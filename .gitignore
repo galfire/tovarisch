@@ -1,3 +1,9 @@
+# IDE
+.vs
+
+# Make
+out
+
 # Prerequisites
 *.d
 
