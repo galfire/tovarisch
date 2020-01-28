@@ -87,74 +87,74 @@ namespace tov
 	};
 
 	template<class T, bool SIMD>
-	class Vector2T
+	class VectorT2
 		: public VectorT<T, 2, SIMD>
 	{
 	public:
-		Vector2T(T x, T y)
+		VectorT2(T x, T y)
 			: VectorT<T, 2, SIMD>(x, y) {}
 
-		Vector2T(const VectorT<T, 2, SIMD>& v)
+		VectorT2(const VectorT<T, 2, SIMD>& v)
 			: VectorT<T, 2, SIMD>(v) {}
 	};
 
-	using Vector2 = Vector2T<float, false>;
+	using Vector2 = VectorT2<float, false>;
 
 	template<class T, bool SIMD>
-	class Vector3T
+	class VectorT3
 		: public VectorT<T, 3, SIMD>
 	{
 	public:
-		Vector3T(T x, T y, T z)
+		VectorT3(T x, T y, T z)
 			: VectorT<T, 3, SIMD>(x, y, z) {}
 
-		Vector3T(const VectorT<T, 3, SIMD>& v)
+		VectorT3(const VectorT<T, 3, SIMD>& v)
 			: VectorT<T, 3, SIMD>(v) {}
 
-		inline Vector3T crossProduct(const Vector3T& vector) const
+		inline VectorT3 crossProduct(const VectorT3& vector) const
 		{
-			Vector3T v = *this;
+			VectorT3 v = *this;
 			v.mMemory = v.mMemory.crossProduct(vector.mMemory);
 			return v;
 		}
 
-		inline Vector3T operator * (const Vector3T& vector) const
+		inline VectorT3 operator * (const VectorT3& vector) const
 		{
 			return crossProduct(vector);
 		}
 	};
 
-	using Vector3 = Vector3T<float, true>;
+	using Vector3 = VectorT3<float, true>;
 
 	template<class T, bool SIMD>
-	class Vector4T
+	class VectorT4
 		: public VectorT<T, 4, SIMD>
 	{
 	public:
-		Vector4T(T x, T y, T z, T w)
+		VectorT4(T x, T y, T z, T w)
 			: VectorT<T, 4, SIMD>(x, y, z, w) {}
 
-		Vector4T(const VectorT<T, 4, SIMD> v)
+		VectorT4(const VectorT<T, 4, SIMD> v)
 			: VectorT<T, 4, SIMD>(v) {}
 	};
 
-	using Vector4 = Vector4T<float, true>;
+	using Vector4 = VectorT4<float, true>;
 
 	template<class T, size_t Size, bool SIMD>
-	class VectorNT
+	class VectorTN
 		: public VectorT<T, Size, SIMD>
 	{
 	public:
 		template <class... U>
-		VectorNT(T x, U... args)
+		VectorTN(T x, U... args)
 			: VectorT<T, Size, SIMD>(x, std::forward<U>(args)...) {}
 
-		VectorNT(const VectorT<T, Size, SIMD> v)
+		VectorTN(const VectorT<T, Size, SIMD> v)
 			: VectorT<T, Size, SIMD>(v) {}
 	};
 
 	template<size_t Size>
-	using Vector = VectorNT<float, Size, false>;
+	using Vector = VectorTN<float, Size, false>;
 
 	TOV_NAMESPACE_END // math
 }
