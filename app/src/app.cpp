@@ -8,6 +8,8 @@
 
 #include <tov/memory_config.h>
 
+#include <tov/math/vector.h>
+
 using namespace tov;
 
 class MyObject
@@ -53,6 +55,17 @@ int main(int argc, char** argv)
 	std::cout << (uintptr_t)&objs[2] % alignof(MyDerivedObject) << "\n";
 	std::cout << (uintptr_t)&objs[2] - (uintptr_t)&objs[1] << "\n";
 	delete[] objs;
+
+	tov::math::Vector<5> vec1(1.0f, 1.0f, 1.0f, 1.0f, 1.0f);
+	tov::math::Vector<5> vec2(1.0f, 1.0f, 1.0f, 1.0f, 1.0f);
+	//auto vecSum = vec1 + vec2;
+	tov::math::Vector<5>&& vecSum = vec1 + vec2;
+
+	std::cout << "Vec1: " << &vec1 << "\n";
+	std::cout << "Vec2: " << &vec2 << "\n";
+	std::cout << "VecSum: " << &vecSum << "\n";
+	std::cout << vecSum << "\n";
+
 
 #if TOV_COMPILER == TOV_COMPILER_MSVC
 	system("PAUSE");

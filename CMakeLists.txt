@@ -27,6 +27,8 @@ set(CATCH_DIR ${CMAKE_CURRENT_BINARY_DIR}/catch/src/)
 # Include sub-projects.
 
 add_subdirectory("projects/memory")
+add_subdirectory("projects/math")
+add_subdirectory("projects/rendering")
 
 if(WIN32)
 	add_subdirectory ("projects/render_system_gl")

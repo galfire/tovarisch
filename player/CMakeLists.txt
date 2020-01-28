@@ -23,5 +23,5 @@ set_target_properties(player
 
 set_target_properties(player
 	PROPERTIES
-	LINK_FLAGS "-s WASM=1 -s FULL_ES3=1 -s FULL_ES2=1 -s TOTAL_MEMORY=32MB -s BINARYEN_METHOD='native-wasm' -s EXTRA_EXPORTED_RUNTIME_METHODS='[\"ccall\", \"cwrap\"]'"
+	LINK_FLAGS "-s WASM=1 -s USE_WEBGL2=1 -s OFFSCREENCANVAS_SUPPORT=1 -s TOTAL_MEMORY=32MB -s BINARYEN_METHOD='native-wasm' -s EXTRA_EXPORTED_RUNTIME_METHODS='[\"ccall\", \"cwrap\"]'"
 )

@@ -7,7 +7,6 @@ namespace tov
 	TOV_NAMESPACE_BEGIN(policies)
 	TOV_NAMESPACE_BEGIN(alignment)
 
-
 	inline size_t Standard::determineAlignmentSpace(size_t alignment) noexcept
 	{
 		return alignment;
