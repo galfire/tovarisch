@@ -66,7 +66,6 @@ int main(int argc, char** argv)
 	std::cout << "VecSum: " << &vecSum << "\n";
 	std::cout << vecSum << "\n";
 
-
 #if TOV_COMPILER == TOV_COMPILER_MSVC
 	system("PAUSE");
 #endif

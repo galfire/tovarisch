@@ -2,15 +2,42 @@
 
 #include <tov/math/vector.h>
 
-TEST_CASE("Vector2", "[Vector2]")
+TEST_CASE("Vector SIMD None", "[Vector]")
 {
-	SECTION("constructor")
+	using Vector3 = tov::math::Vector<3, tov::math::SIMD::_NONE>;
+
+	SECTION("element constructor")
 	{
-		SECTION("accepts arguments for x and y")
+		SECTION("accepts arguments for each element")
 		{
-			tov::math::Vector2 vec(1.0f, 1.0f);
-			REQUIRE(vec.x == 1.0f);
-			REQUIRE(vec.y == 1.0f);
+			Vector3 vec(1.0f, 2.0f, 3.0f);
+			REQUIRE(vec[0] == 1.0f);
+			REQUIRE(vec[1] == 2.0f);
+			REQUIRE(vec[2] == 3.0f);
+		}
+	}
+
+	SECTION("copy constructor")
+	{
+		SECTION("accepts a Vector argument")
+		{
+			Vector3 vecArg(1.0f, 1.0f, 1.0f);
+			Vector3 vec(vecArg);
+			REQUIRE(vec[0] == 1.0f);
+			REQUIRE(vec[1] == 1.0f);
+			REQUIRE(vec[2] == 1.0f);
+		}
+	}
+
+	SECTION("assignment")
+	{
+		SECTION("sets the LHS vector to the RHS vector")
+		{
+			Vector3 vecArg(1.0f, 1.0f, 1.0f);
+			Vector3 vec = vecArg;
+			REQUIRE(vec[0] == 1.0f);
+			REQUIRE(vec[1] == 1.0f);
+			REQUIRE(vec[2] == 1.0f);
 		}
 	}
 
@@ -18,9 +45,34 @@ TEST_CASE("Vector2", "[Vector2]")
 	{
 		SECTION("returns the vector element at the given index")
 		{
-			tov::math::Vector2 vec(2.0f, 3.0f);
-			REQUIRE(vec[0] == 2.0f);
-			REQUIRE(vec[1] == 3.0f);
+			Vector3 vec(1.0f, 2.0f, 3.0f);
+			REQUIRE(vec[0] == 1.0f);
+			REQUIRE(vec[1] == 2.0f);
+			REQUIRE(vec[2] == 3.0f);
+		}
+	}
+
+	SECTION("unary plus")
+	{
+		SECTION("returns the RHS vector")
+		{
+			Vector3 vecArg(1.0f, 2.0f, 3.0f);
+			Vector3 vec = +vecArg;
+			REQUIRE(vec[0] == 1.0f);
+			REQUIRE(vec[1] == 2.0f);
+			REQUIRE(vec[2] == 3.0f);
+		}
+	}
+
+	SECTION("unary negation")
+	{
+		SECTION("returns the RHS vector with each element negated")
+		{
+			Vector3 vecArg(1.0f, 2.0f, 3.0f);
+			Vector3 vec = -vecArg;
+			REQUIRE(vec[0] == -1.0f);
+			REQUIRE(vec[1] == -2.0f);
+			REQUIRE(vec[2] == -3.0f);
 		}
 	}
 
@@ -28,86 +80,12 @@ TEST_CASE("Vector2", "[Vector2]")
 	{
 		SECTION("returns the sum of the LHS and RHS vectors")
 		{
-			tov::math::Vector2 vec1(1.0f, 1.0f);
-			tov::math::Vector2 vec2(1.0f, 1.0f);
-			tov::math::Vector2 vecSum = vec1 + vec2;
-			REQUIRE(vecSum.x == 2.0f);
-			REQUIRE(vecSum.y == 2.0f);
-		}
-	}
-
-
-	SECTION("vector addition assignment")
-	{
-		SECTION("sets the LHS vector to the sum of the LHS and RHS vectors")
-		{
-			tov::math::Vector2 vec1(1.0f, 1.0f);
-			tov::math::Vector2 vec2(1.0f, 1.0f);
-			vec1 += vec2;
-			REQUIRE(vec1[0] == 2.0f);
-			REQUIRE(vec1[1] == 2.0f);
-		}
-	}
-
-	SECTION("vector subtraction")
-	{
-		SECTION("returns the difference of the LHS and RHS vectors")
-		{
-			tov::math::Vector2 vec1(1.0f, 1.0f);
-			tov::math::Vector2 vec2(1.0f, 1.0f);
-			tov::math::Vector2 vecDiff = vec1 - vec2;
-			REQUIRE(vecDiff.x == 0.0f);
-			REQUIRE(vecDiff.y == 0.0f);
-		}
-	}
-
-	SECTION("vector subtraction assignment")
-	{
-		SECTION("sets the LHS vector to the difference of the LHS and RHS vectors")
-		{
-			tov::math::Vector2 vec1(1.0f, 1.0f);
-			tov::math::Vector2 vec2(1.0f, 1.0f);
-			vec1 -= vec2;
-			REQUIRE(vec1[0] == 0.0f);
-			REQUIRE(vec1[1] == 0.0f);
-		}
-	}
-}
-
-TEST_CASE("Vector3", "[Vector3]")
-{
-	SECTION("constructor")
-	{
-		SECTION("accepts arguments for x, y, and z")
-		{
-			tov::math::Vector3 vec(1.0f, 1.0f, 1.0f);
-			REQUIRE(vec.x == 1.0f);
-			REQUIRE(vec.y == 1.0f);
-			REQUIRE(vec.z == 1.0f);
-		}
-	}
-
-	SECTION("subscript")
-	{
-		SECTION("returns the vector element at the given index")
-		{
-			tov::math::Vector3 vec(2.0f, 3.0f, 4.0f);
-			REQUIRE(vec[0] == 2.0f);
-			REQUIRE(vec[1] == 3.0f);
-			REQUIRE(vec[2] == 4.0f);
-		}
-	}
-
-	SECTION("vector addition")
-	{
-		SECTION("returns the sum of the LHS and RHS vectors")
-		{
-			tov::math::Vector3 vec1(1.0f, 1.0f, 1.0f);
-			tov::math::Vector3 vec2(1.0f, 1.0f, 1.0f);
-			tov::math::Vector3 vecSum = vec1 + vec2;
-			REQUIRE(vecSum.x == 2.0f);
-			REQUIRE(vecSum.y == 2.0f);
-			REQUIRE(vecSum.z == 2.0f);
+			Vector3 vec1(1.0f, 1.0f, 1.0f);
+			Vector3 vec2(1.0f, 1.0f, 1.0f);
+			Vector3 vecSum = vec1 + vec2;
+			REQUIRE(vecSum[0] == 2.0f);
+			REQUIRE(vecSum[1] == 2.0f);
+			REQUIRE(vecSum[2] == 2.0f);
 		}
 	}
 
@@ -115,8 +93,8 @@ TEST_CASE("Vector3", "[Vector3]")
 	{
 		SECTION("sets the LHS vector to the sum of the LHS and RHS vectors")
 		{
-			tov::math::Vector3 vec1(1.0f, 1.0f, 1.0f);
-			tov::math::Vector3 vec2(1.0f, 1.0f, 1.0f);
+			Vector3 vec1(1.0f, 1.0f, 1.0f);
+			Vector3 vec2(1.0f, 1.0f, 1.0f);
 			vec1 += vec2;
 			REQUIRE(vec1[0] == 2.0f);
 			REQUIRE(vec1[1] == 2.0f);
@@ -128,12 +106,12 @@ TEST_CASE("Vector3", "[Vector3]")
 	{
 		SECTION("returns the difference of the LHS and RHS vectors")
 		{
-			tov::math::Vector3 vec1(1.0f, 1.0f, 1.0f);
-			tov::math::Vector3 vec2(1.0f, 1.0f, 1.0f);
-			tov::math::Vector3 vecDiff = vec1 - vec2;
-			REQUIRE(vecDiff.x == 0.0f);
-			REQUIRE(vecDiff.y == 0.0f);
-			REQUIRE(vecDiff.z == 0.0f);
+			Vector3 vec1(1.0f, 1.0f, 1.0f);
+			Vector3 vec2(1.0f, 1.0f, 1.0f);
+			Vector3 vecDiff = vec1 - vec2;
+			REQUIRE(vecDiff[0] == 0.0f);
+			REQUIRE(vecDiff[1] == 0.0f);
+			REQUIRE(vecDiff[2] == 0.0f);
 		}
 	}
 
@@ -141,8 +119,8 @@ TEST_CASE("Vector3", "[Vector3]")
 	{
 		SECTION("sets the LHS vector to the difference of the LHS and RHS vectors")
 		{
-			tov::math::Vector3 vec1(1.0f, 1.0f, 1.0f);
-			tov::math::Vector3 vec2(1.0f, 1.0f, 1.0f);
+			Vector3 vec1(1.0f, 1.0f, 1.0f);
+			Vector3 vec2(1.0f, 1.0f, 1.0f);
 			vec1 -= vec2;
 			REQUIRE(vec1[0] == 0.0f);
 			REQUIRE(vec1[1] == 0.0f);
@@ -150,42 +128,140 @@ TEST_CASE("Vector3", "[Vector3]")
 		}
 	}
 
-	SECTION("crossProduct")
+	SECTION("scalar multiplication")
 	{
-		SECTION("returns the cross product of the LHS and RHS vectors")
+		SECTION("returns the product of the LHS vector and the RHS scalar")
 		{
-			tov::math::Vector3 vec1(1.0f, 2.0f, 3.0f);
-			tov::math::Vector3 vec2(2.0f, 3.0f, 4.0f);
-			tov::math::Vector3 vecCrossProduct = vec1.crossProduct(vec2);
-			REQUIRE(vecCrossProduct.x == -1.0f);
-			REQUIRE(vecCrossProduct.y == 2.0f);
-			REQUIRE(vecCrossProduct.z == -1.0f);
+			Vector3 vec1(1.0f, 1.0f, 1.0f);
+			Vector3 vecProduct = vec1 * 3.0f;
+			REQUIRE(vecProduct[0] == 3.0f);
+			REQUIRE(vecProduct[1] == 3.0f);
+			REQUIRE(vecProduct[2] == 3.0f);
+		}
+	}
+
+	SECTION("scalar multiplication assignment")
+	{
+		SECTION("sets the LHS vector to the product of the LHS vector and the RHS scalar")
+		{
+			Vector3 vec1(1.0f, 1.0f, 1.0f);
+			vec1 *= 3.0f;
+			REQUIRE(vec1[0] == 3.0f);
+			REQUIRE(vec1[1] == 3.0f);
+			REQUIRE(vec1[2] == 3.0f);
+		}
+	}
+
+	SECTION("scalar division")
+	{
+		SECTION("returns the quotient of the LHS vector and the RHS scalar")
+		{
+			Vector3 vec1(3.0f, 3.0f, 3.0f);
+			Vector3 vecQuotient = vec1 / 3.0f;
+			REQUIRE(vecQuotient[0] == 1.0f);
+			REQUIRE(vecQuotient[1] == 1.0f);
+			REQUIRE(vecQuotient[2] == 1.0f);
+		}
+	}
+
+	SECTION("scalar division assignment")
+	{
+		SECTION("sets the LHS vector to the quotient of the LHS vector and the RHS scalar")
+		{
+			Vector3 vec1(3.0f, 3.0f, 3.0f);
+			vec1 /= 3.0f;
+			REQUIRE(vec1[0] == 1.0f);
+			REQUIRE(vec1[1] == 1.0f);
+			REQUIRE(vec1[2] == 1.0f);
+		}
+	}
+
+	SECTION("equal comparison")
+	{
+		SECTION("returns true when the LHS and RHS vectors are equal")
+		{
+			Vector3 vec1(1.0f, 1.0f, 1.0f);
+			Vector3 vec2(1.0f, 1.0f, 1.0f);
+			bool equal = vec1 == vec2;
+			REQUIRE(equal);
 		}
 
-		SECTION("can be called using the * operator")
+		SECTION("returns false when the LHS and RHS vectors are not equal")
 		{
-			tov::math::Vector3 vec1(1.0f, 2.0f, 3.0f);
-			tov::math::Vector3 vec2(2.0f, 3.0f, 4.0f);
-			tov::math::Vector3 vecCrossProduct = vec1 * vec2;
-			REQUIRE(vecCrossProduct.x == -1.0f);
-			REQUIRE(vecCrossProduct.y == 2.0f);
-			REQUIRE(vecCrossProduct.z == -1.0f);
+			Vector3 vec1(1.0f, 1.0f, 1.0f);
+			Vector3 vec2(1.0f, 2.0f, 1.0f);
+			bool equal = vec1 == vec2;
+			REQUIRE_FALSE(equal);
+		}
+	}
+
+	SECTION("not equal comparison")
+	{
+		SECTION("returns false when the LHS and RHS vectors are equal")
+		{
+			Vector3 vec1(1.0f, 1.0f, 1.0f);
+			Vector3 vec2(1.0f, 1.0f, 1.0f);
+			bool equal = vec1 != vec2;
+			REQUIRE_FALSE(equal);
+		}
+
+		SECTION("returns true when the LHS and RHS vectors are not equal")
+		{
+			Vector3 vec1(1.0f, 1.0f, 1.0f);
+			Vector3 vec2(1.0f, 2.0f, 1.0f);
+			bool equal = vec1 != vec2;
+			REQUIRE(equal);
+		}
+	}
+
+	SECTION("dot")
+	{
+		SECTION("returns the dot product of the LHS and RHS vectors")
+		{
+			Vector3 vec1(1.0f, 2.0f, 3.0f);
+			Vector3 vec2(3.0f, 2.0f, 1.0f);
+			float dot = vec1.dot(vec2);
+			REQUIRE(dot == 10.0f);
 		}
 	}
 }
 
-TEST_CASE("Vector", "[Vector]")
+TEST_CASE("Vector SIMD 128F", "[Vector]")
 {
-	SECTION("constructor")
+	using Vector3 = tov::math::Vector<3, tov::math::SIMD::_128F>;
+
+	SECTION("element constructor")
 	{
 		SECTION("accepts arguments for each element")
 		{
-			tov::math::Vector<5> vec(1.0f, 2.0f, 3.0f, 4.0f, 5.0f);
+			Vector3 vec(1.0f, 2.0f, 3.0f);
 			REQUIRE(vec[0] == 1.0f);
 			REQUIRE(vec[1] == 2.0f);
 			REQUIRE(vec[2] == 3.0f);
-			REQUIRE(vec[3] == 4.0f);
-			REQUIRE(vec[4] == 5.0f);
+		}
+	}
+
+	SECTION("copy constructor")
+	{	
+		SECTION("accepts a Vector argument")
+		{
+			Vector3 vecArg(1.0f, 1.0f, 1.0f);
+			Vector3 vec(vecArg);
+			REQUIRE(vec[0] == 1.0f);
+			REQUIRE(vec[1] == 1.0f);
+			REQUIRE(vec[2] == 1.0f);
+		}
+	}
+
+	SECTION("assignment")
+	{
+		SECTION("sets the LHS vector to the RHS vector")
+		{
+			Vector3 vecArg(1.0f, 1.0f, 1.0f);
+			Vector3 vec = vecArg;
+			REQUIRE(vec[0] == 1.0f);
+			REQUIRE(vec[1] == 1.0f);
+			REQUIRE(vec[2] == 1.0f);
 		}
 	}
 
@@ -193,12 +269,34 @@ TEST_CASE("Vector", "[Vector]")
 	{
 		SECTION("returns the vector element at the given index")
 		{
-			tov::math::Vector<5> vec(1.0f, 2.0f, 3.0f, 4.0f, 5.0f);
+			Vector3 vec(1.0f, 2.0f, 3.0f);
 			REQUIRE(vec[0] == 1.0f);
 			REQUIRE(vec[1] == 2.0f);
 			REQUIRE(vec[2] == 3.0f);
-			REQUIRE(vec[3] == 4.0f);
-			REQUIRE(vec[4] == 5.0f);
+		}
+	}
+
+	SECTION("unary plus")
+	{
+		SECTION("returns the RHS vector")
+		{
+			Vector3 vecArg(1.0f, 2.0f, 3.0f);
+			Vector3 vec = +vecArg;
+			REQUIRE(vec[0] == 1.0f);
+			REQUIRE(vec[1] == 2.0f);
+			REQUIRE(vec[2] == 3.0f);
+		}
+	}
+
+	SECTION("unary negation")
+	{
+		SECTION("returns the RHS vector with each element negated")
+		{
+			Vector3 vecArg(1.0f, 2.0f, 3.0f);
+			Vector3 vec = -vecArg;
+			REQUIRE(vec[0] == -1.0f);
+			REQUIRE(vec[1] == -2.0f);
+			REQUIRE(vec[2] == -3.0f);
 		}
 	}
 
@@ -206,14 +304,25 @@ TEST_CASE("Vector", "[Vector]")
 	{
 		SECTION("returns the sum of the LHS and RHS vectors")
 		{
-			tov::math::Vector<5> vec1(1.0f, 1.0f, 1.0f, 1.0f, 1.0f);
-			tov::math::Vector<5> vec2(1.0f, 1.0f, 1.0f, 1.0f, 1.0f);
-			tov::math::Vector<5> vecSum = vec1 + vec2;
+			Vector3 vec1(1.0f, 1.0f, 1.0f);
+			Vector3 vec2(1.0f, 1.0f, 1.0f);
+			Vector3 vecSum = vec1 + vec2;
 			REQUIRE(vecSum[0] == 2.0f);
 			REQUIRE(vecSum[1] == 2.0f);
 			REQUIRE(vecSum[2] == 2.0f);
-			REQUIRE(vecSum[3] == 2.0f);
-			REQUIRE(vecSum[4] == 2.0f);
+		}
+	}
+
+	SECTION("vector addition assignment")
+	{
+		SECTION("sets the LHS vector to the sum of the LHS and RHS vectors")
+		{
+			Vector3 vec1(1.0f, 1.0f, 1.0f);
+			Vector3 vec2(1.0f, 1.0f, 1.0f);
+			vec1 += vec2;
+			REQUIRE(vec1[0] == 2.0f);
+			REQUIRE(vec1[1] == 2.0f);
+			REQUIRE(vec1[2] == 2.0f);
 		}
 	}
 
@@ -221,14 +330,175 @@ TEST_CASE("Vector", "[Vector]")
 	{
 		SECTION("returns the difference of the LHS and RHS vectors")
 		{
-			tov::math::Vector<5> vec1(1.0f, 1.0f, 1.0f, 1.0f, 1.0f);
-			tov::math::Vector<5> vec2(1.0f, 1.0f, 1.0f, 1.0f, 1.0f);
-			tov::math::Vector<5> vecDiff = vec1 - vec2;
+			Vector3 vec1(1.0f, 1.0f, 1.0f);
+			Vector3 vec2(1.0f, 1.0f, 1.0f);
+			Vector3 vecDiff = vec1 - vec2;
 			REQUIRE(vecDiff[0] == 0.0f);
 			REQUIRE(vecDiff[1] == 0.0f);
 			REQUIRE(vecDiff[2] == 0.0f);
-			REQUIRE(vecDiff[3] == 0.0f);
-			REQUIRE(vecDiff[4] == 0.0f);
+		}
+	}
+
+	SECTION("vector subtraction assignment")
+	{
+		SECTION("sets the LHS vector to the difference of the LHS and RHS vectors")
+		{
+			Vector3 vec1(1.0f, 1.0f, 1.0f);
+			Vector3 vec2(1.0f, 1.0f, 1.0f);
+			vec1 -= vec2;
+			REQUIRE(vec1[0] == 0.0f);
+			REQUIRE(vec1[1] == 0.0f);
+			REQUIRE(vec1[2] == 0.0f);
+		}
+	}
+
+	SECTION("scalar multiplication")
+	{
+		SECTION("returns the product of the LHS vector and the RHS scalar")
+		{
+			Vector3 vec1(1.0f, 1.0f, 1.0f);
+			Vector3 vecProduct = vec1 * 3.0f;
+			REQUIRE(vecProduct[0] == 3.0f);
+			REQUIRE(vecProduct[1] == 3.0f);
+			REQUIRE(vecProduct[2] == 3.0f);
+		}
+	}
+
+	SECTION("scalar multiplication assignment")
+	{
+		SECTION("sets the LHS vector to the product of the LHS vector and the RHS scalar")
+		{
+			Vector3 vec1(1.0f, 1.0f, 1.0f);
+			vec1 *= 3.0f;
+			REQUIRE(vec1[0] == 3.0f);
+			REQUIRE(vec1[1] == 3.0f);
+			REQUIRE(vec1[2] == 3.0f);
+		}
+	}
+
+	SECTION("scalar division")
+	{
+		SECTION("returns the quotient of the LHS vector and the RHS scalar")
+		{
+			Vector3 vec1(3.0f, 3.0f, 3.0f);
+			Vector3 vecQuotient = vec1 / 3.0f;
+			REQUIRE(vecQuotient[0] == 1.0f);
+			REQUIRE(vecQuotient[1] == 1.0f);
+			REQUIRE(vecQuotient[2] == 1.0f);
+		}
+	}
+
+	SECTION("scalar division assignment")
+	{
+		SECTION("sets the LHS vector to the quotient of the LHS vector and the RHS scalar")
+		{
+			Vector3 vec1(3.0f, 3.0f, 3.0f);
+			vec1 /= 3.0f;
+			REQUIRE(vec1[0] == 1.0f);
+			REQUIRE(vec1[1] == 1.0f);
+			REQUIRE(vec1[2] == 1.0f);
+		}
+	}
+
+	SECTION("equal comparison")
+	{
+		SECTION("returns true when the LHS and RHS vectors are equal")
+		{
+			Vector3 vec1(1.0f, 1.0f, 1.0f);
+			Vector3 vec2(1.0f, 1.0f, 1.0f);
+			bool equal = vec1 == vec2;
+			REQUIRE(equal);
+		}
+
+		SECTION("returns false when the LHS and RHS vectors are not equal")
+		{
+			Vector3 vec1(1.0f, 1.0f, 1.0f);
+			Vector3 vec2(1.0f, 2.0f, 1.0f);
+			bool equal = vec1 == vec2;
+			REQUIRE_FALSE(equal);
+		}
+	}
+
+	SECTION("not equal comparison")
+	{
+		SECTION("returns false when the LHS and RHS vectors are equal")
+		{
+			Vector3 vec1(1.0f, 1.0f, 1.0f);
+			Vector3 vec2(1.0f, 1.0f, 1.0f);
+			bool equal = vec1 != vec2;
+			REQUIRE_FALSE(equal);
+		}
+
+		SECTION("returns true when the LHS and RHS vectors are not equal")
+		{
+			Vector3 vec1(1.0f, 1.0f, 1.0f);
+			Vector3 vec2(1.0f, 2.0f, 1.0f);
+			bool equal = vec1 != vec2;
+			REQUIRE(equal);
+		}
+	}
+
+	SECTION("dot")
+	{
+		SECTION("returns the dot product of the LHS and RHS vectors")
+		{
+			Vector3 vec1(1.0f, 2.0f, 3.0f);
+			Vector3 vec2(3.0f, 2.0f, 1.0f);
+			float dot = vec1.dot(vec2);
+			REQUIRE(dot == 10.0f);
+		}
+	}
+}
+
+TEST_CASE("Vector2", "[Vector2]")
+{
+	SECTION("element constructor")
+	{
+		SECTION("accepts arguments for x and y")
+		{
+			tov::math::Vector2 vec(1.0f, 1.0f);
+			REQUIRE(vec.x == 1.0f);
+			REQUIRE(vec.y == 1.0f);
+		}
+	}
+}
+
+TEST_CASE("Vector3", "[Vector3]")
+{
+	SECTION("element constructor")
+	{
+		SECTION("accepts arguments for x, y, and z")
+		{
+			tov::math::Vector3 vec(1.0f, 1.0f, 1.0f);
+			REQUIRE(vec.x == 1.0f);
+			REQUIRE(vec.y == 1.0f);
+			REQUIRE(vec.z == 1.0f);
+		}
+	}
+
+	SECTION("cross")
+	{
+		SECTION("returns the cross product of the LHS and RHS vectors")
+		{
+			tov::math::Vector3 vec1(1.0f, 2.0f, 3.0f);
+			tov::math::Vector3 vec2(2.0f, 3.0f, 4.0f);
+			tov::math::Vector3 vecCrossProduct = vec1.cross(vec2);
+			REQUIRE(vecCrossProduct.x == -1.0f);
+			REQUIRE(vecCrossProduct.y == 2.0f);
+			REQUIRE(vecCrossProduct.z == -1.0f);
+		}
+	}
+
+	SECTION("crossAssign")
+	{
+		SECTION("sets the LHS to the cross product of the LHS and RHS vectors")
+		{
+			tov::math::Vector3 vec1(1.0f, 2.0f, 3.0f);
+			tov::math::Vector3 vec2(2.0f, 3.0f, 4.0f);
+			vec1.crossAssign(vec2);
+			REQUIRE(vec1.x == -1.0f);
+			REQUIRE(vec1.y == 2.0f);
+			REQUIRE(vec1.z == -1.0f);
 		}
 	}
 }

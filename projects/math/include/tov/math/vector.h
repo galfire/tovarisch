@@ -3,7 +3,10 @@
 
 #include <tov/core.h>
 
-#include <ostream>
+#ifdef TOV_DEBUG
+#	include <ostream>
+#endif
+
 #include <cstring>
 #include <iostream>
 
@@ -13,12 +16,12 @@ namespace tov
 {
 	TOV_NAMESPACE_BEGIN(math)
 
-	template<class T, size_t Size, bool SIMD>
+	template<class T, size_t Size, SIMD::Type SIMD_T>
 	class VectorT
-		: public VectorComponent<T, Size, SIMD>
+		: public VectorComponent<T, Size, SIMD_T>
 	{
 	public:
-		using VectorComponent<T, Size, SIMD>::VectorComponent;
+		using VectorComponent<T, Size, SIMD_T>::VectorComponent;
 
 		VectorT(T f = (T)0)
 		{
@@ -35,6 +38,12 @@ namespace tov
 			this->mArr = data;
 		}
 
+		inline VectorT& operator = (const VectorT& vector)
+		{
+			memcpy(this->mArr.data(), vector.mArr.data(), Size * sizeof(T));
+			return *this;
+		}
+
 		inline T operator [] (const size_t i) const
 		{
 			assert(i < Size);
@@ -45,6 +54,18 @@ namespace tov
 		{
 			assert(i < Size);
 			return *(&mArr[0] + i);
+		}
+
+		inline VectorT operator + () const
+		{
+			return *this;
+		}
+
+		inline VectorT operator - () const
+		{
+			VectorT v = *this;
+			v.mMemory *= -1.0f;
+			return v;
 		}
 
 		inline VectorT operator + (const VectorT& vector) const
@@ -73,6 +94,49 @@ namespace tov
 			return *this;
 		}
 
+		inline VectorT operator * (T scalar) const
+		{
+			VectorT v = *this;
+			v.mMemory *= scalar;
+			return v;
+		}
+
+		inline VectorT& operator *= (T scalar)
+		{
+			mMemory *= scalar;
+			return *this;
+		}
+
+		inline VectorT operator / (T scalar) const
+		{
+			VectorT v = *this;
+			v.mMemory /= scalar;
+			return v;
+		}
+
+		inline VectorT& operator /= (T scalar)
+		{
+			mMemory /= scalar;
+			return *this;
+		}
+
+		inline bool operator == (const VectorT& vector) const
+		{
+			return mMemory == vector.mMemory;
+		}
+
+		inline bool operator != (const VectorT& vector) const
+		{
+			return mMemory != vector.mMemory;
+		}
+
+		inline T dot(const VectorT& vector) const
+		{
+			T dot = mMemory.dot(vector.mMemory);
+			return dot;
+		}
+
+#ifdef TOV_DEBUG
 		inline friend std::ostream& operator <<
 			(std::ostream& o, const VectorT& vec)
 		{
@@ -84,77 +148,79 @@ namespace tov
 			o << ")";
 			return o;
 		}
+#endif
 	};
 
-	template<class T, bool SIMD>
-	class VectorT2
-		: public VectorT<T, 2, SIMD>
-	{
-	public:
-		VectorT2(T x, T y)
-			: VectorT<T, 2, SIMD>(x, y) {}
-
-		VectorT2(const VectorT<T, 2, SIMD>& v)
-			: VectorT<T, 2, SIMD>(v) {}
-	};
-
-	using Vector2 = VectorT2<float, false>;
-
-	template<class T, bool SIMD>
-	class VectorT3
-		: public VectorT<T, 3, SIMD>
-	{
-	public:
-		VectorT3(T x, T y, T z)
-			: VectorT<T, 3, SIMD>(x, y, z) {}
-
-		VectorT3(const VectorT<T, 3, SIMD>& v)
-			: VectorT<T, 3, SIMD>(v) {}
-
-		inline VectorT3 crossProduct(const VectorT3& vector) const
-		{
-			VectorT3 v = *this;
-			v.mMemory = v.mMemory.crossProduct(vector.mMemory);
-			return v;
-		}
-
-		inline VectorT3 operator * (const VectorT3& vector) const
-		{
-			return crossProduct(vector);
-		}
-	};
-
-	using Vector3 = VectorT3<float, true>;
-
-	template<class T, bool SIMD>
-	class VectorT4
-		: public VectorT<T, 4, SIMD>
-	{
-	public:
-		VectorT4(T x, T y, T z, T w)
-			: VectorT<T, 4, SIMD>(x, y, z, w) {}
-
-		VectorT4(const VectorT<T, 4, SIMD> v)
-			: VectorT<T, 4, SIMD>(v) {}
-	};
-
-	using Vector4 = VectorT4<float, true>;
-
-	template<class T, size_t Size, bool SIMD>
+	template<class T, size_t Size, SIMD::Type SIMD_T>
 	class VectorTN
-		: public VectorT<T, Size, SIMD>
+		: public VectorT<T, Size, SIMD_T>
 	{
 	public:
 		template <class... U>
-		VectorTN(T x, U... args)
-			: VectorT<T, Size, SIMD>(x, std::forward<U>(args)...) {}
+		VectorTN(T x, U&&... args)
+			: VectorT<T, Size, SIMD_T>(x, std::forward<U>(args)...) {}
 
-		VectorTN(const VectorT<T, Size, SIMD> v)
-			: VectorT<T, Size, SIMD>(v) {}
+		VectorTN(const VectorT<T, Size, SIMD_T> v)
+			: VectorT<T, Size, SIMD_T>(v) {}
 	};
 
-	template<size_t Size>
-	using Vector = VectorTN<float, Size, false>;
+	template<size_t Size, SIMD::Type SIMD_T = SIMD::_NONE>
+	using Vector = VectorTN<float, Size, SIMD_T>;
+
+	template<class T, SIMD::Type SIMD_T>
+	class VectorT2
+		: public VectorTN<T, 2, SIMD_T>
+	{
+	public:
+		VectorT2(T x, T y)
+			: VectorTN<T, 2, SIMD_T>(x, y) {}
+
+		VectorT2(const VectorT<T, 2, SIMD_T>& v)
+			: VectorTN<T, 2, SIMD_T>(v) {}
+	};
+
+	using Vector2 = VectorT2<float, SIMD::_NONE>;
+
+	template<class T, SIMD::Type SIMD_T>
+	class VectorT3
+		: public VectorTN<T, 3, SIMD_T>
+	{
+	public:
+		VectorT3(T x, T y, T z)
+			: VectorTN<T, 3, SIMD_T>(x, y, z) {}
+
+		VectorT3(const VectorT<T, 3, SIMD_T>& v)
+			: VectorTN<T, 3, SIMD_T>(v) {}
+
+		inline VectorT3 cross(const VectorT3& vector) const
+		{
+			VectorT3 v = *this;
+			v.mMemory.crossAssign(vector.mMemory);
+			return v;
+		}
+
+		inline VectorT3& crossAssign(const VectorT3& vector)
+		{
+			mMemory.crossAssign(vector.mMemory);
+			return *this;
+		}
+	};
+
+	using Vector3 = VectorT3<float, SIMD::_128F>;
+
+	template<class T, SIMD::Type SIMD_T>
+	class VectorT4
+		: public VectorTN<T, 4, SIMD_T>
+	{
+	public:
+		VectorT4(T x, T y, T z, T w)
+			: VectorTN<T, 4, SIMD_T>(x, y, z, w) {}
+
+		VectorT4(const VectorT<T, 4, SIMD_T> v)
+			: VectorTN<T, 4, SIMD_T>(v) {}
+	};
+
+	using Vector4 = VectorT4<float, SIMD::_128F>;
 
 	TOV_NAMESPACE_END // math
 }
