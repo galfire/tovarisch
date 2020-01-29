@@ -1,7 +1,7 @@
 #ifndef TOV_MATH_VECTOR_COMPONENT_H
 #define TOV_MATH_VECTOR_COMPONENT_H
 
-#include <tov/core.h>
+#include "math_core.h"
 
 #include <array>
 #include <immintrin.h>	

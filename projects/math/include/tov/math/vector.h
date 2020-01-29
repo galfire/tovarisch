@@ -1,7 +1,7 @@
 #ifndef TOV_MATH_VECTOR_H
 #define TOV_MATH_VECTOR_H
 
-#include <tov/core.h>
+#include "math_core.h"
 
 #ifdef TOV_DEBUG
 #	include <ostream>

@@ -1,4 +1,4 @@
-#include <catch2/catch.hpp>
+#include "test_helper.h"
 
 #include <tov/math/vector.h>
 
@@ -499,6 +499,21 @@ TEST_CASE("Vector3", "[Vector3]")
 			REQUIRE(vec1.x == -1.0f);
 			REQUIRE(vec1.y == 2.0f);
 			REQUIRE(vec1.z == -1.0f);
+		}
+	}
+}
+
+TEST_CASE("Vector4", "[Vector4]")
+{
+	SECTION("element constructor")
+	{
+		SECTION("accepts arguments for x, y, z,and w")
+		{
+			tov::math::Vector4 vec(1.0f, 1.0f, 1.0f, 1.0f);
+			REQUIRE(vec.x == 1.0f);
+			REQUIRE(vec.y == 1.0f);
+			REQUIRE(vec.z == 1.0f);
+			REQUIRE(vec.w == 1.0f);
 		}
 	}
 }
