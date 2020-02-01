@@ -1,7 +1,7 @@
 #ifndef TOV_RENDER_SYSTEM_RENDER_CONTEXT_H
 #define TOV_RENDER_SYSTEM_RENDER_CONTEXT_H
 
-#include <tov/core.h>
+#include "rendering_core.h"
 
 namespace tov
 {
@@ -9,7 +9,11 @@ namespace tov
 
 	class RenderContext
 	{
+	public:
+		RenderContext() noexcept = default;
+		virtual RenderContext() noexcept = default;
 
+		virtual bool makeCurrent() const TOV_ABSTRACT;
 	};
 
 	TOV_NAMESPACE_END // rendering

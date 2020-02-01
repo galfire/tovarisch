@@ -47,13 +47,13 @@ namespace tov
 		inline T operator [] (const size_t i) const
 		{
 			assert(i < Size);
-			return *(&mArr[0] + i);
+			return *(&this->mArr[0] + i);
 		}
 
 		inline T& operator [] (const size_t i)
 		{
 			assert(i < Size);
-			return *(&mArr[0] + i);
+			return *(&this->mArr[0] + i);
 		}
 
 		inline VectorT operator + () const
@@ -77,7 +77,7 @@ namespace tov
 
 		inline VectorT& operator += (const VectorT& vector)
 		{
-			mMemory += vector.mMemory;
+			this->mMemory += vector.mMemory;
 			return *this;
 		}
 
@@ -90,7 +90,7 @@ namespace tov
 
 		inline VectorT& operator -= (const VectorT& vector)
 		{
-			mMemory -= vector.mMemory;
+			this->mMemory -= vector.mMemory;
 			return *this;
 		}
 
@@ -103,7 +103,7 @@ namespace tov
 
 		inline VectorT& operator *= (T scalar)
 		{
-			mMemory *= scalar;
+			this->mMemory *= scalar;
 			return *this;
 		}
 
@@ -116,23 +116,23 @@ namespace tov
 
 		inline VectorT& operator /= (T scalar)
 		{
-			mMemory /= scalar;
+			this->mMemory /= scalar;
 			return *this;
 		}
 
 		inline bool operator == (const VectorT& vector) const
 		{
-			return mMemory == vector.mMemory;
+			return this->mMemory == vector.mMemory;
 		}
 
 		inline bool operator != (const VectorT& vector) const
 		{
-			return mMemory != vector.mMemory;
+			return this->mMemory != vector.mMemory;
 		}
 
 		inline T dot(const VectorT& vector) const
 		{
-			T dot = mMemory.dot(vector.mMemory);
+			T dot = this->mMemory.dot(vector.mMemory);
 			return dot;
 		}
 
@@ -201,7 +201,7 @@ namespace tov
 
 		inline VectorT3& crossAssign(const VectorT3& vector)
 		{
-			mMemory.crossAssign(vector.mMemory);
+			this->mMemory.crossAssign(vector.mMemory);
 			return *this;
 		}
 	};

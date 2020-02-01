@@ -4,7 +4,13 @@
 #include "math_core.h"
 
 #include <array>
-#include <immintrin.h>	
+
+// Not available on all platforms
+//#include <immintrin.h>
+
+#define SIMDE_ENABLE_NATIVE_ALIASES
+
+#include <simde/x86/ssse3.h>
 
 namespace tov
 {
@@ -177,17 +183,17 @@ namespace tov
 
 		inline VectorMemory3& crossAssign(const VectorMemory3& vector)
 		{
-			T vx = _memory[0];
-			T vy = _memory[1];
-			T vz = _memory[2];
+			T vx = this->_memory[0];
+			T vy = this->_memory[1];
+			T vz = this->_memory[2];
 
 			T vx2 = vector._memory[0];
 			T vy2 = vector._memory[1];
 			T vz2 = vector._memory[2];
 
-			_memory[0] = vy * vz2 - vz * vy2;
-			_memory[1] = vz * vx2 - vx * vz2;
-			_memory[2] = vx * vy2 - vy * vx2;
+			this->_memory[0] = vy * vz2 - vz * vy2;
+			this->_memory[1] = vz * vx2 - vx * vz2;
+			this->_memory[2] = vx * vy2 - vy * vx2;
 
 			return *this;
 		}

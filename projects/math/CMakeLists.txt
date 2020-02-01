@@ -5,8 +5,12 @@ set(CMAKE_CXX_STANDARD 20)
 include_directories(${CMAKE_SOURCE_DIR}/projects/core/include)
 include_directories(include/tov)
 
+message(${SIMDE_DIR})
+
 file(GLOB_RECURSE SOURCES src/*.cpp)
 add_library(math STATIC ${SOURCES})
+
+include_directories(${SIMDE_DIR})
 
 if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
 	SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fpermissive")

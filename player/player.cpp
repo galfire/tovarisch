@@ -9,6 +9,8 @@
 
 #include <tov/memory_config.h>
 
+#include <tov/math/vector.h>
+
 class MyObject
 	: public tov::memory::AllocatedObjectLinear
 {
@@ -28,7 +30,7 @@ public:
 
 int main()
 {
-	{
+	/*{
 		auto obj = tov::memory::ptr<MyDerivedObject>();
 		auto obj2 = tov::memory::ptr<MyDerivedObject>(123);
 		auto obj3 = tov::memory::ptr<MyDerivedObject>();
@@ -49,7 +51,13 @@ int main()
 	std::cout << (uintptr_t)&objs[1] % alignof(MyDerivedObject) << "\n";
 	std::cout << (uintptr_t)&objs[2] % alignof(MyDerivedObject) << "\n";
 	std::cout << (uintptr_t)&objs[2] - (uintptr_t)&objs[1] << "\n";
-	delete[] objs;
+	delete[] objs;*/
+
+	tov::math::Vector3 v1(1.0f, 2.0f, 3.0f);
+	tov::math::Vector3 v2(2.0f, 3.0f, 4.0f);
+	auto&& v3 = v1.cross(v2);
+
+	std::cout << v3 << "\n";
 
 	return 0;
 }

@@ -5,6 +5,24 @@ cmake_minimum_required (VERSION 3.8)
 
 project ("tovarisch")
 
+###
+# SIMDe
+configure_file(simde.cmake simde/download/CMakeLists.txt)
+execute_process(COMMAND "${CMAKE_COMMAND}" -G "${CMAKE_GENERATOR}" .
+  RESULT_VARIABLE result
+  WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/simde/download)
+if(result)
+  message(FATAL_ERROR "CMake step for SIMDe failed: ${result}")
+endif()
+execute_process(COMMAND "${CMAKE_COMMAND}" --build .
+  RESULT_VARIABLE result
+  WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/simde/download)
+if(result)
+  message(FATAL_ERROR "CMake step for SIMDe failed: ${result}")
+endif()
+
+set(SIMDE_DIR ${CMAKE_CURRENT_BINARY_DIR}/simde/src/)
+
 ### 
 # Catch
 
@@ -33,7 +51,7 @@ add_subdirectory("projects/rendering")
 if(WIN32)
 	add_subdirectory ("projects/render_system_gl")
 else()
-	add_subdirectory ("projects/render_system_gl_es")
+	add_subdirectory ("projects/rendering_gles")
 endif()
 
 add_subdirectory (${EXECUTABLE_SUBDIRECTORY})

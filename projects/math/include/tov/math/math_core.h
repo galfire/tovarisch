@@ -15,12 +15,12 @@ namespace tov
 	const float DEG_TO_RAD = PI / 180.0f;
 	const float RAD_TO_DEG = 180.0f / PI;
 
-	constexpr float degreesToRadians(float degrees)
+	inline float degreesToRadians(float degrees)
 	{
 		return degrees * DEG_TO_RAD;
 	}
 
-	constexpr float radiansToDegrees(float radians)
+	inline float radiansToDegrees(float radians)
 	{
 		return radians * RAD_TO_DEG;
 	}

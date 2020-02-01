@@ -3,6 +3,10 @@
 
 #include <tov/core.h>
 
+#ifdef TOV_DEBUG
+#include <ostream>
+#endif
+
 namespace tov
 {
 	TOV_NAMESPACE_BEGIN(rendering)
@@ -23,6 +27,7 @@ namespace tov
 		{}
 		~Colour() noexcept = default;
 
+#ifdef TOV_DEBUG
 		inline friend std::ostream& operator <<
 			(std::ostream& o, const Colour& colour)
 		{
@@ -34,16 +39,17 @@ namespace tov
 			o << " )";
 			return o;
 		}
+#endif
 
 	public:
 		float r, g, b, a;
 
 	public:
-		constexpr static Colour Black	= Colour(0.0f, 0.0f, 0.0f, 1.0f);
-		constexpr static Colour White	= Colour(1.0f, 1.0f, 1.0f, 1.0f);
-		constexpr static Colour Red		= Colour(1.0f, 0.0f, 0.0f, 1.0f);
-		constexpr static Colour Green	= Colour(0.0f, 1.0f, 0.0f, 1.0f);
-		constexpr static Colour Blue	= Colour(0.0f, 0.0f, 1.0f, 1.0f);
+		static const Colour Black;
+		static const Colour White;
+		static const Colour Red;
+		static const Colour Green;
+		static const Colour Blue;
 	};
 
 	TOV_NAMESPACE_END // rendering

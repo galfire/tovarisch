@@ -7,14 +7,17 @@ project(player)
 
 set(CMAKE_CXX_STANDARD 20)
 
-include_directories(${CMAKE_SOURCE_DIR}/projects/memory/include)
+include_directories(${SIMDE_DIR})
 include_directories(${CMAKE_SOURCE_DIR}/projects/core/include)
+include_directories(${CMAKE_SOURCE_DIR}/projects/memory/include)
+include_directories(${CMAKE_SOURCE_DIR}/projects/math/include)
 
 # Add source to this project's executable.
 add_executable (player "player.cpp" "player.h")
 set(CMAKE_EXECUTABLE_SUFFIX ".js")
 
 target_link_libraries(player memory)
+target_link_libraries(player math)
 
 set_target_properties(player
 	PROPERTIES
