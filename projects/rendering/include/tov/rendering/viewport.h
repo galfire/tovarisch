@@ -1,7 +1,7 @@
 #ifndef TOV_RENDERING_VIEWPORT_H
 #define TOV_RENDERING_VIEWPORT_H
 
-#include <tov/core.h>
+#include "rendering_core.h"
 
 #include "colour.h"
 
@@ -15,19 +15,47 @@ namespace tov
 	class Viewport
 	{
 	public:
-		Viewport(
-			RenderTarget* renderTarget,
-			Camera* camera,
+		explicit Viewport(
+			std::reference_wrapper<const RenderTarget> renderTarget,
+			std::reference_wrapper<const Camera> camera,
 			int zIndex,
-			// TODO: Replace top and left with a single 2 float point
-			float left = 0.0f,
-			float top = 0.0f,
-			float width = 1.0f,
-			float height = 1.0f,
+			float normalizedLeft = 0.0f,
+			float normalizedTop = 0.0f,
+			float normalizedWidth = 1.0f,
+			float normalizedHeight = 1.0f,
 			Colour backgroundColour = Colour::Black
 		) noexcept;
+		virtual ~Viewport() noexcept = default;
 
-		~Viewport() noexcept;
+		void updateDimensions() noexcept;
+		
+		void apply() const;
+
+		uint getLeft() const { return mLeft; }
+		uint getTop() const { return mTop; }
+		uint getWidth() const { return mWidth; }
+		uint getHeight() const { return mHeight; }
+
+	private:
+		virtual void _apply() const TOV_ABSTRACT;
+
+	protected:
+		std::reference_wrapper<const RenderTarget> mRenderTarget;
+		std::reference_wrapper<const Camera> mCamera;
+
+		int mZIndex;
+
+		float mNormalizedLeft;
+		float mNormalizedTop;
+		float mNormalizedWidth;
+		float mNormalizedHeight;
+
+		uint mLeft;
+		uint mTop;
+		uint mWidth;
+		uint mHeight;
+
+		Colour mBackgroundColour;
 	};
 
 	TOV_NAMESPACE_END // rendering
