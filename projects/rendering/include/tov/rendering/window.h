@@ -3,35 +3,37 @@
 
 #include "rendering_core.h"
 
-#include "render_target.h"
+#include "window_renderer_component.h"
+#include "window_platform_component.h"
 
 namespace tov
 {
 	TOV_NAMESPACE_BEGIN(rendering)
 
-	class WindowPlatformComponent;
 	class WindowPlatformSupport;
-	class WindowRendererComponent;
 	class WindowRendererSupport;
 
 	class Window
-		: public RenderTarget
 	{
 	public:
 		Window(
-			std::reference_wrapper<const ViewportFactory> viewportFactory,
-			std::reference_wrapper<const WindowPlatformSupport> platformSupport,
-			std::reference_wrapper<const WindowRendererSupport> rendererSupport,
+			const WindowPlatformSupport& platformSupport,
+			const WindowRendererSupport& rendererSupport,
 			uint width,
 			uint height,
 			bool fullscreen
 		);
-		~Window() = default;
+		virtual ~Window() = default;
 
-	private:
-		std::reference_wrapper<const WindowPlatformSupport> mPlatformSupport;
-		std::reference_wrapper<const WindowRendererSupport> mRendererSupport;
+		uint getWidth() const { return mWidth; }
+		uint getHeight() const { return mHeight; }
+		bool getFullscreen() const { return mFullscreen; }
 
+	protected:
+		const WindowPlatformSupport& mPlatformSupport;
+		const WindowRendererSupport& mRendererSupport;
+		uint mWidth;
+		uint mHeight;
 		bool mFullscreen;
 
 		std::unique_ptr<WindowPlatformComponent> mPlatformComponent;

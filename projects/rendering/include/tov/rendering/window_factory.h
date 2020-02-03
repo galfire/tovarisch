@@ -8,7 +8,8 @@ namespace tov
 	TOV_NAMESPACE_BEGIN(rendering)
 
 	class RenderTargetManager;
-	class Window;
+	class Viewport;
+	template<class ViewportT> class Window;
 	class WindowPlatformSupport;
 	class WindowRendererSupport;
 
@@ -21,7 +22,7 @@ namespace tov
 		);
 		~WindowFactory() = default;
 
-		Window* build(
+		Window<Viewport>* build(
 			std::reference_wrapper<RenderTargetManager> renderTargetManager,
 			uint width,
 			uint height,

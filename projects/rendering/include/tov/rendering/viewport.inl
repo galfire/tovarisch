@@ -1,15 +1,14 @@
-#include "rendering/viewport.h"
-
-#include "rendering/render_target.h"
-#include "rendering/camera.h"
+#include "render_target.h"
+#include "camera.h"
 
 namespace tov
 {
 	TOV_NAMESPACE_BEGIN(rendering)
 
-	Viewport::Viewport(
-		std::reference_wrapper<const RenderTarget> renderTarget,
-		std::reference_wrapper<const Camera> camera,
+	template<class ViewportT>
+	inline Viewport<ViewportT>::Viewport(
+		const RenderTarget<ViewportT>& renderTarget,
+		const Camera& camera,
 		int zIndex,
 		float normalizedLeft,
 		float normalizedTop,
@@ -33,10 +32,11 @@ namespace tov
 		updateDimensions();
 	}
 
-	void Viewport::updateDimensions() noexcept
+	template<class ViewportT>
+	void Viewport<ViewportT>::updateDimensions() noexcept
 	{
-		uint width = mRenderTarget.get().getWidth();
-		uint height = mRenderTarget.get().getHeight();
+		uint width = mRenderTarget.getWidth();
+		uint height = mRenderTarget.getHeight();
 
 		mLeft = static_cast<uint>(mNormalizedLeft * width);
 		mTop = static_cast<uint>(mNormalizedTop * height);
@@ -46,9 +46,10 @@ namespace tov
 		//mCamera.get().setAspectRatio((float)mWidth / float(mHeight));
 	}
 
-	void Viewport::apply() const
+	template<class ViewportT>
+	void Viewport<ViewportT>::apply() const
 	{
-		this->_apply();
+		static_cast<const ViewportT*>(this)->_apply();
 	}
 
 	TOV_NAMESPACE_END

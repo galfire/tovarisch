@@ -5,9 +5,15 @@
 
 #include <rendering/window_platform_component.h>
 
+#define NOMINMAX
+#include <Windows.h>
+
 namespace tov
 {
 	TOV_NAMESPACE_BEGIN(rendering)
+
+	class Window;
+
 	TOV_NAMESPACE_BEGIN(platforms)
 	TOV_NAMESPACE_BEGIN(win32)
 
@@ -15,6 +21,37 @@ namespace tov
 		: public WindowPlatformComponent
 	{
 	public:
+		WindowPlatformComponentWin32(Window& parentWindow);
+		~WindowPlatformComponentWin32() = default;
+
+		void swapBuffers() override;
+
+		void adjustWindow(
+			uint clientWidth,
+			uint clientHeight,
+			uint& outWindowWidth,
+			uint& outWindowHeight
+		);
+
+	protected:
+		void create() override;
+		void destroy() override;
+
+		DWORD getWindowStyle(bool fullscreen)
+		{
+			if(fullscreen)
+				return getFullscreenWindowStyle();
+			else
+				return getWindowedWindowStyle();
+		}
+		DWORD getFullscreenWindowStyle() { return mFullscreenWindowStyle; }
+		DWORD getWindowedWindowStyle() { return mWindowedWindowStyle; }
+
+	protected:
+		HWND mHWnd = nullptr;
+
+		DWORD mFullscreenWindowStyle;
+		DWORD mWindowedWindowStyle;
 	};
 
 	TOV_NAMESPACE_END // win32

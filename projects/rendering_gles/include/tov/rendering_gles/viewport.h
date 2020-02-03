@@ -9,12 +9,14 @@ namespace tov
 	TOV_NAMESPACE_BEGIN(gles)
 
 	class Viewport
-		: public rendering::Viewport
+		: public rendering::Viewport<Viewport>
 	{
+		friend class rendering::Viewport<Viewport>;
+
 	public:
 		Viewport(
-			std::reference_wrapper<const RenderTarget> renderTarget,
-			std::reference_wrapper<const Camera> camera,
+			const RenderTarget<Viewport>& renderTarget,
+			const Camera& camera,
 			int zIndex,
 			float normalizedLeft = 0.0f,
 			float normalizedTop = 0.0f,
@@ -25,7 +27,7 @@ namespace tov
 		~Viewport() = default;
 
 	private:
-		void _apply() const override;
+		void _apply() const;
 	};
 
 	TOV_NAMESPACE_END // gles

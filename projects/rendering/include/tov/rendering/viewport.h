@@ -9,15 +9,16 @@ namespace tov
 {
 	TOV_NAMESPACE_BEGIN(rendering)
 
-	class RenderTarget;
+	template<class ViewportT> class RenderTarget;
 	class Camera;
 
+	template<class ViewportT>
 	class Viewport
 	{
 	public:
-		explicit Viewport(
-			std::reference_wrapper<const RenderTarget> renderTarget,
-			std::reference_wrapper<const Camera> camera,
+		explicit inline Viewport(
+			const RenderTarget<ViewportT>& renderTarget,
+			const Camera& camera,
 			int zIndex,
 			float normalizedLeft = 0.0f,
 			float normalizedTop = 0.0f,
@@ -36,12 +37,9 @@ namespace tov
 		uint getWidth() const { return mWidth; }
 		uint getHeight() const { return mHeight; }
 
-	private:
-		virtual void _apply() const TOV_ABSTRACT;
-
 	protected:
-		std::reference_wrapper<const RenderTarget> mRenderTarget;
-		std::reference_wrapper<const Camera> mCamera;
+		const RenderTarget<ViewportT>& mRenderTarget;
+		const Camera& mCamera;
 
 		int mZIndex;
 
@@ -60,5 +58,7 @@ namespace tov
 
 	TOV_NAMESPACE_END // rendering
 }
+
+#include "viewport.inl"
 
 #endif

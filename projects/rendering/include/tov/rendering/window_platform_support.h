@@ -7,6 +7,7 @@ namespace tov
 {
 	TOV_NAMESPACE_BEGIN(rendering)
 
+	class Window;
 	class WindowPlatformComponent;
 
 	class WindowPlatformSupport
@@ -15,7 +16,7 @@ namespace tov
 		WindowPlatformSupport() = default;
 		virtual ~WindowPlatformSupport() = default;
 
-		virtual std::unique_ptr<WindowPlatformComponent> buildComponent() const;
+		virtual std::unique_ptr<WindowPlatformComponent> buildComponent(Window& parentWindow) const TOV_ABSTRACT;
 	};
 
 	TOV_NAMESPACE_END

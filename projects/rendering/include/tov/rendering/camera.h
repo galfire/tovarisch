@@ -9,7 +9,8 @@ namespace tov
 
 	class Camera
 	{
-
+	public:
+		Camera() {}
 	};
 
 	TOV_NAMESPACE_END

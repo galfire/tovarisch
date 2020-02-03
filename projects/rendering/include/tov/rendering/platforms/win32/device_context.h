@@ -3,7 +3,9 @@
 
 #include <rendering/rendering_core.h>
 
-#include <windef.h>
+#include <rendering/device_context.h>
+
+#include <Windows.h>
 
 namespace tov
 {

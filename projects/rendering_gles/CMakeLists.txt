@@ -16,3 +16,13 @@ include_directories(${CMAKE_SOURCE_DIR}/projects/rendering/include)
 
 file(GLOB_RECURSE SOURCES src/*.cpp)
 add_library(rendering_gles STATIC ${SOURCES})
+
+target_link_libraries(rendering_gles rendering)
+
+if(CMAKE_CXX_COMPILER MATCHES "/em\\+\\+(-[a-zA-Z0-9.])?$")
+	find_package(glfw3 REQUIRED)
+	target_link_libraries(rendering_gles glfw3)
+else()
+	find_package(OpenGL REQUIRED COMPONENTS OpenGL)
+	target_link_libraries(rendering_gles ${OPENGL_LIBRARIES})
+endif()

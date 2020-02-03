@@ -7,13 +7,16 @@ namespace tov
 {
 	TOV_NAMESPACE_BEGIN(rendering)
 
-	class DeviceContext;
+	class Window;
 
 	class WindowRendererComponent
 	{
 	public:
-		WindowRendererComponent() = default;
+		WindowRendererComponent(Window& parentWindow);
 		virtual ~WindowRendererComponent() = default;
+
+	protected:
+		Window& mParentWindow;
 	};
 
 	TOV_NAMESPACE_END // rendering

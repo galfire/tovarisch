@@ -1,9 +1,7 @@
 #ifndef TOV_RENDERING_PLATFORMS_WEB_WINDOW_PLATFORM_SUPPORT_WEB_H
 #define TOV_RENDERING_PLATFORMS_WEB_WINDOW_PLATFORM_SUPPORT_WEB_H
 
-#include <rendering/rendering_core.h>
-
-#include <rendering/window_platform_support.h>
+#include "../../window_platform_support.h"
 
 namespace tov
 {
@@ -12,16 +10,16 @@ namespace tov
 	class WindowPlatformComponent;
 
 	TOV_NAMESPACE_BEGIN(platforms)
-	TOV_NAMESPACE_BEGIN(web)
+	TOV_NAMESPACE_BEGIN(win32)
 
-	class WindowPlatformSupportWeb
-		: WindowPlatformSupport
+	class WindowPlatformSupportWin32
+		: public WindowPlatformSupport
 	{
 	public:
-		std::unique_ptr<WindowPlatformComponent> buildComponent() const override;
+		std::unique_ptr<WindowPlatformComponent> buildComponent(Window& parentWindow) const override;
 	};
 
-	TOV_NAMESPACE_END // web
+	TOV_NAMESPACE_END // win32
 	TOV_NAMESPACE_END // platforms
 	TOV_NAMESPACE_END // rendering
 }

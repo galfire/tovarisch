@@ -12,26 +12,27 @@ namespace tov
 	TOV_NAMESPACE_BEGIN(rendering)
 
 	class Camera;
-	class Viewport;
-	class ViewportFactory;
+	template<class ViewportT> class Viewport;
 
+	template<class ViewportT>
 	class RenderTarget
 	{
 		TOV_MOVABLE_ONLY(RenderTarget)
 
 	public:
-		RenderTarget(
-			std::reference_wrapper<const ViewportFactory> viewportFactory,
+		inline RenderTarget(
 			uint width,
 			uint height
 		) noexcept;
 		virtual ~RenderTarget() noexcept = default;
 
+		virtual void swapBuffers() TOV_ABSTRACT;
+
 		uint getWidth() const noexcept { return mWidth; }
 		uint getHeight() const noexcept { return mHeight; }
 
-		void createViewport(
-			std::reference_wrapper<const Camera> camera,
+		inline Viewport<ViewportT>* createViewport(
+			const Camera& camera,
 			int zIndex,
 			float normalizedLeft = 0.0f,
 			float normalizedTop = 0.0f,
@@ -41,15 +42,15 @@ namespace tov
 		);
 
 	protected:
-		std::reference_wrapper<const ViewportFactory> mViewportFactory;
-
 		uint mWidth;
 		uint mHeight;
 
-		std::vector<std::unique_ptr<Viewport>> mViewports;
+		std::vector<std::unique_ptr<Viewport<ViewportT>>> mViewports;
 	};
 
 	TOV_NAMESPACE_END // rendering
 }
+
+#include "render_target.inl"
 
 #endif // !TOV_RENDERING_RENDER_TARGET_H

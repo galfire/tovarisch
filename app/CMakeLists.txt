@@ -5,10 +5,14 @@ cmake_minimum_required (VERSION 3.8)
 
 set(CMAKE_CXX_STANDARD 20)
 
+
+
 include_directories(${SIMDE_DIR})
 include_directories(${CMAKE_SOURCE_DIR}/projects/core/include)
 include_directories(${CMAKE_SOURCE_DIR}/projects/memory/include)
 include_directories(${CMAKE_SOURCE_DIR}/projects/math/include)
+include_directories(${CMAKE_SOURCE_DIR}/projects/rendering/include)
+include_directories(${CMAKE_SOURCE_DIR}/projects/rendering_gles/include)
 
 file(GLOB SOURCES src/*.cpp)
 
@@ -17,5 +21,7 @@ add_executable (app ${SOURCES})
 
 target_link_libraries(app memory)
 target_link_libraries(app math)
+target_link_libraries(app rendering)
+target_link_libraries(app rendering_gles)
 
 # TODO: Add tests and install targets if needed.

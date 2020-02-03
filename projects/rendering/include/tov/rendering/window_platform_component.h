@@ -2,24 +2,42 @@
 #define TOV_RENDERING_WINIDOW_PLATFORM_COMPONENT_H
 
 #include "rendering_core.h"
+#include "device_context.h"
 
 namespace tov
 {
 	TOV_NAMESPACE_BEGIN(rendering)
 
+	class Window;
+
 	class WindowPlatformComponent
 	{
 	public:
-		WindowPlatformComponent() = default;
-		virtual ~WindowPlatformComponent() = default;
+		WindowPlatformComponent(Window& parentWindow);
+		virtual ~WindowPlatformComponent();
 
-		inline std::reference_wrapper<const DeviceContext> getDeviceContext() const
+		inline Window& getParentWindow() const
 		{
-			return std::cref<DeviceContext>(mDeviceContext.get())
+			return mParentWindow;
 		}
 
-	private:
+		inline const DeviceContext& getDeviceContext() const
+		{
+			return *mDeviceContext.get();
+		}
+
+		virtual void create() = 0;
+		virtual void destroy() = 0;
+
+		virtual void swapBuffers() TOV_ABSTRACT;
+
+	protected:
+		Window& mParentWindow;
+
 		std::unique_ptr<DeviceContext> mDeviceContext;
+		uint mLeft = 0;
+		uint mTop = 0;
+		uint mColourDepth = 0;
 	};
 
 	TOV_NAMESPACE_END // rendering
