@@ -1,5 +1,7 @@
 ﻿cmake_minimum_required (VERSION 3.8)
 
+project(rendering)
+
 set(CMAKE_CXX_STANDARD 20)
 
 include_directories(${CMAKE_SOURCE_DIR}/projects/core/include)
@@ -20,6 +22,11 @@ target_link_libraries(rendering math)
 
 if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
 	SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fpermissive")
+endif()
+
+if(WIN32)
+	add_subdirectory(_platforms/win32)
+else()
 endif()
 
 # TESTS

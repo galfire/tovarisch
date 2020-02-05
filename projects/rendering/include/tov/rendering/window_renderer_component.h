@@ -7,6 +7,7 @@ namespace tov
 {
 	TOV_NAMESPACE_BEGIN(rendering)
 
+	class RenderContext;
 	class Window;
 
 	class WindowRendererComponent
@@ -15,8 +16,22 @@ namespace tov
 		WindowRendererComponent(Window& parentWindow);
 		virtual ~WindowRendererComponent() = default;
 
+		const RenderContext& getRenderContext() const;
+
+		void create();
+		void destroy();
+
+	protected:
+		virtual void createRenderContext() TOV_ABSTRACT;
+
+	private:
+		virtual void _create() TOV_ABSTRACT;
+		virtual void _destroy() TOV_ABSTRACT;
+
 	protected:
 		Window& mParentWindow;
+
+		std::unique_ptr<RenderContext> mRenderContext;
 	};
 
 	TOV_NAMESPACE_END // rendering

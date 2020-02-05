@@ -52,9 +52,81 @@
             ]
         },
         {
+            "name": "WSL-EMCC-Release",
+            "generator": "Unix Makefiles",
+            "configurationType": "Release",
+            "buildRoot": "${projectDir}\\out\\build\\${name}",
+            "installRoot": "${projectDir}\\out\\install\\${name}",
+            "cmakeExecutable": "/usr/local/bin/cmake",
+            "cmakeCommandArgs": "",
+            "buildCommandArgs": "",
+            "ctestCommandArgs": "",
+            "inheritEnvironments": [ "linux_clang_x64" ],
+            "wslPath": "${defaultWSLPath}",
+            "addressSanitizerRuntimeFlags": "detect_leaks=0",
+            "variables": [
+                {
+                    "name": "EXECUTABLE_SUBDIRECTORY",
+                    "value": "player",
+                    "type": "STRING"
+                },
+                {
+                    "name": "CMAKE_C_COMPILER",
+                    "value": "/home/brandon/emsdk/upstream/emscripten/emcc",
+                    "type": "STRING"
+                },
+                {
+                    "name": "CMAKE_C_COMPILER_AR",
+                    "value": "/home/brandon/emsdk/upstream/emscripten/emar",
+                    "type": "FILEPATH"
+                },
+                {
+                    "name": "CMAKE_C_COMPILER_RANLIB",
+                    "value": "/home/brandon/emsdk/upstream/emscripten/emranlib",
+                    "type": "FILEPATH"
+                },
+                {
+                    "name": "CMAKE_CXX_COMPILER",
+                    "value": "/home/brandon/emsdk/upstream/emscripten/em++",
+                    "type": "STRING"
+                },
+                {
+                    "name": "CMAKE_CXX_COMPILER_AR",
+                    "value": "/home/brandon/emsdk/upstream/emscripten/emar",
+                    "type": "FILEPATH"
+                },
+                {
+                    "name": "CMAKE_CXX_COMPILER_RANLIB",
+                    "value": "/home/brandon/emsdk/upstream/emscripten/emranlib",
+                    "type": "FILEPATH"
+                }
+            ]
+        },
+        {
             "name": "WSL-Debug",
             "generator": "Unix Makefiles",
             "configurationType": "Debug",
+            "buildRoot": "${projectDir}\\out\\build\\${name}",
+            "installRoot": "${projectDir}\\out\\install\\${name}",
+            "cmakeExecutable": "/usr/local/bin/cmake",
+            "cmakeCommandArgs": "",
+            "buildCommandArgs": "",
+            "ctestCommandArgs": "",
+            "inheritEnvironments": [ "linux_x64" ],
+            "wslPath": "${defaultWSLPath}",
+            "addressSanitizerRuntimeFlags": "detect_leaks=0",
+            "variables": [
+                {
+                    "name": "EXECUTABLE_SUBDIRECTORY",
+                    "value": "app",
+                    "type": "STRING"
+                }
+            ]
+        },
+        {
+            "name": "WSL-Release",
+            "generator": "Unix Makefiles",
+            "configurationType": "RelWithDebInfo",
             "buildRoot": "${projectDir}\\out\\build\\${name}",
             "installRoot": "${projectDir}\\out\\install\\${name}",
             "cmakeExecutable": "/usr/local/bin/cmake",

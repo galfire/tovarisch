@@ -14,22 +14,19 @@ namespace tov
 	{
 	public:
 		WindowPlatformComponent(Window& parentWindow);
-		virtual ~WindowPlatformComponent();
+		virtual ~WindowPlatformComponent() = default;
 
-		inline Window& getParentWindow() const
-		{
-			return mParentWindow;
-		}
+		inline Window& getParentWindow() const { return mParentWindow; }
+		inline const DeviceContext& getDeviceContext() const { return *mDeviceContext.get(); }
 
-		inline const DeviceContext& getDeviceContext() const
-		{
-			return *mDeviceContext.get();
-		}
-
-		virtual void create() = 0;
-		virtual void destroy() = 0;
+		void create();
+		void destroy();
 
 		virtual void swapBuffers() TOV_ABSTRACT;
+
+	private:
+		virtual void _create() TOV_ABSTRACT;
+		virtual void _destroy() TOV_ABSTRACT;
 
 	protected:
 		Window& mParentWindow;

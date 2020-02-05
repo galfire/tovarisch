@@ -11,79 +11,38 @@
 #include <tov/math/vector.h>
 
 #include <tov/rendering/render_target.h>
+#include <tov/rendering/colour.h>
 #include <tov/rendering/camera.h>
-#include <tov/rendering_gles/viewport.h>
-#include <tov/rendering_gles/window_renderer_support.h>
-#include <tov/rendering/platforms/win32/window_platform_support_win32.h>
-#include <tov/rendering/platforms/win32/window_events.h>
 #include <tov/rendering/render_window.h>
+
+#include <tov/rendering/win32/window_platform_support.h>
+#include <tov/rendering/win32/window_events.h>
+
+#include <tov/rendering_gl/viewport.h>
+
+#include <tov/rendering_gl/window_renderer_support.h>
+
 
 using namespace tov;
 
-class MyObject
-	: public tov::memory::AllocatedObjectLinear
-{
-public:
-	MyObject() = default;
-	virtual ~MyObject() = default;
-};
-
-class alignas(32) MyDerivedObject
-	: public MyObject
-{
-public:
-	MyDerivedObject() = default;
-	MyDerivedObject(size_t i) {}
-	~MyDerivedObject() = default;
-};
-
 int main(int argc, char** argv)
 {
-	//{
-	//	auto obj = memory::ptr<MyDerivedObject>();
-	//	auto obj2 = memory::ptr<MyDerivedObject>(123);
-	//	auto obj3 = memory::ptr<MyDerivedObject>();
-	//	std::cout << obj << "\n";
-	//	std::cout << obj2 << "\n";
-	//	std::cout << obj3 << "\n";
-	//	std::cout << (uintptr_t)obj3 - (uintptr_t)obj2 << "\n";
-	//	delete obj;
-	//	delete obj2;
-	//	delete obj3;
-	//}
+	using Viewport = tov::rendering::gl::Viewport;
 
-	////MyDerivedObject::reset();
-
-	//auto objs = memory::ptr_array<MyDerivedObject, 3>();
-	//std::cout << &objs[0] << "\n";
-	//std::cout << &objs[1] << "\n";
-	//std::cout << &objs[2] << "\n";
-	//std::cout << (uintptr_t)&objs[0] % alignof(MyDerivedObject) << "\n";
-	//std::cout << (uintptr_t)&objs[1] % alignof(MyDerivedObject) << "\n";
-	//std::cout << (uintptr_t)&objs[2] % alignof(MyDerivedObject) << "\n";
-	//std::cout << (uintptr_t)&objs[2] - (uintptr_t)&objs[1] << "\n";
-	//delete[] objs;
-
-	using Viewport = tov::rendering::gles::Viewport;
-
-	/*tov::rendering::Camera c;
-	tov::rendering::RenderTarget<Viewport> rt(1024, 100);
-	auto v = rt.createViewport(c, 1, 0.5f);
-	v->apply();*/
-
-	const tov::rendering::gles::WindowRendererSupport rendererSupport;
-	const tov::rendering::platforms::win32::WindowPlatformSupportWin32 platformSupport;
+	const tov::rendering::win32::gl::WindowRendererSupport rendererSupport;
+	const tov::rendering::win32::WindowPlatformSupport platformSupport;
 	tov::rendering::RenderWindow<Viewport> window(platformSupport, rendererSupport, 480, 480, false);
 
 	tov::rendering::Camera c;
-	auto vp = window.createViewport(c, 1);
+	auto vp1 = window.createViewport(c, 0, 0.0f, 0.0f, 0.5f, 1.0f, tov::rendering::Colour::Red);
+	auto vp2 = window.createViewport(c, 1, 0.5f, 0.0f, 0.5f, 1.0f, tov::rendering::Colour::Green);
 
 	while(1)
 	{
-		tov::rendering::platforms::win32::WindowEvents::messageHandler();
+		tov::rendering::win32::WindowEvents::messageHandler();
 		window.swapBuffers();
-		vp->apply();
-
+		vp1->apply();
+		vp2->apply();
 	}
 
 #if TOV_COMPILER == TOV_COMPILER_MSVC

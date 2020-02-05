@@ -1,4 +1,4 @@
-#ifndef TOV_RENDERING_WINDOW_FACTOR_H
+#ifndef TOV_RENDERING_WINDOW_FACTORY_H
 #define TOV_RENDERING_WINDOW_FACTORY_H
 
 #include "rendering_core.h"

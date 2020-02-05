@@ -6,11 +6,16 @@ namespace tov
 
 	WindowPlatformComponent::WindowPlatformComponent(Window& parentWindow)
 		: mParentWindow(parentWindow)
+	{}
+
+	void WindowPlatformComponent::create()
 	{
+		_create();
 	}
 
-	WindowPlatformComponent::~WindowPlatformComponent()
+	void WindowPlatformComponent::destroy()
 	{
+		_destroy();
 	}
 
 	TOV_NAMESPACE_END // rendering

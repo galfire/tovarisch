@@ -7,6 +7,7 @@ project ("tovarisch")
 
 ###
 # SIMDe
+
 configure_file(simde.cmake simde/download/CMakeLists.txt)
 execute_process(COMMAND "${CMAKE_COMMAND}" -G "${CMAKE_GENERATOR}" .
   RESULT_VARIABLE result
@@ -47,13 +48,6 @@ set(CATCH_DIR ${CMAKE_CURRENT_BINARY_DIR}/catch/src/)
 add_subdirectory("projects/memory")
 add_subdirectory("projects/math")
 add_subdirectory("projects/rendering")
-add_subdirectory ("projects/rendering_gles")
-
-
-#if(WIN32)
-#	add_subdirectory ("projects/render_system_gl")
-#else()
-#	add_subdirectory ("projects/rendering_gles")
-#endif()
+add_subdirectory("projects/rendering_gl")
 
 add_subdirectory (${EXECUTABLE_SUBDIRECTORY})

@@ -1,5 +1,5 @@
-#ifndef TOV_RENDER_SYSTEM_PIXEL_FORMAT_H
-#define TOV_RENDER_SYSTEM_PIXEL_FORMAT_H
+#ifndef TOV_RENDERING_PIXEL_FORMAT_H
+#define TOV_RENDERING_PIXEL_FORMAT_H
 
 #include <tov/core.h>
 
@@ -12,25 +12,35 @@ namespace tov
 	class PixelFormat
 	{
 	public:
-		PixelFormat(ushort red, ushort blue, ushort green, ushort alpha)
-			: mRedBits(red)
-			, mBlueBits(blue)
-			, mGreenBits(green)
-			, mAlphaBits(alpha)
+		PixelFormat(ushort red, ushort blue, ushort green, ushort alpha, ushort depth, ushort stencil)
+			: mBitsRed(red)
+			, mBitsBlue(blue)
+			, mBitsGreen(green)
+			, mBitsAlpha(alpha)
+			, mBitsDepth(depth)
+			, mBitsStencil(stencil)
 		{}
-		virtual ~PixelFormat(void) = default;
+		virtual ~PixelFormat() = default;
 
-		ushort getRedBits(void) const { return mRedBits; }
-		ushort getBlueBits(void) const { return mBlueBits; }
-		ushort getGreenBits(void) const { return mGreenBits; }
-		ushort getAlphaBits(void) const { return mAlphaBits; }
-		ushort getColourDepth(void) const { return mRedBits + mBlueBits + mGreenBits + mAlphaBits; }
+		ushort getBitsRed() const { return mBitsRed; }
+		ushort getBitsBlue() const { return mBitsBlue; }
+		ushort getBitsGreen() const { return mBitsGreen; }
+		ushort getBitsAlpha() const { return mBitsAlpha; }
+		ushort getBitsColour() const { return mBitsRed + mBitsBlue + mBitsGreen; }
+		ushort getColourDepth() const { return getBitsColour() + mBitsAlpha; }
+		ushort getBitsDepth() const { return mBitsDepth; }
+		ushort getBitsStencil() const { return mBitsStencil; }
 
 	protected:
-		ushort mRedBits;
-		ushort mBlueBits;
-		ushort mGreenBits;
-		ushort mAlphaBits;
+		ushort mBitsRed;
+		ushort mBitsBlue;
+		ushort mBitsGreen;
+		ushort mBitsAlpha;
+		ushort mBitsDepth;
+		ushort mBitsStencil;
+
+	public:
+		static const PixelFormat Default;
 	};
 
 	TOV_NAMESPACE_END // rendering

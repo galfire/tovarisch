@@ -6,6 +6,8 @@
 #include "render_target.h"
 #include "window.h"
 
+#include "pixel_format.h"
+
 namespace tov
 {
 	TOV_NAMESPACE_BEGIN(rendering)
@@ -21,7 +23,9 @@ namespace tov
 			const WindowRendererSupport& rendererSupport,
 			uint width,
 			uint height,
-			bool fullscreen
+			bool fullscreen,
+			bool visible = true,
+			PixelFormat pixelFormat = PixelFormat::Default
 		);
 		~RenderWindow() = default;
 

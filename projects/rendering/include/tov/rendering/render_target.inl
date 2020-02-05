@@ -11,10 +11,12 @@ namespace tov
 	template<class ViewportT>
 	inline RenderTarget<ViewportT>::RenderTarget(
 		uint width,
-		uint height
+		uint height,
+		PixelFormat pixelFormat
 	) noexcept 
 		: mWidth(width)
 		, mHeight(height)
+		, mPixelFormat(pixelFormat)
 	{}
 
 	template<class ViewportT>

@@ -1,5 +1,5 @@
-#ifndef TOV_RENDER_SYSTEM_COLOUR_H
-#define TOV_RENDER_SYSTEM_COLOUR_H
+#ifndef TOV_RENDERING_COLOUR_H
+#define TOV_RENDERING_COLOUR_H
 
 #include <tov/core.h>
 

@@ -10,18 +10,23 @@ namespace tov
 		const WindowRendererSupport& rendererSupport,
 		uint width,
 		uint height,
-		bool fullscreen
+		bool fullscreen,
+		bool visible,
+		PixelFormat pixelFormat
 	)
 		: RenderTarget(
 			width,
-			height
+			height,
+			pixelFormat
 		)
 		, Window(
 			platformSupport,
 			rendererSupport,
 			width,
 			height,
-			fullscreen
+			fullscreen,
+			visible,
+			pixelFormat
 		)
 	{
 	}

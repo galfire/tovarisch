@@ -4,6 +4,7 @@
 #include "rendering_core.h"
 
 #include "colour.h"
+#include "pixel_format.h"
 
 #include <vector>
 
@@ -22,7 +23,8 @@ namespace tov
 	public:
 		inline RenderTarget(
 			uint width,
-			uint height
+			uint height,
+			PixelFormat pixelFormat = PixelFormat::Default
 		) noexcept;
 		virtual ~RenderTarget() noexcept = default;
 
@@ -44,6 +46,7 @@ namespace tov
 	protected:
 		uint mWidth;
 		uint mHeight;
+		PixelFormat mPixelFormat;
 
 		std::vector<std::unique_ptr<Viewport<ViewportT>>> mViewports;
 	};
