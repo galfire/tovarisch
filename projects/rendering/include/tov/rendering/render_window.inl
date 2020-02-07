@@ -14,7 +14,7 @@ namespace tov
 		bool visible,
 		PixelFormat pixelFormat
 	)
-		: RenderTarget(
+		: RenderTarget<ViewportT>(
 			width,
 			height,
 			pixelFormat

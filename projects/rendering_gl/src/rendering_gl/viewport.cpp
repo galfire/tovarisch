@@ -1,5 +1,7 @@
 #include "rendering_gl/viewport.h"
 
+#include <iostream>
+
 #include "rendering_gl/gl_impl.h"
 
 namespace tov
@@ -38,15 +40,15 @@ namespace tov
 		w = getWidth();
 		h = getHeight();
 
-		glViewport(x, y, w, h);
+		::glViewport(x, y, w, h);
 
-		glScissor(x, y, w, h);
-		glEnable(GL_SCISSOR_TEST);
+		::glScissor(x, y, w, h);
+		::glEnable(GL_SCISSOR_TEST);
 
 		GLbitfield flags = 0;
 
 		flags |= GL_COLOR_BUFFER_BIT;
-		glClearColor(
+		::glClearColor(
 			mBackgroundColour.r,
 			mBackgroundColour.g,
 			mBackgroundColour.b,
@@ -54,11 +56,11 @@ namespace tov
 		);
 
 		flags |= GL_DEPTH_BUFFER_BIT;
-		glClearDepth(1.0f);
+		//glClearDepth(1.0f);
 
 		flags |= GL_STENCIL_BUFFER_BIT;
 
-		glClear(flags);
+		::glClear(flags);
 	}
 
 	TOV_NAMESPACE_END // gl

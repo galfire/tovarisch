@@ -11,6 +11,11 @@ include_directories(${SIMDE_DIR})
 include_directories(${CMAKE_SOURCE_DIR}/projects/core/include)
 include_directories(${CMAKE_SOURCE_DIR}/projects/memory/include)
 include_directories(${CMAKE_SOURCE_DIR}/projects/math/include)
+include_directories(${CMAKE_SOURCE_DIR}/projects/rendering/include)
+include_directories(${CMAKE_SOURCE_DIR}/projects/rendering/_platforms/web/include)
+include_directories(${CMAKE_SOURCE_DIR}/projects/rendering_gl/include)
+include_directories(${CMAKE_SOURCE_DIR}/projects/rendering_gl/_platforms/web/include)
+include_directories($ENV{EMSDK}/upstream/emscripten/system/include)
 
 # Add source to this project's executable.
 add_executable (player "player.cpp" "player.h")
@@ -18,6 +23,10 @@ set(CMAKE_EXECUTABLE_SUFFIX ".js")
 
 target_link_libraries(player memory)
 target_link_libraries(player math)
+target_link_libraries(player rendering)
+target_link_libraries(player rendering_gl)
+target_link_libraries(player rendering_web)
+target_link_libraries(player rendering_web_gl)
 
 set_target_properties(player
 	PROPERTIES
@@ -26,5 +35,5 @@ set_target_properties(player
 
 set_target_properties(player
 	PROPERTIES
-	LINK_FLAGS "-s WASM=1 -s USE_WEBGL2=1 -s OFFSCREENCANVAS_SUPPORT=1 -s TOTAL_MEMORY=32MB -s BINARYEN_METHOD='native-wasm' -s EXTRA_EXPORTED_RUNTIME_METHODS='[\"ccall\", \"cwrap\"]'"
+	LINK_FLAGS "-s WASM=1 -s USE_WEBGL2=1 -s FULL_ES3=1 -s FULL_ES2=1 -s OFFSCREENCANVAS_SUPPORT=1 -s TOTAL_MEMORY=32MB -s BINARYEN_METHOD='native-wasm' -s EXTRA_EXPORTED_RUNTIME_METHODS='[\"ccall\", \"cwrap\"]'"
 )

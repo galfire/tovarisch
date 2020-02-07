@@ -11,12 +11,6 @@ include_directories(include/tov)
 file(GLOB_RECURSE SOURCES src/*.cpp)
 add_library(rendering STATIC ${SOURCES})
 
-if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
-	target_compile_definitions(rendering PUBLIC TOV_GLES)
-else()
-	target_compile_definitions(rendering PUBLIC TOV_GL)
-endif()
-
 target_link_libraries(rendering memory)
 target_link_libraries(rendering math)
 
@@ -27,6 +21,7 @@ endif()
 if(WIN32)
 	add_subdirectory(_platforms/win32)
 else()
+	add_subdirectory(_platforms/web)
 endif()
 
 # TESTS

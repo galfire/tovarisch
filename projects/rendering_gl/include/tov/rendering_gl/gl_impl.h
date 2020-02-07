@@ -7,10 +7,10 @@
 #	include <Windows.h>
 #endif
 
-#ifdef TOV_GLES
+#if defined TOV_GLES
 #	include <GLES3/gl31.h>
 #	include <GLES2/gl2ext.h>
-#else ifdef TOV_GL
+#elif defined TOV_GL
 #	include <gl/GL.h>
 #	include <gl/GLU.h>
 #endif

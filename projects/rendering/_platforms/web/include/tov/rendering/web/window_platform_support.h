@@ -1,7 +1,8 @@
 #ifndef TOV_RENDERING_WEB_WINDOW_PLATFORM_SUPPORT_H
 #define TOV_RENDERING_WEB_WINDOW_PLATFORM_SUPPORT_H
 
-#include <rendering/window_platform_support.h>
+#include <tov/rendering/rendering_core.h>
+#include <tov/rendering/window_platform_support.h>
 
 namespace tov
 {
@@ -15,7 +16,7 @@ namespace tov
 		: public rendering::WindowPlatformSupport
 	{
 	public:
-		WindowPlatformSupport() = default;
+		WindowPlatformSupport() noexcept;
 		~WindowPlatformSupport() = default;
 
 		std::unique_ptr<rendering::WindowPlatformComponent> buildComponent(Window& parentWindow) const override;

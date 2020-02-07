@@ -1,9 +1,8 @@
 #ifndef TOV_RENDERING_WEB_WINDOW_PLATFORM_COMPONENT_H
 #define TOV_RENDERING_WEB_WINDOW_PLATFORM_COMPONENT_H
 
-#include <rendering/rendering_core.h>
-
-#include <rendering/window_platform_component.h>
+#include <tov/rendering/rendering_core.h>
+#include <tov/rendering/window_platform_component.h>
 
 namespace tov
 {
@@ -21,6 +20,10 @@ namespace tov
 		~WindowPlatformComponent() = default;
 
 		void swapBuffers() override;
+
+	private:
+		void _create() override;
+		void _destroy() override;
 	};
 
 	TOV_NAMESPACE_END // web

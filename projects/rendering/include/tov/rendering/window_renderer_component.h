@@ -3,11 +3,12 @@
 
 #include "rendering_core.h"
 
+#include "render_context.h"
+
 namespace tov
 {
 	TOV_NAMESPACE_BEGIN(rendering)
 
-	class RenderContext;
 	class Window;
 
 	class WindowRendererComponent

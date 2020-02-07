@@ -4,60 +4,44 @@
 #include "player.h"
 
 #include <tov/core.h>
-#include <tov/memory/heap_area.h>
-#include <tov/memory.h>
 
-#include <tov/memory_config.h>
+#include <tov/rendering/render_target.h>
+#include <tov/rendering/colour.h>
+#include <tov/rendering/camera.h>
+#include <tov/rendering/render_window.h>
 
-#include <tov/math/vector.h>
+#include <tov/rendering/web/window_platform_support.h>
 
-class MyObject
-	: public tov::memory::AllocatedObjectLinear
+#include <tov/rendering_gl/viewport.h>
+
+#include <tov/rendering_gl/window_renderer_support.h>
+
+#include <emscripten/emscripten.h>
+
+using Viewport = tov::rendering::gl::Viewport;
+
+const tov::rendering::web::gl::WindowRendererSupport rendererSupport;
+const tov::rendering::web::WindowPlatformSupport platformSupport;
+tov::rendering::RenderWindow<Viewport> window(platformSupport, rendererSupport, 480, 480, false);
+
+tov::rendering::Camera c;
+tov::rendering::Viewport<Viewport>* vp1;
+tov::rendering::Viewport<Viewport>* vp2;
+
+void oneIteration()
 {
-public:
-	MyObject() = default;
-	virtual ~MyObject() = default;
-};
-
-class MyDerivedObject
-	: public MyObject
-{
-public:
-	MyDerivedObject() = default;
-	MyDerivedObject(size_t i) {};
-	~MyDerivedObject() = default;
-};
+	window.swapBuffers();
+	vp1->apply();
+	vp2->apply();
+	//emscripten_webgl_commit_frame();
+}
 
 int main()
 {
-	/*{
-		auto obj = tov::memory::ptr<MyDerivedObject>();
-		auto obj2 = tov::memory::ptr<MyDerivedObject>(123);
-		auto obj3 = tov::memory::ptr<MyDerivedObject>();
-		std::cout << obj << "\n";
-		std::cout << obj2 << "\n";
-		std::cout << obj3 << "\n";
-		std::cout << (uintptr_t)obj3 - (uintptr_t)obj2 << "\n";
-		delete obj;
-		delete obj2;
-		delete obj3;
-	}
+	vp1 = window.createViewport(c, 0, 0.0f, 0.0f, 0.5f, 1.0f, tov::rendering::Colour::Red);
+	vp2 = window.createViewport(c, 1, 0.5f, 0.0f, 0.5f, 1.0f, tov::rendering::Colour::Green);
 
-	auto objs = tov::memory::ptr_array<MyDerivedObject, 3>();
-	std::cout << &objs[0] << "\n";
-	std::cout << &objs[1] << "\n";
-	std::cout << &objs[2] << "\n";
-	std::cout << (uintptr_t)&objs[0] % alignof(MyDerivedObject) << "\n";
-	std::cout << (uintptr_t)&objs[1] % alignof(MyDerivedObject) << "\n";
-	std::cout << (uintptr_t)&objs[2] % alignof(MyDerivedObject) << "\n";
-	std::cout << (uintptr_t)&objs[2] - (uintptr_t)&objs[1] << "\n";
-	delete[] objs;*/
-
-	tov::math::Vector3 v1(1.0f, 2.0f, 3.0f);
-	tov::math::Vector3 v2(2.0f, 3.0f, 4.0f);
-	auto&& v3 = v1.cross(v2);
-
-	std::cout << v3 << "\n";
+	emscripten_set_main_loop(oneIteration, 30, 1);
 
 	return 0;
 }
