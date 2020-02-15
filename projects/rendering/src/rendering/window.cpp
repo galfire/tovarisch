@@ -12,6 +12,7 @@ namespace tov
 	Window::Window(
 		const WindowPlatformSupport& platformSupport,
 		const WindowRendererSupport& rendererSupport,
+		const char* name,
 		uint width,
 		uint height,
 		bool fullscreen,
@@ -20,6 +21,7 @@ namespace tov
 	)
 		: mPlatformSupport(platformSupport)
 		, mRendererSupport(rendererSupport)
+		, mName(name)
 		, mWidth(width)
 		, mHeight(height)
 		, mFullscreen(fullscreen)

@@ -4,7 +4,7 @@
 
 #include <tov/rendering/web/device_context.h>
 
-#include "/home/brandon/emsdk/upstream/emscripten/system/include/emscripten/emscripten.h"
+#include <emscripten/emscripten.h>
 
 namespace tov
 {
@@ -15,10 +15,7 @@ namespace tov
 	RenderContext::RenderContext(const rendering::DeviceContext& deviceContext)
 		: rendering::RenderContext(deviceContext)
 	{
-		//const char* canvasID = static_cast<const DeviceContext&>(mDeviceContext).getCanvasID();
-		const char* canvasID = nullptr;
-
-		emscripten_set_canvas_element_size("#canvas", 300, 300);
+		const char* canvasID = static_cast<const DeviceContext&>(mDeviceContext).getCanvasID();
 
 		EmscriptenWebGLContextAttributes ctxAttrs;
 		emscripten_webgl_init_context_attributes(&ctxAttrs);

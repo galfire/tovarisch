@@ -3,6 +3,8 @@
 
 #include "math_core.h"
 
+#include "simd.h"
+
 #include <array>
 
 // Not available on all platforms
@@ -15,15 +17,6 @@
 namespace tov
 {
 	TOV_NAMESPACE_BEGIN(math)
-
-	struct SIMD
-	{
-		enum Type
-		{
-			_NONE,
-			_128F
-		};
-	};
 
 	template<class T, size_t Size, SIMD::Type SIMD_T>
 	class VectorMemory
@@ -56,6 +49,26 @@ namespace tov
 			return *this;
 		}
 
+		// Hadamard (element-wise) vector multiplication
+		inline VectorMemory& operator *= (const VectorMemory& vector)
+		{
+			for (int i = 0; i < Size; i++)
+			{
+				_memory[i] *= vector._memory[i];
+			}
+			return *this;
+		}
+
+		// Hadamard (element-wise) vector division
+		inline VectorMemory& operator /= (const VectorMemory& vector)
+		{
+			for (int i = 0; i < Size; i++)
+			{
+				_memory[i] /= vector._memory[i];
+			}
+			return *this;
+		}
+
 		inline VectorMemory& operator *= (T scalar)
 		{
 			for (int i = 0; i < Size; i++)
@@ -78,7 +91,17 @@ namespace tov
 		{
 			for (int i = 0; i < Size; i++)
 			{
-				if (_memory[i] != vector._memory[i])
+				if (std::abs(_memory[i] - vector._memory[i]) > EPSILON)
+					return false;
+			}
+			return true;
+		}
+
+		inline bool operator == (VectorMemory&& vector)
+		{
+			for (int i = 0; i < Size; i++)
+			{
+				if (std::abs(_memory[i] - vector._memory[i]) > EPSILON)
 					return false;
 			}
 			return true;
@@ -88,12 +111,11 @@ namespace tov
 		{
 			for (int i = 0; i < Size; i++)
 			{
-				if (_memory[i] != vector._memory[i])
+				if (std::abs(_memory[i] - vector._memory[i]) >= EPSILON)
 					return true;
 			}
 			return false;
 		}
-
 
 		inline T dot(const VectorMemory& vector) const
 		{
@@ -105,8 +127,32 @@ namespace tov
 			return sum;
 		}
 
+		inline T squaredLength() const
+		{
+			T sum = 0;
+			for (int i = 0; i < Size; i++)
+			{
+				T v = _memory[i];
+				sum += v * v;
+			}
+			return sum;
+		}
+
+		inline VectorMemory& reciprocalAssign()
+		{
+			for (int i = 0; i < Size; i++)
+			{
+				_memory[i] = static_cast<T>(1.0f) / _memory[i];
+			}
+			return *this;
+		}
+
 	protected:
 		std::array<T, Size> _memory;
+
+	private:
+		constexpr static float EPSILON = 9.e-8f;
+
 	};
 
 	template<size_t Size>
@@ -129,6 +175,20 @@ namespace tov
 			return *this;
 		}
 
+		// Hadamard (element-wise) vector multiplication
+		inline VectorMemory& operator *= (const VectorMemory& vector)
+		{
+			_memory = _mm_mul_ps(_memory, vector._memory);
+			return *this;
+		}
+
+		// Hadamard (element-wise) vector division
+		inline VectorMemory& operator /= (const VectorMemory& vector)
+		{
+			_memory = _mm_div_ps(_memory, vector._memory);
+			return *this;
+		}
+
 		inline VectorMemory& operator *= (float scalar)
 		{
 			__m128 scalars = _mm_set1_ps(scalar);
@@ -145,14 +205,24 @@ namespace tov
 
 		inline bool operator == (const VectorMemory& vector) const
 		{
-			__m128 cmp = _mm_cmpeq_ps(_memory, vector._memory);
+			__m128 eps = _mm_set1_ps(EPSILON);
+			__m128 abd = _mm_andnot_ps(
+				_mm_set1_ps(-0.0f),
+				_mm_sub_ps(_memory, vector._memory)
+			);
+			__m128 cmp = _mm_cmplt_ps(abd, eps);
 			uint16_t mask = _mm_movemask_ps(cmp);
 			return mask == 0xF;
 		}
 
 		inline bool operator != (const VectorMemory& vector) const
 		{
-			__m128 cmp = _mm_cmpeq_ps(_memory, vector._memory);
+			__m128 eps = _mm_set1_ps(EPSILON);
+			__m128 abd = _mm_andnot_ps(
+				_mm_set1_ps(-0.0f),
+				_mm_sub_ps(_memory, vector._memory)
+			);
+			__m128 cmp = _mm_cmplt_ps(abd, eps);
 			uint16_t mask = _mm_movemask_ps(cmp);
 			return mask != 0xF;
 		}
@@ -166,8 +236,26 @@ namespace tov
 			return sum;
 		}
 
+		inline float squaredLength() const
+		{
+			__m128 sqr = _mm_mul_ps(_memory, _memory);
+			__m128 hadd = _mm_hadd_ps(sqr, sqr);
+			       hadd = _mm_hadd_ps(hadd, hadd);
+			float sum = reinterpret_cast<float*>(&hadd)[0];
+			return sum;
+		}
+
+		inline VectorMemory& reciprocalAssign()
+		{
+			_memory = _mm_div_ps(_mm_set1_ps(1.0f), _memory);
+			return *this;
+		}
+
 	protected:
 		__m128 _memory;
+
+	public:
+		constexpr static float EPSILON = 9.e-8f;
 	};
 
 	template<class T, SIMD::Type>

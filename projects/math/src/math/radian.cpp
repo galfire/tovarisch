@@ -10,32 +10,9 @@ namespace tov
 		: mValue(degree.valueRadians())
 	{}
 
-	Radian& Radian::operator = (const Degree& rhs)
+	Degree Radian::toDegree() const
 	{
-		mValue = rhs.valueRadians();
-		return *this;
-	}
-
-	Radian Radian::operator + (const Degree& rhs) const
-	{
-		return Radian(mValue + rhs.valueRadians());
-	}
-
-	Radian& Radian::operator += (const Degree& rhs)
-	{
-		mValue += rhs.valueRadians();
-		return *this;
-	}
-
-	Radian Radian::operator - (const Degree& rhs) const
-	{
-		return Radian(mValue - rhs.valueRadians());
-	}
-
-	Radian& Radian::operator -= (const Degree& rhs)
-	{
-		mValue -= rhs.valueRadians();
-		return *this;
+		return Degree(valueDegrees());
 	}
 
 	float Radian::valueDegrees(void) const

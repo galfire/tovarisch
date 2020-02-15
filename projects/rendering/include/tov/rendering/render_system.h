@@ -1,35 +1,50 @@
 #ifndef TOV_RENDERING_RENDER_SYSTEM_H
 #define TOV_RENDERING_RENDER_SYSTEM_H
 
-#include <tov/core.h>
+#include "rendering_core.h"
 
 #include "colour.h"
+#include "render_target_manager.h"
 
 namespace tov
 {
 	TOV_NAMESPACE_BEGIN(rendering)
 
+	template<class Viewport> class RenderWindow;
 	class WindowPlatformSupport;
 	class WindowRendererSupport;
 
+	template<class ViewportT>
 	class RenderSystem
 	{
 	public:
-		RenderSystem(
-			std::reference_wrapper<const WindowPlatformSupport> windowPlatformSupport,
-			std::reference_wrapper<const WindowRendererSupport> windowRendererSupport
-		) noexcept;
-		virtual ~RenderSystem() noexcept;
+		using RenderWindowT = RenderWindow<ViewportT>;
+		using RenderTargetManagerT = RenderTargetManager<ViewportT>;
 
-		std::reference_wrapper<const WindowPlatformSupport> getWindowPlatformSupport() const { return mWindowPlatformSupport; }
-		std::reference_wrapper<const WindowRendererSupport> getWindowRendererSupport() const { return mWindowRendererSupport; }
+	public:
+		RenderSystem(
+			WindowPlatformSupport& windowPlatformSupport,
+			WindowRendererSupport& windowRendererSupport
+		) noexcept;
+		~RenderSystem() noexcept = default;
+
+		const WindowPlatformSupport& getWindowPlatformSupport() const { return mWindowPlatformSupport; }
+		const WindowRendererSupport& getWindowRendererSupport() const { return mWindowRendererSupport; }
+
+		RenderWindowT* createRenderWindow(const char* name, uint width, uint height, bool fullscreen);
+
+		void renderFrame();
 
 	private:
-		std::reference_wrapper<const WindowPlatformSupport> mWindowPlatformSupport;
-		std::reference_wrapper<const WindowRendererSupport> mWindowRendererSupport;
+		WindowPlatformSupport& mWindowPlatformSupport;
+		WindowRendererSupport& mWindowRendererSupport;
+
+		RenderTargetManagerT mRenderTargetManager;
 	};
 
 	TOV_NAMESPACE_END
 }
+
+#include "render_system.inl"
 
 #endif

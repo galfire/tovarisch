@@ -20,6 +20,7 @@ namespace tov
 		Window(
 			const WindowPlatformSupport& platformSupport,
 			const WindowRendererSupport& rendererSupport,
+			const char* name,
 			uint width,
 			uint height,
 			bool fullscreen,
@@ -28,6 +29,7 @@ namespace tov
 		);
 		virtual ~Window() = default;
 
+		const char* getName() const { return mName; }
 		uint getWidth() const { return mWidth; }
 		uint getHeight() const { return mHeight; }
 		bool getFullscreen() const { return mFullscreen; }
@@ -40,6 +42,7 @@ namespace tov
 	protected:
 		const WindowPlatformSupport& mPlatformSupport;
 		const WindowRendererSupport& mRendererSupport;
+		const char* mName;
 		uint mWidth;
 		uint mHeight;
 		bool mFullscreen;

@@ -113,11 +113,9 @@ namespace tov
 		}
 
 		Degree(const Radian& radian);
-		Degree& operator = (const Radian& rhs);
-		Degree operator + (const Radian& rhs) const;
-		Degree& operator += (const Radian& rhs);
-		Degree operator - (const Radian& rhs) const;
-		Degree& operator -= (const Radian& rhs);
+
+		Radian toRadian() const;
+
 		float valueRadians(void) const;
 
 	private:

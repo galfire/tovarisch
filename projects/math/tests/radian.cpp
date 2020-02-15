@@ -271,58 +271,13 @@ TEST_CASE("Radian", "[Radian]")
 		}
 	}
 
-	SECTION("degree assignment operator")
+	SECTION("toDegree")
 	{
-		SECTION("sets the LHS radian to a radian equal to the RHS degree")
+		SECTION("returns an equivalent degree")
 		{
-			tov::math::Degree d(180.0f);
-			tov::math::Radian r(0.0f);
-			r = d;
-			REQUIRE(r.valueRadians() == PI);
-		}
-	}
-
-	SECTION("degree addition")
-	{
-		SECTION("returns a raidan equal to the radian sum of the LHS radian and RHS degree")
-		{
-			tov::math::Radian r(PI);
-			tov::math::Degree d(180.0f);
-			tov::math::Radian rSum = r + d;
-			REQUIRE(rSum.valueRadians() == 2 * PI);
-		}
-	}
-
-	SECTION("degree addition assignment")
-	{
-		SECTION("sets the LHS degree to the degree sum of the LHS degree and RHS radian")
-		{
-			tov::math::Radian r(PI);
-			tov::math::Degree d(180.0f);
-			r += d;
-			REQUIRE(r.valueRadians() == 2 * PI);
-		}
-	}
-
-	SECTION("degree subtraction")
-	{
-		SECTION("returns a degree equal to the degree difference of the LHS degree and RHS radian")
-		{
-			tov::math::Radian r(PI);
-			tov::math::Degree d(180.0f);
-			tov::math::Radian rDiff = r - d;
-			REQUIRE(rDiff.valueRadians() == 0.0f);
-		}
-	}
-
-	SECTION("degree subtraction assignment")
-	{
-		SECTION("sets the LHS degree to the degree difference of the LHS degree and RHS radian")
-		{
-			tov::math::Radian r(PI);
-			tov::math::Degree d(180.0f);
-			r -= d;
-			REQUIRE(r.valueRadians() == 0.0f);
+			tov::math::Radian r(2.0f * tov::math::PI);
+			tov::math::Degree d = r.toDegree();
+			REQUIRE(d.valueDegrees() == 360.0f);
 		}
 	}
 
@@ -331,7 +286,8 @@ TEST_CASE("Radian", "[Radian]")
 		SECTION("returns the value in degrees")
 		{
 			tov::math::Radian r(PI);
-			REQUIRE(r.valueDegrees() == 180.0f);
+			float dr = r.valueDegrees();
+			REQUIRE(dr == 180.0f);
 		}
 	}
 

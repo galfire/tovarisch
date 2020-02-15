@@ -20,6 +20,17 @@ namespace tov
 	{}
 
 	template<class ViewportT>
+	void RenderTarget<ViewportT>::renderViewports()
+	{
+		prerender();
+
+		for (auto&& viewport : mViewports)
+		{
+			viewport->renderCamera();
+		}
+	}
+
+	template<class ViewportT>
 	inline Viewport<ViewportT>* RenderTarget<ViewportT>::createViewport(
 		const Camera& camera,
 		int zIndex,

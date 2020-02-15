@@ -52,5 +52,12 @@ namespace tov
 		static_cast<const ViewportT*>(this)->_apply();
 	}
 
+	template<class ViewportT>
+	void Viewport<ViewportT>::renderCamera()
+	{
+		apply();
+		mCamera.renderScene();
+	}
+
 	TOV_NAMESPACE_END
 }

@@ -20,13 +20,18 @@ namespace tov
 	void WindowRendererComponent::create()
 	{
 		createRenderContext();
-		bool success = mRenderContext->makeCurrent();
+		bool success = makeContextCurrent();
 		assert(success);
 	}
 
 	void WindowRendererComponent::destroy()
 	{
 		// ???
+	}
+
+	bool WindowRendererComponent::makeContextCurrent()
+	{
+		return mRenderContext->makeCurrent();
 	}
 
 	TOV_NAMESPACE_END // rendering

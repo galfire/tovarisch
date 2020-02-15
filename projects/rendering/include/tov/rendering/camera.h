@@ -11,6 +11,8 @@ namespace tov
 	{
 	public:
 		Camera() {}
+
+		void renderScene() const {}
 	};
 
 	TOV_NAMESPACE_END

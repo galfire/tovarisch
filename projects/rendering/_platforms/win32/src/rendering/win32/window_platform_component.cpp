@@ -21,7 +21,7 @@ namespace tov
 		if(mHWnd)
 			destroy();
 
-		const char name[] = "MY WINDOW NAME";
+		const char* name = mParentWindow.getName();
 		const uint width = mParentWindow.getWidth();
 		const uint height = mParentWindow.getHeight();
 		const bool fullscreen = mParentWindow.getFullscreen();

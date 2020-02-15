@@ -18,6 +18,11 @@ namespace tov
 		return std::unique_ptr<rendering::WindowPlatformComponent>(new WindowPlatformComponent(parentWindow));
 	}
 
+	void WindowPlatformSupport::messageHandler()
+	{
+
+	}
+
 	TOV_NAMESPACE_END // web
 	TOV_NAMESPACE_END // rendering
 }

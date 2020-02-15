@@ -17,6 +17,8 @@ namespace tov
 		virtual ~WindowPlatformSupport() = default;
 
 		virtual std::unique_ptr<WindowPlatformComponent> buildComponent(Window& parentWindow) const TOV_ABSTRACT;
+
+		virtual void messageHandler() TOV_ABSTRACT;
 	};
 
 	TOV_NAMESPACE_END

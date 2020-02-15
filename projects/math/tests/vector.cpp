@@ -128,6 +128,58 @@ TEST_CASE("Vector SIMD None", "[Vector]")
 		}
 	}
 
+	SECTION("vector multiplication")
+	{
+		SECTION("returns the Hadamard product of the LHS and RHS vectors")
+		{
+			Vector3 vec1(2.0f, 2.0f, 2.0f);
+			Vector3 vec2(2.0f, 2.0f, 2.0f);
+			Vector3 vecProduct = vec1 * vec2;
+			REQUIRE(vecProduct[0] == 4.0f);
+			REQUIRE(vecProduct[1] == 4.0f);
+			REQUIRE(vecProduct[2] == 4.0f);
+		}
+	}
+
+	SECTION("vector multiplication assignment")
+	{
+		SECTION("sets the LHS vector to the Hadamard product of the LHS and RHS vectors")
+		{
+			Vector3 vec1(2.0f, 2.0f, 2.0f);
+			Vector3 vec2(2.0f, 2.0f, 2.0f);
+			vec1 *= vec2;
+			REQUIRE(vec1[0] == 4.0f);
+			REQUIRE(vec1[1] == 4.0f);
+			REQUIRE(vec1[2] == 4.0f);
+		}
+	}
+
+	SECTION("vector division")
+	{
+		SECTION("returns the Hadamard quotient of the LHS and RHS vectors")
+		{
+			Vector3 vec1(2.0f, 2.0f, 2.0f);
+			Vector3 vec2(2.0f, 2.0f, 2.0f);
+			Vector3 vecQuotient = vec1 / vec2;
+			REQUIRE(vecQuotient[0] == 1.0f);
+			REQUIRE(vecQuotient[1] == 1.0f);
+			REQUIRE(vecQuotient[2] == 1.0f);
+		}
+	}
+
+	SECTION("vector division assignment")
+	{
+		SECTION("sets the LHS vector to the Hadamard quotient of the LHS and RHS vectors")
+		{
+			Vector3 vec1(2.0f, 2.0f, 2.0f);
+			Vector3 vec2(2.0f, 2.0f, 2.0f);
+			vec1 /= vec2;
+			REQUIRE(vec1[0] == 1.0f);
+			REQUIRE(vec1[1] == 1.0f);
+			REQUIRE(vec1[2] == 1.0f);
+		}
+	}
+
 	SECTION("scalar multiplication")
 	{
 		SECTION("returns the product of the LHS vector and the RHS scalar")
@@ -222,6 +274,63 @@ TEST_CASE("Vector SIMD None", "[Vector]")
 			Vector3 vec2(3.0f, 2.0f, 1.0f);
 			float dot = vec1.dot(vec2);
 			REQUIRE(dot == 10.0f);
+		}
+	}
+
+	SECTION("squaredLength")
+	{
+		SECTION("returns the square of the length of the vector")
+		{
+			Vector3 vec(2.0f, 2.0f, 2.0f);
+			float squaredLength = vec.squaredLength();
+			REQUIRE(squaredLength == 12.0f);
+		}
+	}
+
+
+	SECTION("length")
+	{
+		SECTION("returns length of the vector")
+		{
+			Vector3 vec(2.0f, 2.0f, 2.0f);
+			float length = vec.length();
+			REQUIRE(length == std::sqrt(12.0f));
+		}
+	}
+
+	SECTION("reciprocal")
+	{
+		SECTION("returns the vector with the numerator and denominator of each element flipped")
+		{
+			Vector3 vec(2.0f, 2.0f, 2.0f);
+			Vector3 reciprocal = vec.reciprocal();
+			REQUIRE(reciprocal.x == 0.5f);
+			REQUIRE(reciprocal.y == 0.5f);
+			REQUIRE(reciprocal.z == 0.5f);
+		}
+	}
+
+	SECTION("normalize")
+	{
+		SECTION("normalizes the vector")
+		{
+			Vector3 vec(1.0f, 0.0f, 1.0f);
+			vec.normalize();
+			REQUIRE(vec.x == std::sqrt(2.0f) / 2.0f);
+			REQUIRE(vec.y == 0.0f);
+			REQUIRE(vec.z == std::sqrt(2.0f) / 2.0f);
+		}
+	}
+
+	SECTION("normalizedCopy")
+	{
+		SECTION("returns a normalized copy of the vector")
+		{
+			Vector3 vec(1.0f, 0.0f, 1.0f);
+			Vector3 vec2 = vec.normalizedCopy();
+			REQUIRE(vec2.x == std::sqrt(2.0f) / 2.0f);
+			REQUIRE(vec2.y == 0.0f);
+			REQUIRE(vec2.z == std::sqrt(2.0f) / 2.0f);
 		}
 	}
 }
@@ -352,6 +461,58 @@ TEST_CASE("Vector SIMD 128F", "[Vector]")
 		}
 	}
 
+	SECTION("vector multiplication")
+	{
+		SECTION("returns the Hadamard product of the LHS and RHS vectors")
+		{
+			Vector3 vec1(2.0f, 2.0f, 2.0f);
+			Vector3 vec2(2.0f, 2.0f, 2.0f);
+			Vector3 vecProduct = vec1 * vec2;
+			REQUIRE(vecProduct[0] == 4.0f);
+			REQUIRE(vecProduct[1] == 4.0f);
+			REQUIRE(vecProduct[2] == 4.0f);
+		}
+	}
+
+	SECTION("vector multiplication assignment")
+	{
+		SECTION("sets the LHS vector to the Hadamard product of the LHS and RHS vectors")
+		{
+			Vector3 vec1(2.0f, 2.0f, 2.0f);
+			Vector3 vec2(2.0f, 2.0f, 2.0f);
+			vec1 *= vec2;
+			REQUIRE(vec1[0] == 4.0f);
+			REQUIRE(vec1[1] == 4.0f);
+			REQUIRE(vec1[2] == 4.0f);
+		}
+	}
+
+	SECTION("vector division")
+	{
+		SECTION("returns the Hadamard quotient of the LHS and RHS vectors")
+		{
+			Vector3 vec1(2.0f, 2.0f, 2.0f);
+			Vector3 vec2(2.0f, 2.0f, 2.0f);
+			Vector3 vecQuotient = vec1 / vec2;
+			REQUIRE(vecQuotient[0] == 1.0f);
+			REQUIRE(vecQuotient[1] == 1.0f);
+			REQUIRE(vecQuotient[2] == 1.0f);
+		}
+	}
+
+	SECTION("vector division assignment")
+	{
+		SECTION("sets the LHS vector to the Hadamard quotient of the LHS and RHS vectors")
+		{
+			Vector3 vec1(2.0f, 2.0f, 2.0f);
+			Vector3 vec2(2.0f, 2.0f, 2.0f);
+			vec1 /= vec2;
+			REQUIRE(vec1[0] == 1.0f);
+			REQUIRE(vec1[1] == 1.0f);
+			REQUIRE(vec1[2] == 1.0f);
+		}
+	}
+
 	SECTION("scalar multiplication")
 	{
 		SECTION("returns the product of the LHS vector and the RHS scalar")
@@ -446,6 +607,63 @@ TEST_CASE("Vector SIMD 128F", "[Vector]")
 			Vector3 vec2(3.0f, 2.0f, 1.0f);
 			float dot = vec1.dot(vec2);
 			REQUIRE(dot == 10.0f);
+		}
+	}
+
+	SECTION("squaredLength")
+	{
+		SECTION("returns the square of the length of the vector")
+		{
+			Vector3 vec(2.0f, 2.0f, 2.0f);
+			float squaredLength = vec.squaredLength();
+			REQUIRE(squaredLength == 12.0f);
+		}
+	}
+
+
+	SECTION("length")
+	{
+		SECTION("returns length of the vector")
+		{
+			Vector3 vec(2.0f, 2.0f, 2.0f);
+			float length = vec.length();
+			REQUIRE(length == std::sqrt(12.0f));
+		}
+	}
+
+	SECTION("reciprocal")
+	{
+		SECTION("returns the vector with the numerator and denominator of each element flipped")
+		{
+			Vector3 vec(2.0f, 2.0f, 2.0f);
+			Vector3 reciprocal = vec.reciprocal();
+			REQUIRE(reciprocal.x == 0.5f);
+			REQUIRE(reciprocal.y == 0.5f);
+			REQUIRE(reciprocal.z == 0.5f);
+		}
+	}
+
+	SECTION("normalize")
+	{
+		SECTION("normalizes the vector")
+		{
+			Vector3 vec(1.0f, 0.0f, 1.0f);
+			vec.normalize();
+			REQUIRE(vec.x == std::sqrt(2.0f) / 2.0f);
+			REQUIRE(vec.y == 0.0f);
+			REQUIRE(vec.z == std::sqrt(2.0f) / 2.0f);
+		}
+	}
+
+	SECTION("normalizedCopy")
+	{
+		SECTION("returns a normalized copy of the vector")
+		{
+			Vector3 vec(1.0f, 0.0f, 1.0f);
+			Vector3 vec2 = vec.normalizedCopy();
+			REQUIRE(vec2.x == std::sqrt(2.0f) / 2.0f);
+			REQUIRE(vec2.y == 0.0f);
+			REQUIRE(vec2.z == std::sqrt(2.0f) / 2.0f);
 		}
 	}
 }

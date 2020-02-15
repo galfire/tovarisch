@@ -20,6 +20,11 @@ namespace tov
 		return std::unique_ptr<rendering::WindowPlatformComponent>(new WindowPlatformComponent(parentWindow));
 	}
 
+	void WindowPlatformSupport::messageHandler()
+	{
+		WindowEvents::messageHandler();
+	}
+
 	void WindowPlatformSupport::registerWndClasses() const
 	{
 		const uint16_t moduleFlags =

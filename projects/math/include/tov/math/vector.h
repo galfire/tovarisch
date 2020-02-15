@@ -4,11 +4,11 @@
 #include "math_core.h"
 
 #ifdef TOV_DEBUG
+#	include <cassert>
 #	include <ostream>
 #endif
 
 #include <cstring>
-#include <iostream>
 
 #include "vector_component.h"
 
@@ -23,7 +23,7 @@ namespace tov
 	public:
 		using VectorComponent<T, Size, SIMD_T>::VectorComponent;
 
-		VectorT(T f = (T)0)
+		explicit VectorT(T f = (T)0)
 		{
 			std::fill(this->mArr.begin(), this->mArr.end(), f);
 		}
@@ -94,6 +94,31 @@ namespace tov
 			return *this;
 		}
 
+		inline VectorT operator * (const VectorT& vector)
+		{
+			VectorT v = *this;
+			v.mMemory *= vector.mMemory;
+			return v;
+		}
+
+		inline VectorT& operator *= (const VectorT& vector)
+		{
+			this->mMemory *= vector.mMemory;
+			return *this;
+		}
+		inline VectorT operator / (const VectorT& vector)
+		{
+			VectorT v = *this;
+			v.mMemory /= vector.mMemory;
+			return v;
+		}
+
+		inline VectorT& operator /= (const VectorT& vector)
+		{
+			this->mMemory /= vector.mMemory;
+			return *this;
+		}
+
 		inline VectorT operator * (T scalar) const
 		{
 			VectorT v = *this;
@@ -136,6 +161,41 @@ namespace tov
 			return dot;
 		}
 
+		inline T squaredLength() const
+		{
+			return this->mMemory.squaredLength();
+		}
+
+		inline T length() const
+		{
+			return static_cast<T>(std::sqrt(this->squaredLength()));
+		}
+
+		inline VectorT reciprocal() const
+		{
+			VectorT v = *this;
+			v.mMemory.reciprocalAssign();
+			return v;
+		}
+
+		inline VectorT& normalize()
+		{
+			T length = this->length();
+			if (length > 1e-08)
+			{
+				VectorT r(length);
+				*this *= r.reciprocal();
+			}
+			return *this;
+		}
+
+		inline VectorT normalizedCopy() const
+		{
+			VectorT v = *this;
+			v.normalize();
+			return v;
+		}
+
 #ifdef TOV_DEBUG
 		inline friend std::ostream& operator <<
 			(std::ostream& o, const VectorT& vec)
@@ -149,7 +209,14 @@ namespace tov
 			return o;
 		}
 #endif
+
+	public:
+		static const VectorT ZERO;
+		static const VectorT UNIT_SCALE;
 	};
+
+	template<class T, size_t Size, SIMD::Type SIMD_T> const VectorT<T, Size, SIMD_T> VectorT<T, Size, SIMD_T>::ZERO(0);
+	template<class T, size_t Size, SIMD::Type SIMD_T> const VectorT<T, Size, SIMD_T> VectorT<T, Size, SIMD_T>::UNIT_SCALE(1);
 
 	template<class T, size_t Size, SIMD::Type SIMD_T>
 	class VectorTN

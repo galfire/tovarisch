@@ -20,6 +20,8 @@ namespace tov
 		~WindowPlatformSupport() = default;
 
 		std::unique_ptr<rendering::WindowPlatformComponent> buildComponent(Window& parentWindow) const override;
+
+		void messageHandler() override;
 	};
 
 	TOV_NAMESPACE_END // web

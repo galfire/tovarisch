@@ -21,6 +21,7 @@ namespace tov
 		RenderWindow(
 			const WindowPlatformSupport& platformSupport,
 			const WindowRendererSupport& rendererSupport,
+			const char* name,
 			uint width,
 			uint height,
 			bool fullscreen,
@@ -29,6 +30,7 @@ namespace tov
 		);
 		~RenderWindow() = default;
 
+		void prerender() override;
 		void swapBuffers() override;
 	private:
 	};

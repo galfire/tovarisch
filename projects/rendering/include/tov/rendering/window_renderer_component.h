@@ -22,6 +22,8 @@ namespace tov
 		void create();
 		void destroy();
 
+		bool makeContextCurrent();
+
 	protected:
 		virtual void createRenderContext() TOV_ABSTRACT;
 

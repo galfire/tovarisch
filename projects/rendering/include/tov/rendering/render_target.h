@@ -28,10 +28,13 @@ namespace tov
 		) noexcept;
 		virtual ~RenderTarget() noexcept = default;
 
+		void renderViewports();
+		virtual void prerender() {}
+
 		virtual void swapBuffers() TOV_ABSTRACT;
 
-		uint getWidth() const noexcept { return mWidth; }
-		uint getHeight() const noexcept { return mHeight; }
+		inline uint getWidth() const noexcept { return mWidth; }
+		inline uint getHeight() const noexcept { return mHeight; }
 
 		inline Viewport<ViewportT>* createViewport(
 			const Camera& camera,

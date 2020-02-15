@@ -20,6 +20,8 @@ namespace tov
 
 		std::unique_ptr<rendering::WindowPlatformComponent> buildComponent(Window& parentWindow) const override;
 
+		void messageHandler() override;
+
 	private:
 		void registerWndClasses() const;
 	};

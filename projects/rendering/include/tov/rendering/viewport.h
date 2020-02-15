@@ -32,6 +32,8 @@ namespace tov
 		
 		void apply() const;
 
+		void renderCamera();
+
 		uint getLeft() const { return mLeft; }
 		uint getTop() const { return mTop; }
 		uint getWidth() const { return mWidth; }

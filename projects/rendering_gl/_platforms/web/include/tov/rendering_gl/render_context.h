@@ -5,7 +5,7 @@
 
 #include <tov/rendering/render_context.h>
 
-#include "/home/brandon/emsdk/upstream/emscripten/system/include/emscripten/html5.h"
+#include <emscripten/html5.h>
 
 namespace tov
 {

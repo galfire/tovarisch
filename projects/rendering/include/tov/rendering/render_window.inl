@@ -8,6 +8,7 @@ namespace tov
 	RenderWindow<ViewportT>::RenderWindow(
 		const WindowPlatformSupport& platformSupport,
 		const WindowRendererSupport& rendererSupport,
+		const char* name,
 		uint width,
 		uint height,
 		bool fullscreen,
@@ -22,6 +23,7 @@ namespace tov
 		, Window(
 			platformSupport,
 			rendererSupport,
+			name,
 			width,
 			height,
 			fullscreen,
@@ -29,6 +31,12 @@ namespace tov
 			pixelFormat
 		)
 	{
+	}
+
+	template<class ViewportT>
+	void RenderWindow<ViewportT>::prerender()
+	{
+		mRendererComponent->makeContextCurrent();
 	}
 
 	template<class ViewportT>
