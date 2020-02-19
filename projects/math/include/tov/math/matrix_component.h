@@ -7,6 +7,7 @@
 #include "vector.h"
 
 #include <cstring>
+#include <vector>
 
 namespace tov
 {

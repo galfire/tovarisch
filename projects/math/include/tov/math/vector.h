@@ -271,7 +271,16 @@ namespace tov
 			this->mMemory.crossAssign(vector.mMemory);
 			return *this;
 		}
+
+	public:
+		static const VectorT3 UNIT_X;
+		static const VectorT3 UNIT_Y;
+		static const VectorT3 UNIT_Z;
 	};
+
+	template<class T, SIMD::Type SIMD_T> const VectorT3<T, SIMD_T> VectorT3<T, SIMD_T>::UNIT_X = VectorT3(1, 0, 0);
+	template<class T, SIMD::Type SIMD_T> const VectorT3<T, SIMD_T> VectorT3<T, SIMD_T>::UNIT_Y = VectorT3(0, 1, 0);
+	template<class T, SIMD::Type SIMD_T> const VectorT3<T, SIMD_T> VectorT3<T, SIMD_T>::UNIT_Z = VectorT3(0, 0, 1);
 
 	using Vector3 = VectorT3<float, SIMD::_128F>;
 

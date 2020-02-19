@@ -16,7 +16,7 @@ namespace tov
 	public:
 		Viewport(
 			const RenderTarget<Viewport>& renderTarget,
-			const Camera& camera,
+			Camera& camera,
 			int zIndex,
 			float normalizedLeft = 0.0f,
 			float normalizedTop = 0.0f,

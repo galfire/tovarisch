@@ -561,7 +561,7 @@ TEST_CASE("Vector SIMD 128F", "[Vector]")
 		}
 	}
 
-	SECTION("equal comparison")
+	SECTION("equality operator")
 	{
 		SECTION("returns true when the LHS and RHS vectors are equal")
 		{
@@ -580,7 +580,7 @@ TEST_CASE("Vector SIMD 128F", "[Vector]")
 		}
 	}
 
-	SECTION("not equal comparison")
+	SECTION("inequality operator")
 	{
 		SECTION("returns false when the LHS and RHS vectors are equal")
 		{

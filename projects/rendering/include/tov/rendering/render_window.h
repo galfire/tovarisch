@@ -38,6 +38,6 @@ namespace tov
 	TOV_NAMESPACE_END // rendering
 }
 
-#include "tov/rendering/render_window.inl"
+#include "render_window.inl"
 
 #endif

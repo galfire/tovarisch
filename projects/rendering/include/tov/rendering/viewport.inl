@@ -8,7 +8,7 @@ namespace tov
 	template<class ViewportT>
 	inline Viewport<ViewportT>::Viewport(
 		const RenderTarget<ViewportT>& renderTarget,
-		const Camera& camera,
+		Camera& camera,
 		int zIndex,
 		float normalizedLeft,
 		float normalizedTop,
@@ -43,7 +43,7 @@ namespace tov
 		mWidth = static_cast<uint>(mNormalizedWidth * width);
 		mHeight = static_cast<uint>(mNormalizedHeight * height);
 
-		//mCamera.get().setAspectRatio((float)mWidth / float(mHeight));
+		mCamera.setAspectRatio((float)mWidth / float(mHeight));
 	}
 
 	template<class ViewportT>

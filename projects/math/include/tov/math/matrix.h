@@ -10,6 +10,7 @@
 #endif
 
 #include <cassert>
+#include <cstring>
 
 namespace tov
 {
@@ -23,6 +24,33 @@ namespace tov
 		using Base = MatrixComponent<T, Rows, Columns, SIMD_T>;
 		using Base::MatrixComponent;
 		using Row = typename Base::Row;
+
+		static MatrixT buildIdentity()
+		{
+			assert(Base::ROWS == Base::COLUMNS);
+			MatrixT m(0);
+			for (size_t i = 0; i < Base::ROWS; i++)
+			{
+				m[i][i] = static_cast<T>(1);
+			}
+			return m;
+		}
+
+		explicit MatrixT(T f = (T)0)
+		{
+			std::fill(this->mArr.begin(), this->mArr.end(), f);
+		}
+
+		MatrixT(const MatrixT& matrix)
+		{
+			memcpy(this->mArr.data(), matrix.mArr.data(), Base::SIZE_ACTUAL * sizeof(T));
+		}
+
+		inline MatrixT& operator = (const MatrixT& matrix)
+		{
+			memcpy(this->mArr.data(), matrix.mArr.data(), Base::SIZE_ACTUAL * sizeof(T));
+			return *this;
+		}
 
 		inline const Row& operator [] (const size_t i) const
 		{
@@ -50,7 +78,7 @@ namespace tov
 		}
 
 		template<class U>
-		MatrixT<T, Base::ROWS, U::COLUMNS, SIMD_T> concatenate(const U& matrix)
+		MatrixT<T, Base::ROWS, U::COLUMNS, SIMD_T> concatenate(const U& matrix) const
 		{
 			assert(Base::COLUMNS == U::ROWS);
 			
@@ -69,9 +97,16 @@ namespace tov
 		}
 
 		template<class U>
-		MatrixT<T, Base::ROWS, U::COLUMNS, SIMD_T> operator * (const U& matrix)
+		MatrixT<T, Base::ROWS, U::COLUMNS, SIMD_T> operator * (const U& matrix) const
 		{
 			return this->concatenate(matrix);
+		}
+
+		template<class U>
+		MatrixT<T, Base::ROWS, U::COLUMNS, SIMD_T>& operator *= (const U& matrix)
+		{
+			*this = this->concatenate(matrix);
+			return *this;
 		}
 
 #ifdef TOV_DEBUG
@@ -91,11 +126,21 @@ namespace tov
 			o << " )";
 			return o;
 		}
-	};
 #endif
 
+	public:
+		static const MatrixT ZERO;
+		static const MatrixT IDENTITY;
+	};
+
 	template<class T, size_t Rows, size_t Columns, SIMD::Type SIMD_T>
-	using Matrix = MatrixT<T, Rows, Columns, SIMD_T>;
+	const MatrixT<T, Rows, Columns, SIMD_T> MatrixT<T, Rows, Columns, SIMD_T>::ZERO(0);
+
+	template<class T, size_t Rows, size_t Columns, SIMD::Type SIMD_T>
+	const MatrixT<T, Rows, Columns, SIMD_T> MatrixT<T, Rows, Columns, SIMD_T>::IDENTITY = MatrixT<T, Rows, Columns, SIMD_T>::buildIdentity();
+
+	template<size_t Rows, size_t Columns, SIMD::Type SIMD_T = SIMD::_NONE>
+	using Matrix = MatrixT<float, Rows, Columns, SIMD_T>;
 
 	using Matrix3 = MatrixT<float, 3, 3, SIMD::_128F>;
 	using Matrix4 = MatrixT<float, 4, 4, SIMD::_128F>;

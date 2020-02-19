@@ -30,8 +30,7 @@ namespace tov
 			visible,
 			pixelFormat
 		)
-	{
-	}
+	{}
 
 	template<class ViewportT>
 	void RenderWindow<ViewportT>::prerender()

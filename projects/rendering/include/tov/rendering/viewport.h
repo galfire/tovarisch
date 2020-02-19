@@ -18,7 +18,7 @@ namespace tov
 	public:
 		explicit inline Viewport(
 			const RenderTarget<ViewportT>& renderTarget,
-			const Camera& camera,
+			Camera& camera,
 			int zIndex,
 			float normalizedLeft = 0.0f,
 			float normalizedTop = 0.0f,
@@ -41,7 +41,7 @@ namespace tov
 
 	protected:
 		const RenderTarget<ViewportT>& mRenderTarget;
-		const Camera& mCamera;
+		Camera& mCamera;
 
 		int mZIndex;
 

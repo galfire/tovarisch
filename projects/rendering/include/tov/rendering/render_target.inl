@@ -32,7 +32,7 @@ namespace tov
 
 	template<class ViewportT>
 	inline Viewport<ViewportT>* RenderTarget<ViewportT>::createViewport(
-		const Camera& camera,
+		Camera& camera,
 		int zIndex,
 		float normalizedLeft,
 		float normalizedTop,

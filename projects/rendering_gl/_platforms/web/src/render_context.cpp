@@ -31,7 +31,6 @@ namespace tov
 		switch (result)
 		{
 		case EMSCRIPTEN_RESULT_SUCCESS:
-			std::cout << "MAKE CURRENT SUCCESSFUL\n";
 			return true;
 		case EMSCRIPTEN_RESULT_DEFERRED:
 			std::cout << "EMSCRIPTEN_RESULT_DEFERRED\n";

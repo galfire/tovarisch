@@ -2,11 +2,9 @@
 
 #include <tov/math/matrix.h>
 
-#include <iostream>
-
 TEST_CASE("Matrix", "[Matrix]")
 {
-	using Matrix = tov::math::Matrix<float, 3, 3, tov::math::SIMD::_128F>;
+	using Matrix = tov::math::Matrix<3, 3, tov::math::SIMD::_128F>;
 
 	SECTION("element constructor")
 	{
@@ -52,7 +50,6 @@ TEST_CASE("Matrix", "[Matrix]")
 			REQUIRE(mT[2][1] == 3.0f);
 			REQUIRE(mT[2][2] == 3.0f);
 		}
-		
 	}
 
 	SECTION("concatenate")

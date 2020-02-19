@@ -37,7 +37,7 @@ namespace tov
 		inline uint getHeight() const noexcept { return mHeight; }
 
 		inline Viewport<ViewportT>* createViewport(
-			const Camera& camera,
+			Camera& camera,
 			int zIndex,
 			float normalizedLeft = 0.0f,
 			float normalizedTop = 0.0f,

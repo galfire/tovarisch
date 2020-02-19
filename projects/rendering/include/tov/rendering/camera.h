@@ -3,16 +3,37 @@
 
 #include "rendering_core.h"
 
+#include <tov/math/radian.h>
+
+#include "scene_object.h"
+
+#include "transform.h"
+#include "view_frustum.h"
+
 namespace tov
 {
 	TOV_NAMESPACE_BEGIN(rendering)
 
 	class Camera
+		: public SceneObject
 	{
 	public:
-		Camera() {}
+		Camera() noexcept;
 
-		void renderScene() const {}
+		void setNearDistance(float nearDistance);
+		void setFarDistance(float farDistance);
+		void setAspectRatio(float aspectRatio);
+		void setFieldOfView(math::Radian fieldOfView);
+
+		void renderScene();
+
+	private:
+		void buildProjectionMatrix(void);
+		void buildViewMatrix(void);
+
+	private:
+		Transform mCachedTransform;
+		ViewFrustum<Projection::PERSPECTIVE> mViewFrustum;
 	};
 
 	TOV_NAMESPACE_END
