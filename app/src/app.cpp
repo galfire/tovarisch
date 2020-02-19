@@ -15,6 +15,9 @@
 #include <tov/rendering/render_target.h>
 #include <tov/rendering/colour.h>
 #include <tov/rendering/camera.h>
+#include <tov/rendering/entity.h>
+#include <tov/rendering/mesh_component.h>
+#include <tov/rendering/mesh/mesh.h>
 #include <tov/rendering/render_system.h>
 #include <tov/rendering/render_window.h>
 #include <tov/rendering/scene.h>
@@ -52,12 +55,20 @@ int main(int argc, char** argv)
 	auto window2 = rs.createRenderWindow("canvas2", 640, 180, false);
 	auto vp3 = window2->createViewport(c, 2, 0.0f, 0.0f, 1.0f, 1.0f, tov::rendering::Colour::Blue);
 
+	auto entity = scene.createEntity();
+
+	tov::rendering::mesh::Mesh mesh;
+	auto meshComponent = entity->createMeshComponent(mesh);
+
+	tov::rendering::SceneNode node2;
+	node2.attachSceneObject(entity);
+
 	while(1)
 	{
 		tov::math::Radian r(0.1f);
 		tov::math::Vector3 axis = tov::math::Vector3::UNIT_Y;
 		tov::math::Quaternion rotation(r, axis);
-		node.getTransform().rotate(rotation);
+		node2.getTransform().rotate(rotation);
 		rs.renderFrame();
 	}
 

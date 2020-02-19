@@ -1,6 +1,7 @@
 #include "rendering/scene.h"
 
 #include "rendering/camera.h"
+#include "rendering/entity.h"
 
 namespace tov
 {
@@ -9,6 +10,11 @@ namespace tov
 	Camera* Scene::createCamera()
 	{
 		return create<Camera>();
+	}
+
+	Entity* Scene::createEntity()
+	{
+		return create<Entity>();
 	}
 
 	TOV_NAMESPACE_END // rendering

@@ -12,6 +12,7 @@ namespace tov
 	TOV_NAMESPACE_BEGIN(rendering)
 
 	class Camera;
+	class Entity;
 
 	class Scene
 	{
@@ -22,7 +23,7 @@ namespace tov
 		~Scene() = default;
 
 		template<class T, class... U>
-		T* create(U&& ...args)
+		T* create(U&&... args)
 		{
 			auto sceneObject = std::unique_ptr<T>(
 				new T(std::forward<U>(args)...)
@@ -33,6 +34,7 @@ namespace tov
 		}
 
 		Camera* createCamera();
+		Entity* createEntity();
 
 	private:
 		using SceneObjectList = std::vector<SceneObjectUPtr>;
