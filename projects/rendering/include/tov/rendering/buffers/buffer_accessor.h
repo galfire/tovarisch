@@ -4,20 +4,20 @@
 #include <tov/rendering/rendering_core.h>
 
 #include <tov/core/functional.h>
-#include <tov/rendering/buffers/usage_settings.h>
+#include <tov/rendering/buffers/access_settings.h>
 
 namespace tov
 {
 	TOV_NAMESPACE_BEGIN(rendering)
 	TOV_NAMESPACE_BEGIN(buffers)
 
-	template<class ReaderT, class WriterT, UsageSettings usageSettings>
+	template<class ReaderT, class WriterT, AccessSettings accessSettings>
 	class BufferAccessor
 	{
 	private:
-		template<class ReaderT, UsageSettings settings> class Reader {};
-		template<class ReaderT>
-		class Reader<ReaderT, UsageSettings::READ>
+		template<AccessSettings> class Reader {};
+		template<>
+		class Reader<AccessSettings::READ>
 		{
 		public:
 			template<class... U>
@@ -34,17 +34,17 @@ namespace tov
 		private:
 			ReaderT mReader;
 		};
-		template<class ReaderT>
-		class Reader<ReaderT, UsageSettings::NO_READ>
+		template<>
+		class Reader<AccessSettings::NO_READ>
 		{
 		public:
 			template<class... U> Reader(U&&... args) {}
 			void read(size_t offset, size_t length, void* pDest) {}
 		};
 
-		template<class WriterT, UsageSettings settings> class Writer {};
-		template<class WriterT>
-		class Writer<WriterT, UsageSettings::WRITE>
+		template<AccessSettings> class Writer {};
+		template<>
+		class Writer<AccessSettings::WRITE>
 		{
 		public:
 			template<class... U>
@@ -61,8 +61,8 @@ namespace tov
 		private:
 			WriterT mWriter;
 		};
-		template<class WriterT>
-		class Writer<WriterT, UsageSettings::NO_WRITE>
+		template<>
+		class Writer<AccessSettings::NO_WRITE>
 		{
 		public:
 			template<class... U> Writer(U&&... args) {}
@@ -70,9 +70,9 @@ namespace tov
 		};
 
 	private:
-		static const bitwise_and<UsageSettings> evaluator;
-		static constexpr UsageSettings WRITE_ENABLED = evaluator(usageSettings, UsageSettings::WRITE);
-		static constexpr UsageSettings READ_ENABLED = evaluator(usageSettings, UsageSettings::READ);
+		static const bitwise_and<AccessSettings> evaluator;
+		static constexpr AccessSettings WRITE_ENABLED = evaluator(accessSettings, AccessSettings::WRITE);
+		static constexpr AccessSettings READ_ENABLED = evaluator(accessSettings, AccessSettings::READ);
 
 	public:
 		template<class... U>
@@ -93,8 +93,8 @@ namespace tov
 		}
 
 	private:
-		Reader<ReaderT, READ_ENABLED> mReader;
-		Writer<WriterT, WRITE_ENABLED> mWriter;
+		Reader<READ_ENABLED> mReader;
+		Writer<WRITE_ENABLED> mWriter;
 	};
 
 	TOV_NAMESPACE_END // buffers

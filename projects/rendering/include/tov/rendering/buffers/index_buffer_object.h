@@ -1,11 +1,11 @@
-#ifndef TOV_RENDERING_BUFFERS_VERTEX_BUFFER_OBJECT_H
-#define TOV_RENDERING_BUFFERS_VERTEX_BUFFER_OBJECT_H
+#ifndef TOV_RENDERING_BUFFERS_INDEX_BUFFER_OBJECT_H
+#define TOV_RENDERING_BUFFERS_INDEX_BUFFER_OBJECT_H
 
 #include <tov/rendering/rendering_core.h>
 
 #include "buffer_object.h"
 
-#include "vertex_buffer_format.h"
+#include "index_type.h"
 
 namespace tov
 {
@@ -13,29 +13,43 @@ namespace tov
 	TOV_NAMESPACE_BEGIN(buffers)
 
 	template<class ReaderT, class WriterT>
-	class VertexBufferObject
+	class IndexBufferObject
 		: public BufferObject<ReaderT, WriterT, UsageSettings::STATIC, AccessSettings::WRITE>
 	{
+	private:
+		static constexpr size_t getIndexTypeSize(IndexType indexType)
+		{
+			switch (indexType)
+			{
+			case IndexType::BITS_8:
+				return 8;
+			case IndexType::BITS_16:
+				return 16;
+			case IndexType::BITS_32:
+				return 32;
+			}
+		}
+
 	public:
 		template<class... U>
-		VertexBufferObject(
+		IndexBufferObject(
 			BufferObjectManager& manager,
-			VertexBufferFormat format,
-			uint numVertices,
+			IndexType indexType,
+			uint numIndices,
 			U&&... accessorArgs
 		)
 			: BufferObject<ReaderT, WriterT, UsageSettings::STATIC, AccessSettings::WRITE>::BufferObject(
 				manager,
-				format.getVertexFormat().getSize() * numVertices, 
+				getIndexTypeSize(indexType) * numIndices,
 				std::forward<U>(accessorArgs)...
 			)
-			, mFormat(format)
-			, mNumVertices(numVertices)
+			, mIndexType(indexType)
+			, mNumIndices(numIndices)
 		{}
 
 	private:
-		VertexBufferFormat mFormat;
-		uint mNumVertices;
+		IndexType mIndexType;
+		uint mNumIndices;
 	};
 
 	TOV_NAMESPACE_END // buffers 

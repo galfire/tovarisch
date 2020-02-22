@@ -10,15 +10,8 @@ namespace tov
 
 	enum class UsageSettings : unsigned int
 	{
-		// CPU usage settings
-		STATIC	 = 0,
-		DYNAMIC	 = 1,
-		// Can the buffer be read on lock?
-		READ	 = 1 << 1,
-		NO_READ  = 0 << 1,
-		// Can the buffer be written on unlock?
-		WRITE	 = 1 << 2,
-		NO_WRITE = 0 << 2,
+		STATIC = 0,
+		DYNAMIC = 1
 	};
 
 	constexpr UsageSettings operator & (UsageSettings lhs, UsageSettings rhs)

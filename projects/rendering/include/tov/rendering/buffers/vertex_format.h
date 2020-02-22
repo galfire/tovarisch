@@ -25,7 +25,7 @@ namespace tov
 		// The list of attributes should be unique for each semantic.
 		// A semantic should not exist more than once in this list.
 		VertexAttributeList mAttributes;
-		size_t mSize;
+		size_t mSize = 0;
 	};
 
 	TOV_NAMESPACE_END // buffers

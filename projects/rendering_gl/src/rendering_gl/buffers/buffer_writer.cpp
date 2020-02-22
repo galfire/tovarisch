@@ -1,4 +1,4 @@
-#include "rendering_gl/buffers/buffer_reader.h"
+#include "rendering_gl/buffers/buffer_writer.h"
 
 namespace tov
 {
@@ -6,19 +6,19 @@ namespace tov
 	TOV_NAMESPACE_BEGIN(gl)
 	TOV_NAMESPACE_BEGIN(buffers)
 
-	BufferReader::BufferReader(const GLuint& bufferID, GLenum target) noexcept
+	BufferWriter::BufferWriter(const GLuint& bufferID, GLenum target) noexcept
 		: mBufferID(bufferID)
 		, mBufferTarget(target)
 	{
 	}
 
-	void BufferReader::readImpl(size_t offset, size_t length, void* pDest)
+	void BufferWriter::writeImpl(size_t offset, size_t length, void* pSrc)
 	{
 		bindBuffer();
-		//glGetBufferSubData(mBufferTarget, offset, length, pDest);
+		glBufferSubData(mBufferTarget, offset, length, pSrc);
 	}
 
-	void BufferReader::bindBuffer() const
+	void BufferWriter::bindBuffer() const
 	{
 		glBindBuffer(mBufferTarget, mBufferID);
 	}

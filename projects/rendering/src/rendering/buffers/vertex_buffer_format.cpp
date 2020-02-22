@@ -5,14 +5,10 @@ namespace tov
 	TOV_NAMESPACE_BEGIN(rendering)
 	TOV_NAMESPACE_BEGIN(buffers)
 
-	VertexBufferFormat::VertexBufferFormat(SequenceType sequenceType)
+	VertexBufferFormat::VertexBufferFormat(SequenceType sequenceType, VertexFormat vertexFormat)
 		: mSequenceType(sequenceType)
+		, mVertexFormat(vertexFormat)
 	{
-	}
-
-	void VertexBufferFormat::addAttribute(VertexAttribute attribute)
-	{
-		mVertexFormat.addAttribute(attribute);
 	}
 
 	TOV_NAMESPACE_END // buffers

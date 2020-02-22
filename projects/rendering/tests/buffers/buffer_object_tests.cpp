@@ -2,9 +2,11 @@
 
 #include <tov/rendering/buffers/buffer_object.h>
 
+#include <tov/rendering/buffers/access_settings.h>
 #include <tov/rendering/buffers/buffer_object_manager.h>
 #include <tov/rendering/buffers/buffer_reader.h>
 #include <tov/rendering/buffers/buffer_writer.h>
+#include <tov/rendering/buffers/usage_settings.h>
 
 class DummyReader
 	: public tov::rendering::buffers::BufferReader<DummyReader>
@@ -42,9 +44,13 @@ private:
 	void* mDataPtr = nullptr;
 };
 
-template<tov::rendering::buffers::UsageSettings usageSettings>
+using tov::rendering::buffers::AccessSettings;
+using tov::rendering::buffers::LockSettings;
+using tov::rendering::buffers::UsageSettings;
+
+template<UsageSettings usageSettings, AccessSettings accessSettings>
 class DummyBufferObject
-	: public tov::rendering::buffers::BufferObject<DummyReader, DummyWriter, usageSettings>
+	: public tov::rendering::buffers::BufferObject<DummyReader, DummyWriter, usageSettings, accessSettings>
 {
 public:
 	DummyBufferObject(
@@ -52,20 +58,19 @@ public:
 		size_t bytes,
 		int* dataPtr
 	)
-		: tov::rendering::buffers::BufferObject<DummyReader, DummyWriter, usageSettings>(manager, bytes, dataPtr)
+		: tov::rendering::buffers::BufferObject<DummyReader, DummyWriter, usageSettings, accessSettings>(manager, bytes, dataPtr)
 	{}
 };
 
 TEST_CASE("BufferObject", "[BufferObject]")
 {
-	using tov::rendering::buffers::UsageSettings;
-	using tov::rendering::buffers::LockSettings;
-
+	
 	int data = 42;
 
+	const UsageSettings usageSettings = UsageSettings::STATIC;
+	const AccessSettings accessSettings = AccessSettings::READ | AccessSettings::WRITE;
 	tov::rendering::buffers::BufferObjectManager manager;
-	const UsageSettings usageSettings = UsageSettings::STATIC | UsageSettings::READ | UsageSettings::WRITE;
-	auto bufferObject = DummyBufferObject<usageSettings>(manager, sizeof(int), &data);
+	auto bufferObject = DummyBufferObject<usageSettings, accessSettings>(manager, sizeof(int), &data);
 
 	SECTION("lock")
 	{

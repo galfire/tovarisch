@@ -3,6 +3,7 @@
 
 #include <tov/rendering/rendering_core.h>
 
+#include "access_settings.h"
 #include "buffer_accessor.h"
 #include "lock_settings.h"
 #include "usage_settings.h"
@@ -70,13 +71,15 @@ namespace tov
 
 	using BufferObjectUPtr = std::unique_ptr<BufferObjectBase>;
 
-	template<class ReaderT, class WriterT, UsageSettings usageSettings>
+	template<
+		class ReaderT,
+		class WriterT,
+		UsageSettings usageSettings,
+		AccessSettings accessSettings
+	>
 	class BufferObject
 		: public BufferObjectBase
 	{
-		using Reader = ReaderT;
-		using Writer = WriterT;
-
 	public:
 		template<class... U>
 		BufferObject(
@@ -94,7 +97,10 @@ namespace tov
 		void discard() override;
 
 	private:
-		BufferAccessor<Reader, Writer, usageSettings> mBufferAccessor;
+		BufferAccessor<ReaderT, WriterT, accessSettings> mBufferAccessor;
+
+	protected:
+		static const UsageSettings USAGE_SETTINGS = usageSettings;
 	};
 
 	TOV_NAMESPACE_END // buffers

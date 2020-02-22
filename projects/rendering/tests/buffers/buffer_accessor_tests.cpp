@@ -5,7 +5,7 @@
 #include <tov/rendering/buffers/buffer_reader.h>
 #include <tov/rendering/buffers/buffer_writer.h>
 #include <tov/rendering/buffers/lock_settings.h>
-#include <tov/rendering/buffers/usage_settings.h>
+#include <tov/rendering/buffers/access_settings.h>
 
 class DummyReader
 	: public tov::rendering::buffers::BufferReader<DummyReader>
@@ -46,7 +46,7 @@ private:
 
 TEST_CASE("BufferAccessor", "[BufferAccessor]")
 {
-	using tov::rendering::buffers::UsageSettings;
+	using tov::rendering::buffers::AccessSettings;
 	using tov::rendering::buffers::LockSettings;
 
 	int data = 42;
@@ -54,9 +54,9 @@ TEST_CASE("BufferAccessor", "[BufferAccessor]")
 
 	size_t sz = sizeof(int);
 
-	SECTION("with write usage settings")
+	SECTION("with write access settings")
 	{
-		constexpr UsageSettings U = UsageSettings::WRITE;
+		constexpr AccessSettings U = AccessSettings::WRITE;
 		tov::rendering::buffers::BufferAccessor<DummyReader, DummyWriter, U> u(static_cast<void*>(&data));
 		// Read data into scratch, no read
 		u.read(0, sz, &scratch);
@@ -67,10 +67,10 @@ TEST_CASE("BufferAccessor", "[BufferAccessor]")
 		REQUIRE(data == 144);
 	}
 
-	SECTION("with read usage settings")
+	SECTION("with read access settings")
 	{
-		constexpr UsageSettings U = UsageSettings::READ;
-		tov::rendering::buffers::BufferAccessor<Reader, Writer, U> u(static_cast<void*>(&data));
+		constexpr AccessSettings U = AccessSettings::READ;
+		tov::rendering::buffers::BufferAccessor<DummyReader, DummyWriter, U> u(static_cast<void*>(&data));
 		// Read data into scratch
 		u.read(0, sz, &scratch);
 		REQUIRE(scratch == 42);
@@ -80,10 +80,10 @@ TEST_CASE("BufferAccessor", "[BufferAccessor]")
 		REQUIRE(data == 42);
 	}
 
-	SECTION("with read and write usage settings")
+	SECTION("with read and write access settings")
 	{
-		constexpr UsageSettings U = UsageSettings::WRITE | UsageSettings::READ;
-		tov::rendering::buffers::BufferAccessor<Reader, Writer, U> u(static_cast<void*>(&data));
+		constexpr AccessSettings U = AccessSettings::WRITE | AccessSettings::READ;
+		tov::rendering::buffers::BufferAccessor<DummyReader, DummyWriter, U> u(static_cast<void*>(&data));
 		// Read data into scratch
 		u.read(0, sz, &scratch);
 		REQUIRE(scratch == 42);

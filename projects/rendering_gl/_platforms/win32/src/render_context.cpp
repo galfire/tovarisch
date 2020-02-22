@@ -2,6 +2,8 @@
 
 #include <tov/rendering/win32/device_context.h>
 
+#include "rendering_gl/gl_impl.h"
+
 namespace tov
 {
 	TOV_NAMESPACE_BEGIN(rendering)
@@ -13,6 +15,17 @@ namespace tov
 	{
 		HDC hdc = static_cast<const DeviceContext&>(mDeviceContext).getHDC();
 		mGLRC = wglCreateContext(hdc);
+
+		{
+			_makeCurrent();
+			GLenum err = glewInit();
+			if (GLEW_OK != err)
+			{
+				/* Problem: glewInit failed, something is seriously wrong. */
+				fprintf(stderr, "Error: %s\n", glewGetErrorString(err));
+			}
+			fprintf(stdout, "Status: Using GLEW %s\n", glewGetString(GLEW_VERSION));
+		}
 	}
 
 	bool RenderContext::_makeCurrent()

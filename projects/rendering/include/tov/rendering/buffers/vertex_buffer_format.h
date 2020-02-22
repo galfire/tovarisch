@@ -23,13 +23,11 @@ namespace tov
 		};
 
 	public:
-		VertexBufferFormat(SequenceType sequenceType);
+		VertexBufferFormat(SequenceType sequenceType, VertexFormat vertexFormat);
 		~VertexBufferFormat() = default;
 
-		void addAttribute(VertexAttribute attribute);
-
 		SequenceType getSequenceType() const { return mSequenceType; }
-		size_t getVertexSize() const { return mVertexFormat.getSize(); }
+		VertexFormat getVertexFormat() const { return mVertexFormat; }
 
 	private:
 		SequenceType mSequenceType;
