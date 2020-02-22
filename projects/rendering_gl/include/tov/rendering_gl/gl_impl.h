@@ -11,6 +11,7 @@
 #	include <GLES3/gl31.h>
 #	include <GLES2/gl2ext.h>
 #elif defined TOV_GL
+#	include <gl/glew.h>
 #	include <gl/GL.h>
 #	include <gl/GLU.h>
 #endif

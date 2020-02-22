@@ -51,10 +51,19 @@ target_link_libraries(rendering_gl rendering)
 
 if(${GL_IMPL} EQUAL ${GL_IMPL_GL})
 	target_compile_definitions(rendering_gl PUBLIC TOV_GL)
+	
 	find_package(OpenGL REQUIRED COMPONENTS OpenGL)
 	target_link_libraries(rendering_gl ${OPENGL_LIBRARIES})
+
+	include_directories(${CMAKE_SOURCE_DIR}/projects/rendering_gl/gl)
+	if(${COMPILER} EQUAL ${COMPILER_MSVC})
+		add_library(glew STATIC IMPORTED)
+		set_target_properties(glew PROPERTIES IMPORTED_LOCATION ${CMAKE_SOURCE_DIR}/projects/rendering_gl/lib/Win32/glew32s.lib)
+		target_link_libraries(rendering_gl glew)
+	endif()
 elseif(${GL_IMPL} EQUAL ${GL_IMPL_GLES})
 	target_compile_definitions(rendering_gl PUBLIC TOV_GLES)
+	
 	find_library(glfw3 REQUIRED)
 	target_link_libraries(rendering_gl glfw)
 endif()

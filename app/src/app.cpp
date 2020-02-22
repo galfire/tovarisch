@@ -23,6 +23,8 @@
 #include <tov/rendering/scene.h>
 #include <tov/rendering/scene_node.h>
 
+#include <tov/rendering/buffers/vertex_attribute.h>
+
 #include <tov/rendering/win32/window_platform_support.h>
 #include <tov/rendering/win32/window_events.h>
 
@@ -62,6 +64,10 @@ int main(int argc, char** argv)
 
 	tov::rendering::SceneNode node2;
 	node2.attachSceneObject(entity);
+
+	tov::rendering::buffers::VertexAttribute a = tov::rendering::buffers::VertexAttribute::POSITION;
+	std::cout << "SIZE: " << a.getSize() << "\n";
+
 
 	while(1)
 	{

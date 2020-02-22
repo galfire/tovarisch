@@ -1,7 +1,5 @@
 #include "rendering_gl/viewport.h"
 
-#include <iostream>
-
 #include "rendering_gl/gl_impl.h"
 
 namespace tov

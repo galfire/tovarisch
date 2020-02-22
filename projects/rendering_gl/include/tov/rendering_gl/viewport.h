@@ -1,5 +1,5 @@
-#ifndef TOV_RENDERING_GLES_VIEWPORT_H
-#define TOV_RENDERING_GLES_VIEWPORT_H
+#ifndef TOV_RENDERING_GL_VIEWPORT_H
+#define TOV_RENDERING_GL_VIEWPORT_H
 
 #include <tov/rendering/viewport.h>
 
