@@ -18,16 +18,17 @@ namespace tov
 
 		{
 			_makeCurrent();
+
+			// TODO: Move to platform support after dummy context creation
 			GLenum err = glewInit();
 			if (GLEW_OK != err)
 			{
 				/* Problem: glewInit failed, something is seriously wrong. */
 				fprintf(stderr, "Error: %s\n", glewGetErrorString(err));
 			}
-			fprintf(stdout, "Status: Using GLEW %s\n", glewGetString(GLEW_VERSION));
+			//fprintf(stdout, "Status: Using GLEW %s\n", glewGetString(GLEW_VERSION));
 
-			glEnable(GL_DEBUG_OUTPUT);
-			glDebugMessageCallback(MessageCallback, 0);
+			enableGLOutput();
 		}
 	}
 
