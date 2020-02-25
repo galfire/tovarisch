@@ -3,6 +3,9 @@
 
 #include <tov/rendering/rendering_core.h>
 
+#include "index_data.h"
+#include "vertex_data.h"
+
 namespace tov
 {
 	TOV_NAMESPACE_BEGIN(rendering)
@@ -15,6 +18,10 @@ namespace tov
 	public:
 		Submesh() = default;
 		~Submesh() = default;
+
+	private:
+		IndexDataUPtr mIndexData;
+		VertexDataUPtr mVertexData;
 	};
 
 	using SubmeshUPtr = std::unique_ptr<Submesh>;

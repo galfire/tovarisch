@@ -11,7 +11,8 @@ namespace tov
 	enum class UsageSettings : unsigned int
 	{
 		STATIC = 0,
-		DYNAMIC = 1
+		DYNAMIC = 1,
+		STREAM = 2
 	};
 
 	constexpr UsageSettings operator & (UsageSettings lhs, UsageSettings rhs)

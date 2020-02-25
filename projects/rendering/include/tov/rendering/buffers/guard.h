@@ -8,12 +8,12 @@ namespace tov
 	TOV_NAMESPACE_BEGIN(rendering)
 	TOV_NAMESPACE_BEGIN(buffers)
 
-	template<class BufferObjectT>
+	template<class BufferT>
 	class Guard
 	{
 	public:
 		template<class... U>
-		Guard(BufferObjectT& buffer, U&&... args)
+		Guard(BufferT& buffer, U&&... args)
 			: mBuffer(buffer)
 		{
 			mLock = mBuffer.lock(std::forward<U>(args)...);
@@ -22,12 +22,13 @@ namespace tov
 		~Guard()
 		{
 			mBuffer.unlock();
+			mLock = nullptr;
 		}
 
 		void* getLock() const { return mLock; }
 
 	private:
-		BufferObjectT& mBuffer;
+		BufferT& mBuffer;
 		void* mLock = nullptr;
 	};
 

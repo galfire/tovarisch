@@ -23,16 +23,12 @@
 #include <tov/rendering/scene.h>
 #include <tov/rendering/scene_node.h>
 
-#include <tov/rendering/buffers/buffer_object_manager.h>
-#include <tov/rendering/buffers/vertex_buffer_format.h>
-#include <tov/rendering/buffers/vertex_attribute.h>
-#include <tov/rendering/buffers/vertex_format.h>
-#include <tov/rendering/buffers/lock_settings.h>
+#include <tov/rendering_gl/buffers/buffer_manager.h>
+#include <tov/rendering_gl/buffers/buffer.h>
+#include <tov/rendering/buffers/index_buffer_object.h>
 #include <tov/rendering/buffers/index_type.h>
-
-#include <tov/rendering_gl/buffers/vertex_buffer_object.h>
-#include <tov/rendering_gl/buffers/index_buffer_object.h>
-
+#include <tov/rendering/buffers/access_settings.h>
+#include <tov/rendering/buffers/usage_settings.h>
 
 #include <tov/rendering/win32/window_platform_support.h>
 #include <tov/rendering/win32/window_events.h>
@@ -73,36 +69,17 @@ int main(int argc, char** argv)
 	tov::rendering::SceneNode node2;
 	node2.attachSceneObject(entity);
 
-	tov::rendering::buffers::BufferObjectManager manager;
-
-	tov::rendering::buffers::VertexFormat vertexFormat;
-	vertexFormat.addAttribute(tov::rendering::buffers::VertexAttribute::POSITION);
-	vertexFormat.addAttribute(tov::rendering::buffers::VertexAttribute::NORMAL);
-	vertexFormat.addAttribute(tov::rendering::buffers::VertexAttribute::TEXTURE_COORDINATE);
-	std::cout << vertexFormat.getSize() << "\n";
-	tov::rendering::buffers::VertexBufferFormat format(tov::rendering::buffers::VertexBufferFormat::SequenceType::SEQUENTIAL, vertexFormat);
-	tov::rendering::gl::buffers::VertexBufferObject vbo(manager, format, 10);
-	vbo.lock(tov::rendering::buffers::LockSettings::WRITE);
-	vbo.unlock();
-
-	int numIndices = 10;
-
-	tov::rendering::buffers::IndexType indexType;
-	if (numIndices < 2^8)
 	{
-		indexType = tov::rendering::buffers::IndexType::BITS_8;
+		using UsageSettings = tov::rendering::buffers::UsageSettings;
+		using AccessSettings = tov::rendering::buffers::AccessSettings;
+		using IndexType = tov::rendering::buffers::IndexType;
+		
+		tov::rendering::gl::buffers::BufferManager manager;
+		auto buffer = manager.createIndexBuffer<UsageSettings::STATIC, AccessSettings::WRITE>(128);
+		tov::rendering::buffers::IndexBufferObject ibo(*buffer);
+		void* lock = ibo.lock(tov::rendering::buffers::LockSettings::WRITE);
+		ibo.unlock();
 	}
-	else if (numIndices < 2^16)
-	{
-		indexType = tov::rendering::buffers::IndexType::BITS_16;
-	}
-	else
-	{
-		indexType = tov::rendering::buffers::IndexType::BITS_32;
-	}
-	tov::rendering::gl::buffers::IndexBufferObject ibo(manager, indexType, 10);
-	ibo.lock(tov::rendering::buffers::LockSettings::WRITE);
-	ibo.unlock();
 
 	while(1)
 	{

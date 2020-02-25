@@ -1,0 +1,7 @@
+#ifndef TOV_RENDERING_TESTS_BUFFERS_BUFFER_TEST_HELPER_H
+#define TOV_RENDERING_TESTS_BUFFERS_BUFFER_TEST_HELPER_H
+
+#include "../test_helper.h"
+
+
+#endif

@@ -624,8 +624,8 @@ var wasmMemory;
 // In the wasm backend, we polyfill the WebAssembly object,
 // so this creates a (non-native-wasm) table for us.
 var wasmTable = new WebAssembly.Table({
-  'initial': 426,
-  'maximum': 426 + 0,
+  'initial': 413,
+  'maximum': 413 + 0,
   'element': 'anyfunc'
 });
 
@@ -1229,11 +1229,11 @@ function updateGlobalBufferAndViews(buf) {
 }
 
 var STATIC_BASE = 1024,
-    STACK_BASE = 5270304,
+    STACK_BASE = 5269696,
     STACKTOP = STACK_BASE,
-    STACK_MAX = 27424,
-    DYNAMIC_BASE = 5270304,
-    DYNAMICTOP_PTR = 27264;
+    STACK_MAX = 26816,
+    DYNAMIC_BASE = 5269696,
+    DYNAMICTOP_PTR = 26656;
 
 assert(STACK_BASE % 16 === 0, 'stack must start aligned');
 assert(DYNAMIC_BASE % 16 === 0, 'heap must start aligned');
@@ -1750,7 +1750,7 @@ var ASM_CONSTS = {
 
 
 
-// STATICTOP = STATIC_BASE + 26400;
+// STATICTOP = STATIC_BASE + 25792;
 /* global initializers */  __ATINIT__.push({ func: function() { ___wasm_call_ctors() } });
 
 
@@ -4319,7 +4319,7 @@ var ASM_CONSTS = {
     }
 
   function _emscripten_get_sbrk_ptr() {
-      return 27264;
+      return 26656;
     }
 
   function _emscripten_memcpy_big(dest, src, num) {
@@ -5686,194 +5686,15 @@ var ASM_CONSTS = {
   }
   }
 
-  function _glBindBuffer(target, buffer) {
-  
-      if (target == 0x88EB /*GL_PIXEL_PACK_BUFFER*/) {
-        // In WebGL 2 glReadPixels entry point, we need to use a different WebGL 2 API function call when a buffer is bound to
-        // GL_PIXEL_PACK_BUFFER_BINDING point, so must keep track whether that binding point is non-null to know what is
-        // the proper API function to call.
-        GLctx.currentPixelPackBufferBinding = buffer;
-      } else if (target == 0x88EC /*GL_PIXEL_UNPACK_BUFFER*/) {
-        // In WebGL 2 gl(Compressed)Tex(Sub)Image[23]D entry points, we need to
-        // use a different WebGL 2 API function call when a buffer is bound to
-        // GL_PIXEL_UNPACK_BUFFER_BINDING point, so must keep track whether that
-        // binding point is non-null to know what is the proper API function to
-        // call.
-        GLctx.currentPixelUnpackBufferBinding = buffer;
-      }
-      GLctx.bindBuffer(target, GL.buffers[buffer]);
-    }
-
-  function _glBufferData(target, size, data, usage) {
-      if (GL.currentContext.supportsWebGL2EntryPoints) { // WebGL 2 provides new garbage-free entry points to call to WebGL. Use those always when possible.
-        if (data) {
-          GLctx.bufferData(target, HEAPU8, usage, data, size);
-        } else {
-          GLctx.bufferData(target, size, usage);
-        }
-      } else {
-        // N.b. here first form specifies a heap subarray, second form an integer size, so the ?: code here is polymorphic. It is advised to avoid
-        // randomly mixing both uses in calling code, to avoid any potential JS engine JIT issues.
-        GLctx.bufferData(target, data ? HEAPU8.subarray(data, data+size) : size, usage);
-      }
-    }
-
-  function _glBufferSubData(target, offset, size, data) {
-      if (GL.currentContext.supportsWebGL2EntryPoints) { // WebGL 2 provides new garbage-free entry points to call to WebGL. Use those always when possible.
-        GLctx.bufferSubData(target, offset, HEAPU8, data, size);
-        return;
-      }
-      GLctx.bufferSubData(target, offset, HEAPU8.subarray(data, data+size));
-    }
-
   function _glClear(x0) { GLctx['clear'](x0) }
 
   function _glClearColor(x0, x1, x2, x3) { GLctx['clearColor'](x0, x1, x2, x3) }
 
   function _glEnable(x0) { GLctx['enable'](x0) }
 
-  
-  function __glGenObject(n, buffers, createFunction, objectTable
-      ) {
-      for (var i = 0; i < n; i++) {
-        var buffer = GLctx[createFunction]();
-        var id = buffer && GL.getNewId(objectTable);
-        if (buffer) {
-          buffer.name = id;
-          objectTable[id] = buffer;
-        } else {
-          GL.recordError(0x0502 /* GL_INVALID_OPERATION */);
-        }
-        HEAP32[(((buffers)+(i*4))>>2)]=id;
-      }
-    }function _glGenBuffers(n, buffers) {
-      __glGenObject(n, buffers, 'createBuffer', GL.buffers
-        );
-    }
-
   function _glScissor(x0, x1, x2, x3) { GLctx['scissor'](x0, x1, x2, x3) }
 
   function _glViewport(x0, x1, x2, x3) { GLctx['viewport'](x0, x1, x2, x3) }
-
-  
-  
-  
-  function stringToNewUTF8(jsString) {
-      var length = lengthBytesUTF8(jsString)+1;
-      var cString = _malloc(length);
-      stringToUTF8(jsString, cString, length);
-      return cString;
-    }function _glGetString(name_) {
-      if (GL.stringCache[name_]) return GL.stringCache[name_];
-      var ret;
-      switch(name_) {
-        case 0x1F03 /* GL_EXTENSIONS */:
-          var exts = GLctx.getSupportedExtensions() || []; // .getSupportedExtensions() can return null if context is lost, so coerce to empty array.
-          exts = exts.concat(exts.map(function(e) { return "GL_" + e; }));
-          ret = stringToNewUTF8(exts.join(' '));
-          break;
-        case 0x1F00 /* GL_VENDOR */:
-        case 0x1F01 /* GL_RENDERER */:
-        case 0x9245 /* UNMASKED_VENDOR_WEBGL */:
-        case 0x9246 /* UNMASKED_RENDERER_WEBGL */:
-          var s = GLctx.getParameter(name_);
-          if (!s) {
-            GL.recordError(0x0500/*GL_INVALID_ENUM*/);
-          }
-          ret = stringToNewUTF8(s);
-          break;
-  
-        case 0x1F02 /* GL_VERSION */:
-          var glVersion = GLctx.getParameter(GLctx.VERSION);
-          // return GLES version string corresponding to the version of the WebGL context
-          if (GL.currentContext.version >= 2) glVersion = 'OpenGL ES 3.0 (' + glVersion + ')';
-          else
-          {
-            glVersion = 'OpenGL ES 2.0 (' + glVersion + ')';
-          }
-          ret = stringToNewUTF8(glVersion);
-          break;
-        case 0x8B8C /* GL_SHADING_LANGUAGE_VERSION */:
-          var glslVersion = GLctx.getParameter(GLctx.SHADING_LANGUAGE_VERSION);
-          // extract the version number 'N.M' from the string 'WebGL GLSL ES N.M ...'
-          var ver_re = /^WebGL GLSL ES ([0-9]\.[0-9][0-9]?)(?:$| .*)/;
-          var ver_num = glslVersion.match(ver_re);
-          if (ver_num !== null) {
-            if (ver_num[1].length == 3) ver_num[1] = ver_num[1] + '0'; // ensure minor version has 2 digits
-            glslVersion = 'OpenGL ES GLSL ES ' + ver_num[1] + ' (' + glslVersion + ')';
-          }
-          ret = stringToNewUTF8(glslVersion);
-          break;
-        default:
-          GL.recordError(0x0500/*GL_INVALID_ENUM*/);
-          return 0;
-      }
-      GL.stringCache[name_] = ret;
-      return ret;
-    }var GLEW={isLinaroFork:1,extensions:null,error:{0:null,1:null,2:null,3:null,4:null,5:null,6:null,7:null,8:null},version:{1:null,2:null,3:null,4:null},errorStringConstantFromCode:function(error) {
-        if (GLEW.isLinaroFork) {
-          switch (error) {
-            case 4:return "OpenGL ES lib expected, found OpenGL lib"; // GLEW_ERROR_NOT_GLES_VERSION
-            case 5:return "OpenGL lib expected, found OpenGL ES lib"; // GLEW_ERROR_GLES_VERSION
-            case 6:return "Missing EGL version"; // GLEW_ERROR_NO_EGL_VERSION
-            case 7:return "EGL 1.1 and up are supported"; // GLEW_ERROR_EGL_VERSION_10_ONLY
-            default:break;
-          }
-        }
-  
-        switch (error) {
-          case 0:return "No error"; // GLEW_OK || GLEW_NO_ERROR
-          case 1:return "Missing GL version"; // GLEW_ERROR_NO_GL_VERSION
-          case 2:return "GL 1.1 and up are supported"; // GLEW_ERROR_GL_VERSION_10_ONLY
-          case 3:return "GLX 1.2 and up are supported"; // GLEW_ERROR_GLX_VERSION_11_ONLY
-          default:return null;
-        }
-      },errorString:function(error) {
-        if (!GLEW.error[error]) {
-          var string = GLEW.errorStringConstantFromCode(error);
-          if (!string) {
-            string = "Unknown error";
-            error = 8; // prevent array from growing more than this
-          }
-          GLEW.error[error] = allocate(intArrayFromString(string), 'i8', ALLOC_NORMAL);
-        }
-        return GLEW.error[error];
-      },versionStringConstantFromCode:function(name) {
-        switch (name) {
-          case 1:return "1.10.0"; // GLEW_VERSION
-          case 2:return "1"; // GLEW_VERSION_MAJOR
-          case 3:return "10"; // GLEW_VERSION_MINOR
-          case 4:return "0"; // GLEW_VERSION_MICRO
-          default:return null;
-        }
-      },versionString:function(name) {
-        if (!GLEW.version[name]) {
-          var string = GLEW.versionStringConstantFromCode(name);
-          if (!string)
-            return 0;
-          GLEW.version[name] = allocate(intArrayFromString(string), 'i8', ALLOC_NORMAL);
-        }
-        return GLEW.version[name];
-      },extensionIsSupported:function(name) {
-        if (!GLEW.extensions) {
-          GLEW.extensions = UTF8ToString(_glGetString(0x1F03)).split(' ');
-        }
-  
-        if (GLEW.extensions.indexOf(name) != -1)
-          return 1;
-  
-        // extensions from GLEmulations do not come unprefixed
-        // so, try with prefix
-        return (GLEW.extensions.indexOf("GL_" + name) != -1);
-      }};function _glewGetErrorString(error) {
-      return GLEW.errorString(error);
-    }
-
-  function _glewGetString(name) {
-      return GLEW.versionString(name);
-    }
-
-  function _glewInit() { return 0; }
 
   
   function _memcpy(dest, src, num) {
@@ -6417,7 +6238,7 @@ function intArrayToString(array) {
 // ASM_LIBRARY EXTERN PRIMITIVES: Int8Array,Int32Array
 
 var asmGlobalArg = {};
-var asmLibraryArg = { "__assert_fail": ___assert_fail, "__cxa_allocate_exception": ___cxa_allocate_exception, "__cxa_atexit": ___cxa_atexit, "__cxa_throw": ___cxa_throw, "__lock": ___lock, "__map_file": ___map_file, "__syscall91": ___syscall91, "__unlock": ___unlock, "abort": _abort, "emscripten_get_sbrk_ptr": _emscripten_get_sbrk_ptr, "emscripten_memcpy_big": _emscripten_memcpy_big, "emscripten_resize_heap": _emscripten_resize_heap, "emscripten_set_canvas_element_size": _emscripten_set_canvas_element_size, "emscripten_set_main_loop": _emscripten_set_main_loop, "emscripten_webgl_create_context": _emscripten_webgl_create_context, "emscripten_webgl_destroy_context": _emscripten_webgl_destroy_context, "emscripten_webgl_init_context_attributes": _emscripten_webgl_init_context_attributes, "emscripten_webgl_make_context_current": _emscripten_webgl_make_context_current, "environ_get": _environ_get, "environ_sizes_get": _environ_sizes_get, "fd_close": _fd_close, "fd_read": _fd_read, "fd_seek": _fd_seek, "fd_write": _fd_write, "glBindBuffer": _glBindBuffer, "glBufferData": _glBufferData, "glBufferSubData": _glBufferSubData, "glClear": _glClear, "glClearColor": _glClearColor, "glEnable": _glEnable, "glGenBuffers": _glGenBuffers, "glScissor": _glScissor, "glViewport": _glViewport, "glewGetErrorString": _glewGetErrorString, "glewGetString": _glewGetString, "glewInit": _glewInit, "memory": wasmMemory, "setTempRet0": _setTempRet0, "strftime_l": _strftime_l, "table": wasmTable };
+var asmLibraryArg = { "__assert_fail": ___assert_fail, "__cxa_allocate_exception": ___cxa_allocate_exception, "__cxa_atexit": ___cxa_atexit, "__cxa_throw": ___cxa_throw, "__lock": ___lock, "__map_file": ___map_file, "__syscall91": ___syscall91, "__unlock": ___unlock, "abort": _abort, "emscripten_get_sbrk_ptr": _emscripten_get_sbrk_ptr, "emscripten_memcpy_big": _emscripten_memcpy_big, "emscripten_resize_heap": _emscripten_resize_heap, "emscripten_set_canvas_element_size": _emscripten_set_canvas_element_size, "emscripten_set_main_loop": _emscripten_set_main_loop, "emscripten_webgl_create_context": _emscripten_webgl_create_context, "emscripten_webgl_destroy_context": _emscripten_webgl_destroy_context, "emscripten_webgl_init_context_attributes": _emscripten_webgl_init_context_attributes, "emscripten_webgl_make_context_current": _emscripten_webgl_make_context_current, "environ_get": _environ_get, "environ_sizes_get": _environ_sizes_get, "fd_close": _fd_close, "fd_read": _fd_read, "fd_seek": _fd_seek, "fd_write": _fd_write, "glClear": _glClear, "glClearColor": _glClearColor, "glEnable": _glEnable, "glScissor": _glScissor, "glViewport": _glViewport, "memory": wasmMemory, "setTempRet0": _setTempRet0, "strftime_l": _strftime_l, "table": wasmTable };
 var asm = createWasm();
 var real____wasm_call_ctors = asm["__wasm_call_ctors"];
 asm["__wasm_call_ctors"] = function() {
@@ -6538,32 +6359,18 @@ asm["dynCall_viii"] = function() {
   return real_dynCall_viii.apply(null, arguments);
 };
 
-var real_dynCall_iiii = asm["dynCall_iiii"];
-asm["dynCall_iiii"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return real_dynCall_iiii.apply(null, arguments);
-};
-
-var real_dynCall_jiji = asm["dynCall_jiji"];
-asm["dynCall_jiji"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return real_dynCall_jiji.apply(null, arguments);
-};
-
-var real_dynCall_iidiiii = asm["dynCall_iidiiii"];
-asm["dynCall_iidiiii"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return real_dynCall_iidiiii.apply(null, arguments);
-};
-
 var real_dynCall_vii = asm["dynCall_vii"];
 asm["dynCall_vii"] = function() {
   assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
   assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
   return real_dynCall_vii.apply(null, arguments);
+};
+
+var real_dynCall_iiii = asm["dynCall_iiii"];
+asm["dynCall_iiii"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return real_dynCall_iiii.apply(null, arguments);
 };
 
 var real_dynCall_viijii = asm["dynCall_viijii"];
@@ -6585,6 +6392,20 @@ asm["dynCall_iii"] = function() {
   assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
   assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
   return real_dynCall_iii.apply(null, arguments);
+};
+
+var real_dynCall_jiji = asm["dynCall_jiji"];
+asm["dynCall_jiji"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return real_dynCall_jiji.apply(null, arguments);
+};
+
+var real_dynCall_iidiiii = asm["dynCall_iidiiii"];
+asm["dynCall_iidiiii"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return real_dynCall_iidiiii.apply(null, arguments);
 };
 
 var real_dynCall_iiiii = asm["dynCall_iiiii"];
@@ -6767,28 +6588,16 @@ var dynCall_viii = Module["dynCall_viii"] = function() {
   return Module["asm"]["dynCall_viii"].apply(null, arguments)
 };
 
-var dynCall_iiii = Module["dynCall_iiii"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["dynCall_iiii"].apply(null, arguments)
-};
-
-var dynCall_jiji = Module["dynCall_jiji"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["dynCall_jiji"].apply(null, arguments)
-};
-
-var dynCall_iidiiii = Module["dynCall_iidiiii"] = function() {
-  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
-  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
-  return Module["asm"]["dynCall_iidiiii"].apply(null, arguments)
-};
-
 var dynCall_vii = Module["dynCall_vii"] = function() {
   assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
   assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
   return Module["asm"]["dynCall_vii"].apply(null, arguments)
+};
+
+var dynCall_iiii = Module["dynCall_iiii"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["dynCall_iiii"].apply(null, arguments)
 };
 
 var dynCall_viijii = Module["dynCall_viijii"] = function() {
@@ -6807,6 +6616,18 @@ var dynCall_iii = Module["dynCall_iii"] = function() {
   assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
   assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
   return Module["asm"]["dynCall_iii"].apply(null, arguments)
+};
+
+var dynCall_jiji = Module["dynCall_jiji"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["dynCall_jiji"].apply(null, arguments)
+};
+
+var dynCall_iidiiii = Module["dynCall_iidiiii"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["dynCall_iidiiii"].apply(null, arguments)
 };
 
 var dynCall_iiiii = Module["dynCall_iiiii"] = function() {

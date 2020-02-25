@@ -3,7 +3,9 @@
 
 #include <tov/rendering/rendering_core.h>
 
-#include "buffer_object.h"
+#include "buffer.h"
+#include "index_type.h"
+#include "vertex_buffer_format.h"
 
 #include <tov/memory.h>
 #include <tov/memory/memory_arena.h>
@@ -19,31 +21,31 @@ namespace tov
 	TOV_NAMESPACE_BEGIN(rendering)
 	TOV_NAMESPACE_BEGIN(buffers)
 
-	class BufferObjectManager
+	class BufferManager
 	{
-		TOV_MOVABLE_ONLY(BufferObjectManager)
+		TOV_MOVABLE_ONLY(BufferManager)
 
 	public:
-		BufferObjectManager() noexcept;;
-		virtual ~BufferObjectManager() noexcept = default;
+		BufferManager() noexcept;;
+		virtual ~BufferManager() noexcept = default;
 
 		void* allocateScratch(size_t size);
 		void deallocateScratch(void* ptr);
 
-		template<class BufferObjectT, class... U>
-		BufferObjectT* create(U&&... args)
+		template<class BufferT, class... U>
+		BufferT* create(size_t size, U&&... args)
 		{
-			auto bufferObject = BufferObjectUPtr(
-				new BufferObjectT(*this, std::forward<U>(args)...)
+			auto buffer = BufferUPtr(
+				new BufferT(*this, size, std::forward<U>(args)...)
 			);
-			mBufferObjects.push_back(std::move(bufferObject));
-			auto ret = mBufferObjects.back().get();
-			return static_cast<BufferObjectT*>(ret);
+			mBuffers.push_back(std::move(buffer));
+			auto ret = mBuffers.back().get();
+			return static_cast<BufferT*>(ret);
 		}
 
 	private:
-		using BufferObjectList = std::vector<BufferObjectUPtr>;
-		BufferObjectList mBufferObjects;
+		using BufferList = std::vector<BufferUPtr>;
+		BufferList mBuffers;
 
 		using MemoryArena = memory::MemoryArena<
 			tov::memory::policies::allocation::NewDelete,

@@ -1,19 +1,25 @@
-#include "rendering/buffers/buffer_object.h"
+#include "rendering/buffers/buffer.h"
 
 namespace tov
 {
 	TOV_NAMESPACE_BEGIN(rendering)
 	TOV_NAMESPACE_BEGIN(buffers)
 
-	BufferObjectBase::BufferObjectBase(
-		BufferObjectManager& manager,
+	BufferBase::BufferBase(
+		BufferManager& manager,
 		size_t bytes
 	)
 		: mManager(manager)
 		, mBytes(bytes)
+		, mCurrentBuffer(mBuffer)
+		, mCurrentScratch(mScratch)
 	{}
 
-	void* BufferObjectBase::lock(size_t offset, size_t length, LockSettings lockSettings)
+	BufferBase::~BufferBase()
+	{
+	}
+
+	void* BufferBase::lock(size_t offset, size_t length, LockSettings lockSettings)
 	{
 		assert(!mLocked && "Buffer is already locked!");
 
@@ -26,49 +32,52 @@ namespace tov
 		mLockOffset = offset;
 		mLockLength = length;
 		mLockSettings = lockSettings;
-
-		mScratchPointer = mManager.allocateScratch(mBytes);
+		mScratch = mManager.allocateScratch(mBytes);
 
 		if ((mLockSettings & LockSettings::DISCARD) != 0)
 		{
 			discard();
 		}
 
+		map();
+		assert(mBuffer);
+
 		if ((mLockSettings & LockSettings::READ) != 0)
 		{
 			read();
 		}
 
-		return mScratchPointer;
+		return mScratch;
 	}
 
-	void* BufferObjectBase::lock(LockSettings lockSettings)
+	void* BufferBase::lock(LockSettings lockSettings)
 	{
+		lockSettings |= LockSettings::DISCARD;
 		void* buffer = lock(0, mBytes, lockSettings);
 		return buffer;
 	}
 
-	void BufferObjectBase::unlock()
+	void BufferBase::unlock()
 	{
 		assert(mLocked && "Buffer is not locked!");
 
-		if (
-			mScratchPointer &&
-			(mLockSettings & LockSettings::WRITE) != 0
-			)
+		if (mScratch)
 		{
-			write();
+			if ((mLockSettings & LockSettings::WRITE) != 0)
+			{
+				write();
+			}
+
+			mManager.deallocateScratch(mScratch);
 		}
 
-		if (mScratchPointer)
-		{
-			mManager.deallocateScratch(mScratchPointer);
-		}
+		unmap();
 
 		mLocked = false;
 		mLockOffset = 0;
 		mLockLength = 0;
 		mLockSettings = static_cast<LockSettings>(0);
+		mScratch = nullptr;
 	}
 
 	TOV_NAMESPACE_END // buffers

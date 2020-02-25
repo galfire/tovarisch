@@ -1,20 +1,20 @@
-#include "rendering/buffers/buffer_object_manager.h"
+#include "rendering/buffers/buffer_manager.h"
 
 namespace tov
 {
 	TOV_NAMESPACE_BEGIN(rendering)
 	TOV_NAMESPACE_BEGIN(buffers)
 
-	BufferObjectManager::BufferObjectManager() noexcept
+	BufferManager::BufferManager() noexcept
 		: mMemoryArena()
 	{}
 
-	void* BufferObjectManager::allocateScratch(size_t size)
+	void* BufferManager::allocateScratch(size_t size)
 	{
 		return mMemoryArena.allocate(size, 32);
 	}
 
-	void BufferObjectManager::deallocateScratch(void* ptr)
+	void BufferManager::deallocateScratch(void* ptr)
 	{
 		return mMemoryArena.deallocate(ptr);
 	}

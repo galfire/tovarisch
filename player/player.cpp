@@ -14,9 +14,9 @@
 #include <tov/rendering/web/window_platform_support.h>
 #include <tov/rendering_gl/window_renderer_support.h>
 
-#include <tov/rendering/buffers/buffer_object_manager.h>
-#include <tov/rendering/buffers/vertex_buffer_format.h>
-#include <tov/rendering_gl/buffers/vertex_buffer_object.h>
+//#include <tov/rendering/buffers/buffer_object_manager.h>
+//#include <tov/rendering/buffers/vertex_buffer_format.h>
+//#include <tov/rendering_gl/buffers/vertex_buffer_object.h>
 
 #include <tov/rendering_gl/viewport.h>
 
@@ -49,9 +49,9 @@ int main()
 	auto window2 = rs->createRenderWindow("canvas2", 640, 180, false);
 	auto vp3 = window2->createViewport(c, 2, 0.0f, 0.0f, 1.0f, 1.0f, tov::rendering::Colour::Blue);
 
-	tov::rendering::buffers::BufferObjectManager manager;
+	/*tov::rendering::buffers::BufferObjectManager manager;
 	tov::rendering::buffers::VertexBufferFormat format(tov::rendering::buffers::VertexBufferFormat::SequenceType::SEQUENTIAL);
-	tov::rendering::gl::buffers::VertexBufferObject vbo(manager, format, 10);
+	tov::rendering::gl::buffers::VertexBufferObject vbo(manager, format, 10);*/
 
 	emscripten_set_main_loop(oneIteration, 30, 1);
 

@@ -25,6 +25,9 @@ namespace tov
 				fprintf(stderr, "Error: %s\n", glewGetErrorString(err));
 			}
 			fprintf(stdout, "Status: Using GLEW %s\n", glewGetString(GLEW_VERSION));
+
+			glEnable(GL_DEBUG_OUTPUT);
+			glDebugMessageCallback(MessageCallback, 0);
 		}
 	}
 

@@ -12,30 +12,22 @@ namespace tov
 	TOV_NAMESPACE_BEGIN(rendering)
 	TOV_NAMESPACE_BEGIN(buffers)
 
-	template<class ReaderT, class WriterT>
+	class BufferBase;
+
 	class VertexBufferObject
-		: public BufferObject<ReaderT, WriterT, UsageSettings::STATIC, AccessSettings::WRITE>
+		: public BufferObject
 	{
 	public:
-		template<class... U>
 		VertexBufferObject(
-			BufferObjectManager& manager,
-			VertexBufferFormat format,
-			uint numVertices,
-			U&&... accessorArgs
+			BufferBase& buffer,
+			VertexBufferFormat format
 		)
-			: BufferObject<ReaderT, WriterT, UsageSettings::STATIC, AccessSettings::WRITE>::BufferObject(
-				manager,
-				format.getVertexFormat().getSize() * numVertices, 
-				std::forward<U>(accessorArgs)...
-			)
+			: BufferObject(buffer)
 			, mFormat(format)
-			, mNumVertices(numVertices)
 		{}
 
 	private:
 		VertexBufferFormat mFormat;
-		uint mNumVertices;
 	};
 
 	TOV_NAMESPACE_END // buffers 
