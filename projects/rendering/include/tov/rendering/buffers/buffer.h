@@ -17,8 +17,6 @@ namespace tov
 
 	class BufferBase
 	{
-		//TOV_MOVABLE_ONLY(BufferBase)
-
 		friend class BufferManager;
 
 	public:
@@ -54,7 +52,7 @@ namespace tov
 	protected:
 		BufferManager& mManager;
 
-		// The external buffer
+		// The external buffer store
 		void* mBuffer = nullptr;
 		void*& mCurrentBuffer;
 
@@ -62,7 +60,7 @@ namespace tov
 		void* mScratch = nullptr;
 		void*& mCurrentScratch;
 
-		// Size of the buffer
+		// Size of the buffer store
 		size_t mBytes;
 		// Where in the buffer the lock starts
 		size_t mLockOffset = 0;
@@ -97,7 +95,8 @@ namespace tov
 			, mBufferAccessor(
 				mCurrentBuffer,
 				mCurrentScratch,
-				std::forward<U>(accessorArgs)...)
+				std::forward<U>(accessorArgs)...
+			)
 		{}
 
 	private:

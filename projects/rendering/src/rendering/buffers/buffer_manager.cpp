@@ -19,6 +19,11 @@ namespace tov
 		return mMemoryArena.deallocate(ptr);
 	}
 
+	void BufferManager::checkBounds(void* ptr) const
+	{
+		mMemoryArena.checkBounds(ptr);
+	}
+
 	TOV_NAMESPACE_END // buffers
 	TOV_NAMESPACE_END // rendering
 }

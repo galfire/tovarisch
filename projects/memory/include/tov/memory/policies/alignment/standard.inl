@@ -22,7 +22,7 @@ namespace tov
 		return alignedPtr;
 	}
 
-	inline void Standard::writeHeader(void*& ptr, size_t alignmentSpace, ptrdiff_t alignmentOffset) noexcept
+	inline void Standard::writeHeader(void*& ptr, size_t alignmentSpace, ptrdiff_t alignmentOffset) const noexcept
 	{
 		BlockHeader header = { alignmentSpace, alignmentOffset };
 		accessor.write(ptr, &header);
@@ -37,7 +37,7 @@ namespace tov
 		*byte += sizeof(BlockHeader);
 	}
 
-	inline void Standard::readHeader(void*& ptr, size_t& alignmentSpace, ptrdiff_t& alignmentOffset) noexcept
+	inline void Standard::readHeader(void*& ptr, size_t& alignmentSpace, ptrdiff_t& alignmentOffset) const noexcept
 	{
 		BlockHeader header;
 		accessor.read(ptr, header);

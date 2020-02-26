@@ -65,6 +65,7 @@ namespace tov
 		{
 			if ((mLockSettings & LockSettings::WRITE) != 0)
 			{
+				mManager.checkBounds(mScratch);
 				write();
 			}
 

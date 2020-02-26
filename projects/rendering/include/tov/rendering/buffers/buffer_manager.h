@@ -11,7 +11,7 @@
 #include <tov/memory/memory_arena.h>
 #include <tov/memory/policies/alignment/standard.h>
 #include <tov/memory/policies/allocation/new_delete.h>
-#include <tov/memory/policies/bounds/none.h>
+#include <tov/memory/policies/bounds/simple.h>
 #include <tov/memory/policies/thread/single.h>
 
 #include <vector>
@@ -31,6 +31,7 @@ namespace tov
 
 		void* allocateScratch(size_t size);
 		void deallocateScratch(void* ptr);
+		void checkBounds(void* ptr) const;
 
 		template<class BufferT, class... U>
 		BufferT* create(size_t size, U&&... args)
@@ -51,7 +52,7 @@ namespace tov
 			tov::memory::policies::allocation::NewDelete,
 			tov::memory::policies::alignment::Standard,
 			tov::memory::policies::thread::Single,
-			tov::memory::policies::bounds::None
+			tov::memory::policies::bounds::Simple
 		>;
 
 		MemoryArena mMemoryArena;

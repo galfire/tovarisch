@@ -28,6 +28,8 @@ namespace tov
 		inline void deallocate(void* ptr);
 		inline void reset();
 
+		inline void checkBounds(void* ptr) const;
+
 	private:
 		AllocationPolicy mAllocationPolicy;
 		AlignmentPolicy mAlignmentPolicy;

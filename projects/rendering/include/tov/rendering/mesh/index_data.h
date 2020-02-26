@@ -8,7 +8,6 @@ namespace tov
 	TOV_NAMESPACE_BEGIN(rendering)
 	TOV_NAMESPACE_BEGIN(buffers)
 
-
 	TOV_NAMESPACE_END // buffers
 	TOV_NAMESPACE_BEGIN(mesh)
 

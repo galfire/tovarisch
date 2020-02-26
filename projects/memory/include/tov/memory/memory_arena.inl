@@ -172,5 +172,34 @@ namespace tov
 		mAllocationPolicy.reset();
 	}
 
+	template<typename AllocationPolicy, typename AlignmentPolicy, typename ThreadPolicy, typename BoundsCheckingPolicy>
+	inline void MemoryArena<AllocationPolicy, AlignmentPolicy, ThreadPolicy, BoundsCheckingPolicy>::checkBounds(void* ptr) const
+	{
+		byte* ptrAsByte = (byte*)ptr;
+
+
+		//
+		//		ORDER OF HEADERS
+		//			1. AlignmentPolicy
+
+		byte* headersLocation = (byte*)ptr - (POLICY_OFFSET + BoundsCheckingPolicy::FRONT_BOUND_SIZE);
+
+		void* currentLocation = (void*)headersLocation;
+
+		size_t alignmentSpace;
+		ptrdiff_t alignmentOffset;
+		mAlignmentPolicy.readHeader(currentLocation, alignmentSpace, alignmentOffset);
+
+		void* allocationPtr = headersLocation - alignmentOffset;
+
+		// Check guards
+		void* frontGuard = currentLocation;
+		assert(mBoundsCheckingPolicy.checkFrontSignature(frontGuard));
+
+		size_t allocationSize = mAllocationPolicy.getAllocationSize(allocationPtr);
+		byte* endGuard = ptrAsByte + allocationSize - (OVERHEAD_REQUIREMENT + alignmentSpace);
+		assert(mBoundsCheckingPolicy.checkEndSignature(endGuard));
+	}
+
 	TOV_NAMESPACE_END // memory
 }

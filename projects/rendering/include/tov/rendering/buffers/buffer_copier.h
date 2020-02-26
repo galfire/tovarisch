@@ -21,7 +21,8 @@ namespace tov
 
 		void operator () (size_t offset, size_t length)
 		{
-			memcpy(mDestination, mSource, length);
+			byte* offsetDestination = static_cast<byte*>(mDestination) + offset;
+			memcpy(offsetDestination, mSource, length);
 		}
 
 	protected:

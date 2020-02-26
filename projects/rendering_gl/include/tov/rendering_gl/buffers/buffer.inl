@@ -79,7 +79,7 @@ namespace tov
 	{
 		auto b = bind();
 		auto op = log_gl_op("map buffer", mBufferTarget, mBufferID);
-		mBuffer = glMapBufferRange(mBufferTarget, mLockOffset, mLockLength, sGLAccessSettings);
+		mBuffer = glMapBufferRange(mBufferTarget, 0, mBytes, sGLAccessSettings);
 	}
 
 	template<
