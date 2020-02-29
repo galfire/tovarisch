@@ -8,7 +8,7 @@ namespace tov
 		rendering::buffers::UsageSettings usageSettings,
 		rendering::buffers::AccessSettings accessSettings
 	>
-	GLenum Buffer<usageSettings, accessSettings>::getGLAccessSettings(Buffer::AccessSettings accessSettings)
+	GLenum Buffer<usageSettings, accessSettings>::getGLAccessSettings()
 	{
 		GLenum access = 0;
 		if ((accessSettings & AccessSettings::READ) == AccessSettings::READ)
@@ -26,20 +26,22 @@ namespace tov
 		rendering::buffers::UsageSettings usageSettings,
 		rendering::buffers::AccessSettings accessSettings
 	>
-	GLenum Buffer<usageSettings, accessSettings>::getGLUsageSettings(Buffer::UsageSettings usageSettings)
+	GLenum Buffer<usageSettings, accessSettings>::getGLUsageSettings()
 	{
+		GLenum usage = 0;
 		if ((usageSettings & UsageSettings::STATIC) == UsageSettings::STATIC)
 		{
-			return GL_STATIC_DRAW;
+			usage = GL_STATIC_DRAW;
 		}
 		else if ((usageSettings & UsageSettings::DYNAMIC) == UsageSettings::DYNAMIC)
 		{
-			return GL_DYNAMIC_DRAW;
+			usage = GL_DYNAMIC_DRAW;
 		}
 		else if ((usageSettings & UsageSettings::STREAM) == UsageSettings::STREAM)
 		{
-			return GL_STREAM_DRAW;
+			usage = GL_STREAM_DRAW;
 		}
+		return usage;
 	}
 
 	template<
@@ -50,15 +52,20 @@ namespace tov
 		rendering::buffers::BufferManager& manager,
 		size_t bytes,
 		GLenum bufferTarget
-	)
-		: mBufferTarget(bufferTarget)
-		, rendering::buffers::Buffer<BufferCopier, BufferCopier, usageSettings, accessSettings>(
+	) 
+		: rendering::buffers::Buffer<NullReader, BufferWriter, usageSettings, accessSettings>(
 			manager,
-			bytes
+			bytes,
+			mBufferID,
+			mBufferTarget
 		)
+		, mBufferTarget(bufferTarget)
 	{
-		auto op = log_gl_op("generate buffer");
-		glGenBuffers(1, &mBufferID);
+		{
+			auto op = log_gl_op("generate buffer");
+			glGenBuffers(1, &(this->mBufferID));
+		}
+		discard();
 	}
 
 	template<
@@ -68,30 +75,7 @@ namespace tov
 	Buffer<usageSettings, accessSettings>::~Buffer()
 	{
 		auto op = log_gl_op("delete buffer");
-		glDeleteBuffers(1, &mBufferID);
-	}
-
-	template<
-		rendering::buffers::UsageSettings usageSettings,
-		rendering::buffers::AccessSettings accessSettings
-	>
-	void Buffer<usageSettings, accessSettings>::map()
-	{
-		auto b = bind();
-		auto op = log_gl_op("map buffer", mBufferTarget, mBufferID);
-		mBuffer = glMapBufferRange(mBufferTarget, 0, mBytes, sGLAccessSettings);
-	}
-
-	template<
-		rendering::buffers::UsageSettings usageSettings,
-		rendering::buffers::AccessSettings accessSettings
-	>
-	void Buffer<usageSettings, accessSettings>::unmap()
-	{
-		auto b = bind();
-		auto op = log_gl_op("unmap buffer", mBufferTarget, mBufferID);
-		glUnmapBuffer(mBufferTarget);
-		mBuffer = nullptr;
+		glDeleteBuffers(1, &(this->mBufferID));
 	}
 
 	template<
@@ -101,8 +85,8 @@ namespace tov
 	void Buffer<usageSettings, accessSettings>::discard()
 	{
 		auto b = bind();
-		auto op = log_gl_op("discard buffer", mBufferTarget, mBufferID);
-		glBufferData(mBufferTarget, mBytes, nullptr, sGLUsageSettings);
+		auto op = log_gl_op("discard buffer");
+		glBufferData(this->mBufferTarget, this->mBytes, nullptr, sGLUsageSettings);
 	}
 
 	TOV_NAMESPACE_END // buffers

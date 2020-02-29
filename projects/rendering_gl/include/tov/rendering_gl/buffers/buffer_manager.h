@@ -55,5 +55,4 @@ namespace tov
 	TOV_NAMESPACE_END // rendering
 }
 
-
 #endif // !TOV_RENDERING_GL_BUFFERS_BUFFER_MANAGER_H

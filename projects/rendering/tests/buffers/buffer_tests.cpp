@@ -37,11 +37,6 @@ public:
 		this->mBuffer = nullptr;
 	}
 
-	void setBuffer(void* buffer)
-	{
-		mTestBuffer = buffer;
-	}
-
 private:
 	void* mTestBuffer;
 };
@@ -155,38 +150,6 @@ TEST_CASE("Buffer", "[Buffer]")
 			char expectedBufferStore[8]= { '1', '1', '1', '1', '2', '2', '2', '2' };
 			REQUIRE(memcmp(bufferStore, expectedBufferStore, sizeof(bufferStore)) == 0);
 		}
-	}
-
-	SECTION("can be remapped on lock")
-	{
-		char bufferStore1[4];
-		char bufferStore2[4];
-
-		const UsageSettings usageSettings = UsageSettings::STATIC;
-		const AccessSettings accessSettings = AccessSettings::WRITE;
-		tov::rendering::buffers::BufferManager manager;
-
-		auto buffer = DummyBuffer<usageSettings, accessSettings>(manager, sizeof(bufferStore1), bufferStore1);
-
-		{
-			void* lock = buffer.lock(LockSettings::WRITE);
-			memset(lock, '1', 4);
-			buffer.unlock();
-		}
-
-		// Set the test buffer's store to the second buffer; the buffer will remap its reference on lock
-		buffer.setBuffer(bufferStore2);
-
-		{
-			void* lock = buffer.lock(LockSettings::WRITE);
-			memset(lock, '2', 4);
-			buffer.unlock();
-		}
-
-		char expectedBufferStore1[4] = { '1', '1', '1', '1' };
-		char expectedBufferStore2[4] = { '2', '2', '2', '2' };
-		REQUIRE(memcmp(bufferStore1, expectedBufferStore1, sizeof(bufferStore1)) == 0);
-		REQUIRE(memcmp(bufferStore2, expectedBufferStore2, sizeof(bufferStore2)) == 0);
 	}
 }
 

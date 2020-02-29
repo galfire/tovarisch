@@ -4,8 +4,9 @@
 #include <tov/rendering/buffers/buffer.h>
 
 #include <tov/rendering/buffers/access_settings.h>
-#include <tov/rendering/buffers/buffer_copier.h>
 #include <tov/rendering/buffers/usage_settings.h>
+#include "buffer_binder.h"
+#include "buffer_writer.h"
 
 #include <tov/rendering_gl/gl_impl.h>
 
@@ -15,28 +16,11 @@ namespace tov
 	TOV_NAMESPACE_BEGIN(gl)
 	TOV_NAMESPACE_BEGIN(buffers)
 
-	using BufferCopier = tov::rendering::buffers::BufferCopier;
-
-	class Binder
+	class NullReader
 	{
 	public:
-		Binder(GLuint bufferID, GLenum bufferTarget)
-			: mBufferID(bufferID)
-			, mBufferTarget(bufferTarget)
-		{
-			auto op = log_gl_op("bind buffer", mBufferTarget, mBufferID);
-			glBindBuffer(mBufferTarget, mBufferID);
-		}
-
-		~Binder()
-		{
-			auto op = log_gl_op("unbind buffer", mBufferTarget, mBufferID);
-			glBindBuffer(mBufferTarget, 0);
-		}
-
-	private:
-		GLuint mBufferID;
-		GLenum mBufferTarget;
+		NullReader(void*& src, void*& dst, GLuint& bufferID, GLenum& bufferTarget) {}
+		void operator () (size_t offset, size_t length) {}
 	};
 
 	template<
@@ -44,14 +28,14 @@ namespace tov
 		rendering::buffers::AccessSettings accessSettings
 	>
 	class Buffer
-		: public rendering::buffers::Buffer<BufferCopier, BufferCopier, usageSettings, accessSettings>
+		: public rendering::buffers::Buffer<NullReader, BufferWriter, usageSettings, accessSettings>
 	{
 	private:
 		using AccessSettings = tov::rendering::buffers::AccessSettings;
 		using UsageSettings = tov::rendering::buffers::UsageSettings;
 
-		static GLenum getGLAccessSettings(AccessSettings accessSettings);
-		static GLenum getGLUsageSettings(UsageSettings usageSettings);
+		static GLenum getGLAccessSettings();
+		static GLenum getGLUsageSettings();
 
 	public:
 		Buffer(
@@ -64,16 +48,16 @@ namespace tov
 		void discard() override;
 
 	private:
-		void map() override;
-		void unmap() override;
+		void map() override {}
+		void unmap() override {}
 
-		auto bind() { return Binder(mBufferID, mBufferTarget); }
+		auto bind() { return BufferBinder(mBufferID, mBufferTarget); }
 
 	private:
 		GLuint mBufferID;
 		GLenum mBufferTarget;
-		static inline GLenum sGLAccessSettings = getGLAccessSettings(accessSettings);
-		static inline GLenum sGLUsageSettings = getGLUsageSettings(usageSettings);
+		static inline GLenum sGLAccessSettings = getGLAccessSettings();
+		static inline GLenum sGLUsageSettings = getGLUsageSettings();
 	};
 
 	TOV_NAMESPACE_END // buffers

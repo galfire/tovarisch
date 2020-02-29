@@ -17,6 +17,8 @@ namespace tov
 
 	class BufferBase
 	{
+		TOV_MOVABLE_ONLY(BufferBase)
+
 		friend class BufferManager;
 
 	public:
@@ -105,9 +107,6 @@ namespace tov
 
 	private:
 		BufferAccessor<ReaderT, WriterT, accessSettings> mBufferAccessor;
-
-	protected:
-		static const UsageSettings USAGE_SETTINGS = usageSettings;
 	};
 
 	TOV_NAMESPACE_END // buffers

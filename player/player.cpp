@@ -14,11 +14,16 @@
 #include <tov/rendering/web/window_platform_support.h>
 #include <tov/rendering_gl/window_renderer_support.h>
 
-//#include <tov/rendering/buffers/buffer_object_manager.h>
-//#include <tov/rendering/buffers/vertex_buffer_format.h>
-//#include <tov/rendering_gl/buffers/vertex_buffer_object.h>
+#include <tov/rendering_gl/buffers/buffer_manager.h>
+#include <tov/rendering_gl/buffers/buffer.h>
+#include <tov/rendering/buffers/index_buffer_object.h>
+#include <tov/rendering/buffers/index_type.h>
+#include <tov/rendering/buffers/access_settings.h>
+#include <tov/rendering/buffers/usage_settings.h>
 
 #include <tov/rendering_gl/viewport.h>
+
+#include <tov/rendering_gl/gl_impl.h>
 
 #include <emscripten/emscripten.h>
 
@@ -49,9 +54,31 @@ int main()
 	auto window2 = rs->createRenderWindow("canvas2", 640, 180, false);
 	auto vp3 = window2->createViewport(c, 2, 0.0f, 0.0f, 1.0f, 1.0f, tov::rendering::Colour::Blue);
 
-	/*tov::rendering::buffers::BufferObjectManager manager;
-	tov::rendering::buffers::VertexBufferFormat format(tov::rendering::buffers::VertexBufferFormat::SequenceType::SEQUENTIAL);
-	tov::rendering::gl::buffers::VertexBufferObject vbo(manager, format, 10);*/
+	{
+		//glfwInit();
+
+		using UsageSettings = tov::rendering::buffers::UsageSettings;
+		using AccessSettings = tov::rendering::buffers::AccessSettings;
+		using IndexType = tov::rendering::buffers::IndexType;
+
+		tov::rendering::gl::buffers::BufferManager manager;
+		auto buffer = manager.createIndexBuffer<UsageSettings::STATIC, AccessSettings::READ | AccessSettings::WRITE>(100);
+		tov::rendering::buffers::IndexBufferObject ibo(*buffer);
+		{
+			void* lock = ibo.lock(3, 10, tov::rendering::buffers::LockSettings::WRITE);
+			memset(lock, '1', 10);
+			ibo.unlock();
+		}
+
+		/*{
+			union {
+				void* lock;
+				tov::byte* data;
+			};
+			lock = ibo.lock(tov::rendering::buffers::LockSettings::READ);
+			ibo.unlock();
+		}*/
+	}
 
 	emscripten_set_main_loop(oneIteration, 30, 1);
 

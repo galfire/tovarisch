@@ -75,10 +75,21 @@ int main(int argc, char** argv)
 		using IndexType = tov::rendering::buffers::IndexType;
 		
 		tov::rendering::gl::buffers::BufferManager manager;
-		auto buffer = manager.createIndexBuffer<UsageSettings::STATIC, AccessSettings::WRITE>(128);
+		auto buffer = manager.createIndexBuffer<UsageSettings::STATIC, AccessSettings::READ | AccessSettings::WRITE>(100);
 		tov::rendering::buffers::IndexBufferObject ibo(*buffer);
-		void* lock = ibo.lock(tov::rendering::buffers::LockSettings::WRITE);
-		ibo.unlock();
+		{
+			void* lock = ibo.lock(3, 10, tov::rendering::buffers::LockSettings::WRITE);
+			memset(lock, '1', 10);
+			ibo.unlock();
+		}
+		{
+			union {
+				void* lock;
+				tov::byte* data;
+			};
+			lock = ibo.lock(tov::rendering::buffers::LockSettings::READ);
+			ibo.unlock();
+		}
 	}
 
 	while(1)

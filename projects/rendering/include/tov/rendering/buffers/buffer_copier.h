@@ -8,7 +8,7 @@
 namespace tov
 {
 	TOV_NAMESPACE_BEGIN(rendering)
-		TOV_NAMESPACE_BEGIN(buffers)
+	TOV_NAMESPACE_BEGIN(buffers)
 
 	class BufferCopier
 	{

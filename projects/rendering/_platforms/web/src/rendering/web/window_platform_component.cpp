@@ -14,7 +14,6 @@ namespace tov
 	WindowPlatformComponent::WindowPlatformComponent(Window& window)
 		: rendering::WindowPlatformComponent(window)
 	{
-
 	}
 
 	void WindowPlatformComponent::swapBuffers()
@@ -34,7 +33,6 @@ namespace tov
 
 	void WindowPlatformComponent::_destroy()
 	{
-
 	}
 
 	TOV_NAMESPACE_END // web

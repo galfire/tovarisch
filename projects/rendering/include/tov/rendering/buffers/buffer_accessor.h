@@ -66,9 +66,8 @@ namespace tov
 	class BufferAccessor
 	{
 	private:
-		static const bitwise_and<AccessSettings> evaluator;
-		static constexpr AccessSettings WRITE_ENABLED = evaluator(accessSettings, AccessSettings::WRITE);
-		static constexpr AccessSettings READ_ENABLED = evaluator(accessSettings, AccessSettings::READ);
+		static constexpr AccessSettings WRITE_ENABLED = accessSettings & AccessSettings::WRITE;
+		static constexpr AccessSettings READ_ENABLED = accessSettings & AccessSettings::READ;
 
 	public:
 		template<class... U> BufferAccessor(void*& buffer, void*& scratch, U&&... args)

@@ -1,5 +1,7 @@
 #include "rendering/buffers/buffer.h"
 
+#include <iostream>
+
 namespace tov
 {
 	TOV_NAMESPACE_BEGIN(rendering)
@@ -23,6 +25,11 @@ namespace tov
 	{
 		assert(!mLocked && "Buffer is already locked!");
 
+		if (!mBuffer)
+		{
+			map();
+		}
+
 		if (length + offset > mBytes)
 		{
 			assert(false && "Lock out of bounds!");
@@ -34,15 +41,12 @@ namespace tov
 		mLockSettings = lockSettings;
 		mScratch = mManager.allocateScratch(mBytes);
 
-		if ((mLockSettings & LockSettings::DISCARD) != 0)
+		if ((mLockSettings & LockSettings::DISCARD) == LockSettings::DISCARD)
 		{
 			discard();
 		}
 
-		map();
-		assert(mBuffer);
-
-		if ((mLockSettings & LockSettings::READ) != 0)
+		if ((mLockSettings & LockSettings::READ) == LockSettings::READ)
 		{
 			read();
 		}
@@ -52,7 +56,6 @@ namespace tov
 
 	void* BufferBase::lock(LockSettings lockSettings)
 	{
-		lockSettings |= LockSettings::DISCARD;
 		void* buffer = lock(0, mBytes, lockSettings);
 		return buffer;
 	}
@@ -63,7 +66,7 @@ namespace tov
 
 		if (mScratch)
 		{
-			if ((mLockSettings & LockSettings::WRITE) != 0)
+			if ((mLockSettings & LockSettings::WRITE) == LockSettings::WRITE)
 			{
 				mManager.checkBounds(mScratch);
 				write();
@@ -71,8 +74,6 @@ namespace tov
 
 			mManager.deallocateScratch(mScratch);
 		}
-
-		unmap();
 
 		mLocked = false;
 		mLockOffset = 0;

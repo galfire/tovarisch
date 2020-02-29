@@ -29,11 +29,11 @@ namespace tov
 		switch (indexType)
 		{
 		case IndexType::BITS_8:
-			return 8;
+			return 1;	// 1 byte
 		case IndexType::BITS_16:
-			return 16;
+			return 2;	// 2 bytes
 		case IndexType::BITS_32:
-			return 32;
+			return 4;	// 4 bytes
 		}
 	}
 
