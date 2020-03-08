@@ -16,10 +16,10 @@ namespace tov
 		Node() = default;
 		virtual ~Node() = default;
 
-		const Transform& getTransform() const { return mTransform; }
-		Transform getTransform() { return mTransform; }
+		auto getTransform() const -> auto const & { return mTransform; }
+		auto getTransform() -> auto & { return mTransform; }
 
-		Transform getDerivedTransform() { return mTransform; }
+		auto getDerivedTransform() { return mTransform; }
 
 	protected:
 		Transform mTransform;

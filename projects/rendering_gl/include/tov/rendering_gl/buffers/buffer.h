@@ -39,7 +39,7 @@ namespace tov
 
 	public:
 		Buffer(
-			rendering::buffers::BufferManager& manager,
+			rendering::buffers::BufferManagerBase& manager,
 			size_t bytes,
 			GLenum bufferTarget
 		);

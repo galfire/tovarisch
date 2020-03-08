@@ -23,15 +23,15 @@ namespace tov
 		DISCARD = 1 << 2,
 	};
 
-	constexpr LockSettings operator & (LockSettings lhs, LockSettings rhs)
+	constexpr auto operator & (LockSettings lhs, LockSettings rhs)
 	{
 		return static_cast<LockSettings>(
-			static_cast<std::underlying_type<LockSettings>::type>(lhs )&
+			static_cast<std::underlying_type<LockSettings>::type>(lhs) &
 			static_cast<std::underlying_type<LockSettings>::type>(rhs)
 		);
 	}
 
-	constexpr LockSettings& operator &= (LockSettings& lhs, LockSettings rhs)
+	constexpr auto operator &= (LockSettings& lhs, LockSettings rhs) -> auto&
 	{
 		lhs = static_cast<LockSettings>(
 			static_cast<std::underlying_type<LockSettings>::type>(lhs) &
@@ -40,7 +40,7 @@ namespace tov
 		return lhs;
 	}
 
-	constexpr LockSettings operator | (LockSettings lhs, LockSettings rhs)
+	constexpr auto operator | (LockSettings lhs, LockSettings rhs)
 	{
 		return static_cast<LockSettings>(
 			static_cast<std::underlying_type<LockSettings>::type>(lhs) |
@@ -48,7 +48,7 @@ namespace tov
 		);
 	}
 
-	constexpr LockSettings& operator |= (LockSettings& lhs, LockSettings rhs)
+	constexpr auto operator |= (LockSettings& lhs, LockSettings rhs) -> auto&
 	{
 		lhs = static_cast<LockSettings>(
 			static_cast<std::underlying_type<LockSettings>::type>(lhs) |
@@ -57,12 +57,12 @@ namespace tov
 		return lhs;
 	}
 
-	constexpr bool operator == (LockSettings lhs, std::underlying_type<LockSettings>::type rhs)
+	constexpr auto operator == (LockSettings lhs, std::underlying_type<LockSettings>::type rhs)
 	{
 		return static_cast<std::underlying_type<LockSettings>::type>(lhs) == rhs;
 	}
 
-	constexpr bool operator != (LockSettings lhs, std::underlying_type<LockSettings>::type rhs)
+	constexpr auto operator != (LockSettings lhs, std::underlying_type<LockSettings>::type rhs)
 	{
 		return !(lhs == rhs);
 	}

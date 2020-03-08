@@ -25,7 +25,7 @@ namespace tov
 			mLock = nullptr;
 		}
 
-		void* getLock() const { return mLock; }
+		auto getLock() const { return mLock; }
 
 	private:
 		BufferT& mBuffer;

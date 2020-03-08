@@ -17,7 +17,6 @@ namespace tov
 	template<class ViewportT>
 	class RenderSystem
 	{
-	public:
 		using RenderWindowT = RenderWindow<ViewportT>;
 		using RenderTargetManagerT = RenderTargetManager<ViewportT>;
 
@@ -28,10 +27,10 @@ namespace tov
 		) noexcept;
 		~RenderSystem() noexcept = default;
 
-		const WindowPlatformSupport& getWindowPlatformSupport() const { return mWindowPlatformSupport; }
-		const WindowRendererSupport& getWindowRendererSupport() const { return mWindowRendererSupport; }
+		auto const& getWindowPlatformSupport() const { return mWindowPlatformSupport; }
+		auto const& getWindowRendererSupport() const { return mWindowRendererSupport; }
 
-		RenderWindowT* createRenderWindow(const char* name, uint width, uint height, bool fullscreen);
+		auto createRenderWindow(const char* name, uint width, uint height, bool fullscreen);
 
 		void renderFrame();
 

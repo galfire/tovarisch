@@ -49,7 +49,7 @@ namespace tov
 		rendering::buffers::AccessSettings accessSettings
 	>
 	Buffer<usageSettings, accessSettings>::Buffer(
-		rendering::buffers::BufferManager& manager,
+		rendering::buffers::BufferManagerBase& manager,
 		size_t bytes,
 		GLenum bufferTarget
 	) 

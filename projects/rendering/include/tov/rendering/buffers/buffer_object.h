@@ -11,8 +11,6 @@ namespace tov
 	TOV_NAMESPACE_BEGIN(rendering)
 	TOV_NAMESPACE_BEGIN(buffers)
 
-	class BufferBase;
-
 	class BufferObject
 	{
 	public:
@@ -20,12 +18,12 @@ namespace tov
 			: mBuffer(buffer)
 		{}
 
-		void* lock(size_t offset, size_t length, LockSettings lockSettings)
+		auto lock(size_t offset, size_t length, LockSettings lockSettings)
 		{
 			return mBuffer.lock(offset, length, lockSettings);
 		}
 
-		void* lock(LockSettings lockSettings)
+		auto lock(LockSettings lockSettings)
 		{
 			return mBuffer.lock(lockSettings);
 		}
@@ -38,6 +36,8 @@ namespace tov
 	private:
 		BufferBase& mBuffer;
 	};
+
+	using BufferObjectUPtr = std::unique_ptr<BufferObject>;
 
 	TOV_NAMESPACE_END // buffers
 	TOV_NAMESPACE_END // rendering

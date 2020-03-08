@@ -12,7 +12,7 @@ namespace tov
 	class Radian
 	{
 	public:
-		explicit Radian(float value)
+		Radian(float value = 0.0f)
 			: mValue(value)
 		{}
 

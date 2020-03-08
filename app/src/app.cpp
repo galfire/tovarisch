@@ -18,6 +18,7 @@
 #include <tov/rendering/entity.h>
 #include <tov/rendering/mesh_component.h>
 #include <tov/rendering/mesh/mesh.h>
+#include <tov/rendering/mesh/mesh_manager.h>
 #include <tov/rendering/render_system.h>
 #include <tov/rendering/render_window.h>
 #include <tov/rendering/scene.h>
@@ -25,16 +26,25 @@
 
 #include <tov/rendering_gl/buffers/buffer_manager.h>
 #include <tov/rendering_gl/buffers/buffer.h>
+#include <tov/rendering/buffers/buffer.h>
 #include <tov/rendering/buffers/index_buffer_object.h>
 #include <tov/rendering/buffers/index_type.h>
 #include <tov/rendering/buffers/access_settings.h>
 #include <tov/rendering/buffers/usage_settings.h>
+#include <tov/rendering/buffers/vertex_attribute.h>
+#include <tov/rendering/buffers/vertex_format.h>
+#include <tov/rendering/buffers/vertex_buffer_format.h>
+#include <tov/rendering/mesh/vertex_data.h>
+#include <tov/rendering/mesh/vertex_data_format.h>
+#include <tov/rendering/geometry/sphere.h>
 
 #include <tov/rendering/win32/window_platform_support.h>
 #include <tov/rendering/win32/window_events.h>
 
 #include <tov/rendering_gl/viewport.h>
 #include <tov/rendering_gl/window_renderer_support.h>
+
+#include <iostream>
 
 using Viewport = tov::rendering::gl::Viewport;
 using WindowPlatformSupport = tov::rendering::win32::WindowPlatformSupport;
@@ -61,36 +71,18 @@ int main(int argc, char** argv)
 	auto window2 = rs.createRenderWindow("canvas2", 640, 180, false);
 	auto vp3 = window2->createViewport(c, 2, 0.0f, 0.0f, 1.0f, 1.0f, tov::rendering::Colour::Blue);
 
+	auto sphere = tov::rendering::geometry::Sphere(1.0f, 4, 4);
+
+	using BufferManager = tov::rendering::gl::buffers::BufferManager;
+	BufferManager bufferManager;
+	using MeshManager = tov::rendering::mesh::MeshManager<BufferManager>;
+	MeshManager meshManager(bufferManager);
+	auto mesh = meshManager.create();
+	auto submesh = mesh->createSubmesh(sphere);
+	
 	auto entity = scene.createEntity();
-
-	tov::rendering::mesh::Mesh mesh;
-	auto meshComponent = entity->createMeshComponent(mesh);
-
 	tov::rendering::SceneNode node2;
 	node2.attachSceneObject(entity);
-
-	{
-		using UsageSettings = tov::rendering::buffers::UsageSettings;
-		using AccessSettings = tov::rendering::buffers::AccessSettings;
-		using IndexType = tov::rendering::buffers::IndexType;
-		
-		tov::rendering::gl::buffers::BufferManager manager;
-		auto buffer = manager.createIndexBuffer<UsageSettings::STATIC, AccessSettings::READ | AccessSettings::WRITE>(100);
-		tov::rendering::buffers::IndexBufferObject ibo(*buffer);
-		{
-			void* lock = ibo.lock(3, 10, tov::rendering::buffers::LockSettings::WRITE);
-			memset(lock, '1', 10);
-			ibo.unlock();
-		}
-		{
-			union {
-				void* lock;
-				tov::byte* data;
-			};
-			lock = ibo.lock(tov::rendering::buffers::LockSettings::READ);
-			ibo.unlock();
-		}
-	}
 
 	while(1)
 	{

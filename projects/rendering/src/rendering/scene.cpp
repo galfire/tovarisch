@@ -7,12 +7,12 @@ namespace tov
 {
 	TOV_NAMESPACE_BEGIN(rendering)
 
-	Camera* Scene::createCamera()
+	auto Scene::createCamera() -> Camera*
 	{
 		return create<Camera>();
 	}
 
-	Entity* Scene::createEntity()
+	auto Scene::createEntity() -> Entity*
 	{
 		return create<Entity>();
 	}

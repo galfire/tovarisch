@@ -20,29 +20,29 @@ namespace tov
 			const math::Vector3& scale
 		) noexcept;
 
-		Transform& operator = (const Transform& other);
+		auto operator = (const Transform& other) -> Transform&;
 
-		bool operator == (const Transform& other) const;
-		bool operator != (const Transform& other) const;
+		auto operator == (const Transform& other) const -> bool;
+		auto operator != (const Transform& other) const -> bool;
 
 		void translate(const math::Vector3& translation);
 		void setTranslation(const math::Vector3& translation);
-		const math::Vector3& getTranslation() const;
-		math::Vector3& getTranslation();
+		auto getTranslation() const -> const math::Vector3&;
+		auto getTranslation() -> math::Vector3&;
 
 		void rotate(const math::Quaternion& rotation);
 		void setRotation(const math::Quaternion& rotation);
-		const math::Quaternion& getRotationQuaternion() const;
-		math::Quaternion& getRotationQuaternion();
+		auto getRotationQuaternion() const -> const math::Quaternion&;
+		auto getRotationQuaternion() -> math::Quaternion&;
 
 		void scale(const math::Vector3& scale);
 		void setScale(const math::Vector3& scale);
-		const math::Vector3& getScale() const;
-		math::Vector3& getScale();
+		auto getScale() const -> const math::Vector3&;
+		auto getScale() -> math::Vector3&;
 
-		math::Matrix3 getRotationMatrix() const;
-		math::Matrix3 getScaleMatrix() const;
-		math::Matrix4 getHomogeneousMatrix() const;
+		auto getRotationMatrix() const -> math::Matrix3;
+		auto getScaleMatrix() const -> math::Matrix3;
+		auto getHomogeneousMatrix() const -> math::Matrix4;
 
 	private:
 		math::Vector3 mTranslation;

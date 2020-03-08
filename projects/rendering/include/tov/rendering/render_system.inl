@@ -16,7 +16,7 @@ namespace tov
 	{}
 
 	template<class ViewportT>
-	typename RenderSystem<ViewportT>::RenderWindowT* RenderSystem<ViewportT>::createRenderWindow(const char* name, uint width, uint height, bool fullscreen)
+	auto RenderSystem<ViewportT>::createRenderWindow(const char* name, uint width, uint height, bool fullscreen)
 	{
 		return mRenderTargetManager.template create<RenderWindowT>(
 			mWindowPlatformSupport,

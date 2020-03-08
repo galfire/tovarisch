@@ -20,7 +20,7 @@ namespace tov
 		, mScale(scale)
 	{}
 
-	Transform& Transform::operator = (const Transform& other)
+	auto Transform::operator = (const Transform& other) -> Transform&
 	{
 		mTranslation = other.mTranslation;
 		mRotation = other.mRotation;
@@ -28,7 +28,7 @@ namespace tov
 		return *this;
 	}
 
-	bool Transform::operator == (const Transform& other) const
+	auto Transform::operator == (const Transform& other) const -> bool
 	{
 		return
 			mTranslation == other.mTranslation &&
@@ -36,7 +36,7 @@ namespace tov
 			mScale == other.mScale;
 	}
 
-	bool Transform::operator != (const Transform& other) const
+	auto Transform::operator != (const Transform& other) const -> bool
 	{
 		return !(*this == other);
 	}
@@ -51,12 +51,12 @@ namespace tov
 		mTranslation = translation;
 	}
 
-	const math::Vector3& Transform::getTranslation() const
+	auto Transform::getTranslation() const -> const math::Vector3&
 	{
 		return mTranslation;
 	}
 
-	math::Vector3& Transform::getTranslation()
+	auto Transform::getTranslation() -> math::Vector3&
 	{
 		return mTranslation;
 	}
@@ -71,12 +71,12 @@ namespace tov
 		mRotation = rotation;
 	}
 
-	const math::Quaternion& Transform::getRotationQuaternion() const
+	auto Transform::getRotationQuaternion() const -> const math::Quaternion&
 	{
 		return mRotation;
 	}
 
-	math::Quaternion& Transform::getRotationQuaternion()
+	auto Transform::getRotationQuaternion() -> math::Quaternion&
 	{
 		return mRotation;
 	}
@@ -91,24 +91,24 @@ namespace tov
 		mScale = scale;
 	}
 
-	const math::Vector3& Transform::getScale() const
+	auto Transform::getScale() const -> const math::Vector3&
 	{
 		return mScale;
 	}
 
-	math::Vector3& Transform::getScale()
+	auto Transform::getScale() -> math::Vector3&
 	{
 		return mScale;
 	}
 
-	math::Matrix3 Transform::getRotationMatrix() const
+	auto Transform::getRotationMatrix() const -> math::Matrix3
 	{
 		return mRotation.toRotationMatrix();
 	}
 
-	math::Matrix3 Transform::getScaleMatrix() const
+	auto Transform::getScaleMatrix() const -> math::Matrix3
 	{
-		math::Matrix3 s = math::Matrix3::IDENTITY;
+		auto s = math::Matrix3::IDENTITY;
 		s[0][0] = mScale.x;
 		s[1][1] = mScale.y;
 		s[2][2] = mScale.z;
@@ -116,20 +116,20 @@ namespace tov
 		return s;
 	}
 
-	math::Matrix4 Transform::getHomogeneousMatrix() const
+	auto Transform::getHomogeneousMatrix() const -> math::Matrix4
 	{
-		math::Matrix4 m = math::Matrix4::IDENTITY;
+		auto m = math::Matrix4::IDENTITY;
 
 		// Set translation
 		m[0][3] = mTranslation.x;
 		m[1][3] = mTranslation.x;
 		m[2][3] = mTranslation.x;
 
-		math::Matrix3 scaleRotationMatrix = getRotationMatrix();
+		auto scaleRotationMatrix = getRotationMatrix();
 		
 		if (mScale != math::Vector3::UNIT_SCALE)
 		{
-			math::Matrix3 scaleMatrix = getScaleMatrix();
+			auto scaleMatrix = getScaleMatrix();
 			scaleRotationMatrix *= scaleMatrix;
 		}
 

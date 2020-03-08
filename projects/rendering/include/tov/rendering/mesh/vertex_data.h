@@ -3,46 +3,70 @@
 
 #include <tov/rendering/rendering_core.h>
 
-#include <tov/rendering/buffers/vertex_attribute.h>
-#include <tov/rendering/buffers/vertex_buffer_format.h>
+#include <tov/rendering/buffers/access_settings.h>
+#include <tov/rendering/buffers/usage_settings.h>
+#include <tov/rendering/buffers/buffer_object.h>
+#include <tov/rendering/buffers/vertex_buffer_object.h>
 
-#include <unordered_map>
-#include <vector>
+#include "vertex_data_format.h"
 
 namespace tov
 {
 	TOV_NAMESPACE_BEGIN(rendering)
-	TOV_NAMESPACE_BEGIN(buffers)
-
-	//class BufferObjectBase; 
-	
-	TOV_NAMESPACE_END // buffers
 	TOV_NAMESPACE_BEGIN(mesh)
 
 	// Container for vertex buffer objects
 	// A submesh can be composed of multiple VBOs, where different VBOs contain different vertex attributes.
 	// For example, one VBO can contain POSITION data, while another VBO contains NORMAL data.
-
 	class VertexData
 	{
 		TOV_MOVABLE_ONLY(VertexData)
 
-		/*using VertexAttribute = rendering::buffers::VertexAttribute;
-		using BufferObjectBase = rendering::buffers::BufferObjectBase;
-		using VertexBufferFormat = rendering::buffers::VertexBufferFormat;
-
-		using AttributeToVBOMap = std::unordered_map<VertexAttribute, BufferObjectBase*>;
-		using AttributeToVBOFormatMap = std::unordered_map<VertexAttribute, VertexBufferFormat>;
-		using VBOList = std::vector<BufferObjectBase*>;*/
+		using AccessSettings = tov::rendering::buffers::AccessSettings;
+		using UsageSettings = tov::rendering::buffers::UsageSettings;
+		using VBOHandle = byte;
+		using BufferObjectUPtr = rendering::buffers::BufferObjectUPtr;
+		using HandleToVBOMap = std::unordered_map<VBOHandle, BufferObjectUPtr>;
 
 	public:
-		VertexData() noexcept = default;
+		template<class BufferManagerT>
+		VertexData(
+			BufferManagerT& bufferManager,
+			VertexDataFormat format,
+			uint numVertices
+		) noexcept
+			: mFormat(format)
+		{
+			auto handles = mFormat.getHandles();
+			for (auto&& handle : handles)
+			{
+				auto bufferFormat = mFormat.getVertexBufferFormatForHandle(handle);
+				auto buffer = bufferManager.createVertexBuffer<UsageSettings::STATIC, AccessSettings::WRITE>(bufferFormat, numVertices);
+				auto bufferObject = BufferObjectUPtr(
+					new tov::rendering::buffers::VertexBufferObject(*buffer, bufferFormat)
+				);
+				mHandleToVBOMap[handle] = std::move(bufferObject);
+			}
+		}
+
 		~VertexData() noexcept = default;
 
+		auto getBufferObjectForHandle(VBOHandle handle) const -> auto&
+		{
+			auto vbo = mHandleToVBOMap.at(handle).get();
+			return *static_cast<tov::rendering::buffers::VertexBufferObject*>(vbo);
+		}
+
+		auto getBufferObjectForAttribute(tov::rendering::buffers::VertexAttribute attribute) const -> auto&
+		{
+			auto handle = mFormat.getHandleForAttribute(attribute);
+			auto vbo = getBufferObjectForHandle(handle);
+			return vbo;
+		}
+
 	private:
-		/*AttributeToVBOMap mAttributeToVBOMap;
-		AttributeToVBOMap mAttributeToVBOFormatMap;
-		VBOList mVBOList;*/
+		VertexDataFormat mFormat;
+		HandleToVBOMap mHandleToVBOMap;
 	};
 
 	using VertexDataUPtr = std::unique_ptr<VertexData>;

@@ -16,8 +16,8 @@ namespace tov
 		WindowPlatformComponent(Window& parentWindow);
 		virtual ~WindowPlatformComponent() = default;
 
-		inline Window& getParentWindow() const { return mParentWindow; }
-		inline const DeviceContext& getDeviceContext() const { return *mDeviceContext.get(); }
+		inline auto& getParentWindow() const { return mParentWindow; }
+		inline auto const& getDeviceContext() const { return *mDeviceContext.get(); }
 
 		void create();
 		void destroy();

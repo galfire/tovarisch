@@ -5,4 +5,9 @@
 
 #include "definitions.h"
 
+#ifdef TOV_DEBUG
+#	include <iostream>
+#	include <bitset>
+#endif
+
 #endif

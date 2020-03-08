@@ -5,21 +5,21 @@ namespace tov
 	TOV_NAMESPACE_BEGIN(rendering)
 	TOV_NAMESPACE_BEGIN(buffers)
 
-	BufferManager::BufferManager() noexcept
+	BufferManagerBase::BufferManagerBase() noexcept
 		: mMemoryArena()
 	{}
 
-	void* BufferManager::allocateScratch(size_t size)
+	auto BufferManagerBase::allocateScratch(size_t size) -> void*
 	{
 		return mMemoryArena.allocate(size, 32);
 	}
 
-	void BufferManager::deallocateScratch(void* ptr)
+	void BufferManagerBase::deallocateScratch(void* ptr)
 	{
 		return mMemoryArena.deallocate(ptr);
 	}
 
-	void BufferManager::checkBounds(void* ptr) const
+	void BufferManagerBase::checkBounds(void* ptr) const
 	{
 		mMemoryArena.checkBounds(ptr);
 	}

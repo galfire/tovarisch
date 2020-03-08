@@ -13,30 +13,35 @@ namespace tov
 	TOV_NAMESPACE_BEGIN(rendering)
 	TOV_NAMESPACE_BEGIN(buffers)
 
-	class BufferManager;
+	class BufferManagerBase;
 
 	class BufferBase
 	{
 		TOV_MOVABLE_ONLY(BufferBase)
 
-		friend class BufferManager;
+		friend class BufferManagerBase;
 
 	public:
-		virtual ~BufferBase();
+		virtual ~BufferBase() = default;
 
 		// Lock a part of the buffer [offset, offset + length)
-		void* lock(size_t offset, size_t length, LockSettings lockSettings);
+		auto lock(size_t offset, size_t length, LockSettings lockSettings) -> void*;
 		
 		// Lock the whole buffer
-		void* lock(LockSettings lockSettings);
+		auto lock(LockSettings lockSettings) -> void*;
 
 		void unlock();
 
 	protected:
 		BufferBase(
-			BufferManager& manager,
+			BufferManagerBase& manager,
 			size_t bytes
-		);
+		)
+			: mManager(manager)
+			, mBytes(bytes)
+			, mCurrentBuffer(mBuffer)
+			, mCurrentScratch(mScratch)
+		{}
 
 		// Connect this instance to the external buffer
 		virtual void map() TOV_ABSTRACT;
@@ -52,7 +57,7 @@ namespace tov
 		virtual void discard() {}
 			
 	protected:
-		BufferManager& mManager;
+		BufferManagerBase& mManager;
 
 		// The external buffer store
 		void* mBuffer = nullptr;
@@ -89,7 +94,7 @@ namespace tov
 	public:
 		template<class... U>
 		Buffer(
-			BufferManager& manager,
+			BufferManagerBase& manager,
 			size_t bytes,
 			U&&... accessorArgs
 		)

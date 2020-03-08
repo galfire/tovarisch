@@ -2,7 +2,6 @@
 #include "buffer_test_helper.h"
 
 #include <tov/rendering/buffers/buffer.h>
-
 #include <tov/rendering/buffers/access_settings.h>
 #include <tov/rendering/buffers/buffer_copier.h>
 #include <tov/rendering/buffers/buffer_manager.h>
@@ -19,7 +18,7 @@ class DummyBuffer
 {
 public:
 	DummyBuffer(
-		tov::rendering::buffers::BufferManager& manager,
+		tov::rendering::buffers::BufferManagerBase& manager,
 		size_t bytes,
 		void* buffer
 	)
@@ -42,32 +41,33 @@ private:
 };
 
 class DummyBufferManager
-	: public tov::rendering::buffers::BufferManager
+	: public tov::rendering::buffers::BufferManager<DummyBufferManager>
 {};
 
 TEST_CASE("Buffer", "[Buffer]")
 {
+	DummyBufferManager manager;
+
 	SECTION("lock")
 	{
 		int* bufferStore = new int(42);
 
 		const UsageSettings usageSettings = UsageSettings::STATIC;
 		const AccessSettings accessSettings = AccessSettings::READ;
-		tov::rendering::buffers::BufferManager manager;
 		auto buffer = DummyBuffer<usageSettings, accessSettings>(manager, sizeof(int), bufferStore);
 
 		SECTION("with read lock settings")
 		{
 			SECTION("returns a lock pointer")
 			{
-				void* lock = buffer.lock(LockSettings::READ);
+				auto lock = buffer.lock(LockSettings::READ);
 				REQUIRE(lock != nullptr);
 			}
 
 			SECTION("returns a lock pointer populated with the buffer data")
 			{
-				void* lock = buffer.lock(LockSettings::READ);
-				int i = *static_cast<int*>(lock);
+				auto lock = buffer.lock(LockSettings::READ);
+				auto i = *static_cast<int*>(lock);
 				REQUIRE(i == 42);
 				buffer.unlock();
 			}
@@ -96,7 +96,6 @@ TEST_CASE("Buffer", "[Buffer]")
 
 		const UsageSettings usageSettings = UsageSettings::STATIC;
 		const AccessSettings accessSettings = AccessSettings::WRITE;
-		tov::rendering::buffers::BufferManager manager;
 		auto buffer = DummyBuffer<usageSettings, accessSettings>(manager, sizeof(int), bufferStore);
 
 		SECTION("with write lock settings")
@@ -130,7 +129,6 @@ TEST_CASE("Buffer", "[Buffer]")
 
 		const UsageSettings usageSettings = UsageSettings::STATIC;
 		const AccessSettings accessSettings = AccessSettings::WRITE;
-		tov::rendering::buffers::BufferManager manager;
 		auto buffer = DummyBuffer<usageSettings, accessSettings>(manager, sizeof(bufferStore), bufferStore);
 
 		SECTION("writes the designated section of the buffer")
@@ -155,13 +153,14 @@ TEST_CASE("Buffer", "[Buffer]")
 
 TEST_CASE("Multiple buffers", "[Buffer]")
 {
+	DummyBufferManager manager;
+
 	SECTION("can map to the same buffer store")
 	{
 		char bufferStore[8];
 
 		const UsageSettings usageSettings = UsageSettings::STATIC;
 		const AccessSettings accessSettings = AccessSettings::WRITE;
-		tov::rendering::buffers::BufferManager manager;
 
 		{
 			auto buffer = DummyBuffer<usageSettings, accessSettings>(manager, sizeof(bufferStore), bufferStore);

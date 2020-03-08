@@ -14,14 +14,18 @@ namespace tov
 
 	class VertexFormat
 	{
-	public:
-		void addAttribute(VertexAttribute attribute);
-		size_t getSize() const { return mSize; }
-
 	private:
 		using VertexAttributeList = std::vector<VertexAttribute>;
 
-		// TODO: 
+	public:
+		void addAttribute(VertexAttribute attribute);
+		auto getSize() const { return mSize; }
+
+		auto getAttributes() const -> auto const & { return mAttributes; }
+
+	private:
+
+		// TODO:
 		// The list of attributes should be unique for each semantic.
 		// A semantic should not exist more than once in this list.
 		VertexAttributeList mAttributes;

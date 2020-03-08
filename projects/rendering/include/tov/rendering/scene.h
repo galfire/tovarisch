@@ -23,7 +23,7 @@ namespace tov
 		~Scene() = default;
 
 		template<class T, class... U>
-		T* create(U&&... args)
+		auto create(U&&... args)
 		{
 			auto sceneObject = std::unique_ptr<T>(
 				new T(std::forward<U>(args)...)
@@ -33,8 +33,8 @@ namespace tov
 			return static_cast<T*>(ret);
 		}
 
-		Camera* createCamera();
-		Entity* createEntity();
+		auto createCamera() -> Camera*;
+		auto createEntity() -> Entity*;
 
 	private:
 		using SceneObjectList = std::vector<SceneObjectUPtr>;

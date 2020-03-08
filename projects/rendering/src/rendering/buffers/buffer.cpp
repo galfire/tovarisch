@@ -1,27 +1,11 @@
 #include "rendering/buffers/buffer.h"
 
-#include <iostream>
-
 namespace tov
 {
 	TOV_NAMESPACE_BEGIN(rendering)
 	TOV_NAMESPACE_BEGIN(buffers)
 
-	BufferBase::BufferBase(
-		BufferManager& manager,
-		size_t bytes
-	)
-		: mManager(manager)
-		, mBytes(bytes)
-		, mCurrentBuffer(mBuffer)
-		, mCurrentScratch(mScratch)
-	{}
-
-	BufferBase::~BufferBase()
-	{
-	}
-
-	void* BufferBase::lock(size_t offset, size_t length, LockSettings lockSettings)
+	auto BufferBase::lock(size_t offset, size_t length, LockSettings lockSettings) -> void*
 	{
 		assert(!mLocked && "Buffer is already locked!");
 
@@ -54,9 +38,9 @@ namespace tov
 		return mScratch;
 	}
 
-	void* BufferBase::lock(LockSettings lockSettings)
+	auto BufferBase::lock(LockSettings lockSettings) -> void*
 	{
-		void* buffer = lock(0, mBytes, lockSettings);
+		auto buffer = lock(0, mBytes, lockSettings);
 		return buffer;
 	}
 

@@ -16,7 +16,7 @@ namespace tov
 		WindowRendererSupport() = default;
 		virtual ~WindowRendererSupport() = default;
 
-		virtual std::unique_ptr<WindowRendererComponent> buildComponent(Window& parentWindow) const TOV_ABSTRACT;
+		virtual auto buildComponent(Window& parentWindow) const -> std::unique_ptr<WindowRendererComponent> TOV_ABSTRACT;
 	};
 
 	TOV_NAMESPACE_END

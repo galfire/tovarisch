@@ -17,7 +17,7 @@ namespace tov
 
 	TOV_NAMESPACE_BEGIN(mesh)
 
-	class Mesh;
+	//class Mesh;
 
 	TOV_NAMESPACE_END //mesh
 
@@ -41,7 +41,7 @@ namespace tov
 			return static_cast<T*>(ret);
 		}
 
-		MeshComponent* createMeshComponent(mesh::Mesh& mesh);
+		//MeshComponent* createMeshComponent(mesh::Mesh& mesh);
 
 	private:
 		using ComponentList = std::vector<ComponentUPtr>;

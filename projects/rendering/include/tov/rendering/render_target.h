@@ -33,10 +33,10 @@ namespace tov
 
 		virtual void swapBuffers() TOV_ABSTRACT;
 
-		inline uint getWidth() const noexcept { return mWidth; }
-		inline uint getHeight() const noexcept { return mHeight; }
+		inline auto getWidth() const noexcept { return mWidth; }
+		inline auto getHeight() const noexcept { return mHeight; }
 
-		inline Viewport<ViewportT>* createViewport(
+		inline auto createViewport(
 			Camera& camera,
 			int zIndex,
 			float normalizedLeft = 0.0f,
@@ -44,7 +44,7 @@ namespace tov
 			float normalizedWidth = 1.0f,
 			float normalizedHeight = 1.0f,
 			Colour backgroundColour = Colour::Black
-		);
+		) -> Viewport<ViewportT>*;
 
 	protected:
 		uint mWidth;

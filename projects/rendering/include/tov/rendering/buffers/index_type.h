@@ -15,7 +15,7 @@ namespace tov
 		BITS_32,
 	};
 
-	constexpr IndexType getIndexType(uint numIndices)
+	constexpr auto getIndexType(uint numIndices)
 	{
 		IndexType                        indexType = IndexType::BITS_32;
 		if      (numIndices < (1 << 8))  indexType = IndexType::BITS_8;
@@ -24,7 +24,7 @@ namespace tov
 		return indexType;
 	}
 
-	constexpr size_t getIndexTypeSize(IndexType indexType)
+	constexpr auto getIndexTypeSize(IndexType indexType)
 	{
 		switch (indexType)
 		{

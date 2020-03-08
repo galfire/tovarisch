@@ -31,7 +31,7 @@ namespace tov
 	}
 
 	template<class ViewportT>
-	inline Viewport<ViewportT>* RenderTarget<ViewportT>::createViewport(
+	inline auto RenderTarget<ViewportT>::createViewport(
 		Camera& camera,
 		int zIndex,
 		float normalizedLeft,
@@ -39,7 +39,7 @@ namespace tov
 		float normalizedWidth,
 		float normalizedHeight,
 		Colour backgroundColour
-	)
+	) -> Viewport<ViewportT>*
 	{
 		auto viewport = std::unique_ptr<ViewportT>(
 			new ViewportT(

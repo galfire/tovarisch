@@ -21,7 +21,7 @@ namespace tov
 		~RenderTargetManager() noexcept = default;
 
 		template<class T, class... U>
-		T* create(U&&... args)
+		auto create(U&&... args)
 		{
 			auto renderTarget = std::unique_ptr<T>(
 				new T(std::forward<U>(args)...)

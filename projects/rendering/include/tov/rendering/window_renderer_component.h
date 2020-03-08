@@ -17,12 +17,12 @@ namespace tov
 		WindowRendererComponent(Window& parentWindow);
 		virtual ~WindowRendererComponent() = default;
 
-		const RenderContext& getRenderContext() const;
+		auto getRenderContext() const -> const RenderContext&;
 
 		void create();
 		void destroy();
 
-		bool makeContextCurrent();
+		auto makeContextCurrent() -> bool;
 
 	protected:
 		virtual void createRenderContext() TOV_ABSTRACT;

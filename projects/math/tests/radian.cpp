@@ -7,6 +7,12 @@ TEST_CASE("Radian", "[Radian]")
 {
 	const float PI = tov::math::PI;
 
+	SECTION("assignment constructor")
+	{
+		tov::math::Radian r = PI;
+		REQUIRE(r.valueRadians() == PI);
+	}
+
 	SECTION("valueRadian")
 	{
 		SECTION("returns the value in radians")

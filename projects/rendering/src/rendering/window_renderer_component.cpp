@@ -12,7 +12,7 @@ namespace tov
 		: mParentWindow(parentWindow)
 	{}
 
-	const RenderContext& WindowRendererComponent::getRenderContext() const
+	auto WindowRendererComponent::getRenderContext() const -> const RenderContext&
 	{
 		return *mRenderContext.get();
 	}
