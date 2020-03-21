@@ -14,12 +14,8 @@
 #include <tov/rendering/web/window_platform_support.h>
 #include <tov/rendering_gl/window_renderer_support.h>
 
-#include <tov/rendering_gl/buffers/buffer_manager.h>
-#include <tov/rendering_gl/buffers/buffer.h>
-#include <tov/rendering/buffers/index_buffer_object.h>
-#include <tov/rendering/buffers/index_type.h>
-#include <tov/rendering/buffers/access_settings.h>
-#include <tov/rendering/buffers/usage_settings.h>
+#include <tov/rendering_gl/pipeline/shader.h>
+#include <tov/rendering_gl/pipeline/program.h>
 
 #include <tov/rendering_gl/viewport.h>
 
@@ -55,32 +51,25 @@ int main()
 	auto vp3 = window2->createViewport(c, 2, 0.0f, 0.0f, 1.0f, 1.0f, tov::rendering::Colour::Blue);
 
 	{
-		//glfwInit();
+		using ShaderType = tov::rendering::pipeline::ShaderType;
 
-		using UsageSettings = tov::rendering::buffers::UsageSettings;
-		using AccessSettings = tov::rendering::buffers::AccessSettings;
-		using IndexType = tov::rendering::buffers::IndexType;
+		tov::rendering::gl::pipeline::Shader v(ShaderType::VERTEX, "/shaders/vertex.vert.glsl");
+		tov::rendering::gl::pipeline::Shader f(ShaderType::FRAGMENT, "/shaders/simple.frag.glsl");
 
-		tov::rendering::gl::buffers::BufferManager manager;
-		auto buffer = manager.createIndexBuffer<UsageSettings::STATIC, AccessSettings::READ | AccessSettings::WRITE>(100);
-		tov::rendering::buffers::IndexBufferObject ibo(*buffer);
-		{
-			void* lock = ibo.lock(3, 10, tov::rendering::buffers::LockSettings::WRITE);
-			memset(lock, '1', 10);
-			ibo.unlock();
-		}
+		tov::rendering::gl::pipeline::Program p;
+		p.attachShader(v);
+		p.attachShader(f);
+		p.link();
+		p.use();
 
-		/*{
-			union {
-				void* lock;
-				tov::byte* data;
-			};
-			lock = ibo.lock(tov::rendering::buffers::LockSettings::READ);
-			ibo.unlock();
-		}*/
+		p.setMatrix4("viewMatrix", c.getViewMatrix());
+		p.setMatrix4("projectionMatrix", c.getProjectionMatrix());
+		//p.setMatrix4("modelMatrix", node2.getTransform().getHomogeneousMatrix());
 	}
 
-	emscripten_set_main_loop(oneIteration, 30, 1);
+	// touch touch
+
+	emscripten_set_main_loop(oneIteration, 0, 1);
 
 	return 0;
 }

@@ -27,13 +27,16 @@ namespace tov
 
 		void renderScene();
 
+		auto getProjectionMatrix() const { return mViewFrustum.getProjectionMatrix(); }
+		auto getViewMatrix() const { return mViewFrustum.getViewMatrix(); }
+
 	private:
 		void buildProjectionMatrix(void);
 		void buildViewMatrix(void);
 
 	private:
 		Transform mCachedTransform;
-		ViewFrustum<Projection::PERSPECTIVE> mViewFrustum;
+		ViewFrustum<ProjectionType::PERSPECTIVE> mViewFrustum;
 	};
 
 	TOV_NAMESPACE_END

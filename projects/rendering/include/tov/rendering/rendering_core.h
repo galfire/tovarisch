@@ -5,6 +5,8 @@
 
 #include "definitions.h"
 
+#include <cassert>
+
 #ifdef TOV_DEBUG
 #	include <iostream>
 #	include <bitset>

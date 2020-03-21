@@ -37,16 +37,6 @@ namespace tov
 
 		auto getManager() const -> auto const & { return mManager; }
 
-		//auto createSubmesh(uint numVertices, uint numIndices)
-		//{
-		//	auto submesh = SubmeshUPtr(
-		//		new Submesh(*this, numVertices, numIndices)
-		//	);
-		//	mSubmeshes.push_back(std::move(submesh));
-		//	auto ret = mSubmeshes.back().get();
-		//	return ret;
-		//}
-
 		auto createSubmesh(const tov::rendering::geometry::Geometry& geometry)
 		{
 			auto submesh = SubmeshUPtr(

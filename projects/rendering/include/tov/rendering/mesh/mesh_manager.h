@@ -30,15 +30,15 @@ namespace tov
 		MeshManager(BufferManagerT& bufferManager) noexcept
 			: mBufferManager(bufferManager)
 		{
-			tov::rendering::buffers::VertexFormat vf;
-			vf.addAttribute(tov::rendering::buffers::VertexAttribute::POSITION);
-			vf.addAttribute(tov::rendering::buffers::VertexAttribute::NORMAL);
-			vf.addAttribute(tov::rendering::buffers::VertexAttribute::TEXTURE_COORDINATE);
-			tov::rendering::buffers::VertexBufferFormat vbf(
-				tov::rendering::buffers::VertexBufferFormat::SequenceType::INTERLEAVED,
-				vf
-			);
-			mPreferredVertexDataFormat.mapHandleToFormat(0, vbf);
+				buffers::VertexFormat vf;
+				vf.addAttribute(buffers::VertexAttribute::POSITION);
+				vf.addAttribute(buffers::VertexAttribute::NORMAL);
+				vf.addAttribute(buffers::VertexAttribute::TEXTURE_COORDINATE);
+				buffers::VertexBufferFormat vbf(
+					buffers::VertexBufferFormat::SequenceType::INTERLEAVED,
+					vf
+				);
+				mPreferredVertexDataFormat.mapHandleToFormat(0, vbf);
 		}
 		~MeshManager() noexcept = default;
 

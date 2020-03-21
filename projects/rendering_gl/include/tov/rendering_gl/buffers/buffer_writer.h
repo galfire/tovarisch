@@ -9,41 +9,41 @@
 
 namespace tov
 {
-	TOV_NAMESPACE_BEGIN(rendering)
-	TOV_NAMESPACE_BEGIN(gl)
-	TOV_NAMESPACE_BEGIN(buffers)
+    TOV_NAMESPACE_BEGIN(rendering)
+    TOV_NAMESPACE_BEGIN(gl)
+    TOV_NAMESPACE_BEGIN(buffers)
 
-	class BufferWriter
-	{
-	private:
-		auto bind() { return BufferBinder(mBufferID, mBufferTarget); }
+    class BufferWriter
+    {
+    private:
+        auto bind() { return BufferBinder(mBufferID, mBufferTarget); }
 
-	public:
-		BufferWriter(void*& src, void*& dst, GLuint& bufferID, GLenum& bufferTarget)
-			: mSource(src)
-			, mDestination(dst)
-			, mBufferID(bufferID)
-			, mBufferTarget(bufferTarget)
-		{}
-		virtual ~BufferWriter() = default;
+    public:
+        BufferWriter(void*& src, void*& dst, GLuint& bufferID, GLenum& bufferTarget)
+            : mSource(src)
+            , mDestination(dst)
+            , mBufferID(bufferID)
+            , mBufferTarget(bufferTarget)
+        {}
+        virtual ~BufferWriter() = default;
 
-		void operator () (size_t offset, size_t length)
-		{
-			auto b = bind();
-			auto op = log_gl_op("buffer subdata", mBufferTarget, offset, length, mSource);
-			glBufferSubData(mBufferTarget, offset, length, mSource);
-		}
+        void operator () (size_t offset, size_t length)
+        {
+            auto b = bind();
+            auto op = log_gl_op("buffer subdata", mBufferTarget, offset, length, mSource);
+            glBufferSubData(mBufferTarget, offset, length, mSource);
+        }
 
-	private:
-		void*& mSource;
-		void*& mDestination;
-		GLuint& mBufferID;
-		GLenum& mBufferTarget;
-	};
+    private:
+        void*& mSource;
+        void*& mDestination;
+        GLuint& mBufferID;
+        GLenum& mBufferTarget;
+    };
 
-	TOV_NAMESPACE_END // buffers
-	TOV_NAMESPACE_END // gl
-	TOV_NAMESPACE_END // rendering
+    TOV_NAMESPACE_END // buffers
+    TOV_NAMESPACE_END // gl
+    TOV_NAMESPACE_END // rendering
 }
 
 #endif

@@ -17,21 +17,19 @@ namespace tov
 	public:
 		void buildViewMatrix(const Transform& transform) noexcept;
 
+		auto getViewMatrix() const { return mViewMatrix; }
+
 	private:
 		math::Matrix4 mViewMatrix = math::Matrix4::ZERO;
 	};
 
-	class Projection
+	enum class ProjectionType
 	{
-	public:
-		enum Type
-		{
-			PERSPECTIVE,
-			ORTHOGRAPHIC
-		};
+		PERSPECTIVE,
+		ORTHOGRAPHIC
 	};
 
-	template<Projection::Type Projection>
+	template<ProjectionType Projection>
 	class ViewFrustumProjection
 	{
 	private:
@@ -51,6 +49,8 @@ namespace tov
 
 		inline void buildProjectionMatrix() noexcept;
 
+		auto getProjectionMatrix() const { return mProjectionMatrix; }
+
 	private:
 		inline ProjectionParameters calculateProjectionParameters() noexcept;
 
@@ -63,7 +63,7 @@ namespace tov
 		math::Matrix4 mProjectionMatrix = math::Matrix4::ZERO;
 	};
 
-	template<Projection::Type Projection>
+	template<ProjectionType Projection>
 	class ViewFrustum
 		: public ViewFrustumView
 		, public ViewFrustumProjection<Projection>

@@ -126,6 +126,12 @@ namespace tov
 			o << " )";
 			return o;
 		}
+
+
+		auto data() const
+		{
+			return this->mArr.data();
+		}
 #endif
 
 	public:

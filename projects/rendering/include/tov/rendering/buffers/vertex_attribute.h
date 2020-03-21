@@ -57,7 +57,7 @@ namespace tov
 			case Type::UBYTE:
 				return sizeof(byte);
 			default:
-				return 0u;
+				return static_cast<size_t>(0u);
 			}
 		}
 

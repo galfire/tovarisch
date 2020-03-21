@@ -5,16 +5,16 @@
 
 namespace tov
 {
-	TOV_NAMESPACE_BEGIN(rendering)
+    TOV_NAMESPACE_BEGIN(rendering)
 
-	class DeviceContext
-	{
-	public:
-		DeviceContext() = default;
-		virtual ~DeviceContext() = default;
-	};
+    class DeviceContext
+    {
+    public:
+        DeviceContext() = default;
+        virtual ~DeviceContext() = default;
+    };
 
-	TOV_NAMESPACE_END // rendering
+    TOV_NAMESPACE_END // rendering
 }
 
 #endif

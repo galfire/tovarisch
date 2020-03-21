@@ -22,10 +22,10 @@ namespace tov
 	{
 		TOV_MOVABLE_ONLY(VertexData)
 
-		using AccessSettings = tov::rendering::buffers::AccessSettings;
-		using UsageSettings = tov::rendering::buffers::UsageSettings;
+		using AccessSettings = buffers::AccessSettings;
+		using UsageSettings = buffers::UsageSettings;
 		using VBOHandle = byte;
-		using BufferObjectUPtr = rendering::buffers::BufferObjectUPtr;
+		using BufferObjectUPtr = buffers::BufferObjectUPtr;
 		using HandleToVBOMap = std::unordered_map<VBOHandle, BufferObjectUPtr>;
 
 	public:
@@ -41,7 +41,7 @@ namespace tov
 			for (auto&& handle : handles)
 			{
 				auto bufferFormat = mFormat.getVertexBufferFormatForHandle(handle);
-				auto buffer = bufferManager.createVertexBuffer<UsageSettings::STATIC, AccessSettings::WRITE>(bufferFormat, numVertices);
+				auto buffer = bufferManager.template createVertexBuffer<UsageSettings::STATIC, AccessSettings::WRITE>(bufferFormat, numVertices);
 				auto bufferObject = BufferObjectUPtr(
 					new tov::rendering::buffers::VertexBufferObject(*buffer, bufferFormat)
 				);
@@ -54,13 +54,13 @@ namespace tov
 		auto getBufferObjectForHandle(VBOHandle handle) const -> auto&
 		{
 			auto vbo = mHandleToVBOMap.at(handle).get();
-			return *static_cast<tov::rendering::buffers::VertexBufferObject*>(vbo);
+			return *static_cast<buffers::VertexBufferObject*>(vbo);
 		}
 
-		auto getBufferObjectForAttribute(tov::rendering::buffers::VertexAttribute attribute) const -> auto&
+		auto getBufferObjectForAttribute(buffers::VertexAttribute attribute) const -> auto&
 		{
 			auto handle = mFormat.getHandleForAttribute(attribute);
-			auto vbo = getBufferObjectForHandle(handle);
+			auto& vbo = getBufferObjectForHandle(handle);
 			return vbo;
 		}
 

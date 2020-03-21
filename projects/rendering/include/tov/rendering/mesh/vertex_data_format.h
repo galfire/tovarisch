@@ -60,7 +60,8 @@ namespace tov
 
 		void mapHandleToFormat(VBOHandle handle, VertexBufferFormat vbf)
 		{
-			if (!mHandleToFormatMap.contains(handle))
+			auto format = mHandleToFormatMap.find(handle);
+			if (format == mHandleToFormatMap.end())
 			{
 				mHandles.push_back(handle);
 				mHandleToFormatMap[handle] = vbf;

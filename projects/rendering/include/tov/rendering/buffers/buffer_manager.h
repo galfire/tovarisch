@@ -73,7 +73,7 @@ namespace tov
 			auto vertexFormat = format.getVertexFormat();
 			auto vertexSize = vertexFormat.getSize();
 			size_t size = vertexSize * numVertices;
-			auto buffer = static_cast<DerivedBufferManagerT*>(this)->createVertexBufferImpl<usageSettings, accessSettings>(size);
+			auto buffer = static_cast<DerivedBufferManagerT*>(this)->template createVertexBufferImpl<usageSettings, accessSettings>(size);
 			return buffer;
 		}
 
@@ -83,7 +83,7 @@ namespace tov
 			auto indexType = getIndexType(numIndices);
 			auto indexSize = getIndexTypeSize(indexType);
 			auto size = indexSize * numIndices;
-			auto buffer = static_cast<DerivedBufferManagerT*>(this)->createIndexBufferImpl<usageSettings, accessSettings>(size);
+			auto buffer = static_cast<DerivedBufferManagerT*>(this)->template createIndexBufferImpl<usageSettings, accessSettings>(size);
 			return buffer;
 		}
 

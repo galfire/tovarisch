@@ -196,6 +196,11 @@ namespace tov
 			return v;
 		}
 
+		auto data() const
+		{
+			return this->mArr.data();
+		}
+
 #ifdef TOV_DEBUG
 		inline friend std::ostream& operator <<
 			(std::ostream& o, const VectorT& vec)

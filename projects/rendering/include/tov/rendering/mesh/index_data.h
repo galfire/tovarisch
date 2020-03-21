@@ -17,9 +17,9 @@ namespace tov
 	{
 		TOV_MOVABLE_ONLY(IndexData)
 
-		using AccessSettings = tov::rendering::buffers::AccessSettings;
-		using UsageSettings = tov::rendering::buffers::UsageSettings;
-		using BufferObjectUPtr = rendering::buffers::BufferObjectUPtr;
+		using AccessSettings = buffers::AccessSettings;
+		using UsageSettings = buffers::UsageSettings;
+		using BufferObjectUPtr = buffers::BufferObjectUPtr;
 
 	public:
 		template<class BufferManagerT>
@@ -28,9 +28,9 @@ namespace tov
 			uint numIndices
 		) noexcept
 		{
-			auto buffer = bufferManager.createIndexBuffer<UsageSettings::STATIC, AccessSettings::WRITE>(numIndices);
+			auto buffer = bufferManager.template createIndexBuffer<UsageSettings::STATIC, AccessSettings::WRITE>(numIndices);
 			auto bufferObject = BufferObjectUPtr(
-				new tov::rendering::buffers::IndexBufferObject(*buffer)
+				new buffers::IndexBufferObject(*buffer)
 			);
 			mIndexBufferObject = std::move(bufferObject);
 		}
@@ -40,7 +40,7 @@ namespace tov
 		auto getBufferObject() const -> auto&
 		{
 			auto ibo = mIndexBufferObject.get();
-			return *static_cast<tov::rendering::buffers::IndexBufferObject*>(ibo);
+			return *static_cast<buffers::IndexBufferObject*>(ibo);
 		}
 
 	private:

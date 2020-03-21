@@ -6,10 +6,10 @@ namespace tov
 {
 	TOV_NAMESPACE_BEGIN(rendering)
 
-	//MeshComponent::MeshComponent(mesh::Mesh& mesh)
-		//: Component()
-		//, mMesh(mesh)
-	//{}
+	MeshComponent::MeshComponent(mesh::MeshBase& mesh)
+		: Component()
+		, mMesh(mesh)
+	{}
 
 	TOV_NAMESPACE_END // rendering
 }

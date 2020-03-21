@@ -10,112 +10,112 @@
 
 namespace tov
 {
-	TOV_NAMESPACE_BEGIN(rendering)
-	TOV_NAMESPACE_BEGIN(buffers)
+    TOV_NAMESPACE_BEGIN(rendering)
+    TOV_NAMESPACE_BEGIN(buffers)
 
-	class BufferManagerBase;
+    class BufferManagerBase;
 
-	class BufferBase
-	{
-		TOV_MOVABLE_ONLY(BufferBase)
+    class BufferBase
+    {
+        TOV_MOVABLE_ONLY(BufferBase)
 
-		friend class BufferManagerBase;
+        friend class BufferManagerBase;
 
-	public:
-		virtual ~BufferBase() = default;
+    public:
+        virtual ~BufferBase() = default;
 
-		// Lock a part of the buffer [offset, offset + length)
-		auto lock(size_t offset, size_t length, LockSettings lockSettings) -> void*;
-		
-		// Lock the whole buffer
-		auto lock(LockSettings lockSettings) -> void*;
+        // Lock a part of the buffer [offset, offset + length)
+        auto lock(size_t offset, size_t length, LockSettings lockSettings) -> void*;
+        
+        // Lock the whole buffer
+        auto lock(LockSettings lockSettings) -> void*;
 
-		void unlock();
+        void unlock();
 
-	protected:
-		BufferBase(
-			BufferManagerBase& manager,
-			size_t bytes
-		)
-			: mManager(manager)
-			, mBytes(bytes)
-			, mCurrentBuffer(mBuffer)
-			, mCurrentScratch(mScratch)
-		{}
+    protected:
+        BufferBase(
+            BufferManagerBase& manager,
+            size_t bytes
+        )
+            : mManager(manager)
+            , mBytes(bytes)
+            , mCurrentBuffer(mBuffer)
+            , mCurrentScratch(mScratch)
+        {}
 
-		// Connect this instance to the external buffer
-		virtual void map() TOV_ABSTRACT;
-		virtual void unmap() TOV_ABSTRACT;
+        // Connect this instance to the external buffer
+        virtual void map() TOV_ABSTRACT;
+        virtual void unmap() TOV_ABSTRACT;
 
-		// Commit the data in scratch memory to the buffer 
-		virtual void write() TOV_ABSTRACT;
+        // Commit the data in scratch memory to the buffer 
+        virtual void write() TOV_ABSTRACT;
 
-		// Read the buffer data into scratch memory
-		virtual void read() TOV_ABSTRACT;
+        // Read the buffer data into scratch memory
+        virtual void read() TOV_ABSTRACT;
 
-		// Discard the data in the buffer
-		virtual void discard() {}
-			
-	protected:
-		BufferManagerBase& mManager;
+        // Discard the data in the buffer
+        virtual void discard() {}
+            
+    protected:
+        BufferManagerBase& mManager;
 
-		// The external buffer store
-		void* mBuffer = nullptr;
-		void*& mCurrentBuffer;
+        // The external buffer store
+        void* mBuffer = nullptr;
+        void*& mCurrentBuffer;
 
-		// Scratch pointer
-		void* mScratch = nullptr;
-		void*& mCurrentScratch;
+        // Scratch pointer
+        void* mScratch = nullptr;
+        void*& mCurrentScratch;
 
-		// Size of the buffer store
-		size_t mBytes;
-		// Where in the buffer the lock starts
-		size_t mLockOffset = 0;
-		// The length of the locked portion of the buffer
-		size_t mLockLength = 0;
-		// The lock settings
-		LockSettings mLockSettings = static_cast<LockSettings>(0);
+        // Size of the buffer store
+        size_t mBytes;
+        // Where in the buffer the lock starts
+        size_t mLockOffset = 0;
+        // The length of the locked portion of the buffer
+        size_t mLockLength = 0;
+        // The lock settings
+        LockSettings mLockSettings = static_cast<LockSettings>(0);
 
-	private:
-		bool mLocked = false;
-	};
+    private:
+        bool mLocked = false;
+    };
 
-	using BufferUPtr = std::unique_ptr<BufferBase>;
+    using BufferUPtr = std::unique_ptr<BufferBase>;
 
-	template<
-		class ReaderT,
-		class WriterT,
-		UsageSettings usageSettings,
-		AccessSettings accessSettings
-	>
-	class Buffer
-		: public BufferBase
-	{
-	public:
-		template<class... U>
-		Buffer(
-			BufferManagerBase& manager,
-			size_t bytes,
-			U&&... accessorArgs
-		)
-			: BufferBase(manager, bytes)
-			, mBufferAccessor(
-				mCurrentBuffer,
-				mCurrentScratch,
-				std::forward<U>(accessorArgs)...
-			)
-		{}
+    template<
+        class ReaderT,
+        class WriterT,
+        UsageSettings usageSettings,
+        AccessSettings accessSettings
+    >
+    class Buffer
+        : public BufferBase
+    {
+    public:
+        template<class... U>
+        Buffer(
+            BufferManagerBase& manager,
+            size_t bytes,
+            U&&... accessorArgs
+        )
+            : BufferBase(manager, bytes)
+            , mBufferAccessor(
+                mCurrentBuffer,
+                mCurrentScratch,
+                std::forward<U>(accessorArgs)...
+            )
+        {}
 
-	private:
-		void read() override;
-		void write() override;
+    private:
+        void read() override;
+        void write() override;
 
-	private:
-		BufferAccessor<ReaderT, WriterT, accessSettings> mBufferAccessor;
-	};
+    private:
+        BufferAccessor<ReaderT, WriterT, accessSettings> mBufferAccessor;
+    };
 
-	TOV_NAMESPACE_END // buffers
-	TOV_NAMESPACE_END // rendering
+    TOV_NAMESPACE_END // buffers
+    TOV_NAMESPACE_END // rendering
 }
 
 #include "buffer.inl"

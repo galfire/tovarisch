@@ -18,13 +18,16 @@ include_directories(${CMAKE_SOURCE_DIR}/projects/rendering/include)
 include_directories(${CMAKE_SOURCE_DIR}/projects/rendering_gl/include)
 include_directories(${CMAKE_SOURCE_DIR}/projects/rendering_gl/gl)
 
+add_custom_command(TARGET app POST_BUILD
+                   COMMAND ${CMAKE_COMMAND} -E copy_directory
+                   ${CMAKE_SOURCE_DIR}/app/shaders/ $<TARGET_FILE_DIR:app>/shaders)
+
 if(WIN32)
-	include_directories(${CMAKE_SOURCE_DIR}/projects/rendering/_platforms/win32/include)
-	include_directories(${CMAKE_SOURCE_DIR}/projects/rendering_gl/_platforms/win32/include)
-	add_library(glew STATIC IMPORTED)
-	set_target_properties(glew PROPERTIES IMPORTED_LOCATION ${CMAKE_SOURCE_DIR}/projects/rendering_gl/lib/Win32/glew32s.lib)
-	target_link_libraries(app glew)
-else()
+    include_directories(${CMAKE_SOURCE_DIR}/projects/rendering/_platforms/win32/include)
+    include_directories(${CMAKE_SOURCE_DIR}/projects/rendering_gl/_platforms/win32/include)
+    add_library(glew STATIC IMPORTED)
+    set_target_properties(glew PROPERTIES IMPORTED_LOCATION ${CMAKE_SOURCE_DIR}/projects/rendering_gl/lib/Win32/glew32s.lib)
+    target_link_libraries(app glew)
 endif()
 
 target_link_libraries(app memory)
@@ -33,9 +36,8 @@ target_link_libraries(app rendering)
 target_link_libraries(app rendering_gl)
 
 if(WIN32)
-	target_link_libraries(app rendering_win32)
-	target_link_libraries(app rendering_win32_gl)
-else()
+    target_link_libraries(app rendering_win32)
+    target_link_libraries(app rendering_win32_gl)
 endif()
 
 # TODO: Add tests and install targets if needed.

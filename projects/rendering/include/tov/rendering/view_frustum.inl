@@ -3,8 +3,8 @@ namespace tov
 	TOV_NAMESPACE_BEGIN(rendering)
 
 	template<>
-	inline typename ViewFrustumProjection<Projection::PERSPECTIVE>::ProjectionParameters
-	ViewFrustumProjection<Projection::PERSPECTIVE>::calculateProjectionParameters() noexcept
+	inline typename ViewFrustumProjection<ProjectionType::PERSPECTIVE>::ProjectionParameters
+	ViewFrustumProjection<ProjectionType::PERSPECTIVE>::calculateProjectionParameters() noexcept
 	{
 		ProjectionParameters parameters;
 
@@ -24,7 +24,7 @@ namespace tov
 	}
 
 	template<>
-	inline void ViewFrustumProjection<Projection::PERSPECTIVE>::buildProjectionMatrix() noexcept
+	inline void ViewFrustumProjection<ProjectionType::PERSPECTIVE>::buildProjectionMatrix() noexcept
 	{
 		ProjectionParameters parameters = this->calculateProjectionParameters();
 

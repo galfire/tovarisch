@@ -9,31 +9,31 @@
 
 namespace tov
 {
-	TOV_NAMESPACE_BEGIN(rendering)
-	TOV_NAMESPACE_BEGIN(buffers)
+    TOV_NAMESPACE_BEGIN(rendering)
+    TOV_NAMESPACE_BEGIN(buffers)
 
-	class VertexFormat
-	{
-	private:
-		using VertexAttributeList = std::vector<VertexAttribute>;
+    class VertexFormat
+    {
+    private:
+        using VertexAttributeList = std::vector<VertexAttribute>;
 
-	public:
-		void addAttribute(VertexAttribute attribute);
-		auto getSize() const { return mSize; }
+    public:
+        void addAttribute(VertexAttribute attribute);
+        auto getSize() const { return mSize; }
 
-		auto getAttributes() const -> auto const & { return mAttributes; }
+        auto getAttributes() const -> auto const & { return mAttributes; }
 
-	private:
+    private:
 
-		// TODO:
-		// The list of attributes should be unique for each semantic.
-		// A semantic should not exist more than once in this list.
-		VertexAttributeList mAttributes;
-		size_t mSize = 0;
-	};
+        // TODO:
+        // The list of attributes should be unique for each semantic.
+        // A semantic should not exist more than once in this list.
+        VertexAttributeList mAttributes;
+        size_t mSize = 0;
+    };
 
-	TOV_NAMESPACE_END // buffers
-	TOV_NAMESPACE_END // rendering
+    TOV_NAMESPACE_END // buffers
+    TOV_NAMESPACE_END // rendering
 }
 
 #endif

@@ -8,39 +8,39 @@
 
 namespace tov
 {
-	TOV_NAMESPACE_BEGIN(rendering)
-	TOV_NAMESPACE_BEGIN(buffers)
+    TOV_NAMESPACE_BEGIN(rendering)
+    TOV_NAMESPACE_BEGIN(buffers)
 
-	class BufferObject
-	{
-	public:
-		BufferObject(BufferBase& buffer)
-			: mBuffer(buffer)
-		{}
+    class BufferObject
+    {
+    public:
+        BufferObject(BufferBase& buffer)
+            : mBuffer(buffer)
+        {}
 
-		auto lock(size_t offset, size_t length, LockSettings lockSettings)
-		{
-			return mBuffer.lock(offset, length, lockSettings);
-		}
+        auto lock(size_t offset, size_t length, LockSettings lockSettings)
+        {
+            return mBuffer.lock(offset, length, lockSettings);
+        }
 
-		auto lock(LockSettings lockSettings)
-		{
-			return mBuffer.lock(lockSettings);
-		}
+        auto lock(LockSettings lockSettings)
+        {
+            return mBuffer.lock(lockSettings);
+        }
 
-		void unlock()
-		{
-			mBuffer.unlock();
-		}
+        void unlock()
+        {
+            mBuffer.unlock();
+        }
 
-	private:
-		BufferBase& mBuffer;
-	};
+    private:
+        BufferBase& mBuffer;
+    };
 
-	using BufferObjectUPtr = std::unique_ptr<BufferObject>;
+    using BufferObjectUPtr = std::unique_ptr<BufferObject>;
 
-	TOV_NAMESPACE_END // buffers
-	TOV_NAMESPACE_END // rendering
+    TOV_NAMESPACE_END // buffers
+    TOV_NAMESPACE_END // rendering
 }
 
 #endif
