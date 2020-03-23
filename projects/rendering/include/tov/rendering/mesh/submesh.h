@@ -9,6 +9,7 @@
 #include <tov/rendering/buffers/lock_settings.h>
 #include <tov/rendering/buffers/index_type.h>
 #include <tov/rendering/buffers/vertex_attribute.h>
+#include <tov/rendering/buffers/vertex_format.h>
 #include <tov/rendering/buffers/vertex_buffer_object.h>
 #include <tov/rendering/geometry/geometry.h>
 
@@ -42,6 +43,11 @@ namespace tov
         }
 
         ~Submesh() noexcept = default;
+
+        auto getVertexDataFormat() const
+        {
+            return mVertexData->getFormat();
+        }
 
     private:
         void build()
@@ -103,20 +109,7 @@ namespace tov
         void buildVertexData()
         {
             auto preferredVertexDataFormat = mParentMesh.getManager().getPreferredVertexDataFormat();
-            auto preferredAttributes = preferredVertexDataFormat.getAttributes();
-
-            // Build a vertex data format that is compatible with the geometry, using the preferred vertex data format
-            VertexDataFormat vertexDataFormat;
-
-            for (auto&& attribute : preferredAttributes)
-            {
-                if (mGeometry.hasAttribute(attribute))
-                {
-                    auto handle = preferredVertexDataFormat.getHandleForAttribute(attribute);
-                    auto vertexBufferFormat = preferredVertexDataFormat.getVertexBufferFormatForAttribute(attribute);
-                    vertexDataFormat.mapHandleToFormat(handle, vertexBufferFormat);
-                }
-            }
+            auto vertexDataFormat = preferredVertexDataFormat;
 
             mVertexData = VertexDataUPtr(
                 new VertexData(
@@ -161,19 +154,27 @@ namespace tov
                 for (auto&& attribute : attributes)
                 {
                     auto bytes = attribute.getSize();
-                    switch (attribute.getSemantic())
+
+                    if (mGeometry.hasAttribute(attribute))
                     {
-                    case buffers::VertexAttribute::Semantic::POSITION:
-                        memcpy(lock, &mGeometry.getPositions()[i], bytes);
-                        break;
-                    case buffers::VertexAttribute::Semantic::NORMAL:
-                        memcpy(lock, &mGeometry.getNormals()[i], bytes);
-                        break;
-                    case buffers::VertexAttribute::Semantic::TEXTURE_COORDINATE:
-                        memcpy(lock, &mGeometry.getTextureCoordinates()[i], bytes);
-                        break;
-                    default:
-                        break;
+                        switch (attribute.getSemantic())
+                        {
+                        case buffers::VertexAttribute::Semantic::POSITION:
+                            memcpy(lock, &mGeometry.getPositions()[i], bytes);
+                            break;
+                        case buffers::VertexAttribute::Semantic::NORMAL:
+                            memcpy(lock, &mGeometry.getNormals()[i], bytes);
+                            break;
+                        case buffers::VertexAttribute::Semantic::TEXTURE_COORDINATE:
+                            memcpy(lock, &mGeometry.getTextureCoordinates()[i], bytes);
+                            break;
+                        default:
+                            break;
+                        }
+                    }
+                    else
+                    {
+                        memset(lock, 0, bytes);
                     }
 
                     // Move the write location forward
@@ -196,19 +197,26 @@ namespace tov
                 auto numVertices = mGeometry.getNumVertices();
                 auto bytes = attribute.getSize() * numVertices;
 
-                switch (attribute.getSemantic())
+                if (mGeometry.hasAttribute(attribute))
                 {
-                case buffers::VertexAttribute::Semantic::POSITION:
-                    memcpy(lock, mGeometry.getPositions(), bytes);
-                    break;
-                case buffers::VertexAttribute::Semantic::NORMAL:
-                    memcpy(lock, mGeometry.getNormals(), bytes);
-                    break;
-                case buffers::VertexAttribute::Semantic::TEXTURE_COORDINATE:
-                    memcpy(lock, mGeometry.getTextureCoordinates(), bytes);
-                    break;
-                default:
-                    break;
+                    switch (attribute.getSemantic())
+                    {
+                    case buffers::VertexAttribute::Semantic::POSITION:
+                        memcpy(lock, mGeometry.getPositions(), bytes);
+                        break;
+                    case buffers::VertexAttribute::Semantic::NORMAL:
+                        memcpy(lock, mGeometry.getNormals(), bytes);
+                        break;
+                    case buffers::VertexAttribute::Semantic::TEXTURE_COORDINATE:
+                        memcpy(lock, mGeometry.getTextureCoordinates(), bytes);
+                        break;
+                    default:
+                        break;
+                    }
+                }
+                else
+                {
+                    memset(lock, 0, bytes);
                 }
 
                 // Move the write location forward

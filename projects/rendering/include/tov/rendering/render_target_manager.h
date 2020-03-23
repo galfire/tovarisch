@@ -7,44 +7,49 @@
 
 namespace tov
 {
-	TOV_NAMESPACE_BEGIN(rendering)
+    TOV_NAMESPACE_BEGIN(rendering)
 
-	template<class Viewport> class RenderTarget;
+    template <class ViewportT> class RenderSystem;
+    template <class ViewportT> class RenderTarget;
 
-	template<class Viewport>
-	class RenderTargetManager
-	{
-		using RenderTargetT = RenderTarget<Viewport>;
+    template<class Viewport>
+    class RenderTargetManager
+    {
+        using RenderTargetT = RenderTarget<Viewport>;
 
-	public:
-		RenderTargetManager() noexcept = default;
-		~RenderTargetManager() noexcept = default;
+    public:
+        RenderTargetManager(RenderSystem<Viewport>& renderSystem) noexcept
+            : mRenderSystem(renderSystem)
+        {}
 
-		template<class T, class... U>
-		auto create(U&&... args)
-		{
-			auto renderTarget = std::unique_ptr<T>(
-				new T(std::forward<U>(args)...)
-			);
-			mRenderTargets.push_back(std::move(renderTarget));
-			auto ret = mRenderTargets.back().get();
-			return static_cast<T*>(ret);
-		}
+        ~RenderTargetManager() noexcept = default;
 
-		void renderTargets()
-		{
-			for (auto&& renderTarget : mRenderTargets)
-			{
-				renderTarget->renderViewports();
-				renderTarget->swapBuffers();
-			}
-		}
+        template<class T, class... U>
+        auto create(U&&... args)
+        {
+            auto renderTarget = std::unique_ptr<T>(
+                new T(mRenderSystem, std::forward<U>(args)...)
+            );
+            mRenderTargets.push_back(std::move(renderTarget));
+            auto ret = mRenderTargets.back().get();
+            return static_cast<T*>(ret);
+        }
 
-	private:
-		std::vector<std::unique_ptr<RenderTargetT>> mRenderTargets;
-	};
+        void renderTargets()
+        {
+            for (auto&& renderTarget : mRenderTargets)
+            {
+                renderTarget->renderViewports();
+                renderTarget->swapBuffers();
+            }
+        }
 
-	TOV_NAMESPACE_END // rendering
+    private:
+        RenderSystem<Viewport>& mRenderSystem;
+        std::vector<std::unique_ptr<RenderTargetT>> mRenderTargets;
+    };
+
+    TOV_NAMESPACE_END // rendering
 }
 
 #endif

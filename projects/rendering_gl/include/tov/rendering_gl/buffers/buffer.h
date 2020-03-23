@@ -56,7 +56,6 @@ namespace tov
     private:
         GLuint mBufferID;
         GLenum mBufferTarget;
-        static inline GLenum sGLAccessSettings = getGLAccessSettings();
         static inline GLenum sGLUsageSettings = getGLUsageSettings();
     };
 

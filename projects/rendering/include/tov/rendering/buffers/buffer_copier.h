@@ -7,31 +7,31 @@
 
 namespace tov
 {
-	TOV_NAMESPACE_BEGIN(rendering)
-	TOV_NAMESPACE_BEGIN(buffers)
+    TOV_NAMESPACE_BEGIN(rendering)
+    TOV_NAMESPACE_BEGIN(buffers)
 
-	class BufferCopier
-	{
-	public:
-		BufferCopier(void*& src, void*& dst)
-			: mSource(src)
-			, mDestination(dst)
-		{}
-		virtual ~BufferCopier() = default;
+    class BufferCopier
+    {
+    public:
+        BufferCopier(void*& src, void*& dst)
+            : mSource(src)
+            , mDestination(dst)
+        {}
+        virtual ~BufferCopier() = default;
 
-		void operator () (size_t offset, size_t length)
-		{
-			byte* offsetDestination = static_cast<byte*>(mDestination) + offset;
-			memcpy(offsetDestination, mSource, length);
-		}
+        void operator () (size_t offset, size_t length)
+        {
+            byte* offsetDestination = static_cast<byte*>(mDestination) + offset;
+            memcpy(offsetDestination, mSource, length);
+        }
 
-	protected:
-		void*& mSource;
-		void*& mDestination;
-	};
+    protected:
+        void*& mSource;
+        void*& mDestination;
+    };
 
-	TOV_NAMESPACE_END // buffers
-	TOV_NAMESPACE_END // rendering
+    TOV_NAMESPACE_END // buffers
+    TOV_NAMESPACE_END // rendering
 }
 
 #endif

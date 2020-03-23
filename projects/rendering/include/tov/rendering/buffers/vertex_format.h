@@ -5,6 +5,7 @@
 
 #include "vertex_attribute.h"
 
+#include <unordered_map>
 #include <vector>
 
 namespace tov
@@ -16,9 +17,10 @@ namespace tov
     {
     private:
         using VertexAttributeList = std::vector<VertexAttribute>;
+        using VertexAttributeToLocationMap = std::unordered_map<VertexAttribute, ushort, VertexAttribute::Hash, VertexAttribute::EqualTo>;
 
     public:
-        void addAttribute(VertexAttribute attribute);
+        void addAttribute(VertexAttribute attribute, ushort location);
         auto getSize() const { return mSize; }
 
         auto getAttributes() const -> auto const & { return mAttributes; }
@@ -29,6 +31,7 @@ namespace tov
         // The list of attributes should be unique for each semantic.
         // A semantic should not exist more than once in this list.
         VertexAttributeList mAttributes;
+        VertexAttributeToLocationMap mAttributeToLocationMap;
         size_t mSize = 0;
     };
 

@@ -7,43 +7,43 @@
 
 namespace tov
 {
-	TOV_NAMESPACE_BEGIN(rendering)
+    TOV_NAMESPACE_BEGIN(rendering)
 
-	Window::Window(
-		const WindowPlatformSupport& platformSupport,
-		const WindowRendererSupport& rendererSupport,
-		const char* name,
-		uint width,
-		uint height,
-		bool fullscreen,
-		bool visible,
-		PixelFormat pixelFormat
-	)
-		: mPlatformSupport(platformSupport)
-		, mRendererSupport(rendererSupport)
-		, mName(name)
-		, mWidth(width)
-		, mHeight(height)
-		, mFullscreen(fullscreen)
-		, mVisible(visible)
-		, mPixelFormat(pixelFormat)
-	{
-		mPlatformComponent = mPlatformSupport.buildComponent(*this);
-		mPlatformComponent->create();
+    Window::Window(
+        const WindowPlatformSupport& platformSupport,
+        const WindowRendererSupport& rendererSupport,
+        const char* name,
+        uint width,
+        uint height,
+        bool fullscreen,
+        bool visible,
+        PixelFormat pixelFormat
+    )
+        : mPlatformSupport(platformSupport)
+        , mRendererSupport(rendererSupport)
+        , mName(name)
+        , mWidth(width)
+        , mHeight(height)
+        , mFullscreen(fullscreen)
+        , mVisible(visible)
+        , mPixelFormat(pixelFormat)
+    {
+        mPlatformComponent = mPlatformSupport.buildComponent(*this);
+        mPlatformComponent->create();
 
-		mRendererComponent = mRendererSupport.buildComponent(*this);
-		mRendererComponent->create();
-	}
+        mRendererComponent = mRendererSupport.buildComponent(*this);
+        mRendererComponent->create();
+    }
 
-	const WindowPlatformComponent& Window::getPlatformComponent() const
-	{
-		return *mPlatformComponent.get();
-	}
+    const WindowPlatformComponent& Window::getPlatformComponent() const
+    {
+        return *mPlatformComponent.get();
+    }
 
-	const WindowRendererComponent& Window::getRendererComponent() const
-	{
-		return *mRendererComponent.get();
-	}
+    const WindowRendererComponent& Window::getRendererComponent() const
+    {
+        return *mRendererComponent.get();
+    }
 
-	TOV_NAMESPACE_END // rendering
+    TOV_NAMESPACE_END // rendering
 }

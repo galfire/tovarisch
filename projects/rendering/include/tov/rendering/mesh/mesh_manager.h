@@ -12,60 +12,62 @@
 
 namespace tov
 {
-	TOV_NAMESPACE_BEGIN(rendering)
-	TOV_NAMESPACE_BEGIN(buffers)
+    TOV_NAMESPACE_BEGIN(rendering)
+    TOV_NAMESPACE_BEGIN(buffers)
 
-	template<class DerivedBufferManagerT> class BufferManager;
+    template<class DerivedBufferManagerT> class BufferManager;
 
-	TOV_NAMESPACE_END // buffers
-	TOV_NAMESPACE_BEGIN(mesh)
+    TOV_NAMESPACE_END // buffers
+    TOV_NAMESPACE_BEGIN(mesh)
 
-	template<class DerivedBufferManagerT>
-	class MeshManager
-	{
-		using BufferManagerT = tov::rendering::buffers::BufferManager<DerivedBufferManagerT>;
-		using MeshT = Mesh<DerivedBufferManagerT>;
+    template<class DerivedBufferManagerT>
+    class MeshManager
+    {
+        using BufferManagerT = tov::rendering::buffers::BufferManager<DerivedBufferManagerT>;
+        using MeshT = Mesh<DerivedBufferManagerT>;
 
-	public:
-		MeshManager(BufferManagerT& bufferManager) noexcept
-			: mBufferManager(bufferManager)
-		{
-				buffers::VertexFormat vf;
-				vf.addAttribute(buffers::VertexAttribute::POSITION);
-				vf.addAttribute(buffers::VertexAttribute::NORMAL);
-				vf.addAttribute(buffers::VertexAttribute::TEXTURE_COORDINATE);
-				buffers::VertexBufferFormat vbf(
-					buffers::VertexBufferFormat::SequenceType::INTERLEAVED,
-					vf
-				);
-				mPreferredVertexDataFormat.mapHandleToFormat(0, vbf);
-		}
-		~MeshManager() noexcept = default;
+    public:
+        MeshManager(BufferManagerT& bufferManager) noexcept
+            : mBufferManager(bufferManager)
+        {
+                buffers::VertexFormat vf;
+                vf.addAttribute(buffers::VertexAttribute::POSITION, 0);
+                vf.addAttribute(buffers::VertexAttribute::NORMAL, 1);
+                vf.addAttribute(buffers::VertexAttribute::COLOUR, 2);
+                vf.addAttribute(buffers::VertexAttribute::TEXTURE_COORDINATE, 3);
+                buffers::VertexBufferFormat vbf(
+                    buffers::VertexBufferFormat::SequenceType::INTERLEAVED,
+                    vf
+                );
+                mPreferredVertexDataFormat.mapHandleToFormat(0, vbf);
+        }
 
-		auto create()
-		{
-			auto mesh = MeshUPtr(
-				new MeshT(*this)
-			);
-			mMeshList.push_back(std::move(mesh));
-			auto ret = mMeshList.back().get();
-			return static_cast<MeshT*>(ret);
-		}
+        ~MeshManager() noexcept = default;
 
-		auto getBufferManager() const -> auto & { return mBufferManager; }
-		auto getPreferredVertexDataFormat() const -> auto const & { return mPreferredVertexDataFormat; }
+        auto create()
+        {
+            auto mesh = MeshUPtr(
+                new MeshT(*this)
+            );
+            mMeshList.push_back(std::move(mesh));
+            auto ret = mMeshList.back().get();
+            return static_cast<MeshT*>(ret);
+        }
 
-	private:
-		BufferManagerT& mBufferManager;
+        auto getBufferManager() const -> auto & { return mBufferManager; }
+        auto getPreferredVertexDataFormat() const -> auto const & { return mPreferredVertexDataFormat; }
 
-		VertexDataFormat mPreferredVertexDataFormat;
+    private:
+        BufferManagerT& mBufferManager;
 
-		using MeshList = std::vector<MeshUPtr>;
-		MeshList mMeshList;
-	};
+        VertexDataFormat mPreferredVertexDataFormat;
 
-	TOV_NAMESPACE_END // mesh
-	TOV_NAMESPACE_END // rendering
+        using MeshList = std::vector<MeshUPtr>;
+        MeshList mMeshList;
+    };
+
+    TOV_NAMESPACE_END // mesh
+    TOV_NAMESPACE_END // rendering
 }
 
 #endif

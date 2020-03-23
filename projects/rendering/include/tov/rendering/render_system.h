@@ -3,8 +3,9 @@
 
 #include "rendering_core.h"
 
-#include "colour.h"
 #include "render_target_manager.h"
+
+#include "commands/command_bucket.h"
 
 namespace tov
 {
@@ -14,7 +15,9 @@ namespace tov
     class WindowPlatformSupport;
     class WindowRendererSupport;
 
-    template<class ViewportT>
+    template <
+        class ViewportT
+    >
     class RenderSystem
     {
         using RenderWindowT = RenderWindow<ViewportT>;
@@ -34,9 +37,13 @@ namespace tov
 
         void renderFrame();
 
+        auto getFrameCommandBucket() -> auto& { return mFrameCommandBucket; }
+
     private:
         WindowPlatformSupport& mWindowPlatformSupport;
         WindowRendererSupport& mWindowRendererSupport;
+
+        commands::CommandBucket<128> mFrameCommandBucket;
 
         RenderTargetManagerT mRenderTargetManager;
     };

@@ -9,13 +9,13 @@ namespace tov
 	TOV_NAMESPACE_BEGIN(memory)
 
 	template<class T, class... Args>
-	inline T* ptr(Args&&... args)
+	inline auto ptr(Args&&... args)
 	{
 		return new (alignof(T)) T(std::forward<Args>(args)...);
 	}
 
 	template<class T, size_t N>
-	inline T* ptr_array()
+	inline auto ptr_array()
 	{
 		return new (alignof(T)) T[N];
 	}

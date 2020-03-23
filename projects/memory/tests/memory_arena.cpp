@@ -5,7 +5,6 @@
 #include <tov/memory/policies/alignment/standard.h>
 
 #include "dummy_allocation_policy.h"
-//#include "dummy_bounds_policy.h"
 
 #include <tov/memory/policies/bounds/simple.h>
 

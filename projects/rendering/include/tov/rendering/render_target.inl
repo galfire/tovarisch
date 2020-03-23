@@ -2,6 +2,8 @@
 
 #include "camera.h"
 #include "render_system.h"
+#include "commands/commands.h"
+#include "commands/command_bucket.h"
 #include "viewport.h"
 
 namespace tov
@@ -10,11 +12,13 @@ namespace tov
 
 	template<class ViewportT>
 	inline RenderTarget<ViewportT>::RenderTarget(
+		RenderSystem<ViewportT>& renderSystem,
 		uint width,
 		uint height,
 		PixelFormat pixelFormat
 	) noexcept 
-		: mWidth(width)
+		: mRenderSystem(renderSystem)
+		, mWidth(width)
 		, mHeight(height)
 		, mPixelFormat(pixelFormat)
 	{}
@@ -26,6 +30,9 @@ namespace tov
 
 		for (auto&& viewport : mViewports)
 		{
+			auto& bucket = mRenderSystem.getFrameCommandBucket();
+			auto command = bucket.addCommand<commands::ApplyViewport>(0);
+			command->i = 123;
 			viewport->renderCamera();
 		}
 	}

@@ -26,6 +26,9 @@
 #include <tov/rendering/scene.h>
 #include <tov/rendering/scene_node.h>
 
+#include <tov/rendering/commands/command_bucket.h>
+
+#include <tov/rendering/pipeline/pipeline_state_object.h>
 #include <tov/rendering_gl/pipeline/shader.h>
 #include <tov/rendering_gl/pipeline/program.h>
 
@@ -44,6 +47,41 @@ using Viewport = tov::rendering::gl::Viewport;
 using WindowPlatformSupport = tov::rendering::win32::WindowPlatformSupport;
 using WindowRendererSupport = tov::rendering::win32::gl::WindowRendererSupport;
 using RenderSystem = tov::rendering::RenderSystem<Viewport>;
+
+struct DrawCommand
+{
+    int i = 0;
+    static tov::rendering::commands::DispatchFunction DispatchFunction;
+};
+
+void DispatchDraw(const void* command)
+{
+    std::cout << "Drawing...\n";
+    auto draw = reinterpret_cast<const DrawCommand*>(command);
+    // TODO: This would invoke a call to the backend drawer
+    std::cout << draw->i << "\n";
+    std::cout << "Done!\n";
+}
+
+tov::rendering::commands::DispatchFunction DrawCommand::DispatchFunction = DispatchDraw;
+
+struct OtherCommand
+{
+    int i = 0;
+    int j = 0;
+    int k = 0;
+    static tov::rendering::commands::DispatchFunction DispatchFunction;
+};
+
+void DispatchOther(const void* command)
+{
+    std::cout << "Doing something...\n";
+    auto thing = reinterpret_cast<const OtherCommand*>(command);
+    std::cout << thing->i << ", " << thing->j << ", " << thing->k << "\n";
+    std::cout << "Done!\n";
+}
+
+tov::rendering::commands::DispatchFunction OtherCommand::DispatchFunction = DispatchOther;
 
 int main(int argc, char** argv)
 {
@@ -64,6 +102,25 @@ int main(int argc, char** argv)
 
     auto window2 = rs.createRenderWindow("canvas2", 640, 180, false);
     auto vp3 = window2->createViewport(c, 2, 0.0f, 0.0f, 1.0f, 1.0f, tov::rendering::Colour::Blue);
+
+    tov::rendering::commands::CommandBucket<256> bucket;
+    {
+        auto command = bucket.addCommand<DrawCommand>(0);
+        command->i = 123;
+    }
+    {
+        auto command = bucket.addCommand<OtherCommand>(1);
+        command->i = 555;
+        command->j = 666;
+        command->k = 777;
+    }
+    {
+        auto command = bucket.addCommand<DrawCommand>(2);
+        command->i = 416;
+    }
+
+    bucket.submit();
+    bucket.submit();
 
     auto sphere = tov::rendering::geometry::Sphere(1.0f, 4, 4);
 
@@ -89,6 +146,11 @@ int main(int argc, char** argv)
         p.attachShader(v);
         p.attachShader(f);
         p.link();
+
+        tov::rendering::pipeline::PipelineStateObject pso(p, meshManager.getPreferredVertexDataFormat());
+
+
+
         p.use();
 
         p.setMatrix4("viewMatrix", c.getViewMatrix());

@@ -8,24 +8,6 @@ namespace tov
         rendering::buffers::UsageSettings usageSettings,
         rendering::buffers::AccessSettings accessSettings
     >
-    GLenum Buffer<usageSettings, accessSettings>::getGLAccessSettings()
-    {
-        GLenum access = 0;
-        if ((accessSettings & AccessSettings::READ) == AccessSettings::READ)
-        {
-            access |= GL_MAP_READ_BIT;
-        }
-        else if ((accessSettings & AccessSettings::WRITE) == AccessSettings::WRITE)
-        {
-            access |= GL_MAP_WRITE_BIT;
-        }
-        return access;
-    }
-
-    template<
-        rendering::buffers::UsageSettings usageSettings,
-        rendering::buffers::AccessSettings accessSettings
-    >
     GLenum Buffer<usageSettings, accessSettings>::getGLUsageSettings()
     {
         GLenum usage = 0;

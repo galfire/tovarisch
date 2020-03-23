@@ -11,7 +11,8 @@ namespace tov
         WindowPlatformSupport& windowPlatformSupport,
         WindowRendererSupport& windowRendererSupport
     ) noexcept
-        : mWindowPlatformSupport(windowPlatformSupport)
+        : mRenderTargetManager(*this)
+        , mWindowPlatformSupport(windowPlatformSupport)
         , mWindowRendererSupport(windowRendererSupport)
     {}
 
@@ -33,6 +34,7 @@ namespace tov
     {
         mWindowPlatformSupport.messageHandler();
         mRenderTargetManager.renderTargets();
+        mFrameCommandBucket.submit();
     }
 
     TOV_NAMESPACE_END // rendering

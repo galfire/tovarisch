@@ -12,34 +12,34 @@
 
 namespace tov
 {
-	TOV_NAMESPACE_BEGIN(rendering)
+    TOV_NAMESPACE_BEGIN(rendering)
 
-	class Camera
-		: public SceneObject
-	{
-	public:
-		Camera() noexcept;
+    class Camera
+        : public SceneObject
+    {
+    public:
+        Camera() noexcept;
 
-		void setNearDistance(float nearDistance);
-		void setFarDistance(float farDistance);
-		void setAspectRatio(float aspectRatio);
-		void setFieldOfView(math::Radian fieldOfView);
+        void setNearDistance(float nearDistance);
+        void setFarDistance(float farDistance);
+        void setAspectRatio(float aspectRatio);
+        void setFieldOfView(math::Radian fieldOfView);
 
-		void renderScene();
+        void renderScene();
 
-		auto getProjectionMatrix() const { return mViewFrustum.getProjectionMatrix(); }
-		auto getViewMatrix() const { return mViewFrustum.getViewMatrix(); }
+        auto getProjectionMatrix() const { return mViewFrustum.getProjectionMatrix(); }
+        auto getViewMatrix() const { return mViewFrustum.getViewMatrix(); }
 
-	private:
-		void buildProjectionMatrix(void);
-		void buildViewMatrix(void);
+    private:
+        void buildProjectionMatrix(void);
+        void buildViewMatrix(void);
 
-	private:
-		Transform mCachedTransform;
-		ViewFrustum<ProjectionType::PERSPECTIVE> mViewFrustum;
-	};
+    private:
+        Transform mCachedTransform;
+        ViewFrustum<ProjectionType::PERSPECTIVE> mViewFrustum;
+    };
 
-	TOV_NAMESPACE_END
+    TOV_NAMESPACE_END
 }
 
 #endif

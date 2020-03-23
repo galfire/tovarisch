@@ -25,7 +25,8 @@ namespace tov
             , mBufferID(bufferID)
             , mBufferTarget(bufferTarget)
         {}
-        virtual ~BufferWriter() = default;
+
+        ~BufferWriter() = default;
 
         void operator () (size_t offset, size_t length)
         {

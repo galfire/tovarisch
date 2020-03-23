@@ -12,6 +12,8 @@ namespace tov
 {
 	TOV_NAMESPACE_BEGIN(rendering)
 
+	template <class ViewportT> class RenderSystem;
+
 	template<class ViewportT>
 	class RenderWindow
 		: public RenderTarget<ViewportT>
@@ -19,6 +21,7 @@ namespace tov
 	{
 	public:
 		RenderWindow(
+			RenderSystem<ViewportT>& renderSystem,
 			const WindowPlatformSupport& platformSupport,
 			const WindowRendererSupport& rendererSupport,
 			const char* name,

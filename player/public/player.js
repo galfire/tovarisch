@@ -194,7 +194,7 @@ Module['FS_createPath']('/', 'shaders', true, true);
   }
 
  }
- loadPackage({"files": [{"start": 0, "audio": 0, "end": 206, "filename": "/shaders/simple.frag.glsl"}, {"start": 206, "audio": 0, "end": 580, "filename": "/shaders/vertex.vert.glsl"}], "remote_package_size": 580, "package_uuid": "17030c31-a327-4ade-bbf9-45463e0e49e4"});
+ loadPackage({"files": [{"start": 0, "audio": 0, "end": 206, "filename": "/shaders/simple.frag.glsl"}, {"start": 206, "audio": 0, "end": 580, "filename": "/shaders/vertex.vert.glsl"}], "remote_package_size": 580, "package_uuid": "88544740-d75c-481b-a76b-dd5d89bb9b7e"});
 
 })();
 

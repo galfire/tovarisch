@@ -57,11 +57,9 @@ namespace tov
 			return *static_cast<buffers::VertexBufferObject*>(vbo);
 		}
 
-		auto getBufferObjectForAttribute(buffers::VertexAttribute attribute) const -> auto&
+		auto getFormat() const -> auto&
 		{
-			auto handle = mFormat.getHandleForAttribute(attribute);
-			auto& vbo = getBufferObjectForHandle(handle);
-			return vbo;
+			return mFormat;
 		}
 
 	private:

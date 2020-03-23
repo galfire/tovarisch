@@ -5,23 +5,34 @@
 
 namespace tov
 {
-	TOV_NAMESPACE_BEGIN(rendering)
-	TOV_NAMESPACE_BEGIN(pipeline)
+    TOV_NAMESPACE_BEGIN(rendering)
+    TOV_NAMESPACE_BEGIN(mesh)
 
-	class Program;
+    class VertexDataFormat;
 
-	class PipelineStateObject
-	{
-	public:
-		PipelineStateObject(
-			Program& program,
-			
+    TOV_NAMESPACE_END // mesh
 
-		);
-	};
+    TOV_NAMESPACE_BEGIN(pipeline)
 
-	TOV_NAMESPACE_END // pipeline
-	TOV_NAMESPACE_END // rendering
+    class Program;
+
+    class PipelineStateObject
+    {
+    public:
+        PipelineStateObject(
+            Program const& program,
+            mesh::VertexDataFormat const& vertexDataFormat
+        ) noexcept;
+
+        ~PipelineStateObject() noexcept = default;
+
+    private:
+        Program const& mProgram;
+        mesh::VertexDataFormat const& mVertexDataFormat;
+    };
+
+    TOV_NAMESPACE_END // pipeline
+    TOV_NAMESPACE_END // rendering
 }
 
 #endif

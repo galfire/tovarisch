@@ -8,36 +8,36 @@
 
 namespace tov
 {
-	TOV_NAMESPACE_BEGIN(rendering)
-	TOV_NAMESPACE_BEGIN(buffers)
+    TOV_NAMESPACE_BEGIN(rendering)
+    TOV_NAMESPACE_BEGIN(buffers)
 
-	class VertexBufferFormat
-	{
-	public:
-		enum class SequenceType
-		{
-			// VNCVNCVNC
-			INTERLEAVED,
-			// VVVNNNCCC
-			SEQUENTIAL
-		};
+    class VertexBufferFormat
+    {
+    public:
+        enum class SequenceType
+        {
+            // VNCVNCVNC
+            INTERLEAVED,
+            // VVVNNNCCC
+            SEQUENTIAL
+        };
 
-	public:
-		VertexBufferFormat() = default;
-		VertexBufferFormat(SequenceType sequenceType, VertexFormat vertexFormat);
-		~VertexBufferFormat() = default;
+    public:
+        VertexBufferFormat() = default;
+        VertexBufferFormat(SequenceType sequenceType, VertexFormat vertexFormat);
+        ~VertexBufferFormat() = default;
 
-		auto getSequenceType() const { return mSequenceType; }
-		auto getVertexFormat() const { return mVertexFormat; }
+        auto getSequenceType() const { return mSequenceType; }
+        auto getVertexFormat() const { return mVertexFormat; }
 
-	private:
-		SequenceType mSequenceType;
+    private:
+        SequenceType mSequenceType;
 
-		VertexFormat mVertexFormat;
-	};
+        VertexFormat mVertexFormat;
+    };
 
-	TOV_NAMESPACE_END // buffers
-	TOV_NAMESPACE_END // rendering
+    TOV_NAMESPACE_END // buffers
+    TOV_NAMESPACE_END // rendering
 }
 
 #endif

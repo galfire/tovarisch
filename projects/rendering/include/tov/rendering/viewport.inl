@@ -55,7 +55,7 @@ namespace tov
 	template<class ViewportT>
 	void Viewport<ViewportT>::renderCamera()
 	{
-		apply();
+		//apply();
 		mCamera.renderScene();
 	}
 

@@ -35,7 +35,7 @@ namespace tov
 
 		~Mesh() noexcept = default;
 
-		auto getManager() const -> auto const & { return mManager; }
+		auto getManager() const -> auto const& { return mManager; }
 
 		auto createSubmesh(const tov::rendering::geometry::Geometry& geometry)
 		{

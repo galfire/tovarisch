@@ -16,14 +16,10 @@ namespace tov
 
 	class VertexDataFormat
 	{
-		using VertexAttribute = rendering::buffers::VertexAttribute;
-		using VertexBufferFormat = rendering::buffers::VertexBufferFormat;
-		using VertexAttributeList = std::vector<VertexAttribute>;
-
 		using VBOHandle = byte;
-		using HandleList = std::vector<VBOHandle>;
-		using AttributeToHandleMap = std::unordered_map<VertexAttribute, VBOHandle, VertexAttribute::Hash, VertexAttribute::EqualTo>;
+		using VertexBufferFormat = rendering::buffers::VertexBufferFormat;
 		using HandleToFormatMap = std::unordered_map<VBOHandle, VertexBufferFormat>;
+		using HandleList = std::vector<VBOHandle>;
 
 	public:
 		VertexDataFormat() noexcept {}
@@ -34,27 +30,9 @@ namespace tov
 			return mHandles;
 		}
 
-		auto getAttributes() const -> auto const &
-		{
-			return mAttributes;
-		}
-
-		auto getHandleForAttribute(VertexAttribute attribute) const
-		{
-			auto handle = mAttributeToHandleMap.at(attribute);
-			return handle;
-		}
-
 		auto getVertexBufferFormatForHandle(VBOHandle handle) const
 		{
 			auto format = mHandleToFormatMap.at(handle);
-			return format;
-		}
-
-		auto getVertexBufferFormatForAttribute(VertexAttribute attribute) const
-		{
-			auto handle = getHandleForAttribute(attribute);
-			auto format = getVertexBufferFormatForHandle(handle);
 			return format;
 		}
 
@@ -65,19 +43,11 @@ namespace tov
 			{
 				mHandles.push_back(handle);
 				mHandleToFormatMap[handle] = vbf;
-				auto attributes = vbf.getVertexFormat().getAttributes();
-				for (auto&& attribute : attributes)
-				{
-					mAttributeToHandleMap[attribute] = handle;
-					mAttributes.push_back(attribute);
-				}
 			}
 		}
 
 	private:
 		HandleList mHandles;
-		VertexAttributeList mAttributes;
-		AttributeToHandleMap mAttributeToHandleMap;
 		HandleToFormatMap mHandleToFormatMap;
 	};
 
