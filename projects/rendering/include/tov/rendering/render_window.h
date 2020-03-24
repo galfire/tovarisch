@@ -10,37 +10,34 @@
 
 namespace tov
 {
-	TOV_NAMESPACE_BEGIN(rendering)
+    TOV_NAMESPACE_BEGIN(rendering)
 
-	template <class ViewportT> class RenderSystem;
+    class RenderSystem;
 
-	template<class ViewportT>
-	class RenderWindow
-		: public RenderTarget<ViewportT>
-		, public Window
-	{
-	public:
-		RenderWindow(
-			RenderSystem<ViewportT>& renderSystem,
-			const WindowPlatformSupport& platformSupport,
-			const WindowRendererSupport& rendererSupport,
-			const char* name,
-			uint width,
-			uint height,
-			bool fullscreen,
-			bool visible = true,
-			PixelFormat pixelFormat = PixelFormat::Default
-		);
-		~RenderWindow() = default;
+    class RenderWindow
+        : public RenderTarget
+        , public Window
+    {
+    public:
+        RenderWindow(
+            RenderSystem& renderSystem,
+            const WindowPlatformSupport& platformSupport,
+            const WindowRendererSupport& rendererSupport,
+            const char* name,
+            uint width,
+            uint height,
+            bool fullscreen,
+            bool visible = true,
+            PixelFormat pixelFormat = PixelFormat::Default
+        );
+        ~RenderWindow() = default;
 
-		void prerender() override;
-		void swapBuffers() override;
-	private:
-	};
+        void prerender() override;
+        void swapBuffers() override;
+    private:
+    };
 
-	TOV_NAMESPACE_END // rendering
+    TOV_NAMESPACE_END // rendering
 }
-
-#include "render_window.inl"
 
 #endif

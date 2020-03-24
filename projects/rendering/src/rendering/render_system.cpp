@@ -1,13 +1,13 @@
-#include "render_window.h"
+#include "rendering/render_system.h"
 
-#include "window_platform_support.h"
+#include "rendering/render_window.h"
+#include "rendering/window_platform_support.h"
 
 namespace tov
 {
     TOV_NAMESPACE_BEGIN(rendering)
 
-    template<class ViewportT>
-    RenderSystem<ViewportT>::RenderSystem(
+    RenderSystem::RenderSystem(
         WindowPlatformSupport& windowPlatformSupport,
         WindowRendererSupport& windowRendererSupport
     ) noexcept
@@ -16,10 +16,9 @@ namespace tov
         , mWindowRendererSupport(windowRendererSupport)
     {}
 
-    template<class ViewportT>
-    auto RenderSystem<ViewportT>::createRenderWindow(const char* name, uint width, uint height, bool fullscreen)
+    auto RenderSystem::createRenderWindow(const char* name, uint width, uint height, bool fullscreen) -> RenderWindow&
     {
-        return mRenderTargetManager.template create<RenderWindowT>(
+        auto renderWindow = mRenderTargetManager.template create<RenderWindow>(
             mWindowPlatformSupport,
             mWindowRendererSupport,
             name,
@@ -27,10 +26,10 @@ namespace tov
             height,
             fullscreen
         );
+        return *renderWindow;
     }
 
-    template<class ViewportT>
-    void RenderSystem<ViewportT>::renderFrame()
+    void RenderSystem::renderFrame()
     {
         mWindowPlatformSupport.messageHandler();
         mRenderTargetManager.renderTargets();

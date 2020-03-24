@@ -7,60 +7,59 @@
 
 namespace tov
 {
-	TOV_NAMESPACE_BEGIN(rendering)
+    TOV_NAMESPACE_BEGIN(rendering)
 
-	template<class ViewportT> class RenderTarget;
-	class Camera;
+    class RenderTarget;
+    class Camera;
 
-	template<class ViewportT>
-	class Viewport
-	{
-	public:
-		explicit inline Viewport(
-			const RenderTarget<ViewportT>& renderTarget,
-			Camera& camera,
-			int zIndex,
-			float normalizedLeft = 0.0f,
-			float normalizedTop = 0.0f,
-			float normalizedWidth = 1.0f,
-			float normalizedHeight = 1.0f,
-			Colour backgroundColour = Colour::Black
-		) noexcept;
-		virtual ~Viewport() noexcept = default;
+    class Viewport
+    {
+    public:
+        explicit Viewport(
+            RenderTarget& renderTarget,
+            Camera& camera,
+            int zIndex,
+            float normalizedLeft = 0.0f,
+            float normalizedTop = 0.0f,
+            float normalizedWidth = 1.0f,
+            float normalizedHeight = 1.0f,
+            Colour backgroundColour = Colour::Black
+        ) noexcept;
+        virtual ~Viewport() noexcept = default;
 
-		void updateDimensions() noexcept;
-		
-		void apply() const;
+        void updateDimensions() noexcept;
+        
+        void renderCamera();
 
-		void renderCamera();
+        auto getRenderTarget() -> auto& { return mRenderTarget; }
 
-		uint getLeft() const { return mLeft; }
-		uint getTop() const { return mTop; }
-		uint getWidth() const { return mWidth; }
-		uint getHeight() const { return mHeight; }
+        auto getZIndex() const { return mZIndex; }
+        auto getLeft() const { return mLeft; }
+        auto getTop() const { return mTop; }
+        auto getWidth() const { return mWidth; }
+        auto getHeight() const { return mHeight; }
+        auto getBackgroundColour() const { return mBackgroundColour; }
 
-	protected:
-		const RenderTarget<ViewportT>& mRenderTarget;
-		Camera& mCamera;
+    protected:
+        RenderTarget& mRenderTarget;
+        Camera& mCamera;
 
-		int mZIndex;
+        int mZIndex;
 
-		float mNormalizedLeft;
-		float mNormalizedTop;
-		float mNormalizedWidth;
-		float mNormalizedHeight;
+        float mNormalizedLeft;
+        float mNormalizedTop;
+        float mNormalizedWidth;
+        float mNormalizedHeight;
 
-		uint mLeft;
-		uint mTop;
-		uint mWidth;
-		uint mHeight;
+        uint mLeft;
+        uint mTop;
+        uint mWidth;
+        uint mHeight;
 
-		Colour mBackgroundColour;
-	};
+        Colour mBackgroundColour;
+    };
 
-	TOV_NAMESPACE_END // rendering
+    TOV_NAMESPACE_END // rendering
 }
-
-#include "viewport.inl"
 
 #endif

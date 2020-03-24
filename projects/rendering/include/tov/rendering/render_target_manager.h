@@ -9,16 +9,13 @@ namespace tov
 {
     TOV_NAMESPACE_BEGIN(rendering)
 
-    template <class ViewportT> class RenderSystem;
-    template <class ViewportT> class RenderTarget;
+    class RenderSystem;
+    class RenderTarget;
 
-    template<class Viewport>
     class RenderTargetManager
     {
-        using RenderTargetT = RenderTarget<Viewport>;
-
     public:
-        RenderTargetManager(RenderSystem<Viewport>& renderSystem) noexcept
+        RenderTargetManager(RenderSystem& renderSystem) noexcept
             : mRenderSystem(renderSystem)
         {}
 
@@ -35,18 +32,11 @@ namespace tov
             return static_cast<T*>(ret);
         }
 
-        void renderTargets()
-        {
-            for (auto&& renderTarget : mRenderTargets)
-            {
-                renderTarget->renderViewports();
-                renderTarget->swapBuffers();
-            }
-        }
+        void renderTargets();
 
     private:
-        RenderSystem<Viewport>& mRenderSystem;
-        std::vector<std::unique_ptr<RenderTargetT>> mRenderTargets;
+        RenderSystem& mRenderSystem;
+        std::vector<std::unique_ptr<RenderTarget>> mRenderTargets;
     };
 
     TOV_NAMESPACE_END // rendering

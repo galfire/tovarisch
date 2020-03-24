@@ -11,6 +11,7 @@ namespace tov
 {
     TOV_NAMESPACE_BEGIN(rendering)
 
+    class Viewport;
 
     TOV_NAMESPACE_END // rendering
 
@@ -19,7 +20,7 @@ namespace tov
 
     struct ApplyViewport
     {
-        int i = 0;
+        Viewport* viewport;
         static inline DispatchFunction DispatchFunction = BackendDispatch::ApplyViewport;
     };
 

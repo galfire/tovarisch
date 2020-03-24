@@ -1,12 +1,11 @@
-#include "render_window.h"
+#include "rendering/render_window.h"
 
 namespace tov
 {
     TOV_NAMESPACE_BEGIN(rendering)
 
-    template<class ViewportT>
-    RenderWindow<ViewportT>::RenderWindow(
-        RenderSystem<ViewportT>& renderSystem,
+    RenderWindow::RenderWindow(
+        RenderSystem& renderSystem,
         const WindowPlatformSupport& platformSupport,
         const WindowRendererSupport& rendererSupport,
         const char* name,
@@ -16,7 +15,7 @@ namespace tov
         bool visible,
         PixelFormat pixelFormat
     )
-        : RenderTarget<ViewportT>(
+        : RenderTarget(
             renderSystem,
             width,
             height,
@@ -34,14 +33,12 @@ namespace tov
         )
     {}
 
-    template<class ViewportT>
-    void RenderWindow<ViewportT>::prerender()
+    void RenderWindow::prerender()
     {
         mRendererComponent->makeContextCurrent();
     }
 
-    template<class ViewportT>
-    void RenderWindow<ViewportT>::swapBuffers()
+    void RenderWindow::swapBuffers()
     {
         mPlatformComponent->swapBuffers();
     }

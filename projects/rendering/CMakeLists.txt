@@ -18,13 +18,13 @@ target_link_libraries(rendering math)
 target_link_libraries(rendering memory)
 
 if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
-	SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fpermissive")
+    SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fpermissive")
 endif()
 
 if(WIN32)
-	add_subdirectory(_platforms/win32)
+    add_subdirectory(_platforms/win32)
 else()
-	add_subdirectory(_platforms/web)
+    add_subdirectory(_platforms/web)
 endif()
 
 # TESTS

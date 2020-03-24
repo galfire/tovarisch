@@ -9,6 +9,8 @@
 #include <tov/memory/heap_area.h>
 #include <tov/memory/memory_arena.h>
 
+#include <array>
+
 namespace tov
 {
     TOV_NAMESPACE_BEGIN(rendering)
@@ -51,7 +53,8 @@ namespace tov
                 this->mCommandPackets[i] = &packet;
             }
 
-            return static_cast<Command*>(packet.getCommand());
+            auto command = static_cast<Command*>(packet.getCommand());
+            return command;
         }
 
         void submit()
@@ -59,20 +62,13 @@ namespace tov
             for (auto i = 0u; i < this->mCurrent; i++)
             {
                 auto packet = this->mCommandPackets[i];
-                this->submitPacket(packet);
+                packet->submit();
             }
 
             this->reset();
         }
 
     private:
-        void submitPacket(CommandPacket* packet)
-        {
-            auto dispatchFunction = packet->getDispatchFunction();
-            auto command = packet->getCommand();
-            (*dispatchFunction)(command);
-        }
-
         void reset()
         {
             this->mCurrent = 0;

@@ -5,6 +5,7 @@
 
 #include "colour.h"
 #include "pixel_format.h"
+#include "viewport.h"
 
 #include <vector>
 
@@ -13,17 +14,15 @@ namespace tov
     TOV_NAMESPACE_BEGIN(rendering)
 
     class Camera;
-    template<class ViewportT> class RenderSystem;
-    template<class ViewportT> class Viewport;
+    class RenderSystem;
 
-    template<class ViewportT>
     class RenderTarget
     {
         TOV_MOVABLE_ONLY(RenderTarget)
 
     public:
-        inline RenderTarget(
-            RenderSystem<ViewportT>& renderSystem,
+        RenderTarget(
+            RenderSystem& renderSystem,
             uint width,
             uint height,
             PixelFormat pixelFormat = PixelFormat::Default
@@ -35,10 +34,10 @@ namespace tov
 
         virtual void swapBuffers() TOV_ABSTRACT;
 
-        inline auto getWidth() const noexcept { return mWidth; }
-        inline auto getHeight() const noexcept { return mHeight; }
+        auto getWidth() const noexcept { return mWidth; }
+        auto getHeight() const noexcept { return mHeight; }
 
-        inline auto createViewport(
+        auto createViewport(
             Camera& camera,
             int zIndex,
             float normalizedLeft = 0.0f,
@@ -46,21 +45,19 @@ namespace tov
             float normalizedWidth = 1.0f,
             float normalizedHeight = 1.0f,
             Colour backgroundColour = Colour::Black
-        ) -> Viewport<ViewportT>*;
+        ) -> Viewport*;
 
     protected:
-        RenderSystem<ViewportT>& mRenderSystem;
+        RenderSystem& mRenderSystem;
 
         uint mWidth;
         uint mHeight;
         PixelFormat mPixelFormat;
 
-        std::vector<std::unique_ptr<Viewport<ViewportT>>> mViewports;
+        std::vector<std::unique_ptr<Viewport>> mViewports;
     };
 
     TOV_NAMESPACE_END // rendering
 }
-
-#include "render_target.inl"
 
 #endif // !TOV_RENDERING_RENDER_TARGET_H

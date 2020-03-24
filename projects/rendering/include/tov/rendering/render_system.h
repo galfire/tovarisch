@@ -11,18 +11,12 @@ namespace tov
 {
     TOV_NAMESPACE_BEGIN(rendering)
 
-    template<class Viewport> class RenderWindow;
+    class RenderWindow;
     class WindowPlatformSupport;
     class WindowRendererSupport;
 
-    template <
-        class ViewportT
-    >
     class RenderSystem
     {
-        using RenderWindowT = RenderWindow<ViewportT>;
-        using RenderTargetManagerT = RenderTargetManager<ViewportT>;
-
     public:
         RenderSystem(
             WindowPlatformSupport& windowPlatformSupport,
@@ -30,10 +24,10 @@ namespace tov
         ) noexcept;
         ~RenderSystem() noexcept = default;
 
-        auto const& getWindowPlatformSupport() const { return mWindowPlatformSupport; }
-        auto const& getWindowRendererSupport() const { return mWindowRendererSupport; }
+        auto getWindowPlatformSupport() const -> auto const& { return mWindowPlatformSupport; }
+        auto getWindowRendererSupport() const -> auto const& { return mWindowRendererSupport; }
 
-        auto createRenderWindow(const char* name, uint width, uint height, bool fullscreen);
+        auto createRenderWindow(const char* name, uint width, uint height, bool fullscreen) -> RenderWindow&;
 
         void renderFrame();
 
@@ -45,12 +39,10 @@ namespace tov
 
         commands::CommandBucket<128> mFrameCommandBucket;
 
-        RenderTargetManagerT mRenderTargetManager;
+        RenderTargetManager mRenderTargetManager;
     };
 
     TOV_NAMESPACE_END
 }
-
-#include "render_system.inl"
 
 #endif

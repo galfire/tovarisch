@@ -13,8 +13,8 @@ namespace tov
     class CommandPacket
     {
     public:
-        CommandPacket() = default;
-        ~CommandPacket() = default;
+        CommandPacket() noexcept = default;
+        ~CommandPacket() noexcept = default;
 
         auto getDispatchFunction() const { return mDispatchFunction; }
         auto getCommand() const { return mCommand; }
@@ -31,6 +31,11 @@ namespace tov
         void setDispatchFunction(DispatchFunction* dispatchFunction)
         {
             mDispatchFunction = dispatchFunction;
+        }
+
+        void submit()
+        {
+            (*mDispatchFunction)(mCommand);
         }
 
     private:

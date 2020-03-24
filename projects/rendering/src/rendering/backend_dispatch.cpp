@@ -4,6 +4,9 @@
 
 #include "rendering/commands/commands.h"
 
+#include "rendering/render_target.h"
+#include "rendering/viewport.h"
+
 namespace tov
 {
     TOV_NAMESPACE_BEGIN(rendering)
@@ -11,7 +14,10 @@ namespace tov
     void BackendDispatch::ApplyViewport(const void* data)
     {
         auto command = reinterpret_cast<const commands::ApplyViewport*>(data);
-        backend::ApplyViewport();
+        auto viewport = command->viewport;
+        auto& renderTarget = viewport->getRenderTarget();
+        renderTarget.prerender();
+        backend::ApplyViewport(viewport);
     }
 
     TOV_NAMESPACE_END // rendering

@@ -38,50 +38,16 @@
 #include <tov/rendering/win32/window_platform_support.h>
 #include <tov/rendering/win32/window_events.h>
 
-#include <tov/rendering_gl/viewport.h>
+#include <tov/rendering/viewport.h>
+
 #include <tov/rendering_gl/window_renderer_support.h>
 
 #include <iostream>
 
-using Viewport = tov::rendering::gl::Viewport;
+using Viewport = tov::rendering::Viewport;
 using WindowPlatformSupport = tov::rendering::win32::WindowPlatformSupport;
 using WindowRendererSupport = tov::rendering::win32::gl::WindowRendererSupport;
-using RenderSystem = tov::rendering::RenderSystem<Viewport>;
-
-struct DrawCommand
-{
-    int i = 0;
-    static tov::rendering::commands::DispatchFunction DispatchFunction;
-};
-
-void DispatchDraw(const void* command)
-{
-    std::cout << "Drawing...\n";
-    auto draw = reinterpret_cast<const DrawCommand*>(command);
-    // TODO: This would invoke a call to the backend drawer
-    std::cout << draw->i << "\n";
-    std::cout << "Done!\n";
-}
-
-tov::rendering::commands::DispatchFunction DrawCommand::DispatchFunction = DispatchDraw;
-
-struct OtherCommand
-{
-    int i = 0;
-    int j = 0;
-    int k = 0;
-    static tov::rendering::commands::DispatchFunction DispatchFunction;
-};
-
-void DispatchOther(const void* command)
-{
-    std::cout << "Doing something...\n";
-    auto thing = reinterpret_cast<const OtherCommand*>(command);
-    std::cout << thing->i << ", " << thing->j << ", " << thing->k << "\n";
-    std::cout << "Done!\n";
-}
-
-tov::rendering::commands::DispatchFunction OtherCommand::DispatchFunction = DispatchOther;
+using RenderSystem = tov::rendering::RenderSystem;
 
 int main(int argc, char** argv)
 {
@@ -96,31 +62,12 @@ int main(int argc, char** argv)
     auto c = *scene.createCamera();
     node.attachSceneObject(&c);
 
-    auto window = rs.createRenderWindow("WINDWOWWW", 640, 480, false);
-    auto vp1 = window->createViewport(c, 0, 0.0f, 0.0f, 0.5f, 1.0f, tov::rendering::Colour::Red);
-    auto vp2 = window->createViewport(c, 1, 0.5f, 0.0f, 0.5f, 1.0f, tov::rendering::Colour::Green);
+    auto& window = rs.createRenderWindow("WINDWOWWW", 640, 480, false);
+    auto vp1 = window.createViewport(c, 0, 0.0f, 0.0f, 0.5f, 1.0f, tov::rendering::Colour::Red);
+    auto vp2 = window.createViewport(c, 1, 0.5f, 0.0f, 0.5f, 1.0f, tov::rendering::Colour::Green);
 
-    auto window2 = rs.createRenderWindow("canvas2", 640, 180, false);
-    auto vp3 = window2->createViewport(c, 2, 0.0f, 0.0f, 1.0f, 1.0f, tov::rendering::Colour::Blue);
-
-    tov::rendering::commands::CommandBucket<256> bucket;
-    {
-        auto command = bucket.addCommand<DrawCommand>(0);
-        command->i = 123;
-    }
-    {
-        auto command = bucket.addCommand<OtherCommand>(1);
-        command->i = 555;
-        command->j = 666;
-        command->k = 777;
-    }
-    {
-        auto command = bucket.addCommand<DrawCommand>(2);
-        command->i = 416;
-    }
-
-    bucket.submit();
-    bucket.submit();
+    auto& window2 = rs.createRenderWindow("canvas2", 640, 180, false);
+    auto vp3 = window2.createViewport(c, 2, 0.0f, 0.0f, 1.0f, 1.0f, tov::rendering::Colour::Blue);
 
     auto sphere = tov::rendering::geometry::Sphere(1.0f, 4, 4);
 
