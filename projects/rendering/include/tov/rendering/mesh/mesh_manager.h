@@ -23,12 +23,11 @@ namespace tov
     template<class DerivedBufferManagerT>
     class MeshManager
     {
-        using BufferManagerT = tov::rendering::buffers::BufferManager<DerivedBufferManagerT>;
         using MeshT = Mesh<DerivedBufferManagerT>;
 
     public:
-        MeshManager(BufferManagerT& bufferManager) noexcept
-            : mBufferManager(bufferManager)
+        MeshManager(buffers::BufferManagerBase& bufferManager) noexcept
+            : mBufferManager(static_cast<DerivedBufferManagerT&>(bufferManager))
         {
                 buffers::VertexFormat vf;
                 vf.addAttribute(buffers::VertexAttribute::POSITION, 0);
@@ -58,7 +57,7 @@ namespace tov
         auto getPreferredVertexDataFormat() const -> auto const & { return mPreferredVertexDataFormat; }
 
     private:
-        BufferManagerT& mBufferManager;
+        buffers::BufferManager<DerivedBufferManagerT>& mBufferManager;
 
         VertexDataFormat mPreferredVertexDataFormat;
 

@@ -21,15 +21,13 @@ namespace tov
 
     public:
         void addAttribute(VertexAttribute attribute, ushort location);
+
+        // The size of the vertex in bytes
         auto getSize() const { return mSize; }
 
         auto getAttributes() const -> auto const & { return mAttributes; }
 
     private:
-
-        // TODO:
-        // The list of attributes should be unique for each semantic.
-        // A semantic should not exist more than once in this list.
         VertexAttributeList mAttributes;
         VertexAttributeToLocationMap mAttributeToLocationMap;
         size_t mSize = 0;

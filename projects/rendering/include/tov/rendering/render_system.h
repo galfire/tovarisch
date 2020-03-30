@@ -34,6 +34,9 @@ namespace tov
         auto getFrameCommandBucket() -> auto& { return mFrameCommandBucket; }
 
     private:
+        void submit();
+
+    private:
         WindowPlatformSupport& mWindowPlatformSupport;
         WindowRendererSupport& mWindowRendererSupport;
 

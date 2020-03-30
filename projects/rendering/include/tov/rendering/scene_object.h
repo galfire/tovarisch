@@ -5,30 +5,30 @@
 
 namespace tov
 {
-	TOV_NAMESPACE_BEGIN(rendering)
+    TOV_NAMESPACE_BEGIN(rendering)
 
-	class SceneNode;
+    class SceneNode;
 
-	class SceneObject
-	{
-		friend class SceneNode;
+    class SceneObject
+    {
+        friend class SceneNode;
 
-	public:
-		SceneObject() = default;
-		virtual ~SceneObject() = default;
+    public:
+        SceneObject() = default;
+        virtual ~SceneObject() = default;
 
-		SceneNode* getParentSceneNode() const { return mParentSceneNode; }
+        auto getParentSceneNode() const { return mParentSceneNode; }
 
-	private:
-		void attachToSceneNode(SceneNode* sceneNode);
+    private:
+        void attachToSceneNode(SceneNode* sceneNode);
 
-	protected:
-		SceneNode* mParentSceneNode = nullptr;
-	};
+    protected:
+        SceneNode* mParentSceneNode = nullptr;
+    };
 
-	using SceneObjectUPtr = std::unique_ptr<SceneObject>;
+    using SceneObjectUPtr = std::unique_ptr<SceneObject>;
 
-	TOV_NAMESPACE_END
+    TOV_NAMESPACE_END
 }
 
 #endif

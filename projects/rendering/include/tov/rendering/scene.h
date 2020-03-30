@@ -18,6 +18,10 @@ namespace tov
     {
         TOV_MOVABLE_ONLY(Scene)
 
+        using SceneObjectList = std::vector<SceneObjectUPtr>;
+        using CameraList = std::vector<std::reference_wrapper<Camera>>;
+        using EntityList = std::vector<std::reference_wrapper<Entity>>;
+
     public:
         Scene() = default;
         ~Scene() = default;
@@ -33,12 +37,15 @@ namespace tov
             return static_cast<T*>(ret);
         }
 
-        auto createCamera() -> Camera*;
-        auto createEntity() -> Entity*;
+        auto createCamera() -> Camera&;
+        auto createEntity() -> Entity&;
+
+        void renderCameras();
 
     private:
-        using SceneObjectList = std::vector<SceneObjectUPtr>;
         SceneObjectList mSceneObjects;
+        CameraList mCameras;
+        EntityList mEntities;
     };
 
     TOV_NAMESPACE_END // rendering

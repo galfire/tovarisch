@@ -4,12 +4,12 @@
 
 namespace tov
 {
-	TOV_NAMESPACE_BEGIN(rendering)
+    TOV_NAMESPACE_BEGIN(rendering)
 
-	void SceneObject::attachToSceneNode(SceneNode* sceneNode)
-	{
-		mParentSceneNode = sceneNode;
-	}
+    void SceneObject::attachToSceneNode(SceneNode* sceneNode)
+    {
+        mParentSceneNode = sceneNode;
+    }
 
-	TOV_NAMESPACE_END // rendering
+    TOV_NAMESPACE_END // rendering
 }

@@ -33,6 +33,11 @@ namespace tov
     {
         mWindowPlatformSupport.messageHandler();
         mRenderTargetManager.renderTargets();
+        submit();
+    }
+
+    void RenderSystem::submit()
+    {
         mFrameCommandBucket.submit();
     }
 

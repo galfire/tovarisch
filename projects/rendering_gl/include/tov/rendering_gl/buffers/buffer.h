@@ -16,6 +16,13 @@ namespace tov
     TOV_NAMESPACE_BEGIN(gl)
     TOV_NAMESPACE_BEGIN(buffers)
 
+    namespace
+    { 
+        namespace base = rendering::buffers;
+        using AccessSettings = base::AccessSettings;
+        using UsageSettings = base::UsageSettings;
+    }
+
     class NullReader
     {
     public:
@@ -24,22 +31,19 @@ namespace tov
     };
 
     template<
-        rendering::buffers::UsageSettings usageSettings,
-        rendering::buffers::AccessSettings accessSettings
+        UsageSettings usageSettings,
+        AccessSettings accessSettings
     >
     class Buffer
-        : public rendering::buffers::Buffer<NullReader, BufferWriter, usageSettings, accessSettings>
+        : public base::Buffer<NullReader, BufferWriter, usageSettings, accessSettings>
     {
     private:
-        using AccessSettings = tov::rendering::buffers::AccessSettings;
-        using UsageSettings = tov::rendering::buffers::UsageSettings;
-
         static GLenum getGLAccessSettings();
         static GLenum getGLUsageSettings();
 
     public:
         Buffer(
-            rendering::buffers::BufferManagerBase& manager,
+            base::BufferManagerBase& manager,
             size_t bytes,
             GLenum bufferTarget
         );

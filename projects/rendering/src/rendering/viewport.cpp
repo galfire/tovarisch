@@ -48,7 +48,7 @@ namespace tov
 
     void Viewport::renderCamera()
     {
-        mCamera.renderScene();
+        //mCamera.renderScene();
     }
 
     TOV_NAMESPACE_END

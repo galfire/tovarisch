@@ -42,7 +42,7 @@ namespace tov
 			if (format == mHandleToFormatMap.end())
 			{
 				mHandles.push_back(handle);
-				mHandleToFormatMap[handle] = vbf;
+				mHandleToFormatMap.emplace(handle, vbf);
 			}
 		}
 

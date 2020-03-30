@@ -62,7 +62,7 @@ namespace tov
 		}
 
 	public:
-		VertexAttribute(Semantic semantic, Type type, ushort count) noexcept;
+		VertexAttribute(Semantic semantic, Type type, ushort count, ushort index) noexcept;
 		~VertexAttribute() noexcept = default;
 
 		auto operator = (const VertexAttribute& rhs) -> auto &
@@ -77,11 +77,13 @@ namespace tov
 		auto getType() const { return mType; }
 		auto getCount() const { return mCount; }
 		auto getSize() const { return getTypeSize(mType) * mCount; }
+		auto getIndex() const { return mIndex; }
 
 	private:
 		Semantic mSemantic;
 		Type mType;
 		ushort mCount;
+		ushort mIndex;
 
 	public:
 		static const VertexAttribute POSITION;

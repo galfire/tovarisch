@@ -5,12 +5,14 @@
 
 namespace tov
 {
-	TOV_NAMESPACE_BEGIN(rendering)
+    TOV_NAMESPACE_BEGIN(rendering)
 
-	MeshComponent* Entity::createMeshComponent(mesh::MeshBase& mesh)
-	{
-		return create<MeshComponent>(mesh);
-	}
+    auto Entity::createMeshComponent(mesh::MeshBase& mesh) -> MeshComponent&
+    {
+        auto& meshComponent = *create<MeshComponent>(mesh);
+        mMeshComponents.push_back(meshComponent);
+        return meshComponent;
+    }
 
-	TOV_NAMESPACE_END // rendering
+    TOV_NAMESPACE_END // rendering
 }

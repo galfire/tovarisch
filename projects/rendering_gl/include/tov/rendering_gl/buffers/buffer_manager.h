@@ -14,38 +14,33 @@
 namespace tov
 {
     TOV_NAMESPACE_BEGIN(rendering)
-    TOV_NAMESPACE_BEGIN(buffers)
-
-    class BufferBase;
-
-    TOV_NAMESPACE_END // buffers
     TOV_NAMESPACE_BEGIN(gl)
     TOV_NAMESPACE_BEGIN(buffers)
 
-    using rendering::buffers::AccessSettings;
-    using rendering::buffers::UsageSettings;
+    namespace { namespace base = rendering::buffers; }
 
     class BufferManager
-        : public rendering::buffers::BufferManager<BufferManager>
+        : public base::BufferManager<BufferManager>
     {
     public:
-        template<UsageSettings usageSettings, AccessSettings accessSettings>
+        template<base::UsageSettings usageSettings, base::AccessSettings accessSettings>
         auto createIndexBufferImpl(size_t size)
         {
             return create<usageSettings, accessSettings>(size, GL_ELEMENT_ARRAY_BUFFER);
         }
 
-        template<UsageSettings usageSettings, AccessSettings accessSettings>
+        template<base::UsageSettings usageSettings, base::AccessSettings accessSettings>
         auto createVertexBufferImpl(size_t size)
         {
             return create<usageSettings, accessSettings>(size, GL_ARRAY_BUFFER);
         }
 
     protected:
-        template<UsageSettings usageSettings, AccessSettings accessSettings>
+        template<base::UsageSettings usageSettings, base::AccessSettings accessSettings>
         auto create(size_t size, GLenum bufferTarget)
         {
-            return rendering::buffers::BufferManager<BufferManager>::create<Buffer<usageSettings, accessSettings>>(size, bufferTarget);
+            using BufferT = Buffer<usageSettings, accessSettings>;
+            return base::BufferManager<BufferManager>::create<BufferT>(size, bufferTarget);
         }
     };
 

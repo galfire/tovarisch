@@ -22,11 +22,8 @@ namespace tov
 	{
 		TOV_MOVABLE_ONLY(VertexData)
 
-		using AccessSettings = buffers::AccessSettings;
-		using UsageSettings = buffers::UsageSettings;
 		using VBOHandle = byte;
-		using BufferObjectUPtr = buffers::BufferObjectUPtr;
-		using HandleToVBOMap = std::unordered_map<VBOHandle, BufferObjectUPtr>;
+		using HandleToVBOMap = std::unordered_map<VBOHandle, buffers::BufferObjectUPtr>;
 
 	public:
 		template<class BufferManagerT>
@@ -41,9 +38,9 @@ namespace tov
 			for (auto&& handle : handles)
 			{
 				auto bufferFormat = mFormat.getVertexBufferFormatForHandle(handle);
-				auto buffer = bufferManager.template createVertexBuffer<UsageSettings::STATIC, AccessSettings::WRITE>(bufferFormat, numVertices);
-				auto bufferObject = BufferObjectUPtr(
-					new tov::rendering::buffers::VertexBufferObject(*buffer, bufferFormat)
+				auto buffer = bufferManager.template createVertexBuffer<buffers::UsageSettings::STATIC, buffers::AccessSettings::WRITE>(bufferFormat, numVertices);
+				auto bufferObject = buffers::BufferObjectUPtr(
+					new buffers::VertexBufferObject(*buffer, bufferFormat)
 				);
 				mHandleToVBOMap[handle] = std::move(bufferObject);
 			}

@@ -39,10 +39,10 @@ namespace tov
 
     private:
         using MemoryArena = memory::MemoryArena<
-            tov::memory::policies::allocation::NewDelete,
-            tov::memory::policies::alignment::Standard,
-            tov::memory::policies::thread::Single,
-            tov::memory::policies::bounds::Simple
+            memory::policies::allocation::NewDelete,
+            memory::policies::alignment::Standard,
+            memory::policies::thread::Single,
+            memory::policies::bounds::Simple
         >;
 
         MemoryArena mMemoryArena;

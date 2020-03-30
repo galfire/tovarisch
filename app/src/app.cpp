@@ -59,7 +59,7 @@ int main(int argc, char** argv)
     tov::rendering::Scene scene;
     tov::rendering::SceneNode node;
 
-    auto c = *scene.createCamera();
+    auto& c = scene.createCamera();
     node.attachSceneObject(&c);
 
     auto& window = rs.createRenderWindow("WINDWOWWW", 640, 480, false);
@@ -77,11 +77,12 @@ int main(int argc, char** argv)
     MeshManager meshManager(bufferManager);
     auto mesh = meshManager.create();
     auto submesh = mesh->createSubmesh(sphere);
-    
-    auto entity = scene.createEntity();
-    entity->createMeshComponent(*mesh);
+
+
+    auto& entity = scene.createEntity();
+    entity.createMeshComponent(*mesh);
     tov::rendering::SceneNode node2;
-    node2.attachSceneObject(entity);
+    node2.attachSceneObject(&entity);
 
     {
         using ShaderType = tov::rendering::pipeline::ShaderType;

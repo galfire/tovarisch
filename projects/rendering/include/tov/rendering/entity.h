@@ -11,44 +11,49 @@
 
 namespace tov
 {
-	TOV_NAMESPACE_BEGIN(rendering)
+    TOV_NAMESPACE_BEGIN(rendering)
 
-	class MeshComponent;
+    class MeshComponent;
 
-	TOV_NAMESPACE_BEGIN(mesh)
+    TOV_NAMESPACE_BEGIN(mesh)
 
-	class MeshBase;
+    class MeshBase;
 
-	TOV_NAMESPACE_END //mesh
+    TOV_NAMESPACE_END //mesh
 
-	class Entity
-		: public SceneObject
-	{
-		TOV_MOVABLE_ONLY(Entity)
+    class Entity
+        : public SceneObject
+    {
+        TOV_MOVABLE_ONLY(Entity)
 
-	public:
-		Entity() = default;
-		~Entity() = default;
+        using ComponentList = std::vector<ComponentUPtr>;
+        using MeshComponentList = std::vector<std::reference_wrapper<MeshComponent>>;
 
-		template<class T, class... U>
-		T* create(U&&... args)
-		{
-			auto component = std::unique_ptr<T>(
-				new T(std::forward<U>(args)...)
-			);
-			mComponents.push_back(std::move(component));
-			auto ret = mComponents.back().get();
-			return static_cast<T*>(ret);
-		}
+    public:
+        Entity() = default;
+        ~Entity() = default;
 
-		MeshComponent* createMeshComponent(mesh::MeshBase& mesh);
+        template<class T, class... U>
+        T* create(U&&... args)
+        {
+            auto component = std::unique_ptr<T>(
+                new T(std::forward<U>(args)...)
+            );
+            mComponents.push_back(std::move(component));
+            auto ret = mComponents.back().get();
+            return static_cast<T*>(ret);
+        }
 
-	private:
-		using ComponentList = std::vector<ComponentUPtr>;
-		ComponentList mComponents;
-	};
+        auto createMeshComponent(mesh::MeshBase& mesh) -> MeshComponent&;
 
-	TOV_NAMESPACE_END // rendering
+        auto getMeshComponents() const -> auto const& { return mMeshComponents; }
+
+    private:
+        ComponentList mComponents;
+        MeshComponentList mMeshComponents;
+    };
+
+    TOV_NAMESPACE_END // rendering
 }
 
 #endif // !TOV_RENDERING_ENTITY_H

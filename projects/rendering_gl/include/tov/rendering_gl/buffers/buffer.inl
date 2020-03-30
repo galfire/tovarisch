@@ -5,8 +5,8 @@ namespace tov
     TOV_NAMESPACE_BEGIN(buffers)
 
     template<
-        rendering::buffers::UsageSettings usageSettings,
-        rendering::buffers::AccessSettings accessSettings
+        UsageSettings usageSettings,
+        AccessSettings accessSettings
     >
     GLenum Buffer<usageSettings, accessSettings>::getGLUsageSettings()
     {
@@ -27,15 +27,15 @@ namespace tov
     }
 
     template<
-        rendering::buffers::UsageSettings usageSettings,
-        rendering::buffers::AccessSettings accessSettings
+        UsageSettings usageSettings,
+        AccessSettings accessSettings
     >
     Buffer<usageSettings, accessSettings>::Buffer(
-        rendering::buffers::BufferManagerBase& manager,
+        base::BufferManagerBase& manager,
         size_t bytes,
         GLenum bufferTarget
     ) 
-        : rendering::buffers::Buffer<NullReader, BufferWriter, usageSettings, accessSettings>(
+        : base::Buffer<NullReader, BufferWriter, usageSettings, accessSettings>(
             manager,
             bytes,
             mBufferID,
@@ -51,8 +51,8 @@ namespace tov
     }
 
     template<
-        rendering::buffers::UsageSettings usageSettings,
-        rendering::buffers::AccessSettings accessSettings
+        UsageSettings usageSettings,
+        AccessSettings accessSettings
     >
     Buffer<usageSettings, accessSettings>::~Buffer()
     {
@@ -61,8 +61,8 @@ namespace tov
     }
 
     template<
-        rendering::buffers::UsageSettings usageSettings,
-        rendering::buffers::AccessSettings accessSettings
+        UsageSettings usageSettings,
+        AccessSettings accessSettings
     >
     void Buffer<usageSettings, accessSettings>::discard()
     {

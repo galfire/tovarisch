@@ -44,10 +44,7 @@ namespace tov
 
         ~Submesh() noexcept = default;
 
-        auto getVertexDataFormat() const
-        {
-            return mVertexData->getFormat();
-        }
+        auto getVertexDataFormat() const { return mVertexData->getFormat(); }
 
     private:
         void build()

@@ -6,8 +6,9 @@ namespace tov
 {
     TOV_NAMESPACE_BEGIN(rendering)
 
-    Camera::Camera() noexcept
-        : mCachedTransform()
+    Camera::Camera(Scene& scene) noexcept
+        : mScene(scene)
+        , mCachedTransform()
         , mViewFrustum()
     {}
 
@@ -35,7 +36,7 @@ namespace tov
         buildProjectionMatrix();
     }
 
-    void Camera::renderScene()
+    void Camera::render()
     {
         this->buildViewMatrix();
     }

@@ -36,7 +36,6 @@ namespace tov
             {
                 CommandPacket packet;
                 Command command;
-                DispatchFunction* dispatchFunction;
             };
 
             auto size = sizeof(Layout);

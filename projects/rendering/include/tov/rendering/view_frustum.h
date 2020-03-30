@@ -59,7 +59,6 @@ namespace tov
 		float mFarDistance = 3000.0f;
 		float mAspectRatio = 4.0f / 3;
 		math::Radian mFieldOfViewY = math::Radian(math::PI / 6);
-
 		math::Matrix4 mProjectionMatrix = math::Matrix4::ZERO;
 	};
 
@@ -67,9 +66,7 @@ namespace tov
 	class ViewFrustum
 		: public ViewFrustumView
 		, public ViewFrustumProjection<Projection>
-	{
-	public:
-	};
+	{};
 
 	TOV_NAMESPACE_END // rendering
 }
