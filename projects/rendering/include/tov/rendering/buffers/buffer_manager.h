@@ -10,11 +10,7 @@
 #include "vertex_buffer_format.h"
 
 #include <tov/memory.h>
-#include <tov/memory/memory_arena.h>
-#include <tov/memory/policies/alignment/standard.h>
-#include <tov/memory/policies/allocation/new_delete.h>
-#include <tov/memory/policies/bounds/simple.h>
-#include <tov/memory/policies/thread/single.h>
+#include <tov/memory_config.h>
 
 #include <vector>
 
@@ -38,14 +34,7 @@ namespace tov
         void checkBounds(void* ptr) const;
 
     private:
-        using MemoryArena = memory::MemoryArena<
-            memory::policies::allocation::NewDelete,
-            memory::policies::alignment::Standard,
-            memory::policies::thread::Single,
-            memory::policies::bounds::Simple
-        >;
-
-        MemoryArena mMemoryArena;
+        memory::ArenaNewDelete mMemoryArena;
     };
 
     template<class DerivedBufferManagerT>
@@ -72,7 +61,7 @@ namespace tov
         {
             auto vertexFormat = format.getVertexFormat();
             auto vertexSize = vertexFormat.getSize();
-            size_t size = vertexSize * numVertices;
+            auto size = vertexSize * numVertices;
             auto buffer = static_cast<DerivedBufferManagerT*>(this)->template createVertexBufferImpl<usageSettings, accessSettings>(size);
             return buffer;
         }

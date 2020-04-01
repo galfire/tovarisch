@@ -25,10 +25,7 @@ namespace tov
 		VertexDataFormat() noexcept {}
 		~VertexDataFormat() noexcept {}
 
-		auto getHandles() const -> auto const &
-		{
-			return mHandles;
-		}
+		void mapHandleToFormat(VBOHandle handle, VertexBufferFormat vbf);
 
 		auto getVertexBufferFormatForHandle(VBOHandle handle) const
 		{
@@ -36,19 +33,13 @@ namespace tov
 			return format;
 		}
 
-		void mapHandleToFormat(VBOHandle handle, VertexBufferFormat vbf)
-		{
-			auto format = mHandleToFormatMap.find(handle);
-			if (format == mHandleToFormatMap.end())
-			{
-				mHandles.push_back(handle);
-				mHandleToFormatMap.emplace(handle, vbf);
-			}
-		}
-
+		auto getHandles() const -> auto const& { return mHandles; }
 	private:
 		HandleList mHandles;
 		HandleToFormatMap mHandleToFormatMap;
+
+	public:
+		static const VertexDataFormat DEFAULT;
 	};
 
 	TOV_NAMESPACE_END // mesh

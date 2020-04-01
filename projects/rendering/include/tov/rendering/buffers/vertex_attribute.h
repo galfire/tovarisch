@@ -62,7 +62,7 @@ namespace tov
 		}
 
 	public:
-		VertexAttribute(Semantic semantic, Type type, ushort count, ushort index) noexcept;
+		constexpr VertexAttribute(Semantic semantic, Type type, ushort count, ushort index) noexcept;
 		~VertexAttribute() noexcept = default;
 
 		auto operator = (const VertexAttribute& rhs) -> auto &

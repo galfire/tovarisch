@@ -38,13 +38,10 @@
 #include <tov/rendering/win32/window_platform_support.h>
 #include <tov/rendering/win32/window_events.h>
 
-#include <tov/rendering/viewport.h>
-
 #include <tov/rendering_gl/window_renderer_support.h>
 
 #include <iostream>
 
-using Viewport = tov::rendering::Viewport;
 using WindowPlatformSupport = tov::rendering::win32::WindowPlatformSupport;
 using WindowRendererSupport = tov::rendering::win32::gl::WindowRendererSupport;
 using RenderSystem = tov::rendering::RenderSystem;
@@ -63,11 +60,11 @@ int main(int argc, char** argv)
     node.attachSceneObject(&c);
 
     auto& window = rs.createRenderWindow("WINDWOWWW", 640, 480, false);
-    auto vp1 = window.createViewport(c, 0, 0.0f, 0.0f, 0.5f, 1.0f, tov::rendering::Colour::Red);
-    auto vp2 = window.createViewport(c, 1, 0.5f, 0.0f, 0.5f, 1.0f, tov::rendering::Colour::Green);
+    window.createViewport(c, 0, 0.0f, 0.0f, 0.5f, 1.0f, tov::rendering::Colour::Red);
+    window.createViewport(c, 1, 0.5f, 0.0f, 0.5f, 1.0f, tov::rendering::Colour::Green);
 
     auto& window2 = rs.createRenderWindow("canvas2", 640, 180, false);
-    auto vp3 = window2.createViewport(c, 2, 0.0f, 0.0f, 1.0f, 1.0f, tov::rendering::Colour::Blue);
+    window2.createViewport(c, 2, 0.0f, 0.0f, 1.0f, 1.0f, tov::rendering::Colour::Blue);
 
     auto sphere = tov::rendering::geometry::Sphere(1.0f, 4, 4);
 

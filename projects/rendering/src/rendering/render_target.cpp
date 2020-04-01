@@ -27,10 +27,10 @@ namespace tov
         for (auto&& viewport : mViewports)
         {
             auto& bucket = mRenderSystem.getFrameCommandBucket();
-            auto command = bucket.addCommand<commands::ApplyViewport>(viewport->getZIndex());
-            command->viewport = viewport.get();
+            auto& command = bucket.addCommand<commands::ApplyViewport>(viewport->getZIndex());
+            command.viewport = viewport.get();
 
-            viewport->renderCamera();
+            //viewport->renderCamera();
         }
     }
 

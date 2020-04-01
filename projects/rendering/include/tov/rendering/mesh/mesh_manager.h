@@ -29,16 +29,16 @@ namespace tov
         MeshManager(buffers::BufferManagerBase& bufferManager) noexcept
             : mBufferManager(static_cast<DerivedBufferManagerT&>(bufferManager))
         {
-                buffers::VertexFormat vf;
-                vf.addAttribute(buffers::VertexAttribute::POSITION, 0);
-                vf.addAttribute(buffers::VertexAttribute::NORMAL, 1);
-                vf.addAttribute(buffers::VertexAttribute::COLOUR, 2);
-                vf.addAttribute(buffers::VertexAttribute::TEXTURE_COORDINATE, 3);
-                buffers::VertexBufferFormat vbf(
-                    buffers::VertexBufferFormat::SequenceType::INTERLEAVED,
-                    vf
-                );
-                mPreferredVertexDataFormat.mapHandleToFormat(0, vbf);
+            buffers::VertexFormat vf;
+            vf.addAttribute(buffers::VertexAttribute::POSITION, 0);
+            vf.addAttribute(buffers::VertexAttribute::NORMAL, 1);
+            vf.addAttribute(buffers::VertexAttribute::COLOUR, 2);
+            vf.addAttribute(buffers::VertexAttribute::TEXTURE_COORDINATE, 3);
+            buffers::VertexBufferFormat vbf(
+                buffers::VertexBufferFormat::SequenceType::INTERLEAVED,
+                vf
+            );
+            mPreferredVertexDataFormat.mapHandleToFormat(0, vbf);
         }
 
         ~MeshManager() noexcept = default;

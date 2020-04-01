@@ -9,14 +9,6 @@
 
 #if defined TOV_GLES
 #	include <GLES3/gl32.h>
-#	include <GLES2/gl2ext.h>
-#	include <EGL/egl.h>
-
-#	include <iostream>
-
-#	define GL_MAP_PERSISTENT_BIT GL_MAP_PERSISTENT_BIT_EXT
-#	define GL_MAP_COHERENT_BIT   GL_MAP_COHERENT_BIT_EXT
-
 #elif defined TOV_GL
 #	include <gl/glew.h>
 #	include <gl/GL.h>

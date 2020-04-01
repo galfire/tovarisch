@@ -30,7 +30,7 @@ namespace tov
         ~CommandBucket() noexcept = default;
 
         template <class Command>
-        auto addCommand(Key key)
+        auto addCommand(Key key) -> auto&
         {
             struct Layout
             {
@@ -53,7 +53,7 @@ namespace tov
             }
 
             auto command = static_cast<Command*>(packet.getCommand());
-            return command;
+            return *command;
         }
 
         void submit()

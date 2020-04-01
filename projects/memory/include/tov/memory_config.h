@@ -11,6 +11,7 @@
 #include "memory/heap_area.h"
 
 #include "memory/policies/allocation/linear.h"
+#include "memory/policies/allocation/new_delete.h"
 
 #include "memory/policies/alignment/standard.h"
 #include "memory/policies/alignment/none.h"
@@ -25,9 +26,10 @@ namespace tov
 	TOV_NAMESPACE_BEGIN(memory)
 
 	using AllocationPolicyLinear = policies::allocation::Linear;
+	using AllocationPolicyNewDelete = policies::allocation::NewDelete;
 
+	using AlignmentPolicyNone = policies::alignment::None;
 	using AlignmentPolicyStandard = policies::alignment::Standard;
-	//using AlignmentPolicyStandard = policies::alignment::None;
 
 	using ThreadPolicySingle = policies::thread::Single;
 
@@ -37,28 +39,6 @@ namespace tov
 	using BoundsPolicy = policies::bounds::None;
 #endif
 
-	template<size_t Index>
-	class IndexedHeapArea
-	{
-	public:
-		enum
-		{
-			INDEX = Index
-		};
-
-	public:
-		IndexedHeapArea(size_t sz)
-		{
-			mHeapArea = std::make_unique<HeapArea>(sz);
-		}
-
-		inline void* getStart(void) const { return mHeapArea->getStart(); }
-		inline void* getEnd(void) const { return mHeapArea->getEnd(); }
-
-	private:
-		HeapAreaUPtr mHeapArea;
-	};
-
 	using ArenaLinear = MemoryArena<
 		AllocationPolicyLinear, 
 		AlignmentPolicyStandard, 
@@ -66,7 +46,12 @@ namespace tov
 		BoundsPolicy
 	>;
 
-	using AllocatedObjectLinear = AllocatedObject<ArenaLinear, IndexedHeapArea<0>, 4_mb>;
+	using ArenaNewDelete = MemoryArena<
+		AllocationPolicyNewDelete,
+		AlignmentPolicyStandard,
+		ThreadPolicySingle,
+		BoundsPolicy
+	>;
 
 	TOV_NAMESPACE_END // memory
 }

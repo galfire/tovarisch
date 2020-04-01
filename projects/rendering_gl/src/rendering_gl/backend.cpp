@@ -1,8 +1,8 @@
 #include <tov/rendering/backend.h>
 
-#include "rendering_gl/gl_impl.h"
-
 #include <tov/rendering/viewport.h>
+
+#include "rendering_gl/gl_impl.h"
 
 namespace tov
 {
