@@ -11,6 +11,8 @@
 #	include <GLES3/gl32.h>
 #elif defined TOV_GL
 #	include <gl/glew.h>
+#   include <gl/wglew.h>
+#   include <gl/wglext.h>
 #	include <gl/GL.h>
 #	include <gl/GLU.h>
 #endif
@@ -117,6 +119,7 @@ namespace
 
         std::cout << "\n";
         std::cout << src_str << ", " << type_str << ", " << severity_str << ": " << message;
+        std::cout << "\n";
 #endif
     }
 }

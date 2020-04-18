@@ -18,7 +18,7 @@ namespace tov
 		NO_WRITE = 0 << 1,
 	};
 
-	constexpr AccessSettings operator & (AccessSettings lhs, AccessSettings rhs)
+	constexpr auto operator & (AccessSettings lhs, AccessSettings rhs)
 	{
 		return static_cast<AccessSettings>(
 			static_cast<std::underlying_type<AccessSettings>::type>(lhs) &
@@ -26,7 +26,7 @@ namespace tov
 		);
 	}
 
-	constexpr AccessSettings& operator &= (AccessSettings& lhs, AccessSettings rhs)
+	constexpr auto operator &= (AccessSettings& lhs, AccessSettings rhs) -> auto&
 	{
 		lhs = static_cast<AccessSettings>(
 			static_cast<std::underlying_type<AccessSettings>::type>(lhs) &
@@ -35,7 +35,7 @@ namespace tov
 		return lhs;
 	}
 
-	constexpr AccessSettings operator | (AccessSettings lhs, AccessSettings rhs)
+	constexpr auto operator | (AccessSettings lhs, AccessSettings rhs)
 	{
 		return static_cast<AccessSettings>(
 			static_cast<std::underlying_type<AccessSettings>::type>(lhs) |
@@ -43,7 +43,7 @@ namespace tov
 		);
 	}
 
-	constexpr AccessSettings& operator |= (AccessSettings& lhs, AccessSettings rhs)
+	constexpr auto operator |= (AccessSettings& lhs, AccessSettings rhs) -> auto&
 	{
 		lhs = static_cast<AccessSettings>(
 			static_cast<std::underlying_type<AccessSettings>::type>(lhs) |
@@ -52,12 +52,12 @@ namespace tov
 		return lhs;
 	}
 
-	constexpr bool operator == (AccessSettings lhs, std::underlying_type<AccessSettings>::type rhs)
+	constexpr auto operator == (AccessSettings lhs, std::underlying_type<AccessSettings>::type rhs)
 	{
 		return static_cast<std::underlying_type<AccessSettings>::type>(lhs) == rhs;
 	}
 
-	constexpr bool operator != (AccessSettings lhs, std::underlying_type<AccessSettings>::type rhs)
+	constexpr auto operator != (AccessSettings lhs, std::underlying_type<AccessSettings>::type rhs)
 	{
 		return !(lhs == rhs);
 	}

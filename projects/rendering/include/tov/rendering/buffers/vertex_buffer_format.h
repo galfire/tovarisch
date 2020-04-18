@@ -27,19 +27,47 @@ namespace tov
         {
             // The attribute semantic
             VertexAttribute::Semantic semantic;
-            // The attribute index
+            // The attribute index (TEX1, TEX2, etc.)
             ushort index;
+            // The attribute location (the location index in the vertex)
+            ushort location;
+            // The number of components
+            ushort count;
             // The attribute data type
             VertexAttribute::Type type;
             // The distance to the same semantic in the next vertex
             size_t stride;
             // The offset in bytes for this semantic in the vertex
             size_t offset;
+
+#ifdef TOV_DEBUG
+            inline friend std::ostream& operator << (std::ostream& o, const AttributeDescriptor& ad)
+            {
+                o << "Semantic: " << ad.semantic << ", ";
+                o << "Index: " << ad.index << ", ";
+                o << "Type: " << ad.type << ", ";
+                o << "Stride: " << ad.stride << ", ";
+                o << "Offset: " << ad.offset;
+                return o;
+            }
+#endif
         };
 
         struct Descriptor
         {
             std::vector<AttributeDescriptor> attributeDescriptors;
+
+#ifdef TOV_DEBUG
+            inline friend std::ostream& operator <<
+                (std::ostream& o, const Descriptor& desc)
+            {
+                for (auto&& ad : desc.attributeDescriptors)
+                {
+                    o << ad << "\n";
+                }
+                return o;
+            }
+#endif
         };
 
     public:

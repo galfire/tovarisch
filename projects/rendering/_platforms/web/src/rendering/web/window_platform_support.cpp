@@ -4,25 +4,23 @@
 
 namespace tov
 {
-	TOV_NAMESPACE_BEGIN(rendering)
-	TOV_NAMESPACE_BEGIN(web)
+    TOV_NAMESPACE_BEGIN(rendering)
+    TOV_NAMESPACE_BEGIN(web)
 
-	WindowPlatformSupport::WindowPlatformSupport() noexcept
-		: rendering::WindowPlatformSupport()
-	{
+    WindowPlatformSupport::WindowPlatformSupport() noexcept
+        : rendering::WindowPlatformSupport()
+    {}
 
-	}
+    std::unique_ptr<rendering::WindowPlatformComponent> WindowPlatformSupport::buildComponent(Window& parentWindow) const
+    {
+        return std::unique_ptr<rendering::WindowPlatformComponent>(
+            new WindowPlatformComponent(parentWindow)
+        );
+    }
 
-	std::unique_ptr<rendering::WindowPlatformComponent> WindowPlatformSupport::buildComponent(Window& parentWindow) const
-	{
-		return std::unique_ptr<rendering::WindowPlatformComponent>(new WindowPlatformComponent(parentWindow));
-	}
+    void WindowPlatformSupport::messageHandler()
+    {}
 
-	void WindowPlatformSupport::messageHandler()
-	{
-
-	}
-
-	TOV_NAMESPACE_END // web
-	TOV_NAMESPACE_END // rendering
+    TOV_NAMESPACE_END // web
+    TOV_NAMESPACE_END // rendering
 }

@@ -7,7 +7,7 @@ namespace tov
 {
     TOV_NAMESPACE_BEGIN(rendering)
 
-    auto Entity::createMeshComponent(mesh::MeshBase& mesh) -> MeshComponent&
+    auto Entity::createMeshComponent(mesh::Mesh& mesh) -> MeshComponent&
     {
         auto& meshComponent = *create<MeshComponent>(mesh);
         mMeshComponents.push_back(meshComponent);

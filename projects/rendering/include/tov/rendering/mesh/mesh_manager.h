@@ -15,25 +15,22 @@ namespace tov
     TOV_NAMESPACE_BEGIN(rendering)
     TOV_NAMESPACE_BEGIN(buffers)
 
-    template<class DerivedBufferManagerT> class BufferManager;
+    class BufferManagerBase;
 
     TOV_NAMESPACE_END // buffers
     TOV_NAMESPACE_BEGIN(mesh)
 
-    template<class DerivedBufferManagerT>
     class MeshManager
     {
-        using MeshT = Mesh<DerivedBufferManagerT>;
-
     public:
         MeshManager(buffers::BufferManagerBase& bufferManager) noexcept
-            : mBufferManager(static_cast<DerivedBufferManagerT&>(bufferManager))
+            : mBufferManager(bufferManager)
         {
             buffers::VertexFormat vf;
             vf.addAttribute(buffers::VertexAttribute::POSITION, 0);
-            vf.addAttribute(buffers::VertexAttribute::NORMAL, 1);
-            vf.addAttribute(buffers::VertexAttribute::COLOUR, 2);
-            vf.addAttribute(buffers::VertexAttribute::TEXTURE_COORDINATE, 3);
+            //vf.addAttribute(buffers::VertexAttribute::NORMAL, 1);
+            //vf.addAttribute(buffers::VertexAttribute::COLOUR, 2);
+            //vf.addAttribute(buffers::VertexAttribute::TEXTURE_COORDINATE, 3);
             buffers::VertexBufferFormat vbf(
                 buffers::VertexBufferFormat::SequenceType::INTERLEAVED,
                 vf
@@ -46,18 +43,18 @@ namespace tov
         auto create()
         {
             auto mesh = MeshUPtr(
-                new MeshT(*this)
+                new Mesh(*this)
             );
             mMeshList.push_back(std::move(mesh));
             auto ret = mMeshList.back().get();
-            return static_cast<MeshT*>(ret);
+            return static_cast<Mesh*>(ret);
         }
 
         auto getBufferManager() const -> auto & { return mBufferManager; }
         auto getPreferredVertexDataFormat() const -> auto const & { return mPreferredVertexDataFormat; }
 
     private:
-        buffers::BufferManager<DerivedBufferManagerT>& mBufferManager;
+        buffers::BufferManagerBase& mBufferManager;
 
         VertexDataFormat mPreferredVertexDataFormat;
 

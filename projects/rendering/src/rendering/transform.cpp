@@ -122,8 +122,8 @@ namespace tov
 
 		// Set translation
 		m[0][3] = mTranslation.x;
-		m[1][3] = mTranslation.x;
-		m[2][3] = mTranslation.x;
+		m[1][3] = mTranslation.y;
+		m[2][3] = mTranslation.z;
 
 		auto scaleRotationMatrix = getRotationMatrix();
 		

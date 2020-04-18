@@ -1,4 +1,4 @@
-#include "rendering_gl/render_context.h"
+#include "rendering_gl/dummy_render_context.h"
 
 #include <tov/rendering/win32/device_context.h>
 
@@ -10,41 +10,36 @@ namespace tov
     TOV_NAMESPACE_BEGIN(win32)
     TOV_NAMESPACE_BEGIN(gl)
 
-    RenderContext::RenderContext(const rendering::DeviceContext& deviceContext)
+    DummyRenderContext::DummyRenderContext(const rendering::DeviceContext& deviceContext)
         : rendering::RenderContext(deviceContext)
     {
         HDC hdc = static_cast<const DeviceContext&>(mDeviceContext).getHDC();
-        
-        int contextattribs[] =
-        {
-            WGL_CONTEXT_MAJOR_VERSION_ARB,  4,
-            WGL_CONTEXT_MINOR_VERSION_ARB,  2,
-#if TOV_DEBUG
-            WGL_CONTEXT_FLAGS_ARB,          WGL_CONTEXT_DEBUG_BIT_ARB,
-#endif
-            0
-        };
-
-        mGLRC = wglCreateContextAttribsARB(hdc, nullptr, contextattribs);
+        mGLRC = wglCreateContext(hdc);
 
         makeCurrent();
-        enableGLOutput();
+
+        GLenum err = glewInit();
+        if (GLEW_OK != err)
+        {
+            fprintf(stderr, "Error: %s\n", glewGetErrorString(err));
+        }
+        fprintf(stdout, "Status: Using GLEW %s\n", glewGetString(GLEW_VERSION));
     }
 
-    bool RenderContext::_makeCurrent()
+    bool DummyRenderContext::_makeCurrent()
     {
         HDC hdc = static_cast<const DeviceContext&>(mDeviceContext).getHDC();
         bool success = wglMakeCurrent(hdc, mGLRC);
         return success;
     }
 
-    bool RenderContext::_endCurrent()
+    bool DummyRenderContext::_endCurrent()
     {
         bool success = wglMakeCurrent(nullptr, nullptr);
         return success;
     }
 
-    bool RenderContext::_release()
+    bool DummyRenderContext::_release()
     {
         bool success = false;
         if(mGLRC)

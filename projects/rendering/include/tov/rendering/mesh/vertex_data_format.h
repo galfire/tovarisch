@@ -20,6 +20,7 @@ namespace tov
 		using VertexBufferFormat = rendering::buffers::VertexBufferFormat;
 		using HandleToFormatMap = std::unordered_map<VBOHandle, VertexBufferFormat>;
 		using HandleList = std::vector<VBOHandle>;
+		using VertexBufferFormatList = std::vector<VertexBufferFormat>;
 
 	public:
 		VertexDataFormat() noexcept {}
@@ -34,12 +35,11 @@ namespace tov
 		}
 
 		auto getHandles() const -> auto const& { return mHandles; }
+		auto getVertexBufferFormats() const -> auto const& { return mVertexBufferFormats; }
 	private:
 		HandleList mHandles;
+		VertexBufferFormatList mVertexBufferFormats;
 		HandleToFormatMap mHandleToFormatMap;
-
-	public:
-		static const VertexDataFormat DEFAULT;
 	};
 
 	TOV_NAMESPACE_END // mesh

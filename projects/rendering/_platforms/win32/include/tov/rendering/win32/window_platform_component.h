@@ -20,7 +20,7 @@ namespace tov
 		: public rendering::WindowPlatformComponent
 	{
 	public:
-		WindowPlatformComponent(Window& parentWindow);
+		WindowPlatformComponent(Window& parentWindow, const char* windowClassName);
 		~WindowPlatformComponent() = default;
 
 		void swapBuffers() override;
@@ -45,8 +45,10 @@ namespace tov
 		}
 		DWORD getFullscreenWindowStyle() { return mFullscreenWindowStyle; }
 		DWORD getWindowedWindowStyle() { return mWindowedWindowStyle; }
-
+		
 	protected:
+		const char* mWindowClassName;
+
 		HWND mHWnd = nullptr;
 		DWORD mFullscreenWindowStyle = 0;
 		DWORD mWindowedWindowStyle = 0;

@@ -5,26 +5,26 @@
 
 namespace tov
 {
-	TOV_NAMESPACE_BEGIN(rendering)
+    TOV_NAMESPACE_BEGIN(rendering)
 
-	class WindowRendererComponent;
+    class WindowRendererComponent;
 
-	TOV_NAMESPACE_BEGIN(win32)
-	TOV_NAMESPACE_BEGIN(gl)
+    TOV_NAMESPACE_BEGIN(win32)
+    TOV_NAMESPACE_BEGIN(gl)
 
-	class WindowRendererSupport
-		: public rendering::WindowRendererSupport
-	{
-	public:
-		WindowRendererSupport() = default;
-		~WindowRendererSupport() = default;
+    class WindowRendererSupport
+        : public rendering::WindowRendererSupport
+    {
+    public:
+        WindowRendererSupport() = default;
+        ~WindowRendererSupport() = default;
 
-		std::unique_ptr<rendering::WindowRendererComponent> buildComponent(Window& parentWindow) const override;
-	};
+        std::unique_ptr<rendering::WindowRendererComponent> buildComponent(Window& parentWindow) const override;
+    };
 
-	TOV_NAMESPACE_END // gl
-	TOV_NAMESPACE_END // win32
-	TOV_NAMESPACE_END // rendering
+    TOV_NAMESPACE_END // gl
+    TOV_NAMESPACE_END // win32
+    TOV_NAMESPACE_END // rendering
 }
 
 #endif

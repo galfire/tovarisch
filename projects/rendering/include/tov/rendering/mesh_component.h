@@ -8,10 +8,9 @@
 namespace tov
 {
 	TOV_NAMESPACE_BEGIN(rendering)
-
 	TOV_NAMESPACE_BEGIN(mesh)
 
-	class MeshBase;
+	class Mesh;
 
 	TOV_NAMESPACE_END // mesh
 
@@ -19,14 +18,14 @@ namespace tov
 		: public Component
 	{
 	public:
-		MeshComponent(mesh::MeshBase& mesh);
+		MeshComponent(mesh::Mesh& mesh);
 		~MeshComponent() = default;
 
 	private:
-		mesh::MeshBase& mMesh;
+		mesh::Mesh& mMesh;
 	};
 
-	TOV_NAMESPACE_END
+	TOV_NAMESPACE_END // rendering
 }
 
 #endif // !TOV_RENDERING_MESH_COMPONENT_H

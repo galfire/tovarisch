@@ -23,15 +23,17 @@ namespace tov
         : public base::BufferManager<BufferManager>
     {
     public:
-        template<base::UsageSettings usageSettings, base::AccessSettings accessSettings>
         auto createIndexBufferImpl(size_t size)
         {
+            constexpr auto usageSettings = buffers::UsageSettings::STATIC;
+            constexpr auto accessSettings = buffers::AccessSettings::WRITE;
             return create<usageSettings, accessSettings>(size, GL_ELEMENT_ARRAY_BUFFER);
         }
 
-        template<base::UsageSettings usageSettings, base::AccessSettings accessSettings>
         auto createVertexBufferImpl(size_t size)
         {
+            constexpr auto usageSettings = buffers::UsageSettings::STATIC;
+            constexpr auto accessSettings = buffers::AccessSettings::WRITE;
             return create<usageSettings, accessSettings>(size, GL_ARRAY_BUFFER);
         }
 

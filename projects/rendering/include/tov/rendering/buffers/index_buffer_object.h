@@ -18,9 +18,18 @@ namespace tov
 		: public BufferObject
 	{
 	public:
-		IndexBufferObject(BufferBase& buffer)
+		IndexBufferObject(BufferBase& buffer, uint numIndices)
 			: BufferObject(buffer)
+			, mNumIndices(numIndices)
+			, mIndexType(buffers::getIndexType(numIndices))
 		{}
+
+		auto getNumIndices() const { return mNumIndices; }
+		auto getIndexType() const { return mIndexType; }
+
+	private:
+		uint mNumIndices;
+		IndexType mIndexType;
 	};
 
 	TOV_NAMESPACE_END // buffers 

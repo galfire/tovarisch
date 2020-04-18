@@ -29,8 +29,10 @@ namespace tov
 
         auto createRenderWindow(const char* name, uint width, uint height, bool fullscreen) -> RenderWindow&;
 
+        void queueFrame();
         void renderFrame();
 
+        auto getGBufferBucket() -> auto& { return mGBufferBucket; }
         auto getFrameCommandBucket() -> auto& { return mFrameCommandBucket; }
 
     private:
@@ -40,6 +42,7 @@ namespace tov
         WindowPlatformSupport& mWindowPlatformSupport;
         WindowRendererSupport& mWindowRendererSupport;
 
+        commands::CommandBucket<128> mGBufferBucket;
         commands::CommandBucket<128> mFrameCommandBucket;
 
         RenderTargetManager mRenderTargetManager;

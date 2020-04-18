@@ -4,60 +4,53 @@
 #include <tov/rendering/rendering_core.h>
 
 #include "submesh.h"
-#include <tov/rendering/geometry/geometry.h>
 
 #include <vector>
 
 namespace tov
 {
-	TOV_NAMESPACE_BEGIN(rendering)
-	TOV_NAMESPACE_BEGIN(mesh)
+    TOV_NAMESPACE_BEGIN(rendering)
+    TOV_NAMESPACE_BEGIN(geometry)
+    
+    class Geometry;
+    
+    TOV_NAMESPACE_END // geometry
+    TOV_NAMESPACE_BEGIN(mesh)
 
-	template<class DerivedBufferManagerT> class MeshManager;
+    class MeshManager;
+    class Submesh;
 
-	class MeshBase
-	{
-		TOV_MOVABLE_ONLY(MeshBase)
+    class Mesh
+    {
+        TOV_MOVABLE_ONLY(Mesh)
 
-	public:
-		MeshBase() noexcept = default;
-		virtual ~MeshBase() noexcept = default;
-	};
+    public:
+        Mesh(MeshManager& manager) noexcept;
+        ~Mesh() noexcept = default;
 
-	template<class DerivedBufferManagerT>
-	class Mesh
-		: public MeshBase
-	{
-	public:
-		Mesh(MeshManager<DerivedBufferManagerT>& manager) noexcept
-			: mManager(manager)
-		{}
+        auto getManager() const -> auto const& { return mManager; }
 
-		~Mesh() noexcept = default;
+        auto createSubmesh(const geometry::Geometry& geometry) -> auto&
+        {
+            auto submesh = SubmeshUPtr(
+                new Submesh(*this, geometry)
+            );
+            mSubmeshes.push_back(std::move(submesh));
+            auto ret = mSubmeshes.back().get();
+            return *ret;
+        }
 
-		auto getManager() const -> auto const& { return mManager; }
+    private:
+        MeshManager& mManager;
 
-		auto createSubmesh(const tov::rendering::geometry::Geometry& geometry)
-		{
-			auto submesh = SubmeshUPtr(
-				new Submesh(*this, geometry)
-			);
-			mSubmeshes.push_back(std::move(submesh));
-			auto ret = mSubmeshes.back().get();
-			return ret;
-		}
+        using SubmeshList = std::vector<SubmeshUPtr>;
+        SubmeshList mSubmeshes;
+    };
 
-	private:
-		MeshManager<DerivedBufferManagerT>& mManager;
+    using MeshUPtr = std::unique_ptr<Mesh>;
 
-		using SubmeshList = std::vector<SubmeshUPtr>;
-		SubmeshList mSubmeshes;
-	};
-
-	using MeshUPtr = std::unique_ptr<MeshBase>;
-
-	TOV_NAMESPACE_END // mesh
-	TOV_NAMESPACE_END // rendering
+    TOV_NAMESPACE_END // mesh
+    TOV_NAMESPACE_END // rendering
 }
 
 #endif // !TOV_RENDERING_MESH_MESH_H

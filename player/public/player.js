@@ -38,7 +38,7 @@ var Module = typeof Module !== 'undefined' ? Module : {};
       } else {
         throw 'using preloaded data can only be done on a web page or in a web worker';
       }
-      var PACKAGE_NAME = '/mnt/d/Galfire/projects/tovarisch/player/public/player.data';
+      var PACKAGE_NAME = '../../../../player/public/player.data';
       var REMOTE_PACKAGE_BASE = 'player.data';
       if (typeof Module['locateFilePackage'] === 'function' && !Module['locateFile']) {
         Module['locateFile'] = Module['locateFilePackage'];
@@ -170,10 +170,10 @@ var Module = typeof Module !== 'undefined' ? Module : {};
             for (var i = 0; i < files.length; ++i) {
               DataRequest.prototype.requests[files[i].filename].onload();
             }
-                Module['removeRunDependency']('datafile_/mnt/d/Galfire/projects/tovarisch/player/public/player.data');
+                Module['removeRunDependency']('datafile_../../../../player/public/player.data');
 
       };
-      Module['addRunDependency']('datafile_/mnt/d/Galfire/projects/tovarisch/player/public/player.data');
+      Module['addRunDependency']('datafile_../../../../player/public/player.data');
     
       if (!Module.preloadResults) Module.preloadResults = {};
     
@@ -194,7 +194,7 @@ var Module = typeof Module !== 'undefined' ? Module : {};
     }
   
    }
-   loadPackage({"files": [{"start": 0, "audio": 0, "end": 206, "filename": "/shaders/simple.frag.glsl"}, {"start": 206, "audio": 0, "end": 580, "filename": "/shaders/vertex.vert.glsl"}], "remote_package_size": 580, "package_uuid": "5a3d5be9-5dc0-424b-9ee4-94a861dfb833"});
+   loadPackage({"files": [{"start": 0, "audio": 0, "end": 218, "filename": "/shaders/simple.frag.glsl"}, {"start": 218, "audio": 0, "end": 610, "filename": "/shaders/vertex.vert.glsl"}], "remote_package_size": 610, "package_uuid": "0dfea00b-3100-49aa-965d-4730d704e974"});
   
   })();
   

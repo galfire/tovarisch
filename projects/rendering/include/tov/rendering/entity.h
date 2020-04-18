@@ -17,7 +17,7 @@ namespace tov
 
     TOV_NAMESPACE_BEGIN(mesh)
 
-    class MeshBase;
+    class Mesh;
 
     TOV_NAMESPACE_END //mesh
 
@@ -44,7 +44,7 @@ namespace tov
             return static_cast<T*>(ret);
         }
 
-        auto createMeshComponent(mesh::MeshBase& mesh) -> MeshComponent&;
+        auto createMeshComponent(mesh::Mesh& mesh) -> MeshComponent&;
 
         auto getMeshComponents() const -> auto const& { return mMeshComponents; }
 

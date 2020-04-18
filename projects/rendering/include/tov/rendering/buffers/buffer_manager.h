@@ -33,6 +33,9 @@ namespace tov
         void deallocateScratch(void* ptr);
         void checkBounds(void* ptr) const;
 
+        virtual BufferBase* createIndexBuffer(uint numIndices) TOV_ABSTRACT;
+        virtual BufferBase* createVertexBuffer(VertexBufferFormat format, uint numVertices) TOV_ABSTRACT;
+
     private:
         memory::ArenaNewDelete mMemoryArena;
     };
@@ -56,23 +59,21 @@ namespace tov
             return static_cast<BufferT*>(ret);
         }
 
-        template<UsageSettings usageSettings, AccessSettings accessSettings>
-        auto createVertexBuffer(VertexBufferFormat format, uint numVertices)
+        BufferBase* createVertexBuffer(VertexBufferFormat format, uint numVertices) override
         {
             auto vertexFormat = format.getVertexFormat();
             auto vertexSize = vertexFormat.getSize();
             auto size = vertexSize * numVertices;
-            auto buffer = static_cast<DerivedBufferManagerT*>(this)->template createVertexBufferImpl<usageSettings, accessSettings>(size);
+            auto buffer = static_cast<DerivedBufferManagerT*>(this)->createVertexBufferImpl(size);
             return buffer;
         }
 
-        template<UsageSettings usageSettings, AccessSettings accessSettings>
-        auto createIndexBuffer(uint numIndices)
+        BufferBase* createIndexBuffer(uint numIndices) override
         {
             auto indexType = getIndexType(numIndices);
             auto indexSize = getIndexTypeSize(indexType);
             auto size = indexSize * numIndices;
-            auto buffer = static_cast<DerivedBufferManagerT*>(this)->template createIndexBufferImpl<usageSettings, accessSettings>(size);
+            auto buffer = static_cast<DerivedBufferManagerT*>(this)->createIndexBufferImpl(size);
             return buffer;
         }
 

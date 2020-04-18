@@ -6,6 +6,7 @@
 
 #include "rendering/render_target.h"
 #include "rendering/viewport.h"
+#include "rendering/mesh/draw_data.h"
 
 namespace tov
 {
@@ -18,6 +19,13 @@ namespace tov
         auto& renderTarget = viewport->getRenderTarget();
         renderTarget.prerender();
         backend::ApplyViewport(viewport);
+    }
+
+    void BackendDispatch::Draw(const void* data)
+    {
+        auto command = reinterpret_cast<const commands::Draw*>(data);
+        auto drawData = command->drawData;
+        backend::Draw(drawData);
     }
 
     TOV_NAMESPACE_END // rendering

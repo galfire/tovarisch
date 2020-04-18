@@ -12,7 +12,7 @@ void main()
 {
     mat4 mvp = projectionMatrix * viewMatrix * modelMatrix;
 
-    gl_Position = mvp * vec4(pos, 1.0);
+    gl_Position = mvp * vec4(pos, 1.0f);
 
-    vertexColor = vec4(0.5, 0.0, 0.0, 1.0);
+    vertexColor = vec4(0.5, 0.5, 0.5, 1.0);
 }

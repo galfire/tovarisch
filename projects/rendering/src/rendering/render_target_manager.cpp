@@ -6,11 +6,11 @@ namespace tov
 {
     TOV_NAMESPACE_BEGIN(rendering)
 
-    void RenderTargetManager::renderTargets()
+    void RenderTargetManager::queueTargets()
     {
         for (auto&& renderTarget : mRenderTargets)
         {
-            renderTarget->renderViewports();
+            renderTarget->queueViewports();
             renderTarget->swapBuffers();
         }
     }

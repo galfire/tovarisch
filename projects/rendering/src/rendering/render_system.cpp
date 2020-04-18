@@ -29,15 +29,21 @@ namespace tov
         return *renderWindow;
     }
 
-    void RenderSystem::renderFrame()
+    void RenderSystem::queueFrame()
     {
         mWindowPlatformSupport.messageHandler();
-        mRenderTargetManager.renderTargets();
+
+        mRenderTargetManager.queueTargets();
+    }
+
+    void RenderSystem::renderFrame()
+    {
         submit();
     }
 
     void RenderSystem::submit()
     {
+        mGBufferBucket.submit();
         mFrameCommandBucket.submit();
     }
 

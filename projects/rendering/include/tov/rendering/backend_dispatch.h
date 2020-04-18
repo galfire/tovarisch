@@ -11,6 +11,7 @@ namespace tov
     {
     public:
         static void ApplyViewport(const void* data);
+        static void Draw(const void* data);
     };
 
     TOV_NAMESPACE_END // rendering

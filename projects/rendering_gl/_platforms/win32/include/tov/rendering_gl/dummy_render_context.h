@@ -1,5 +1,5 @@
-#ifndef TOV_RENDERING_WIN32_GL_RENDER_CONTEXT_H
-#define TOV_RENDERING_WIN32_GL_RENDER_CONTEXT_H
+#ifndef TOV_RENDERING_WIN32_GL_DUMMY_RENDER_CONTEXT_H
+#define TOV_RENDERING_WIN32_GL_DUMMY_RENDER_CONTEXT_H
 
 #include <tov/rendering/rendering_core.h>
 
@@ -16,12 +16,12 @@ namespace tov
     TOV_NAMESPACE_BEGIN(win32)
     TOV_NAMESPACE_BEGIN(gl)
 
-    class RenderContext
+    class DummyRenderContext
         : public rendering::RenderContext
     {
     public:
-        RenderContext(const rendering::DeviceContext& deviceContext);
-        ~RenderContext() = default;
+        DummyRenderContext(const rendering::DeviceContext& deviceContext);
+        ~DummyRenderContext() = default;
 
     private:
         bool _makeCurrent() override;

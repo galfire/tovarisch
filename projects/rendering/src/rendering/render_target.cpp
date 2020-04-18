@@ -1,8 +1,6 @@
 #include "rendering/render_target.h"
 
 #include "rendering/camera.h"
-#include "rendering/commands/commands.h"
-#include "rendering/commands/command_bucket.h"
 #include "rendering/render_system.h"
 #include "rendering/viewport.h"
 
@@ -22,18 +20,6 @@ namespace tov
         , mPixelFormat(pixelFormat)
     {}
 
-    void RenderTarget::renderViewports()
-    {
-        for (auto&& viewport : mViewports)
-        {
-            auto& bucket = mRenderSystem.getFrameCommandBucket();
-            auto& command = bucket.addCommand<commands::ApplyViewport>(viewport->getZIndex());
-            command.viewport = viewport.get();
-
-            //viewport->renderCamera();
-        }
-    }
-
     auto RenderTarget::createViewport(
         Camera& camera,
         int zIndex,
@@ -46,6 +32,7 @@ namespace tov
     {
         auto viewport = std::unique_ptr<Viewport>(
             new Viewport(
+                mRenderSystem,
                 *this,
                 camera,
                 zIndex,
@@ -57,6 +44,14 @@ namespace tov
             ));
         mViewports.push_back(std::move(viewport));
         return mViewports.back().get();
+    }
+
+    void RenderTarget::queueViewports()
+    {
+        for (auto&& viewport : mViewports)
+        {
+            viewport->queue();
+        }
     }
 
     TOV_NAMESPACE_END

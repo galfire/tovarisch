@@ -109,6 +109,11 @@ namespace tov
 			return *this;
 		}
 
+		auto data() const
+		{
+			return this->mArr.data();
+		}
+
 #ifdef TOV_DEBUG
 		inline friend std::ostream& operator <<
 			(std::ostream& o, const MatrixT& mat)
@@ -125,12 +130,6 @@ namespace tov
 			}
 			o << " )";
 			return o;
-		}
-
-
-		auto data() const
-		{
-			return this->mArr.data();
 		}
 #endif
 

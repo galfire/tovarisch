@@ -29,7 +29,6 @@ namespace tov
         ) noexcept;
         virtual ~RenderTarget() noexcept = default;
 
-        void renderViewports();
         virtual void prerender() {}
 
         virtual void swapBuffers() TOV_ABSTRACT;
@@ -46,6 +45,8 @@ namespace tov
             float normalizedHeight = 1.0f,
             Colour backgroundColour = Colour::Black
         ) -> Viewport*;
+
+        void queueViewports();
 
     protected:
         RenderSystem& mRenderSystem;

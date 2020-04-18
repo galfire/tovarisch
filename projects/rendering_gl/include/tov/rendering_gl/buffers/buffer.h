@@ -51,11 +51,11 @@ namespace tov
 
         void discard() override;
 
+        auto bind() const { return BufferBinder(mBufferID, mBufferTarget); }
+
     private:
         void map() override {}
         void unmap() override {}
-
-        auto bind() { return BufferBinder(mBufferID, mBufferTarget); }
 
     private:
         GLuint mBufferID;

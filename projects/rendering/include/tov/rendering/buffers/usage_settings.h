@@ -15,7 +15,7 @@ namespace tov
 		STREAM = 2
 	};
 
-	constexpr UsageSettings operator & (UsageSettings lhs, UsageSettings rhs)
+	constexpr auto operator & (UsageSettings lhs, UsageSettings rhs)
 	{
 		return static_cast<UsageSettings>(
 			static_cast<std::underlying_type<UsageSettings>::type>(lhs) &
@@ -23,7 +23,7 @@ namespace tov
 		);
 	}
 
-	constexpr UsageSettings& operator &= (UsageSettings& lhs, UsageSettings rhs)
+	constexpr auto operator &= (UsageSettings& lhs, UsageSettings rhs) -> auto&
 	{
 		lhs = static_cast<UsageSettings>(
 			static_cast<std::underlying_type<UsageSettings>::type>(lhs) &
@@ -32,7 +32,7 @@ namespace tov
 		return lhs;
 	}
 
-	constexpr UsageSettings operator | (UsageSettings lhs, UsageSettings rhs)
+	constexpr auto operator | (UsageSettings lhs, UsageSettings rhs)
 	{
 		return static_cast<UsageSettings>(
 			static_cast<std::underlying_type<UsageSettings>::type>(lhs) |
@@ -40,7 +40,7 @@ namespace tov
 		);
 	}
 
-	constexpr UsageSettings& operator |= (UsageSettings& lhs, UsageSettings rhs)
+	constexpr auto operator |= (UsageSettings& lhs, UsageSettings rhs) -> auto&
 	{
 		lhs = static_cast<UsageSettings>(
 			static_cast<std::underlying_type<UsageSettings>::type>(lhs) |
@@ -49,12 +49,12 @@ namespace tov
 		return lhs;
 	}
 
-	constexpr bool operator == (UsageSettings lhs, std::underlying_type<UsageSettings>::type rhs)
+	constexpr auto operator == (UsageSettings lhs, std::underlying_type<UsageSettings>::type rhs)
 	{
 		return static_cast<std::underlying_type<UsageSettings>::type>(lhs) == rhs;
 	}
 
-	constexpr bool operator != (UsageSettings lhs, std::underlying_type<UsageSettings>::type rhs)
+	constexpr auto operator != (UsageSettings lhs, std::underlying_type<UsageSettings>::type rhs)
 	{
 		return !(lhs == rhs);
 	}

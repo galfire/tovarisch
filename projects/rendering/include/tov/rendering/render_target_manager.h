@@ -32,7 +32,7 @@ namespace tov
             return static_cast<T*>(ret);
         }
 
-        void renderTargets();
+        void queueTargets();
 
     private:
         RenderSystem& mRenderSystem;

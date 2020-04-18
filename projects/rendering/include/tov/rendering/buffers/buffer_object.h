@@ -33,6 +33,8 @@ namespace tov
             mBuffer.unlock();
         }
 
+        auto getBuffer() const -> auto& { return mBuffer; }
+
     private:
         BufferBase& mBuffer;
     };

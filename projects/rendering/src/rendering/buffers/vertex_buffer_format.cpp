@@ -24,6 +24,8 @@ namespace tov
             AttributeDescriptor attributeDescriptor;
             attributeDescriptor.semantic = attribute.getSemantic();
             attributeDescriptor.index = attribute.getIndex();
+            attributeDescriptor.location = attribute.getLocation();
+            attributeDescriptor.count = attribute.getCount();
             attributeDescriptor.type = attribute.getType();
             switch (mSequenceType)
             {
@@ -31,10 +33,12 @@ namespace tov
                 attributeDescriptor.offset = offset;
                 offset += attribute.getSize();
                 attributeDescriptor.stride = vertexSize;
+                break;
             case SequenceType::SEQUENTIAL:
                 attributeDescriptor.offset = offset;
                 offset += numAttributes * attribute.getSize();
                 attributeDescriptor.stride = 0;
+                break;
             default:
                 break;
             }

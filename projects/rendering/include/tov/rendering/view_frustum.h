@@ -20,7 +20,7 @@ namespace tov
 		auto getViewMatrix() const { return mViewMatrix; }
 
 	private:
-		math::Matrix4 mViewMatrix = math::Matrix4::ZERO;
+		math::Matrix4 mViewMatrix = math::Matrix4::IDENTITY;
 	};
 
 	enum class ProjectionType

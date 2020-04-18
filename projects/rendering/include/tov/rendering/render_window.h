@@ -34,7 +34,6 @@ namespace tov
 
         void prerender() override;
         void swapBuffers() override;
-    private:
     };
 
     TOV_NAMESPACE_END // rendering

@@ -1,13 +1,17 @@
 #include "rendering/viewport.h"
 
 #include "rendering/camera.h"
+#include "rendering/render_system.h"
 #include "rendering/render_target.h"
+#include "rendering/commands/commands.h"
+#include "rendering/commands/command_bucket.h"
 
 namespace tov
 {
     TOV_NAMESPACE_BEGIN(rendering)
 
     Viewport::Viewport(
+        RenderSystem& renderSystem,
         RenderTarget& renderTarget,
         Camera& camera,
         int zIndex,
@@ -17,7 +21,8 @@ namespace tov
         float normalizedHeight,
         Colour backgroundColor
     ) noexcept
-        : mRenderTarget(renderTarget)
+        : mRenderSystem(renderSystem)
+        , mRenderTarget(renderTarget)
         , mCamera(camera)
         , mZIndex(zIndex)
         , mNormalizedLeft(normalizedLeft)
@@ -43,7 +48,14 @@ namespace tov
         mWidth = static_cast<uint>(mNormalizedWidth * width);
         mHeight = static_cast<uint>(mNormalizedHeight * height);
 
-        mCamera.setAspectRatio((float)mWidth / float(mHeight));
+        mCamera.setAspectRatio((float)mWidth / (float)mHeight);
+    }
+
+    void Viewport::queue() noexcept
+    {
+        auto& bucket = mRenderSystem.getFrameCommandBucket();
+        auto& command = bucket.addCommand<commands::ApplyViewport>(getZIndex());
+        command.viewport = this;
     }
 
     void Viewport::renderCamera()
