@@ -24,6 +24,16 @@ namespace tov
 		return indexType;
 	}
 
+	constexpr auto getIndexTypeString(IndexType indexType)
+	{
+		switch (indexType)
+		{
+		case IndexType::BITS_8: return "BYTE (8)";
+		case IndexType::BITS_16: return "SHORT (16)";
+		case IndexType::BITS_32: return "INT (32)";
+		}
+	}
+
 	constexpr auto getIndexTypeSize(IndexType indexType)
 	{
 		switch (indexType)

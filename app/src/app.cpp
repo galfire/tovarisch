@@ -35,7 +35,9 @@
 #include <tov/rendering_gl/pipeline/program.h>
 
 #include <tov/rendering_gl/buffers/buffer_manager.h>
+
 #include <tov/rendering/geometry/sphere.h>
+#include <tov/rendering/geometry/triangle.h>
 
 #include <tov/rendering/win32/window_platform_support.h>
 #include <tov/rendering/win32/window_events.h>
@@ -61,16 +63,17 @@ int main(int argc, char** argv)
     auto& c = scene.createCamera();
     node.attachSceneObject(&c);
 
-    /*auto& window = rs.createRenderWindow("WINDWOWWW", 640, 480, false);
-    window.createViewport(c, 0, 0.0f, 0.0f, 0.5f, 1.0f, tov::rendering::Colour::Red);
-    window.createViewport(c, 1, 0.5f, 0.0f, 0.5f, 1.0f, tov::rendering::Colour::Green);
-
-    auto& window2 = rs.createRenderWindow("canvas2", 640, 180, false);
-    window2.createViewport(c, 2, 0.0f, 0.0f, 1.0f, 1.0f, tov::rendering::Colour::Blue);*/
+    //auto& window = rs.createRenderWindow("WINDWOWWW", 640, 480, false);
+    //window.createViewport(c, 0, 0.0f, 0.0f, 0.5f, 1.0f, tov::rendering::Colour::Red);
+    //window.createViewport(c, 1, 0.5f, 0.0f, 0.5f, 1.0f, tov::rendering::Colour::Green);
+    //auto& window2 = rs.createRenderWindow("canvas2", 640, 180, false);
+    //window2.createViewport(c, 2, 0.0f, 0.0f, 1.0f, 1.0f, tov::rendering::Colour::Blue);
+    
     auto& window = rs.createRenderWindow("WINDWOWWW", 640, 480, false);
     window.createViewport(c, 0, 0.0f, 0.0f, 1.0f, 1.0f, tov::rendering::Colour::Black);
 
-    auto sphere = tov::rendering::geometry::Sphere(1.0f, 4, 4);
+    auto sphere = tov::rendering::geometry::Sphere(5.0f);
+    //auto sphere = tov::rendering::geometry::Triangle();
 
     using BufferManager = tov::rendering::gl::buffers::BufferManager;
     BufferManager bufferManager;
@@ -103,13 +106,14 @@ int main(int argc, char** argv)
     {
         std::cout << "STARTING FRAME...\n";
 
-        tov::math::Vector3 translation(2, 2, -10);
+        tov::math::Vector3 translation(0, 0, -20);
         node2.getTransform().setTranslation(translation);
+
         rs.queueFrame();
 
-        auto viewMatrix = c.getViewMatrix();
-        auto projectionMatrix = c.getProjectionMatrix();
-        auto modelMatrix = node2.getTransform().getHomogeneousMatrix();
+        auto viewMatrix = c.getViewMatrix().transpose();
+        auto projectionMatrix = c.getProjectionMatrix().transpose();
+        auto modelMatrix = node2.getTransform().getHomogeneousMatrix().transpose();
 
         p.setMatrix4("viewMatrix", viewMatrix);
         p.setMatrix4("projectionMatrix", projectionMatrix);

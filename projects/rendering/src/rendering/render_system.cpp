@@ -43,8 +43,8 @@ namespace tov
 
     void RenderSystem::submit()
     {
-        mGBufferBucket.submit();
         mFrameCommandBucket.submit();
+        mGBufferBucket.submit();
     }
 
     TOV_NAMESPACE_END // rendering

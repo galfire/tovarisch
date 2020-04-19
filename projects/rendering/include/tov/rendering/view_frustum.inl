@@ -8,8 +8,8 @@ namespace tov
 	{
 		ProjectionParameters parameters;
 
-		math::Radian thetaY = this->mFieldOfViewY / 2;
-		float tanThetaY = math::tan(thetaY);
+		math::Radian halfThetaY = this->mFieldOfViewY / 2;
+		float tanThetaY = math::tan(halfThetaY);
 		float tanThetaX = tanThetaY * this->mAspectRatio;
 
 		float halfWidthNear = this->mNearDistance * tanThetaX;

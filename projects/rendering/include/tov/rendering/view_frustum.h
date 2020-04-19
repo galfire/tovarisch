@@ -55,10 +55,10 @@ namespace tov
 		inline ProjectionParameters calculateProjectionParameters() noexcept;
 
 	private:
-		float mNearDistance = 1.0f;
-		float mFarDistance = 3000.0f;
-		float mAspectRatio = 4.0f / 3;
-		math::Radian mFieldOfViewY = math::Radian(math::PI / 6);
+		float mNearDistance = 0.1f;
+		float mFarDistance = 100.0f;
+		float mAspectRatio = 4.0f / 3.0f;
+		math::Radian mFieldOfViewY = math::Radian(math::PI / 4.0f);
 		math::Matrix4 mProjectionMatrix = math::Matrix4::ZERO;
 	};
 

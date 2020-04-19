@@ -50,7 +50,6 @@ namespace tov
         ::glClear(flags);
     }
 
-
     auto getEnumString(GLenum e)
     {
         switch (e)
@@ -90,7 +89,8 @@ namespace tov
         {
             auto location = a.location;
             auto count = a.count;
-            auto stride = a.stride;
+            //auto stride = a.stride;
+            auto stride = 0;
             auto offset = reinterpret_cast<void*>(a.offset);
             GLenum type = 0;
             switch (a.type)
@@ -127,11 +127,11 @@ namespace tov
                 auto op = log_gl_op("vertex attrib pointer", location, count, getEnumString(type), false, stride, offset);
                 glVertexAttribPointer(
                     location,
-                    a.count,
+                    count,
                     type,
                     false,
-                    a.stride,
-                    &a.offset
+                    stride,
+                    offset
                 );
             }
         }
@@ -169,8 +169,8 @@ namespace tov
 
         glDeleteVertexArrays(1, &vao);
 
-        //const GLenum buffers[] = { GL_COLOR_ATTACHMENT0 };
-        //glDrawBuffers(1, buffers);
+        /*const GLenum buffers[] = { GL_COLOR_ATTACHMENT0 };
+        glDrawBuffers(1, buffers);*/
     }
 
     TOV_NAMESPACE_END // backend

@@ -71,6 +71,7 @@ namespace tov
         BufferBase* createIndexBuffer(uint numIndices) override
         {
             auto indexType = getIndexType(numIndices);
+            std::cout << "Creating Index Buffer: " << getIndexTypeString(indexType) << "\n";
             auto indexSize = getIndexTypeSize(indexType);
             auto size = indexSize * numIndices;
             auto buffer = static_cast<DerivedBufferManagerT*>(this)->createIndexBufferImpl(size);
