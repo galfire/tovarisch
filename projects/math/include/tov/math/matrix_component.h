@@ -11,102 +11,102 @@
 
 namespace tov
 {
-	TOV_NAMESPACE_BEGIN(math)
+    TOV_NAMESPACE_BEGIN(math)
 
-	template<class T, size_t Rows, size_t Columns, SIMD::Type SIMD_T>
-	class MatrixComponent
-	{
-	public:
-		constexpr static size_t ROWS = Rows;
-		constexpr static size_t COLUMNS = Columns;
-		constexpr static size_t SIZE = ROWS * COLUMNS;
+    template<class T, size_t Rows, size_t Columns, SIMD::Type SIMD_T>
+    class MatrixComponent
+    {
+    public:
+        constexpr static size_t ROWS = Rows;
+        constexpr static size_t COLUMNS = Columns;
+        constexpr static size_t SIZE = ROWS * COLUMNS;
 
-		using Row = VectorTN<T, COLUMNS, SIMD_T>;
-		using Column = VectorTN<T, ROWS, SIMD_T>;
+        using Row = VectorTN<T, COLUMNS, SIMD_T>;
+        using Column = VectorTN<T, ROWS, SIMD_T>;
 
-	public:
-		MatrixComponent()
-		{
-			std::fill(mArr.begin(), mArr.end(), static_cast<T>(0.0f));
-		}
+    public:
+        MatrixComponent()
+        {
+            std::fill(mArr.begin(), mArr.end(), static_cast<T>(0.0f));
+        }
 
-		MatrixComponent(const MatrixComponent& matrix)
-		{
-			memcpy(mArr.data(), matrix.mArr.data(), SIZE * sizeof(T));
-		}
+        MatrixComponent(const MatrixComponent& matrix)
+        {
+            memcpy(mArr.data(), matrix.mArr.data(), SIZE * sizeof(T));
+        }
 
-		template<class... U>
-		MatrixComponent(T x, U&&... args)
-			: mArr { x, std::forward<U>(args)... }
-		{}
+        template<class... U>
+        MatrixComponent(T x, U&&... args)
+            : mArr { x, std::forward<U>(args)... }
+        {}
 
-	protected:
-		union
-		{
-			std::array<T, SIZE> mArr;
-			std::array<Row, ROWS> mRows;
-		};
-	};
+    protected:
+        union
+        {
+            std::array<T, SIZE> mArr;
+            std::array<Row, ROWS> mRows;
+        };
+    };
 
-	template<size_t Rows, size_t Columns>
-	class MatrixComponent<float, Rows, Columns, SIMD::_128F>
-	{
-	protected:
-		using T = float;
+    template<size_t Rows, size_t Columns>
+    class MatrixComponent<float, Rows, Columns, SIMD::_128F>
+    {
+    protected:
+        using T = float;
 
-	public:
-		constexpr static size_t ROWS = Rows;
-		constexpr static size_t COLUMNS = Columns;
-		constexpr static size_t SIZE = ROWS * COLUMNS;
+    public:
+        constexpr static size_t ROWS = Rows;
+        constexpr static size_t COLUMNS = Columns;
+        constexpr static size_t SIZE = ROWS * COLUMNS;
 
-		using Row = VectorTN<T, COLUMNS, SIMD::_128F>;
-		using Column = VectorTN<T, ROWS, SIMD::_128F>;
+        using Row = VectorTN<T, COLUMNS, SIMD::_128F>;
+        using Column = VectorTN<T, ROWS, SIMD::_128F>;
 
-	public:
-		MatrixComponent()
-		{
-			std::fill(mArr.begin(), mArr.end(), 0.0f);
-		}
+    public:
+        MatrixComponent()
+        {
+            std::fill(mArr.begin(), mArr.end(), 0.0f);
+        }
 
-		MatrixComponent(const MatrixComponent& matrix)
-		{
-			memcpy(mArr.data(), matrix.mArr.data(), SIZE_ACTUAL * sizeof(T));
-		}
+        MatrixComponent(const MatrixComponent& matrix)
+        {
+            memcpy(mArr.data(), matrix.mArr.data(), SIZE_ACTUAL * sizeof(T));
+        }
 
-		template<class... U>
-		MatrixComponent(T x, U&&... args)
-			: mArr {}
-		{
-			std::vector<T> v { x, args... };
-			
-			T* writePtr = this->mArr.data();
-			T* readPtr = v.data();
+        template<class... U>
+        MatrixComponent(T x, U&&... args)
+            : mArr {}
+        {
+            std::vector<T> v { x, args... };
+            
+            T* writePtr = this->mArr.data();
+            T* readPtr = v.data();
 
-			for (size_t i = 0; i < ROWS; i++)
-			{
-				size_t writeRow = i * COLUMNS_ACTUAL;
-				size_t readRow = i * COLUMNS;
-				memcpy(
-					writePtr + writeRow,
-					readPtr + readRow,
-					COLUMNS * sizeof(T)
-				);
-			}
-		}
+            for (size_t i = 0; i < ROWS; i++)
+            {
+                size_t writeRow = i * COLUMNS_ACTUAL;
+                size_t readRow = i * COLUMNS;
+                memcpy(
+                    writePtr + writeRow,
+                    readPtr + readRow,
+                    COLUMNS * sizeof(T)
+                );
+            }
+        }
 
-	protected:
-		constexpr static size_t ROWS_ACTUAL = ROWS;
-		constexpr static size_t COLUMNS_ACTUAL = 4u;
-		constexpr static size_t SIZE_ACTUAL = ROWS_ACTUAL * COLUMNS_ACTUAL;
+    protected:
+        constexpr static size_t ROWS_ACTUAL = ROWS;
+        constexpr static size_t COLUMNS_ACTUAL = 4u;
+        constexpr static size_t SIZE_ACTUAL = ROWS_ACTUAL * COLUMNS_ACTUAL;
 
-		union
-		{
-			std::array<T, SIZE_ACTUAL> mArr;
-			std::array<Row, ROWS_ACTUAL> mRows;
-		};
-	};
+        union
+        {
+            std::array<T, SIZE_ACTUAL> mArr;
+            std::array<Row, ROWS_ACTUAL> mRows;
+        };
+    };
 
-	TOV_NAMESPACE_END // math
+    TOV_NAMESPACE_END // math
 }
 
 #endif

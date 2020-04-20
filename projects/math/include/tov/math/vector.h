@@ -3,8 +3,7 @@
 
 #include "math_core.h"
 
-#ifdef TOV_DEBUG
-#	include <cassert>
+#if TOV_DEBUG
 #	include <ostream>
 #endif
 
@@ -201,7 +200,7 @@ namespace tov
 			return this->mArr.data();
 		}
 
-#ifdef TOV_DEBUG
+#if TOV_DEBUG
 		inline friend std::ostream& operator <<
 			(std::ostream& o, const VectorT& vec)
 		{

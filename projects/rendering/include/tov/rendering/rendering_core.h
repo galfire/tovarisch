@@ -7,7 +7,7 @@
 
 #include <cassert>
 
-#ifdef TOV_DEBUG
+#if TOV_DEBUG
 #	include <iostream>
 #	include <bitset>
 #endif

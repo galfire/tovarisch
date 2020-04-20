@@ -106,14 +106,14 @@ int main(int argc, char** argv)
     {
         std::cout << "STARTING FRAME...\n";
 
-        tov::math::Vector3 translation(0, 0, -20);
+        tov::math::Vector3 translation(0, 0, -40);
         node2.getTransform().setTranslation(translation);
 
         rs.queueFrame();
 
-        auto viewMatrix = c.getViewMatrix().transpose();
-        auto projectionMatrix = c.getProjectionMatrix().transpose();
-        auto modelMatrix = node2.getTransform().getHomogeneousMatrix().transpose();
+        auto viewMatrix = c.getViewMatrix();
+        auto projectionMatrix = c.getProjectionMatrix();
+        auto modelMatrix = node2.getTransform().getHomogeneousMatrix();
 
         p.setMatrix4("viewMatrix", viewMatrix);
         p.setMatrix4("projectionMatrix", projectionMatrix);

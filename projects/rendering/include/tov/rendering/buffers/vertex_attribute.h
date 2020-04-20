@@ -26,7 +26,7 @@ namespace tov
             TEXTURE_COORDINATE,
         };
 
-#ifdef TOV_DEBUG
+#if TOV_DEBUG
         inline friend std::ostream& operator << (std::ostream& o, const Semantic& semantic)
         {
             switch (semantic)
@@ -52,7 +52,7 @@ namespace tov
             UBYTE
         };
 
-#ifdef TOV_DEBUG
+#if TOV_DEBUG
         inline friend std::ostream& operator << (std::ostream& o, const Type& type)
         {
             switch (type)

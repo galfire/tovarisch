@@ -40,7 +40,7 @@ namespace tov
             // The offset in bytes for this semantic in the vertex
             size_t offset;
 
-#ifdef TOV_DEBUG
+#if TOV_DEBUG
             inline friend std::ostream& operator << (std::ostream& o, const AttributeDescriptor& ad)
             {
                 o << "Semantic: " << ad.semantic << ", ";
@@ -57,7 +57,7 @@ namespace tov
         {
             std::vector<AttributeDescriptor> attributeDescriptors;
 
-#ifdef TOV_DEBUG
+#if TOV_DEBUG
             inline friend std::ostream& operator <<
                 (std::ostream& o, const Descriptor& desc)
             {

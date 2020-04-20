@@ -75,7 +75,8 @@ namespace tov
             location,
             1,
             GL_FALSE,
-            value.data()
+            // Transpose row major to GL column major
+            value.transpose().data()
         );
     }
 
