@@ -3,6 +3,8 @@
 #include <tov/math/matrix.h>
 #include <tov/math/vector.h>
 
+#include <iostream>
+
 namespace tov
 {
     TOV_NAMESPACE_BEGIN(rendering)

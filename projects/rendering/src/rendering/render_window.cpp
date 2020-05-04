@@ -35,7 +35,8 @@ namespace tov
 
     void RenderWindow::prerender()
     {
-        mRendererComponent->makeContextCurrent();
+        bool success = mRendererComponent->makeContextCurrent();
+        assert(success, "Failed to make context current!");
     }
 
     void RenderWindow::swapBuffers()

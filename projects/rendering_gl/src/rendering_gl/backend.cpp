@@ -25,29 +25,32 @@ namespace tov
         w = viewport->getWidth();
         h = viewport->getHeight();
         
-        ::glViewport(x, y, w, h);
+        glViewport(x, y, w, h);
         
-        ::glScissor(x, y, w, h);
-        ::glEnable(GL_SCISSOR_TEST);
-        
+        glEnable(GL_SCISSOR_TEST);
+        glScissor(x, y, w, h);
+    }
+
+    void ClearViewport(Viewport* viewport)
+    {
         GLbitfield flags = 0;
-        
+
         flags |= GL_COLOR_BUFFER_BIT;
 
         auto colour = viewport->getBackgroundColour();
-        ::glClearColor(
-        	colour.r,
-        	colour.g,
-        	colour.b,
-        	colour.a
+        glClearColor(
+            colour.r,
+            colour.g,
+            colour.b,
+            colour.a
         );
-        
+
         flags |= GL_DEPTH_BUFFER_BIT;
-        //glClearDepth(1.0f);
-        
+        glClearDepth(1.0f);
+
         flags |= GL_STENCIL_BUFFER_BIT;
-        
-        ::glClear(flags);
+
+        glClear(flags);
     }
 
     auto getEnumString(GLenum e)
@@ -74,10 +77,15 @@ namespace tov
         auto& indexBuffer = static_cast<Buffer&>(ibo.getBuffer());
         auto& vertexBuffer = static_cast<Buffer&>(vbo.getBuffer());
 
+        // TODO: Abstract and make a persistent VAO
         GLuint vao;
-        glGenVertexArrays(1, &vao);
-        glBindVertexArray(vao);
+        {
+            auto op = log_gl_op("generate and bind VAO");
+            glGenVertexArrays(1, &vao);
+            glBindVertexArray(vao);
 
+        }
+        
         // Bind the index and vertex buffer before drawing
         auto bindIndex = indexBuffer.bind();
         auto bindVertex = vertexBuffer.bind();
@@ -89,8 +97,7 @@ namespace tov
         {
             auto location = a.location;
             auto count = a.count;
-            //auto stride = a.stride;
-            auto stride = 0;
+            auto stride = a.stride;
             auto offset = reinterpret_cast<void*>(a.offset);
             GLenum type = 0;
             switch (a.type)
@@ -168,9 +175,6 @@ namespace tov
         }
 
         glDeleteVertexArrays(1, &vao);
-
-        /*const GLenum buffers[] = { GL_COLOR_ATTACHMENT0 };
-        glDrawBuffers(1, buffers);*/
     }
 
     TOV_NAMESPACE_END // backend

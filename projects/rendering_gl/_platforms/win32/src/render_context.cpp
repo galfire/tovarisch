@@ -10,6 +10,8 @@ namespace tov
     TOV_NAMESPACE_BEGIN(win32)
     TOV_NAMESPACE_BEGIN(gl)
 
+    HGLRC RenderContext::sSharedGLRC = nullptr;
+
     RenderContext::RenderContext(const rendering::DeviceContext& deviceContext)
         : rendering::RenderContext(deviceContext)
     {
@@ -25,7 +27,12 @@ namespace tov
             0
         };
 
-        mGLRC = wglCreateContextAttribsARB(hdc, nullptr, contextattribs);
+        if (!sSharedGLRC)
+        {
+            sSharedGLRC = wglCreateContextAttribsARB(hdc, nullptr, contextattribs);
+        }
+
+        mGLRC = wglCreateContextAttribsARB(hdc, sSharedGLRC, contextattribs);
 
         makeCurrent();
         enableGLOutput();
@@ -34,7 +41,7 @@ namespace tov
     bool RenderContext::_makeCurrent()
     {
         HDC hdc = static_cast<const DeviceContext&>(mDeviceContext).getHDC();
-        bool success = wglMakeCurrent(hdc, mGLRC);
+        bool success = wglMakeCurrent(hdc, sSharedGLRC);
         return success;
     }
 

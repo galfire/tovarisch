@@ -51,9 +51,6 @@ namespace tov
         auto getIndices() const -> auto const { return mIndices.data(); }
 
     protected:
-        virtual void generateVertices() TOV_ABSTRACT;
-        virtual void generateIndicies() TOV_ABSTRACT;
-
         void addPosition(math::Vector3 position) { mPositions.push_back(position); }
         void addNormal(math::Vector3 normal) { mNormals.push_back(normal); }
         void addTextureCoordinate(math::Vector2 textureCoordinate) { mTextureCoordinates.push_back(textureCoordinate); }

@@ -27,30 +27,30 @@ namespace tov
         TOV_MOVABLE_ONLY(Entity)
 
         using ComponentList = std::vector<ComponentUPtr>;
-        using MeshComponentList = std::vector<std::reference_wrapper<MeshComponent>>;
 
     public:
         Entity() = default;
         ~Entity() = default;
 
+        auto createMeshComponent(mesh::Mesh& mesh) -> MeshComponent&;
+
+    private:
+        auto getDrawDataList() const -> DrawDataList const& override;
+
         template<class T, class... U>
-        T* create(U&&... args)
+        auto createComponent(U&&... args)
         {
             auto component = std::unique_ptr<T>(
                 new T(std::forward<U>(args)...)
-            );
+                );
             mComponents.push_back(std::move(component));
             auto ret = mComponents.back().get();
             return static_cast<T*>(ret);
         }
 
-        auto createMeshComponent(mesh::Mesh& mesh) -> MeshComponent&;
-
-        auto getMeshComponents() const -> auto const& { return mMeshComponents; }
-
     private:
         ComponentList mComponents;
-        MeshComponentList mMeshComponents;
+        MeshComponent* mMeshComponent = nullptr;
     };
 
     TOV_NAMESPACE_END // rendering

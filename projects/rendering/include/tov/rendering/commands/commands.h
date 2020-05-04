@@ -32,6 +32,12 @@ namespace tov
         static inline DispatchFunction DispatchFunction = BackendDispatch::ApplyViewport;
     };
 
+    struct ClearViewport
+    {
+        Viewport* viewport;
+        static inline DispatchFunction DispatchFunction = BackendDispatch::ClearViewport;
+    };
+
     struct Draw
     {
         const mesh::DrawData* drawData;

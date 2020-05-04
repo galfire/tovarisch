@@ -3,6 +3,8 @@
 
 #include "rendering_core.h"
 
+#include "render_target.h"
+
 #include <vector>
 
 namespace tov

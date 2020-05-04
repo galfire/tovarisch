@@ -14,10 +14,6 @@ namespace tov
 	public:
 		Triangle();
 		~Triangle() = default;
-
-	private:
-		void generateVertices() override;
-		void generateIndicies() override;
 	};
 
 	TOV_NAMESPACE_END // geometry

@@ -31,10 +31,10 @@ namespace tov
 
         ~IndexData() noexcept = default;
 
-        auto getBufferObject() const
+        auto getBufferObject() const -> auto&
         {
             auto ibo = mIndexBufferObject.get();
-            return static_cast<buffers::IndexBufferObject*>(ibo);
+            return *static_cast<buffers::IndexBufferObject*>(ibo);
         }
 
     private:

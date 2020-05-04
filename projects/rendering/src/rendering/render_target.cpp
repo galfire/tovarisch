@@ -28,7 +28,7 @@ namespace tov
         float normalizedWidth,
         float normalizedHeight,
         Colour backgroundColour
-    ) -> Viewport*
+    ) -> Viewport&
     {
         auto viewport = std::unique_ptr<Viewport>(
             new Viewport(
@@ -43,7 +43,7 @@ namespace tov
                 backgroundColour
             ));
         mViewports.push_back(std::move(viewport));
-        return mViewports.back().get();
+        return *mViewports.back().get();
     }
 
     void RenderTarget::queueViewports()

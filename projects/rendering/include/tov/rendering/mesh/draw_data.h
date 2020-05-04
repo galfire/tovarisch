@@ -5,7 +5,6 @@
 
 #include <tov/rendering/buffers/buffer_object.h>
 
-
 namespace tov
 {
     TOV_NAMESPACE_BEGIN(rendering)

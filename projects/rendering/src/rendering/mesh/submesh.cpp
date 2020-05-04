@@ -1,28 +1,32 @@
 #include <rendering/mesh/submesh.h>
 
+#include <rendering/buffers/guard.h>
+#include <rendering/buffers/index_type.h>
+#include <rendering/buffers/lock_settings.h>
+#include <rendering/buffers/vertex_attribute.h>
+#include <rendering/buffers/vertex_buffer_object.h>
+#include <rendering/buffers/vertex_format.h>
+
+#include <rendering/geometry/geometry.h>
+
+#include <rendering/mesh/draw_data.h>
 #include <rendering/mesh/mesh.h>
 #include <rendering/mesh/mesh_manager.h>
 #include <rendering/mesh/vertex_data_format.h>
-
-#include <tov/rendering/buffers/lock_settings.h>
-#include <tov/rendering/buffers/index_type.h>
-#include <tov/rendering/buffers/vertex_attribute.h>
-#include <tov/rendering/buffers/vertex_format.h>
-#include <tov/rendering/buffers/vertex_buffer_object.h>
-#include <tov/rendering/geometry/geometry.h>
 
 namespace tov
 {
     TOV_NAMESPACE_BEGIN(rendering)
     TOV_NAMESPACE_BEGIN(mesh)
 
-    void writeVertexBufferInterleaved(buffers::VertexBufferObject* vbo, const geometry::Geometry& geometry)
+    void writeVertexBufferInterleaved(buffers::VertexBufferObject& vbo, const geometry::Geometry& geometry)
     {
-        auto format = vbo->getBufferFormat();
+        auto format = vbo.getBufferFormat();
         auto attributes = format.getVertexFormat().getAttributes();
         auto numVertices = geometry.getNumVertices();
 
-        auto lock = vbo->lock(buffers::LockSettings::WRITE);
+        auto guard = buffers::Guard(vbo, buffers::LockSettings::WRITE);
+        auto lock = guard.getLock();
 
         for (uint i = 0; i < numVertices; i++)
         {
@@ -56,16 +60,15 @@ namespace tov
                 lock = static_cast<byte*>(lock) + bytes;
             }
         }
-
-        vbo->unlock();
     }
 
-    void writeVertexBufferSequential(buffers::VertexBufferObject* vbo, const geometry::Geometry& geometry)
+    void writeVertexBufferSequential(buffers::VertexBufferObject& vbo, const geometry::Geometry& geometry)
     {
-        auto format = vbo->getBufferFormat();
+        auto format = vbo.getBufferFormat();
         auto attributes = format.getVertexFormat().getAttributes();
 
-        auto lock = vbo->lock(buffers::LockSettings::WRITE);
+        auto guard = buffers::Guard(vbo, buffers::LockSettings::WRITE);
+        auto lock = guard.getLock();
 
         for (auto&& attribute : attributes)
         {
@@ -97,13 +100,11 @@ namespace tov
             // Move the write location forward
             lock = static_cast<byte*>(lock) + bytes;
         }
-
-        vbo->unlock();
     }
 
-    void writeVertexBuffer(buffers::VertexBufferObject* vbo, const geometry::Geometry& geometry)
+    void writeVertexBuffer(buffers::VertexBufferObject& vbo, const geometry::Geometry& geometry)
     {
-        auto format = vbo->getBufferFormat();
+        auto format = vbo.getBufferFormat();
         switch (format.getSequenceType())
         {
         case buffers::VertexBufferFormat::SequenceType::INTERLEAVED:
@@ -127,13 +128,13 @@ namespace tov
         this->buildIndexData();
         this->buildVertexData();
 
-        auto& ibo = *mIndexData->getBufferObject();
+        auto& ibo = mIndexData->getBufferObject();
         auto& vbos = mVertexData->getBufferObjects();
 
         for (auto&& vbo : vbos)
         {
-            DrawData drawData(ibo, *vbo);
-            mDrawDataList.push_back(drawData);
+            auto drawData = DrawData(ibo, *vbo);
+            mParentMesh.addDrawData(drawData);
         }
     }
 
@@ -150,8 +151,9 @@ namespace tov
         auto numIndices = mGeometry.getNumIndices();
         auto indexType = buffers::getIndexType(numIndices);
 
-        auto ibo = mIndexData->getBufferObject();
-        auto lock = ibo->lock(buffers::LockSettings::WRITE);
+        auto& ibo = mIndexData->getBufferObject();
+        auto guard = buffers::Guard(ibo, buffers::LockSettings::WRITE);
+        auto lock = guard.getLock();;
 
         switch (indexType)
         {
@@ -183,8 +185,6 @@ namespace tov
             }
             break;
         }
-
-        ibo->unlock();
     }
 
     void Submesh::buildVertexData()
@@ -203,7 +203,7 @@ namespace tov
         auto handles = vertexDataFormat.getHandles();
         for (auto&& handle : handles)
         {
-            auto vbo = mVertexData->getBufferObjectForHandle(handle);
+            auto& vbo = mVertexData->getBufferObjectForHandle(handle);
             writeVertexBuffer(vbo, mGeometry);
         }
     }

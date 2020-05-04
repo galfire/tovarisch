@@ -21,6 +21,13 @@ namespace tov
         backend::ApplyViewport(viewport);
     }
 
+    void BackendDispatch::ClearViewport(const void* data)
+    {
+        auto command = reinterpret_cast<const commands::ApplyViewport*>(data);
+        auto viewport = command->viewport;
+        backend::ClearViewport(viewport);
+    }
+
     void BackendDispatch::Draw(const void* data)
     {
         auto command = reinterpret_cast<const commands::Draw*>(data);

@@ -2,6 +2,7 @@
 
 #include "rendering/mesh_component.h"
 #include "rendering/mesh/mesh.h"
+#include "rendering/mesh/mesh_instance.h"
 
 namespace tov
 {
@@ -9,10 +10,24 @@ namespace tov
 
     auto Entity::createMeshComponent(mesh::Mesh& mesh) -> MeshComponent&
     {
-        auto& meshComponent = *create<MeshComponent>(mesh);
-        mMeshComponents.push_back(meshComponent);
-        return meshComponent;
+        mMeshComponent = createComponent<MeshComponent>(mesh);
+        return *mMeshComponent;
     }
+    
+    auto Entity::getDrawDataList() const -> DrawDataList const&
+    {
+        if (mMeshComponent)
+        {
+            auto const& meshInstance = mMeshComponent->getMeshInstance();
+            auto const& drawDataList = meshInstance.getDrawDataList();
+            return drawDataList;
+        }
+        else
+        {
+            return {};
+        }
+    }
+
 
     TOV_NAMESPACE_END // rendering
 }

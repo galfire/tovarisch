@@ -3,11 +3,8 @@
 
 #include <tov/rendering/rendering_core.h>
 
-#include "draw_data.h"
 #include "index_data.h"
 #include "vertex_data.h"
-
-#include <vector>
 
 namespace tov
 {
@@ -34,10 +31,6 @@ namespace tov
         Submesh(Mesh& parentMesh, const geometry::Geometry& geometry) noexcept;
         ~Submesh() noexcept = default;
 
-        auto getDrawDataList() const -> auto& { return mDrawDataList; }
-
-        auto getVertexDataFormat() const { return mVertexData->getFormat(); }
-
     private:
         void build();
         void buildIndexData();
@@ -49,9 +42,6 @@ namespace tov
 
         IndexDataUPtr mIndexData;
         VertexDataUPtr mVertexData;
-
-        using DrawDataList = std::vector<DrawData>;
-        DrawDataList mDrawDataList;
     };
 
     using SubmeshUPtr = std::unique_ptr<Submesh>;

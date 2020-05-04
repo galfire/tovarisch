@@ -52,10 +52,10 @@ namespace tov
 
         ~VertexData() noexcept = default;
 
-        auto getBufferObjectForHandle(VBOHandle handle) const
+        auto getBufferObjectForHandle(VBOHandle handle) const -> auto&
         {
             auto vbo = mHandleToVBOMap.at(handle);
-            return static_cast<buffers::VertexBufferObject*>(vbo);
+            return *static_cast<buffers::VertexBufferObject*>(vbo);
         }
 
         auto getBufferObjects() const -> auto&

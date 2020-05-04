@@ -15,10 +15,10 @@ namespace tov
         Sphere(float radius = 1.0f, uint sectorCount = 36u, uint stackCount = 18u);
         ~Sphere() = default;
 
-    protected:
+    private:
         void set(float radius, uint sectorCount, uint stackCount);
-        void generateVertices() override;
-        void generateIndicies() override;
+        void generateVertices();
+        void generateIndicies();
 
     private:
         float mRadius;

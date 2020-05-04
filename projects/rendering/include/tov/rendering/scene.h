@@ -10,9 +10,16 @@
 namespace tov
 {
     TOV_NAMESPACE_BEGIN(rendering)
+    TOV_NAMESPACE_BEGIN(pipeline)
+
+    class Program;
+
+    TOV_NAMESPACE_END // pipeline
 
     class Camera;
     class Entity;
+    class RenderSystem;
+    class SceneNode;
 
     class Scene
     {
@@ -23,8 +30,8 @@ namespace tov
         using EntityList = std::vector<std::reference_wrapper<Entity>>;
 
     public:
-        Scene() = default;
-        ~Scene() = default;
+        Scene(RenderSystem& renderSystem) noexcept;
+        ~Scene() noexcept = default;
 
         template<class T, class... U>
         auto create(U&&... args)
@@ -40,9 +47,15 @@ namespace tov
         auto createCamera() -> Camera&;
         auto createEntity() -> Entity&;
 
-        void renderCameras();
+        auto getRootNode() -> SceneNode&;
+
+        void renderCameras(pipeline::Program& program);
 
     private:
+        RenderSystem& mRenderSystem;
+
+        std::unique_ptr<SceneNode> mRootNode;
+
         SceneObjectList mSceneObjects;
         CameraList mCameras;
         EntityList mEntities;

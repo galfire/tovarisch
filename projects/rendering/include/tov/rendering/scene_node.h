@@ -9,24 +9,32 @@
 
 namespace tov
 {
-	TOV_NAMESPACE_BEGIN(rendering)
+    TOV_NAMESPACE_BEGIN(rendering)
 
-	class SceneObject;
+        class Camera;
+    class SceneObject;
 
-	class SceneNode
-		: public node::Node
-	{
-	public:
-		SceneNode() = default;
-		~SceneNode() = default;
+    class SceneNode
+        : public node::Node
+    {
+    public:
+        SceneNode() = default;
+        ~SceneNode() = default;
 
-		void attachSceneObject(SceneObject* sceneObject);
+        auto createChild()->SceneNode&;
 
-	private:
-		std::vector<SceneObject*> mSceneObjects;
-	};
+        auto getChildren() const -> auto& { return mChildren; }
 
-	TOV_NAMESPACE_END // rendering
+        void attachSceneObject(SceneObject* sceneObject);
+        auto getSceneObjects() const { return mSceneObjects; }
+        auto getSceneObjects() -> auto& { return mSceneObjects; }
+
+    private:
+        std::vector<std::unique_ptr<Node>> mChildren;
+        std::vector<SceneObject*> mSceneObjects;
+    };
+
+    TOV_NAMESPACE_END // rendering
 }
 
 #endif

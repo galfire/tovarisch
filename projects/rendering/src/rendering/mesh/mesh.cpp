@@ -9,7 +9,13 @@ namespace tov
 
     Mesh::Mesh(MeshManager& manager) noexcept
         : mManager(manager)
+        , mDrawDataList({})
     {}
+
+    void Mesh::addDrawData(DrawData drawData)
+    {
+        mDrawDataList.push_back(drawData);
+    }
 
     TOV_NAMESPACE_END // mesh
     TOV_NAMESPACE_END // rendering

@@ -5,6 +5,11 @@
 
 #include <cmath>
 #include <cassert>
+#include <cstring>
+
+#if TOV_DEBUG
+#	include <ostream>
+#endif
 
 namespace tov
 {

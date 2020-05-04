@@ -3,10 +3,11 @@
 
 #include <tov/rendering/rendering_core.h>
 
+#include "constant_definition.h"
+#include "program_state.h"
+
 #include <tov/math/matrix.h>
 #include <tov/math/vector.h>
-
-#include <vector>
 
 namespace tov
 {
@@ -17,14 +18,38 @@ namespace tov
 
     class Program
     {
+        TOV_NON_COPYABLE(Program)
+
     public:
         Program() = default;
         virtual ~Program() = default;
 
+        template<class T>
+        void addConstantDefinition(const char* name, ConstantDefinition<T> definition)
+        {
+            mProgramState.addConstantDefinition(name, definition);
+        }
+
+        template <class T>
+        auto getConstant(const char* name) const -> auto const&
+        {
+            return mProgramState.getConstant<T>(name);
+        }
+
+        template <class T>
+        auto setConstant(const char* name, const T& value)
+        {
+            mProgramState.setConstant<T>(name, value);
+        }
+
+        auto getProgramState() const -> auto const& { return mProgramState; }
+
         void attachShader(Shader& shader);
+        void compile();
         void link();
         void use();
 
+        // TODO: move into SetShaderState command
         virtual void setMatrix4(const char* name, const math::Matrix4& value) TOV_ABSTRACT;
         virtual void setVector2(const char* name, const math::Vector2& value) TOV_ABSTRACT;
         virtual void setVector3(const char* name, const math::Vector3& value) TOV_ABSTRACT;
@@ -40,6 +65,8 @@ namespace tov
 
     private:
         std::vector<std::reference_wrapper<Shader>> mShaders;
+
+        ProgramState mProgramState;
     };
 
     TOV_NAMESPACE_END // pipeline

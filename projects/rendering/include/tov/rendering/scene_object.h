@@ -3,6 +3,8 @@
 
 #include "rendering_core.h"
 
+#include "mesh/draw_data.h"
+
 namespace tov
 {
     TOV_NAMESPACE_BEGIN(rendering)
@@ -18,6 +20,9 @@ namespace tov
         virtual ~SceneObject() = default;
 
         auto getParentSceneNode() const { return mParentSceneNode; }
+
+        using DrawDataList = std::vector<mesh::DrawData>;
+        virtual auto getDrawDataList() const -> DrawDataList const& TOV_ABSTRACT;
 
     private:
         void attachToSceneNode(SceneNode* sceneNode);

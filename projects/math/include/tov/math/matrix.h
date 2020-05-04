@@ -5,13 +5,6 @@
 
 #include "matrix_component.h"
 
-#if TOV_DEBUG
-#	include <ostream>
-#endif
-
-#include <cassert>
-#include <cstring>
-
 namespace tov
 {
     TOV_NAMESPACE_BEGIN(math)

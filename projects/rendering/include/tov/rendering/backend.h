@@ -23,6 +23,7 @@ namespace tov
     TOV_NAMESPACE_BEGIN(backend)
 
     void ApplyViewport(Viewport* viewport);
+    void ClearViewport(Viewport* viewport);
     void Draw(const mesh::DrawData* drawData);
 
     TOV_NAMESPACE_END // backend

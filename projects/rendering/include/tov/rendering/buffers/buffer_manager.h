@@ -48,17 +48,6 @@ namespace tov
         BufferManager() noexcept = default;
         virtual ~BufferManager() noexcept = default;
 
-        template<class BufferT, class... U>
-        auto create(size_t size, U&&... args)
-        {
-            auto buffer = BufferUPtr(
-                new BufferT(*this, size, std::forward<U>(args)...)
-            );
-            mBuffers.push_back(std::move(buffer));
-            auto ret = mBuffers.back().get();
-            return static_cast<BufferT*>(ret);
-        }
-
         BufferBase* createVertexBuffer(VertexBufferFormat format, uint numVertices) override
         {
             auto vertexFormat = format.getVertexFormat();
@@ -71,11 +60,22 @@ namespace tov
         BufferBase* createIndexBuffer(uint numIndices) override
         {
             auto indexType = getIndexType(numIndices);
-            std::cout << "Creating Index Buffer: " << getIndexTypeString(indexType) << "\n";
             auto indexSize = getIndexTypeSize(indexType);
             auto size = indexSize * numIndices;
             auto buffer = static_cast<DerivedBufferManagerT*>(this)->createIndexBufferImpl(size);
             return buffer;
+        }
+
+    protected:
+        template<class BufferT, class... U>
+        auto create(size_t size, U&&... args)
+        {
+            auto buffer = BufferUPtr(
+                new BufferT(*this, size, std::forward<U>(args)...)
+            );
+            mBuffers.push_back(std::move(buffer));
+            auto ret = mBuffers.back().get();
+            return static_cast<BufferT*>(ret);
         }
 
     private:

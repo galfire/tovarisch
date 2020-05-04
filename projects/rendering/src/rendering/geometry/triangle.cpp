@@ -1,4 +1,4 @@
-#include "rendering/geometry/triangle.h"
+#include <rendering/geometry/triangle.h>
 
 #include <tov/math/vector.h>
 
@@ -9,12 +9,6 @@ namespace tov
 
     Triangle::Triangle()
         : Geometry()
-    {
-        this->generateVertices();
-        this->generateIndicies();
-    }
-
-    void Triangle::generateVertices()
     {
         // v1
         // | \
@@ -31,10 +25,7 @@ namespace tov
 
         math::Vector3 v3(0.0f, 0.0f, 0.0f);
         this->addPosition(v3);
-    }
 
-    void Triangle::generateIndicies()
-    {
         this->addIndices(0, 1, 2);
     }
 

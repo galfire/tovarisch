@@ -1,5 +1,7 @@
 #include "rendering_gl/pipeline/shader.h"
 
+#include <iostream>
+
 namespace tov
 {
     TOV_NAMESPACE_BEGIN(rendering)
@@ -22,9 +24,16 @@ namespace tov
     Shader::Shader(rendering::pipeline::ShaderType shaderType, const char* sourceFilePath)
         : rendering::pipeline::Shader(shaderType, sourceFilePath)
     {
-        auto glShaderType = getGLShaderType(shaderType);
-        auto op = log_gl_op("create shader", glShaderType);
-        mShaderID = glCreateShader(glShaderType);
+        {
+            auto glShaderType = getGLShaderType(shaderType);
+            auto op = log_gl_op("create shader", glShaderType);
+            mShaderID = glCreateShader(glShaderType);
+        }
+        {
+            auto op = log_gl_op("shader source");
+            auto source = mSource;
+            glShaderSource(mShaderID, 1, &source, nullptr);
+        }
     }
 
     Shader::~Shader()
@@ -35,11 +44,6 @@ namespace tov
 
     void Shader::compileImpl()
     {
-        {
-            auto op = log_gl_op("shader source");
-            auto source = mSource;
-            glShaderSource(mShaderID, 1, &source, nullptr);
-        }
         {
             auto op = log_gl_op("compile shader");
             glCompileShader(mShaderID);

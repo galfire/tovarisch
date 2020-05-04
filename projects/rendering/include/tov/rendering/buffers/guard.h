@@ -22,7 +22,6 @@ namespace tov
 		~Guard()
 		{
 			mBuffer.unlock();
-			mLock = nullptr;
 		}
 
 		auto getLock() const { return mLock; }

@@ -44,7 +44,7 @@ namespace tov
             float normalizedWidth = 1.0f,
             float normalizedHeight = 1.0f,
             Colour backgroundColour = Colour::Black
-        ) -> Viewport*;
+        ) -> Viewport&;
 
         void queueViewports();
 

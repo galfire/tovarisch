@@ -3,10 +3,9 @@
 
 #include "rendering_core.h"
 
-#include <tov/math/radian.h>
-
 #include "scene_object.h"
 
+#include <tov/math/radian.h>
 #include "transform.h"
 #include "view_frustum.h"
 
@@ -14,7 +13,10 @@ namespace tov
 {
     TOV_NAMESPACE_BEGIN(rendering)
 
+    class DrawContext;
     class Scene;
+    class SceneNode;
+    class Viewport;
 
     class Camera
         : public SceneObject
@@ -27,12 +29,20 @@ namespace tov
         void setAspectRatio(float aspectRatio);
         void setFieldOfView(math::Radian fieldOfView);
 
-        void render();
+        void populateDrawContext(DrawContext& drawContext);
+        void populateDrawContext(DrawContext& drawContext, SceneNode& node);
+
+        auto isVisible(SceneNode&) const -> bool;
 
         auto getProjectionMatrix() const { return mViewFrustum.getProjectionMatrix(); }
         auto getViewMatrix() const { return mViewFrustum.getViewMatrix(); }
 
+        void attachViewport(Viewport& viewport);
+        auto getViewports() const -> auto & { return mViewports; }
+
     private:
+        auto getDrawDataList() const -> DrawDataList const& { return DrawDataList{}; }
+
         void buildProjectionMatrix(void);
         void buildViewMatrix(void);
 
@@ -40,6 +50,8 @@ namespace tov
         Scene& mScene;
         Transform mCachedTransform;
         ViewFrustum<ProjectionType::PERSPECTIVE> mViewFrustum;
+
+        std::vector<Viewport*> mViewports;
     };
 
     TOV_NAMESPACE_END

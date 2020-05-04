@@ -9,15 +9,25 @@ namespace tov
 
 	void Program::attachShader(Shader& shader)
     {
-        // Compile ths shader if it's not already compiled
-        shader.compile();
         mShaders.push_back(shader);
-        attachShaderImpl(shader);
+
+        // TODO: Parse shader source and automatically add constant definitions
     }
 
     void Program::detachShader(Shader& shader)
     {
         detachShaderImpl(shader);
+    }
+
+    void Program::compile()
+    {
+        for (auto&& shader : mShaders)
+        {
+            shader.get().compile();
+            attachShaderImpl(shader);
+        }
+
+        mProgramState.initialize();
     }
 
     void Program::link()

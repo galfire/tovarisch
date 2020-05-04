@@ -47,8 +47,6 @@ namespace tov
         mTop = static_cast<uint>(mNormalizedTop * height);
         mWidth = static_cast<uint>(mNormalizedWidth * width);
         mHeight = static_cast<uint>(mNormalizedHeight * height);
-
-        mCamera.setAspectRatio((float)mWidth / (float)mHeight);
     }
 
     void Viewport::queue() noexcept

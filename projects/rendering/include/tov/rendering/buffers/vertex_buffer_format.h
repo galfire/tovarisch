@@ -3,8 +3,8 @@
 
 #include <tov/rendering/rendering_core.h>
 
-#include "vertex_format.h"
 #include "vertex_attribute.h"
+#include "vertex_format.h"
 
 namespace tov
 {
@@ -22,7 +22,7 @@ namespace tov
             SEQUENTIAL
         };
 
-        // How the attribute is used in the context of this buffer
+        // How the attribute is used in the context of this buffer format
         struct AttributeDescriptor
         {
             // The attribute semantic

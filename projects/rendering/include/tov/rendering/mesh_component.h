@@ -4,6 +4,7 @@
 #include "rendering_core.h"
 
 #include "component.h"
+#include "mesh/mesh_instance.h"
 
 namespace tov
 {
@@ -21,8 +22,11 @@ namespace tov
 		MeshComponent(mesh::Mesh& mesh);
 		~MeshComponent() = default;
 
+		auto getMeshInstance() const -> auto const& { return mMeshInstance; }
+
 	private:
 		mesh::Mesh& mMesh;
+		mesh::MeshInstance mMeshInstance;
 	};
 
 	TOV_NAMESPACE_END // rendering

@@ -30,6 +30,9 @@ namespace tov
 
     private:
         HGLRC mGLRC;
+
+    private:
+        static HGLRC sSharedGLRC;
     };
 
     TOV_NAMESPACE_END // gl

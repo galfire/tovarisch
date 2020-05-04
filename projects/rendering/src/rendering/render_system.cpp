@@ -31,13 +31,13 @@ namespace tov
 
     void RenderSystem::queueFrame()
     {
-        mWindowPlatformSupport.messageHandler();
-
         mRenderTargetManager.queueTargets();
     }
 
     void RenderSystem::renderFrame()
     {
+        mWindowPlatformSupport.messageHandler();
+
         submit();
     }
 

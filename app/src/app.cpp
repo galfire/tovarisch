@@ -8,6 +8,7 @@
 
 #include <tov/memory_config.h>
 
+#include <tov/math/matrix.h>
 #include <tov/math/quaternion.h>
 #include <tov/math/radian.h>
 #include <tov/math/vector.h>
@@ -57,20 +58,26 @@ int main(int argc, char** argv)
 
     auto rs = RenderSystem(platformSupport, rendererSupport);
 
-    tov::rendering::Scene scene;
-    tov::rendering::SceneNode node;
+    tov::rendering::Scene scene(rs);
+    auto& root = scene.getRootNode();
 
-    auto& c = scene.createCamera();
-    node.attachSceneObject(&c);
+    auto& cameraNode = root.createChild();
+    auto& camera = scene.createCamera();
+    cameraNode.attachSceneObject(&camera);
 
-    //auto& window = rs.createRenderWindow("WINDWOWWW", 640, 480, false);
-    //window.createViewport(c, 0, 0.0f, 0.0f, 0.5f, 1.0f, tov::rendering::Colour::Red);
-    //window.createViewport(c, 1, 0.5f, 0.0f, 0.5f, 1.0f, tov::rendering::Colour::Green);
-    //auto& window2 = rs.createRenderWindow("canvas2", 640, 180, false);
-    //window2.createViewport(c, 2, 0.0f, 0.0f, 1.0f, 1.0f, tov::rendering::Colour::Blue);
-    
-    auto& window = rs.createRenderWindow("WINDWOWWW", 640, 480, false);
-    window.createViewport(c, 0, 0.0f, 0.0f, 1.0f, 1.0f, tov::rendering::Colour::Black);
+    {
+        auto& window = rs.createRenderWindow("WINDWOWWW", 800, 600, false);
+        auto& vp1 = window.createViewport(camera, 0, 0.0f, 0.0f, 0.5f, 1.0f, tov::rendering::Colour::Red);
+        auto& vp2 = window.createViewport(camera, 1, 0.5f, 0.0f, 0.5f, 1.0f, tov::rendering::Colour::Green);
+        camera.attachViewport(vp1);
+        camera.attachViewport(vp2);
+    }
+
+    {
+        auto& window = rs.createRenderWindow("WINDWOWWW2222", 200, 600, false);
+        auto& vp = window.createViewport(camera, 2, 0.0f, 0.0f, 1.0f, 1.0f, tov::rendering::Colour::Blue);
+        camera.attachViewport(vp);
+    }
 
     auto sphere = tov::rendering::geometry::Sphere(5.0f);
     //auto sphere = tov::rendering::geometry::Triangle();
@@ -83,10 +90,10 @@ int main(int argc, char** argv)
     auto mesh = meshManager.create();
     auto& submesh = mesh->createSubmesh(sphere);
 
+    auto& entityNode = root.createChild();
     auto& entity = scene.createEntity();
     entity.createMeshComponent(*mesh);
-    tov::rendering::SceneNode node2;
-    node2.attachSceneObject(&entity);
+    entityNode.attachSceneObject(&entity);
 
     using ShaderType = tov::rendering::pipeline::ShaderType;
 
@@ -96,7 +103,18 @@ int main(int argc, char** argv)
     tov::rendering::gl::pipeline::Program p;
     p.attachShader(v);
     p.attachShader(f);
+
+    using Matrix4 = tov::math::Matrix4;
+    auto def = tov::rendering::pipeline::ConstantDefinition<Matrix4>::DEFINITION;
+    p.addConstantDefinition("modelMatrix", def);
+
+    p.compile();
     p.link();
+
+    auto m = Matrix4::IDENTITY;
+    p.setConstant("modelMatrix", m);
+    auto val = p.getConstant<Matrix4>("modelMatrix");
+    std::cout << val << "\n";
 
     //tov::rendering::pipeline::PipelineStateObject pso(p, meshManager.getPreferredVertexDataFormat());
 
@@ -107,25 +125,27 @@ int main(int argc, char** argv)
         std::cout << "STARTING FRAME...\n";
 
         tov::math::Vector3 translation(0, 0, -40);
-        node2.getTransform().setTranslation(translation);
+        entityNode.getTransform().setTranslation(translation);
 
         rs.queueFrame();
+        
+        scene.renderCameras(p);
 
-        auto viewMatrix = c.getViewMatrix();
-        auto projectionMatrix = c.getProjectionMatrix();
-        auto modelMatrix = node2.getTransform().getHomogeneousMatrix();
+        //auto viewMatrix = camera.getViewMatrix();
+        //auto projectionMatrix = camera.getProjectionMatrix();
+        auto modelMatrix = entityNode.getTransform().getHomogeneousMatrix();
 
-        p.setMatrix4("viewMatrix", viewMatrix);
-        p.setMatrix4("projectionMatrix", projectionMatrix);
+        //p.setMatrix4("viewMatrix", viewMatrix);
+        //p.setMatrix4("projectionMatrix", projectionMatrix);
         p.setMatrix4("modelMatrix", modelMatrix);
 
-        auto& bucket = rs.getGBufferBucket();
-        auto& drawDataList = submesh.getDrawDataList();
+        /*auto& bucket = rs.getGBufferBucket();
+        auto& drawDataList = mesh->getDrawDataList();
         for (auto&& drawData : drawDataList)
         {
             auto& command = bucket.addCommand<tov::rendering::commands::Draw>(0);
             command.drawData = &drawData;
-        }
+        }*/
 
         rs.renderFrame();
 

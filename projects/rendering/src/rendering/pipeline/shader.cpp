@@ -1,6 +1,7 @@
 #include "rendering/pipeline/shader.h"
 
 #include <stdio.h>
+#include <iostream>
 
 namespace tov
 {

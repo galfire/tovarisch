@@ -20,9 +20,12 @@ namespace tov
     {
         const DeviceContext& deviceContext = mParentWindow.getPlatformComponent().getDeviceContext();
 
+        static bool dummyCreated = false;
+        if(!dummyCreated)
         {
             // Create dummy context to initialize GLEW
             auto dummyContext = std::unique_ptr<DummyRenderContext>(new DummyRenderContext(deviceContext));
+            dummyCreated = true;
         }
 
         mRenderContext = std::unique_ptr<RenderContext>(new RenderContext(deviceContext));
