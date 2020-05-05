@@ -7,15 +7,19 @@
 
 #include <tov/rendering/backend_dispatch.h>
 
+#include <tov/math/matrix.h>
+
 namespace tov
 {
     TOV_NAMESPACE_BEGIN(rendering)
 
     class Viewport;
 
-    TOV_NAMESPACE_END // rendering
+    TOV_NAMESPACE_BEGIN(pipeline)
 
-    TOV_NAMESPACE_BEGIN(rendering)
+    class ProgramInstance;
+
+    TOV_NAMESPACE_END // pipeline
     TOV_NAMESPACE_BEGIN(mesh)
 
     class DrawData;
@@ -28,19 +32,22 @@ namespace tov
 
     struct ApplyViewport
     {
-        Viewport* viewport;
+        Viewport const * viewport;
         static inline DispatchFunction DispatchFunction = BackendDispatch::ApplyViewport;
     };
 
     struct ClearViewport
     {
-        Viewport* viewport;
+        Viewport const * viewport;
         static inline DispatchFunction DispatchFunction = BackendDispatch::ClearViewport;
     };
 
     struct Draw
     {
-        const mesh::DrawData* drawData;
+        math::Matrix4 modelMatrix;
+        math::Matrix4 viewMatrix;
+        math::Matrix4 projectionMatrix;
+        mesh::DrawData const * drawData;
         static inline DispatchFunction DispatchFunction = BackendDispatch::Draw;
     };
 

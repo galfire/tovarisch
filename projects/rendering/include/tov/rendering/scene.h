@@ -10,11 +10,6 @@
 namespace tov
 {
     TOV_NAMESPACE_BEGIN(rendering)
-    TOV_NAMESPACE_BEGIN(pipeline)
-
-    class Program;
-
-    TOV_NAMESPACE_END // pipeline
 
     class Camera;
     class Entity;
@@ -49,7 +44,7 @@ namespace tov
 
         auto getRootNode() -> SceneNode&;
 
-        void renderCameras(pipeline::Program& program);
+        void renderCameras();
 
     private:
         RenderSystem& mRenderSystem;

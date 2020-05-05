@@ -36,6 +36,7 @@ namespace tov
         void renderCamera();
 
         auto getRenderTarget() -> auto& { return mRenderTarget; }
+        auto getRenderTarget() const -> auto const& { return mRenderTarget; }
         auto getZIndex() const { return mZIndex; }
         auto getLeft() const { return mLeft; }
         auto getTop() const { return mTop; }

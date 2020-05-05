@@ -9,6 +9,7 @@
 namespace tov
 {
     TOV_NAMESPACE_BEGIN(rendering)
+
     TOV_NAMESPACE_BEGIN(buffers)
 
     class VertexBufferObject;
@@ -19,6 +20,12 @@ namespace tov
     class Geometry;
     
     TOV_NAMESPACE_END // geometry
+    TOV_NAMESPACE_BEGIN(pipeline)
+
+    class Program;
+
+    TOV_NAMESPACE_END // pipeline
+
     TOV_NAMESPACE_BEGIN(mesh)
 
     class Mesh;
@@ -28,7 +35,7 @@ namespace tov
         TOV_MOVABLE_ONLY(Submesh)
 
     public:
-        Submesh(Mesh& parentMesh, const geometry::Geometry& geometry) noexcept;
+        Submesh(Mesh& parentMesh, const geometry::Geometry& geometry, pipeline::Program& program) noexcept;
         ~Submesh() noexcept = default;
 
     private:
@@ -39,6 +46,7 @@ namespace tov
     private:
         Mesh& mParentMesh;
         const geometry::Geometry& mGeometry;
+        pipeline::Program& mProgram;
 
         IndexDataUPtr mIndexData;
         VertexDataUPtr mVertexData;

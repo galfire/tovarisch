@@ -4,7 +4,7 @@
 #include <tov/rendering/rendering_core.h>
 
 #include "constant_definition.h"
-#include "program_state.h"
+#include "program_instance.h"
 
 #include <tov/math/matrix.h>
 #include <tov/math/vector.h>
@@ -18,7 +18,10 @@ namespace tov
 
     class Program
     {
-        TOV_NON_COPYABLE(Program)
+        TOV_MOVABLE_ONLY(Program)
+
+    public:
+        using ShaderList = std::vector<std::reference_wrapper<Shader>>;
 
     public:
         Program() = default;
@@ -27,46 +30,23 @@ namespace tov
         template<class T>
         void addConstantDefinition(const char* name, ConstantDefinition<T> definition)
         {
-            mProgramState.addConstantDefinition(name, definition);
+            mConstantBufferOffsetMap.emplace(name, mConstantBufferSize);
+            mConstantBufferSize += sizeof(ConstantDefinition<T>::Type);
         }
 
-        template <class T>
-        auto getConstant(const char* name) const -> auto const&
-        {
-            return mProgramState.getConstant<T>(name);
-        }
-
-        template <class T>
-        auto setConstant(const char* name, const T& value)
-        {
-            mProgramState.setConstant<T>(name, value);
-        }
-
-        auto getProgramState() const -> auto const& { return mProgramState; }
+        auto instantiate() -> ProgramInstance&;
 
         void attachShader(Shader& shader);
-        void compile();
-        void link();
-        void use();
-
-        // TODO: move into SetShaderState command
-        virtual void setMatrix4(const char* name, const math::Matrix4& value) TOV_ABSTRACT;
-        virtual void setVector2(const char* name, const math::Vector2& value) TOV_ABSTRACT;
-        virtual void setVector3(const char* name, const math::Vector3& value) TOV_ABSTRACT;
-        virtual void setVector4(const char* name, const math::Vector4& value) TOV_ABSTRACT;
 
     private:
-        void detachShader(Shader& shader);
+        virtual auto instantiateImpl() const->ProgramInstance* TOV_ABSTRACT;
 
-        virtual void attachShaderImpl(Shader& shader) TOV_ABSTRACT;
-        virtual void detachShaderImpl(Shader& shader) TOV_ABSTRACT;
-        virtual void linkImpl() TOV_ABSTRACT;
-        virtual void useImpl() TOV_ABSTRACT;
+    protected:
+        size_t mConstantBufferSize = 0;
+        ProgramState::ConstantBufferOffsetMap mConstantBufferOffsetMap;
 
-    private:
-        std::vector<std::reference_wrapper<Shader>> mShaders;
-
-        ProgramState mProgramState;
+        ShaderList mShaders;
+        std::vector<std::unique_ptr<ProgramInstance>> mInstances;
     };
 
     TOV_NAMESPACE_END // pipeline

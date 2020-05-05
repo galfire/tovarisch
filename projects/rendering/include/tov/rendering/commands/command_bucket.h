@@ -29,7 +29,7 @@ namespace tov
 
         ~CommandBucket() noexcept = default;
 
-        template <class Command>
+        template <class Command, class... U>
         auto addCommand(Key key) -> auto&
         {
             struct Layout

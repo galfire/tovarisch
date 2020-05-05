@@ -21,6 +21,7 @@ namespace tov
 
         ~MeshInstance() noexcept = default;
 
+        auto getDrawDataList() -> auto & { return mDrawDataList; }
         auto getDrawDataList() const -> auto const& { return mDrawDataList; }
 
     private:

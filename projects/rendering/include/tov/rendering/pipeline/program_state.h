@@ -21,36 +21,33 @@ namespace tov
 
     class ProgramState
     {
-        TOV_NON_COPYABLE(ProgramState)
+        TOV_MOVABLE_ONLY(ProgramState)
+
+    public:
+        using ConstantBufferOffsetMap = std::unordered_map<std::string, ptrdiff_t>;
 
     private:
         auto getConstantOffset(const char* name) const
         {
-            return mConstantMap.at(name);
+            return mConstantBufferOffsetMap.at(name);
         }
 
         auto getConstantLocation(const char* name) const
         {
-            auto buffer = static_cast<byte*>(mHeapArea->getStart());
-            auto location = buffer + getConstantOffset(name);
+            auto buffer = mHeapArea->getStart();
+            auto location = static_cast<byte*>(buffer) + getConstantOffset(name);
             return location;
         }
 
     public:
-        ProgramState() = default;
+        ProgramState(size_t constantBufferSize, ConstantBufferOffsetMap const& constantBufferOffsetMap)
+            : mConstantBufferSize(constantBufferSize)
+            , mConstantBufferOffsetMap(constantBufferOffsetMap)
+        {
+            mHeapArea = std::make_unique<memory::HeapArea>(mConstantBufferSize);
+        }
+
         ~ProgramState() = default;
-
-        void initialize()
-        {
-            mHeapArea = std::make_unique<memory::HeapArea>(mBufferSize);
-        }
-
-        template<class T>
-        void addConstantDefinition(const char* name, ConstantDefinition<T> definition)
-        {
-            mConstantMap.emplace(name, mBufferSize);
-            mBufferSize += sizeof(ConstantDefinition<T>::Type);
-        }
 
         template <class T>
         auto getConstant(const char* name) const -> auto const&
@@ -67,10 +64,10 @@ namespace tov
         }
 
     private:
-        size_t mBufferSize = 0;
+        size_t mConstantBufferSize = 0;
+        ConstantBufferOffsetMap mConstantBufferOffsetMap;
+
         std::unique_ptr<memory::HeapArea> mHeapArea;
-        using ConstantMap = std::unordered_map<std::string, ptrdiff_t>;
-        ConstantMap mConstantMap;
     };
 
     TOV_NAMESPACE_END // pipeline

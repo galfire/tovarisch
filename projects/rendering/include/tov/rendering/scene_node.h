@@ -26,8 +26,8 @@ namespace tov
         auto getChildren() const -> auto& { return mChildren; }
 
         void attachSceneObject(SceneObject* sceneObject);
-        auto getSceneObjects() const { return mSceneObjects; }
         auto getSceneObjects() -> auto& { return mSceneObjects; }
+        auto getSceneObjects() const { return mSceneObjects; }
 
     private:
         std::vector<std::unique_ptr<Node>> mChildren;

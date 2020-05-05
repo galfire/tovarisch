@@ -29,7 +29,7 @@ namespace tov
         ) noexcept;
         virtual ~RenderTarget() noexcept = default;
 
-        virtual void prerender() {}
+        virtual void prerender() const {}
 
         virtual void swapBuffers() TOV_ABSTRACT;
 

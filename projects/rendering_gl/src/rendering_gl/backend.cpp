@@ -1,11 +1,17 @@
 #include <tov/rendering/backend.h>
 
+#include <tov/math/matrix.h>
+
 #include <tov/rendering/viewport.h>
+
 #include <tov/rendering/mesh/draw_data.h>
+
 #include <tov/rendering/buffers/access_settings.h>
 #include <tov/rendering/buffers/usage_settings.h>
 #include <tov/rendering/buffers/index_buffer_object.h>
 #include <tov/rendering/buffers/vertex_buffer_object.h>
+
+#include <tov/rendering/pipeline/program_instance.h>
 
 #include "rendering_gl/buffers/buffer.h"
 
@@ -16,7 +22,7 @@ namespace tov
     TOV_NAMESPACE_BEGIN(rendering)
     TOV_NAMESPACE_BEGIN(backend)
 
-    void ApplyViewport(Viewport* viewport)
+    void ApplyViewport(Viewport const *const viewport)
     {
         GLsizei x, y, w, h;
         
@@ -31,7 +37,7 @@ namespace tov
         glScissor(x, y, w, h);
     }
 
-    void ClearViewport(Viewport* viewport)
+    void ClearViewport(Viewport const *const viewport)
     {
         GLbitfield flags = 0;
 
@@ -68,10 +74,13 @@ namespace tov
         }
     }
 
-    void Draw(const mesh::DrawData* drawData)
+    void Draw(mesh::DrawData const *const drawData)
     {
-        auto& ibo = static_cast<buffers::IndexBufferObject&>(drawData->getIndexBufferObject());
-        auto& vbo = static_cast<buffers::VertexBufferObject&>(drawData->getVertexBufferObject());
+        auto& programInstance = drawData->getProgramInstance();
+        programInstance.use();
+
+        auto const& ibo = static_cast<buffers::IndexBufferObject const&>(drawData->getIndexBufferObject());
+        auto const& vbo = static_cast<buffers::VertexBufferObject const&>(drawData->getVertexBufferObject());
 
         using Buffer = rendering::gl::buffers::Buffer<buffers::UsageSettings::STATIC, buffers::AccessSettings::WRITE>;
         auto& indexBuffer = static_cast<Buffer&>(ibo.getBuffer());

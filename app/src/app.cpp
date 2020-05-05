@@ -34,6 +34,7 @@
 #include <tov/rendering/pipeline/pipeline_state_object.h>
 #include <tov/rendering_gl/pipeline/shader.h>
 #include <tov/rendering_gl/pipeline/program.h>
+#include <tov/rendering/pipeline/program_instance.h>
 
 #include <tov/rendering_gl/buffers/buffer_manager.h>
 
@@ -79,6 +80,20 @@ int main(int argc, char** argv)
         camera.attachViewport(vp);
     }
 
+    using ShaderType = tov::rendering::pipeline::ShaderType;
+    tov::rendering::gl::pipeline::Shader vertexShader(ShaderType::VERTEX, "./shaders/vertex.vert.glsl");
+    tov::rendering::gl::pipeline::Shader fragmentShader(ShaderType::FRAGMENT, "./shaders/simple.frag.glsl");
+    vertexShader.compile();
+    fragmentShader.compile();
+
+    tov::rendering::gl::pipeline::Program program;
+    program.attachShader(vertexShader);
+    program.attachShader(fragmentShader);
+
+    using Matrix4 = tov::math::Matrix4;
+    auto def = tov::rendering::pipeline::ConstantDefinition<Matrix4>::DEFINITION;
+    program.addConstantDefinition("modelMatrix", def);
+
     auto sphere = tov::rendering::geometry::Sphere(5.0f);
     //auto sphere = tov::rendering::geometry::Triangle();
 
@@ -88,37 +103,12 @@ int main(int argc, char** argv)
     using MeshManager = tov::rendering::mesh::MeshManager;
     MeshManager meshManager(bufferManager);
     auto mesh = meshManager.create();
-    auto& submesh = mesh->createSubmesh(sphere);
+    auto& submesh = mesh->createSubmesh(sphere, program);
 
     auto& entityNode = root.createChild();
     auto& entity = scene.createEntity();
     entity.createMeshComponent(*mesh);
     entityNode.attachSceneObject(&entity);
-
-    using ShaderType = tov::rendering::pipeline::ShaderType;
-
-    tov::rendering::gl::pipeline::Shader v(ShaderType::VERTEX, "./shaders/vertex.vert.glsl");
-    tov::rendering::gl::pipeline::Shader f(ShaderType::FRAGMENT, "./shaders/simple.frag.glsl");
-
-    tov::rendering::gl::pipeline::Program p;
-    p.attachShader(v);
-    p.attachShader(f);
-
-    using Matrix4 = tov::math::Matrix4;
-    auto def = tov::rendering::pipeline::ConstantDefinition<Matrix4>::DEFINITION;
-    p.addConstantDefinition("modelMatrix", def);
-
-    p.compile();
-    p.link();
-
-    auto m = Matrix4::IDENTITY;
-    p.setConstant("modelMatrix", m);
-    auto val = p.getConstant<Matrix4>("modelMatrix");
-    std::cout << val << "\n";
-
-    //tov::rendering::pipeline::PipelineStateObject pso(p, meshManager.getPreferredVertexDataFormat());
-
-    p.use();
 
     while(1)
     {
@@ -129,23 +119,7 @@ int main(int argc, char** argv)
 
         rs.queueFrame();
         
-        scene.renderCameras(p);
-
-        //auto viewMatrix = camera.getViewMatrix();
-        //auto projectionMatrix = camera.getProjectionMatrix();
-        auto modelMatrix = entityNode.getTransform().getHomogeneousMatrix();
-
-        //p.setMatrix4("viewMatrix", viewMatrix);
-        //p.setMatrix4("projectionMatrix", projectionMatrix);
-        p.setMatrix4("modelMatrix", modelMatrix);
-
-        /*auto& bucket = rs.getGBufferBucket();
-        auto& drawDataList = mesh->getDrawDataList();
-        for (auto&& drawData : drawDataList)
-        {
-            auto& command = bucket.addCommand<tov::rendering::commands::Draw>(0);
-            command.drawData = &drawData;
-        }*/
+        scene.renderCameras();
 
         rs.renderFrame();
 

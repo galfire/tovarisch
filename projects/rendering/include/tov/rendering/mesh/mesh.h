@@ -17,6 +17,12 @@ namespace tov
     class Geometry;
     
     TOV_NAMESPACE_END // geometry
+    TOV_NAMESPACE_BEGIN(pipeline)
+
+    class Program;
+
+    TOV_NAMESPACE_END // pipeline
+
     TOV_NAMESPACE_BEGIN(mesh)
 
     class MeshManager;
@@ -35,21 +41,17 @@ namespace tov
         auto getDrawDataList() const -> auto& { return mDrawDataList; }
         auto getManager() const -> auto const& { return mManager; }
 
-        auto createSubmesh(geometry::Geometry const& geometry) -> auto&
+        auto createSubmesh(geometry::Geometry const& geometry, pipeline::Program& program) -> auto&
         {
             auto submesh = SubmeshUPtr(
-                new Submesh(*this, geometry)
+                new Submesh(*this, geometry, program)
             );
             mSubmeshes.push_back(std::move(submesh));
             auto ret = mSubmeshes.back().get();
             return *ret;
         }
 
-        auto createInstance() const
-        {
-            auto instance = MeshInstance(mDrawDataList);
-            return instance;
-        }
+        auto instantiate() const -> MeshInstance;
 
     private:
         MeshManager& mManager;

@@ -32,7 +32,7 @@ namespace tov
         );
         ~RenderWindow() = default;
 
-        void prerender() override;
+        void prerender() const override;
         void swapBuffers() override;
     };
 

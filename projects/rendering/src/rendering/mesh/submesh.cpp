@@ -14,6 +14,8 @@
 #include <rendering/mesh/mesh_manager.h>
 #include <rendering/mesh/vertex_data_format.h>
 
+#include <rendering/pipeline/program.h>
+
 namespace tov
 {
     TOV_NAMESPACE_BEGIN(rendering)
@@ -116,9 +118,10 @@ namespace tov
         }
     }
 
-    Submesh::Submesh(Mesh& parentMesh, const geometry::Geometry& geometry) noexcept
+    Submesh::Submesh(Mesh& parentMesh, const geometry::Geometry& geometry, pipeline::Program& program) noexcept
         : mParentMesh(parentMesh)
         , mGeometry(geometry)
+        , mProgram(program)
     {
         this->build();
     }
@@ -130,10 +133,11 @@ namespace tov
 
         auto& ibo = mIndexData->getBufferObject();
         auto& vbos = mVertexData->getBufferObjects();
+        auto& programInstance = mProgram.instantiate();
 
         for (auto&& vbo : vbos)
         {
-            auto drawData = DrawData(ibo, *vbo);
+            auto drawData = DrawData(ibo, *vbo, programInstance);
             mParentMesh.addDrawData(drawData);
         }
     }

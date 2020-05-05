@@ -2,6 +2,8 @@
 
 #include <rendering/mesh/submesh.h>
 
+#include <rendering/pipeline/program.h>
+
 namespace tov
 {
     TOV_NAMESPACE_BEGIN(rendering)
@@ -15,6 +17,11 @@ namespace tov
     void Mesh::addDrawData(DrawData drawData)
     {
         mDrawDataList.push_back(drawData);
+    }
+
+    auto Mesh::instantiate() const -> MeshInstance
+    {
+        return MeshInstance(mDrawDataList);
     }
 
     TOV_NAMESPACE_END // mesh

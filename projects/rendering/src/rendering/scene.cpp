@@ -9,7 +9,7 @@
 #include "rendering/commands/commands.h"
 #include "rendering/commands/command_bucket.h"
 
-#include "rendering/pipeline/program.h"
+#include "rendering/pipeline/program_instance.h"
 
 namespace tov
 {
@@ -41,7 +41,7 @@ namespace tov
         return *mRootNode.get();
     }
 
-    void Scene::renderCameras(pipeline::Program& program)
+    void Scene::renderCameras()
     {
         auto& bucket = mRenderSystem.getGBufferBucket();
 
@@ -64,20 +64,6 @@ namespace tov
                 }
 
                 {
-                    const auto& projectionMatrix = camera.get().getProjectionMatrix();
-                    const auto& viewMatrix = camera.get().getViewMatrix();
-
-                    program.setMatrix4("projectionMatrix", projectionMatrix);
-                    program.setMatrix4("viewMatrix", viewMatrix);
-
-                    const auto& state = program.getProgramState();
-
-                    // state = program.getState()
-                    // bucket.addCommand<SetShaderState>(state)
-                    //   -> at submit time, set all uniforms to the values in state
-                }
-
-                {
                     auto& command = bucket.addCommand<commands::ApplyViewport>(viewport->getZIndex());
                     command.viewport = viewport;
                 }
@@ -89,18 +75,28 @@ namespace tov
 
                 for (auto&& node : nodes)
                 {
-                    auto sceneObjects = node->getSceneObjects();
+                    const auto& projectionMatrix = camera.get().getProjectionMatrix();
+                    const auto& viewMatrix = camera.get().getViewMatrix();
+                    const auto& modelMatrix = node->getTransform().getHomogeneousMatrix();
+
+                    // state = program.getState()
+                    // bucket.addCommand<SetShaderState>(state)
+                    //   -> at submit time, set all uniforms to the values in state
+
+                    auto const& sceneObjects = node->getSceneObjects();
                     for (auto&& sceneObject : sceneObjects)
                     {
-                        auto const& drawDataList = sceneObject->getDrawDataList();
+                        auto& drawDataList = sceneObject->getDrawDataList();
                         for (auto&& drawData : drawDataList)
                         {
                             auto& command = bucket.addCommand<commands::Draw>(0);
                             command.drawData = &drawData;
+                            command.modelMatrix = modelMatrix;
+                            command.viewMatrix = viewMatrix;
+                            command.projectionMatrix = projectionMatrix;
                         }
                     }
                 }
-
             }
         }
     }

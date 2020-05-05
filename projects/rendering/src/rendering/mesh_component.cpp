@@ -9,7 +9,7 @@ namespace tov
 	MeshComponent::MeshComponent(mesh::Mesh& mesh)
 		: Component()
 		, mMesh(mesh)
-		, mMeshInstance(mesh.createInstance())
+		, mMeshInstance(mesh.instantiate())
 	{}
 
 	TOV_NAMESPACE_END // rendering

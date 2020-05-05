@@ -33,7 +33,7 @@ namespace tov
         )
     {}
 
-    void RenderWindow::prerender()
+    void RenderWindow::prerender() const
     {
         bool success = mRendererComponent->makeContextCurrent();
         assert(success, "Failed to make context current!");

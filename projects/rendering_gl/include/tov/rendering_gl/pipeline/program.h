@@ -10,6 +10,12 @@
 namespace tov
 {
     TOV_NAMESPACE_BEGIN(rendering)
+    TOV_NAMESPACE_BEGIN(pipeline)
+
+    class ProgramInstance;
+
+    TOV_NAMESPACE_END // pipeline
+
     TOV_NAMESPACE_BEGIN(gl)
     TOV_NAMESPACE_BEGIN(pipeline)
 
@@ -20,18 +26,8 @@ namespace tov
         Program();
         ~Program();
 
-        void setMatrix4(const char* name, const math::Matrix4& value) override;
-        void setVector2(const char* name, const math::Vector2& value) override;
-        void setVector3(const char* name, const math::Vector3& value) override;
-        void setVector4(const char* name, const math::Vector4& value) override;
-
     private:
-        void attachShaderImpl(rendering::pipeline::Shader& shader) override;
-        void detachShaderImpl(rendering::pipeline::Shader& shader) override;
-        void linkImpl() override;
-        void useImpl() override;
-
-        auto getUniformLocation(const char* name) const -> int;
+        auto instantiateImpl() const -> rendering::pipeline::ProgramInstance* override;
 
     private:
         uint mProgramID;
