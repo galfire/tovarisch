@@ -1,6 +1,7 @@
 #include <rendering/mesh/submesh.h>
 
 #include <rendering/buffers/guard.h>
+#include <rendering/buffers/index_buffer_object.h>
 #include <rendering/buffers/index_type.h>
 #include <rendering/buffers/lock_settings.h>
 #include <rendering/buffers/vertex_attribute.h>
@@ -10,8 +11,10 @@
 #include <rendering/geometry/geometry.h>
 
 #include <rendering/mesh/draw_data.h>
+#include <rendering/mesh/index_data.h>
 #include <rendering/mesh/mesh.h>
 #include <rendering/mesh/mesh_manager.h>
+#include <rendering/mesh/vertex_data.h>
 #include <rendering/mesh/vertex_data_format.h>
 
 #include <rendering/pipeline/program.h>
@@ -126,6 +129,9 @@ namespace tov
         this->build();
     }
 
+    Submesh::~Submesh()
+    {}
+
     void Submesh::build()
     {
         this->buildIndexData();
@@ -144,7 +150,7 @@ namespace tov
 
     void Submesh::buildIndexData()
     {
-        mIndexData = IndexDataUPtr(
+        mIndexData = std::unique_ptr<IndexData>(
             new IndexData(
                 mParentMesh.getManager().getBufferManager(),
                 mGeometry.getNumIndices()
@@ -196,7 +202,7 @@ namespace tov
         auto preferredVertexDataFormat = mParentMesh.getManager().getPreferredVertexDataFormat();
         auto vertexDataFormat = preferredVertexDataFormat;
 
-        mVertexData = VertexDataUPtr(
+        mVertexData = std::unique_ptr<VertexData>(
             new VertexData(
                 mParentMesh.getManager().getBufferManager(),
                 vertexDataFormat,

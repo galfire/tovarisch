@@ -66,17 +66,17 @@ int main(int argc, char** argv)
     auto& camera = scene.createCamera();
     cameraNode.attachSceneObject(&camera);
 
-    {
-        auto& window = rs.createRenderWindow("WINDWOWWW", 800, 600, false);
-        auto& vp1 = window.createViewport(camera, 0, 0.0f, 0.0f, 0.5f, 1.0f, tov::rendering::Colour::Red);
-        auto& vp2 = window.createViewport(camera, 1, 0.5f, 0.0f, 0.5f, 1.0f, tov::rendering::Colour::Green);
-        camera.attachViewport(vp1);
-        camera.attachViewport(vp2);
-    }
+    //{
+    //    auto& window = rs.createRenderWindow("WINDWOWWW", 800, 600, false);
+    //    auto& vp1 = window.createViewport(0, 0.0f, 0.0f, 0.5f, 1.0f, tov::rendering::Colour::Red);
+    //    auto& vp2 = window.createViewport(1, 0.5f, 0.0f, 0.5f, 1.0f, tov::rendering::Colour::Green);
+    //    camera.attachViewport(vp1);
+    //    camera.attachViewport(vp2);
+    //}
 
     {
-        auto& window = rs.createRenderWindow("WINDWOWWW2222", 200, 600, false);
-        auto& vp = window.createViewport(camera, 2, 0.0f, 0.0f, 1.0f, 1.0f, tov::rendering::Colour::Blue);
+        auto& window = rs.createRenderWindow("WINDWOWWW2222", 800, 600, false);
+        auto& vp = window.createViewport(2, 0.0f, 0.0f, 1.0f, 1.0f, tov::rendering::Colour::Black);
         camera.attachViewport(vp);
     }
 
@@ -95,7 +95,6 @@ int main(int argc, char** argv)
     program.addConstantDefinition("modelMatrix", def);
 
     auto sphere = tov::rendering::geometry::Sphere(5.0f);
-    //auto sphere = tov::rendering::geometry::Triangle();
 
     using BufferManager = tov::rendering::gl::buffers::BufferManager;
     BufferManager bufferManager;
@@ -105,21 +104,31 @@ int main(int argc, char** argv)
     auto mesh = meshManager.create();
     auto& submesh = mesh->createSubmesh(sphere, program);
 
-    auto& entityNode = root.createChild();
-    auto& entity = scene.createEntity();
-    entity.createMeshComponent(*mesh);
-    entityNode.attachSceneObject(&entity);
+    {
+        auto& entityNode = root.createChild();
+        auto& entity = scene.createEntity();
+        entity.createMeshComponent(*mesh);
+        entityNode.attachSceneObject(&entity);
+        tov::math::Vector3 translation(0, 0, -40);
+        entityNode.getTransform().setTranslation(translation);
+    }
+
+    {
+        auto& entityNode = root.createChild();
+        auto& entity = scene.createEntity();
+        entity.createMeshComponent(*mesh);
+        entityNode.attachSceneObject(&entity);
+        tov::math::Vector3 translation(5, 5, -30);
+        entityNode.getTransform().setTranslation(translation);
+    }
 
     while(1)
     {
         std::cout << "STARTING FRAME...\n";
 
-        tov::math::Vector3 translation(0, 0, -40);
-        entityNode.getTransform().setTranslation(translation);
-
-        rs.queueFrame();
+        rs.swapBuffers();
         
-        scene.renderCameras();
+        scene.queue();
 
         rs.renderFrame();
 

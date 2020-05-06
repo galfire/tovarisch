@@ -2,21 +2,21 @@
 
 namespace tov
 {
-	TOV_NAMESPACE_BEGIN(rendering)
+    TOV_NAMESPACE_BEGIN(rendering)
 
-	WindowPlatformComponent::WindowPlatformComponent(Window& parentWindow)
-		: mParentWindow(parentWindow)
-	{}
+    WindowPlatformComponent::WindowPlatformComponent(Window& parentWindow)
+        : mParentWindow(parentWindow)
+    {}
 
-	void WindowPlatformComponent::create()
-	{
-		_create();
-	}
+    void WindowPlatformComponent::create()
+    {
+        _create();
+    }
 
-	void WindowPlatformComponent::destroy()
-	{
-		_destroy();
-	}
+    void WindowPlatformComponent::destroy()
+    {
+        _destroy();
+    }
 
-	TOV_NAMESPACE_END // rendering
+    TOV_NAMESPACE_END // rendering
 }

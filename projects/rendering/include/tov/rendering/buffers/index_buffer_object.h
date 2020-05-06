@@ -9,31 +9,31 @@
 
 namespace tov
 {
-	TOV_NAMESPACE_BEGIN(rendering)
-	TOV_NAMESPACE_BEGIN(buffers)
+    TOV_NAMESPACE_BEGIN(rendering)
+    TOV_NAMESPACE_BEGIN(buffers)
 
-	class BufferBase;
+    class BufferBase;
 
-	class IndexBufferObject
-		: public BufferObject
-	{
-	public:
-		IndexBufferObject(BufferBase& buffer, uint numIndices)
-			: BufferObject(buffer)
-			, mNumIndices(numIndices)
-			, mIndexType(buffers::getIndexType(numIndices))
-		{}
+    class IndexBufferObject
+        : public BufferObject
+    {
+    public:
+        IndexBufferObject(BufferBase& buffer, uint numIndices)
+            : BufferObject(buffer)
+            , mNumIndices(numIndices)
+            , mIndexType(buffers::getIndexType(numIndices))
+        {}
 
-		auto getNumIndices() const { return mNumIndices; }
-		auto getIndexType() const { return mIndexType; }
+        auto getNumIndices() const { return mNumIndices; }
+        auto getIndexType() const { return mIndexType; }
 
-	private:
-		uint mNumIndices;
-		IndexType mIndexType;
-	};
+    private:
+        uint mNumIndices;
+        IndexType mIndexType;
+    };
 
-	TOV_NAMESPACE_END // buffers 
-	TOV_NAMESPACE_END // rendering
+    TOV_NAMESPACE_END // buffers 
+    TOV_NAMESPACE_END // rendering
 }
 
 #endif

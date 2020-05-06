@@ -11,7 +11,7 @@ namespace tov
 {
     TOV_NAMESPACE_BEGIN(rendering)
 
-        class Camera;
+    class Camera;
     class SceneObject;
 
     class SceneNode

@@ -41,7 +41,7 @@ namespace tov
         auto getViewports() const -> auto & { return mViewports; }
 
     private:
-        auto getDrawDataList() const -> DrawDataList const& { return DrawDataList{}; }
+        auto getDrawDataList() const -> DrawDataList const& { return mDrawDataList; }
 
         void buildProjectionMatrix(void);
         void buildViewMatrix(void);
@@ -50,6 +50,8 @@ namespace tov
         Scene& mScene;
         Transform mCachedTransform;
         ViewFrustum<ProjectionType::PERSPECTIVE> mViewFrustum;
+
+        DrawDataList mDrawDataList;
 
         std::vector<Viewport*> mViewports;
     };

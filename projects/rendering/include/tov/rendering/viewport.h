@@ -9,17 +9,13 @@ namespace tov
 {
     TOV_NAMESPACE_BEGIN(rendering)
 
-    class RenderSystem;
     class RenderTarget;
-    class Camera;
 
     class Viewport
     {
     public:
         explicit Viewport(
-            RenderSystem& renderSystem,
             RenderTarget& renderTarget,
-            Camera& camera,
             int zIndex,
             float normalizedLeft = 0.0f,
             float normalizedTop = 0.0f,
@@ -27,13 +23,9 @@ namespace tov
             float normalizedHeight = 1.0f,
             Colour backgroundColour = Colour::Black
         ) noexcept;
-        virtual ~Viewport() noexcept = default;
+        ~Viewport() noexcept = default;
 
         void updateDimensions() noexcept;
-
-        void queue() noexcept;
-        
-        void renderCamera();
 
         auto getRenderTarget() -> auto& { return mRenderTarget; }
         auto getRenderTarget() const -> auto const& { return mRenderTarget; }
@@ -45,12 +37,9 @@ namespace tov
         auto getBackgroundColour() const { return mBackgroundColour; }
 
     protected:
-        RenderSystem& mRenderSystem;
         RenderTarget& mRenderTarget;
-        Camera& mCamera;
 
         int mZIndex;
-
         float mNormalizedLeft;
         float mNormalizedTop;
         float mNormalizedWidth;

@@ -13,7 +13,7 @@
 
 namespace tov
 {
-	using byte = unsigned char;
+    using byte = unsigned char;
 }
 
 #endif

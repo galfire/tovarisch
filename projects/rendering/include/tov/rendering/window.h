@@ -4,15 +4,15 @@
 #include "rendering_core.h"
 
 #include "pixel_format.h"
-#include "window_platform_component.h"
-#include "window_renderer_component.h"
 
 namespace tov
 {
     TOV_NAMESPACE_BEGIN(rendering)
 
     class WindowPlatformSupport;
+    class WindowPlatformComponent;
     class WindowRendererSupport;
+    class WindowRendererComponent;
 
     class Window
     {
@@ -27,7 +27,7 @@ namespace tov
             bool visible = true,
             PixelFormat pixelFormat = PixelFormat::Default
         );
-        virtual ~Window() = default;
+        virtual ~Window();
 
         const char* getName() const { return mName; }
         uint getWidth() const { return mWidth; }

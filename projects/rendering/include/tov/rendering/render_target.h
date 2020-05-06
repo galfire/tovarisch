@@ -5,7 +5,6 @@
 
 #include "colour.h"
 #include "pixel_format.h"
-#include "viewport.h"
 
 #include <vector>
 
@@ -15,6 +14,7 @@ namespace tov
 
     class Camera;
     class RenderSystem;
+    class Viewport;
 
     class RenderTarget
     {
@@ -22,12 +22,11 @@ namespace tov
 
     public:
         RenderTarget(
-            RenderSystem& renderSystem,
             uint width,
             uint height,
             PixelFormat pixelFormat = PixelFormat::Default
         ) noexcept;
-        virtual ~RenderTarget() noexcept = default;
+        virtual ~RenderTarget() noexcept;
 
         virtual void prerender() const {}
 
@@ -37,7 +36,6 @@ namespace tov
         auto getHeight() const noexcept { return mHeight; }
 
         auto createViewport(
-            Camera& camera,
             int zIndex,
             float normalizedLeft = 0.0f,
             float normalizedTop = 0.0f,
@@ -46,11 +44,7 @@ namespace tov
             Colour backgroundColour = Colour::Black
         ) -> Viewport&;
 
-        void queueViewports();
-
     protected:
-        RenderSystem& mRenderSystem;
-
         uint mWidth;
         uint mHeight;
         PixelFormat mPixelFormat;

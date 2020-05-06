@@ -1,13 +1,14 @@
-#ifndef TOV_RENDERING_BACKEND_DISPATCH_H
-#define TOV_RENDERING_BACKEND_DISPATCH_H
+#ifndef TOV_RENDERING_COMMANDS_COMMAND_DISPATCH_H
+#define TOV_RENDERING_COMMANDS_COMMAND_DISPATCH_H
 
-#include "rendering_core.h"
+#include <tov/rendering/rendering_core.h>
 
 namespace tov
 {
     TOV_NAMESPACE_BEGIN(rendering)
+    TOV_NAMESPACE_BEGIN(commands)
 
-    class BackendDispatch
+    class CommandDispatch
     {
     public:
         static void ApplyViewport(const void* data);
@@ -15,6 +16,7 @@ namespace tov
         static void Draw(const void* data);
     };
 
+    TOV_NAMESPACE_END // commands
     TOV_NAMESPACE_END // rendering
 }
 

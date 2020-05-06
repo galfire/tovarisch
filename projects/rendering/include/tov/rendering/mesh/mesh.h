@@ -5,7 +5,6 @@
 
 #include "draw_data.h"
 #include "mesh_instance.h"
-#include "submesh.h"
 
 #include <vector>
 
@@ -34,36 +33,25 @@ namespace tov
 
     public:
         Mesh(MeshManager& manager) noexcept;
-        ~Mesh() noexcept = default;
+        ~Mesh() noexcept;
 
         void addDrawData(DrawData drawData);
 
         auto getDrawDataList() const -> auto& { return mDrawDataList; }
         auto getManager() const -> auto const& { return mManager; }
 
-        auto createSubmesh(geometry::Geometry const& geometry, pipeline::Program& program) -> auto&
-        {
-            auto submesh = SubmeshUPtr(
-                new Submesh(*this, geometry, program)
-            );
-            mSubmeshes.push_back(std::move(submesh));
-            auto ret = mSubmeshes.back().get();
-            return *ret;
-        }
-
+        auto createSubmesh(geometry::Geometry const& geometry, pipeline::Program& program) -> Submesh&;
         auto instantiate() const -> MeshInstance;
 
     private:
         MeshManager& mManager;
 
-        using SubmeshList = std::vector<SubmeshUPtr>;
+        using SubmeshList = std::vector<std::unique_ptr<Submesh>>;
         SubmeshList mSubmeshes;
 
         using DrawDataList = std::vector<DrawData>;
         DrawDataList mDrawDataList;
     };
-
-    using MeshUPtr = std::unique_ptr<Mesh>;
 
     TOV_NAMESPACE_END // mesh
     TOV_NAMESPACE_END // rendering

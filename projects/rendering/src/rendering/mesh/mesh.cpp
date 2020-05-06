@@ -14,9 +14,22 @@ namespace tov
         , mDrawDataList({})
     {}
 
+    Mesh::~Mesh() noexcept
+    {}
+
     void Mesh::addDrawData(DrawData drawData)
     {
         mDrawDataList.push_back(drawData);
+    }
+
+    auto Mesh::createSubmesh(geometry::Geometry const& geometry, pipeline::Program& program) -> Submesh&
+    {
+        auto submesh = std::unique_ptr<Submesh>(
+            new Submesh(*this, geometry, program)
+        );
+        mSubmeshes.push_back(std::move(submesh));
+        auto ret = mSubmeshes.back().get();
+        return *ret;
     }
 
     auto Mesh::instantiate() const -> MeshInstance

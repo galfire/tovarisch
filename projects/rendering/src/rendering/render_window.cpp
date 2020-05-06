@@ -1,11 +1,13 @@
 #include "rendering/render_window.h"
 
+#include "rendering/window_platform_component.h"
+#include "rendering/window_renderer_component.h"
+
 namespace tov
 {
     TOV_NAMESPACE_BEGIN(rendering)
 
     RenderWindow::RenderWindow(
-        RenderSystem& renderSystem,
         const WindowPlatformSupport& platformSupport,
         const WindowRendererSupport& rendererSupport,
         const char* name,
@@ -16,7 +18,6 @@ namespace tov
         PixelFormat pixelFormat
     )
         : RenderTarget(
-            renderSystem,
             width,
             height,
             pixelFormat
@@ -36,7 +37,7 @@ namespace tov
     void RenderWindow::prerender() const
     {
         bool success = mRendererComponent->makeContextCurrent();
-        assert(success, "Failed to make context current!");
+        assert(success && "Failed to make context current!");
     }
 
     void RenderWindow::swapBuffers()

@@ -1,8 +1,8 @@
-#include "rendering/backend_dispatch.h"
+#include <rendering/commands/command_dispatch.h>
+
+#include <rendering/commands/commands.h>
 
 #include "rendering/backend.h"
-
-#include "rendering/commands/commands.h"
 
 #include <tov/math/matrix.h>
 
@@ -13,8 +13,9 @@
 namespace tov
 {
     TOV_NAMESPACE_BEGIN(rendering)
+    TOV_NAMESPACE_BEGIN(commands)
 
-    void BackendDispatch::ApplyViewport(const void* data)
+    void CommandDispatch::ApplyViewport(const void* data)
     {
         auto command = reinterpret_cast<commands::ApplyViewport const *const>(data);
         const auto viewport = command->viewport;
@@ -23,14 +24,14 @@ namespace tov
         backend::ApplyViewport(viewport);
     }
 
-    void BackendDispatch::ClearViewport(const void* data)
+    void CommandDispatch::ClearViewport(const void* data)
     {
         auto command = reinterpret_cast<commands::ApplyViewport const *const>(data);
         auto viewport = command->viewport;
         backend::ClearViewport(viewport);
     }
 
-    void BackendDispatch::Draw(const void* data)
+    void CommandDispatch::Draw(const void* data)
     {
         auto command = reinterpret_cast<commands::Draw const *const>(data);
 
@@ -48,5 +49,6 @@ namespace tov
         backend::Draw(drawData);
     }
 
+    TOV_NAMESPACE_END // commands
     TOV_NAMESPACE_END // rendering
 }

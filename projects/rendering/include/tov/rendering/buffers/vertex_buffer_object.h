@@ -9,31 +9,31 @@
 
 namespace tov
 {
-	TOV_NAMESPACE_BEGIN(rendering)
-	TOV_NAMESPACE_BEGIN(buffers)
+    TOV_NAMESPACE_BEGIN(rendering)
+    TOV_NAMESPACE_BEGIN(buffers)
 
-	class BufferBase;
+    class BufferBase;
 
-	class VertexBufferObject
-		: public BufferObject
-	{
-	public:
-		VertexBufferObject(
-			BufferBase& buffer,
-			VertexBufferFormat format
-		)
-			: BufferObject(buffer)
-			, mFormat(format)
-		{}
+    class VertexBufferObject
+        : public BufferObject
+    {
+    public:
+        VertexBufferObject(
+            BufferBase& buffer,
+            VertexBufferFormat format
+        )
+            : BufferObject(buffer)
+            , mFormat(format)
+        {}
 
-		auto getBufferFormat() const { return mFormat; }
+        auto getBufferFormat() const { return mFormat; }
 
-	private:
-		VertexBufferFormat mFormat;
-	};
+    private:
+        VertexBufferFormat mFormat;
+    };
 
-	TOV_NAMESPACE_END // buffers 
-	TOV_NAMESPACE_END // rendering
+    TOV_NAMESPACE_END // buffers 
+    TOV_NAMESPACE_END // rendering
 }
 
 #endif

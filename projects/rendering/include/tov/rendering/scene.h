@@ -3,8 +3,6 @@
 
 #include "rendering_core.h"
 
-#include "scene_object.h"
-
 #include <vector>
 
 namespace tov
@@ -15,18 +13,15 @@ namespace tov
     class Entity;
     class RenderSystem;
     class SceneNode;
+    class SceneObject;
 
     class Scene
     {
         TOV_MOVABLE_ONLY(Scene)
 
-        using SceneObjectList = std::vector<SceneObjectUPtr>;
-        using CameraList = std::vector<std::reference_wrapper<Camera>>;
-        using EntityList = std::vector<std::reference_wrapper<Entity>>;
-
     public:
         Scene(RenderSystem& renderSystem) noexcept;
-        ~Scene() noexcept = default;
+        ~Scene() noexcept;
 
         template<class T, class... U>
         auto create(U&&... args)
@@ -44,12 +39,16 @@ namespace tov
 
         auto getRootNode() -> SceneNode&;
 
-        void renderCameras();
+        void queue();
 
     private:
         RenderSystem& mRenderSystem;
 
         std::unique_ptr<SceneNode> mRootNode;
+
+        using SceneObjectList = std::vector<std::unique_ptr<SceneObject>>;
+        using CameraList = std::vector<std::reference_wrapper<Camera>>;
+        using EntityList = std::vector<std::reference_wrapper<Entity>>;
 
         SceneObjectList mSceneObjects;
         CameraList mCameras;

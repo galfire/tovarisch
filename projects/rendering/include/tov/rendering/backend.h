@@ -19,9 +19,7 @@ namespace tov
     class ProgramState;
 
     TOV_NAMESPACE_END //pipeline
-    TOV_NAMESPACE_END // rendering
 
-    TOV_NAMESPACE_BEGIN(rendering)
     TOV_NAMESPACE_BEGIN(backend)
 
     void ApplyViewport(Viewport const *const viewport);

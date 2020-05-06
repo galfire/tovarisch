@@ -3,9 +3,6 @@
 
 #include <tov/rendering/rendering_core.h>
 
-#include "index_data.h"
-#include "vertex_data.h"
-
 namespace tov
 {
     TOV_NAMESPACE_BEGIN(rendering)
@@ -28,7 +25,9 @@ namespace tov
 
     TOV_NAMESPACE_BEGIN(mesh)
 
+    class IndexData;
     class Mesh;
+    class VertexData;
 
     class Submesh
     {
@@ -36,7 +35,7 @@ namespace tov
 
     public:
         Submesh(Mesh& parentMesh, const geometry::Geometry& geometry, pipeline::Program& program) noexcept;
-        ~Submesh() noexcept = default;
+        ~Submesh() noexcept;
 
     private:
         void build();
@@ -48,11 +47,9 @@ namespace tov
         const geometry::Geometry& mGeometry;
         pipeline::Program& mProgram;
 
-        IndexDataUPtr mIndexData;
-        VertexDataUPtr mVertexData;
+        std::unique_ptr<IndexData> mIndexData;
+        std::unique_ptr<VertexData> mVertexData;
     };
-
-    using SubmeshUPtr = std::unique_ptr<Submesh>;
 
     TOV_NAMESPACE_END // mesh
     TOV_NAMESPACE_END // rendering

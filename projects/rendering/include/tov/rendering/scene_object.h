@@ -31,8 +31,6 @@ namespace tov
         SceneNode* mParentSceneNode = nullptr;
     };
 
-    using SceneObjectUPtr = std::unique_ptr<SceneObject>;
-
     TOV_NAMESPACE_END
 }
 

@@ -70,7 +70,7 @@ namespace tov
         template<class BufferT, class... U>
         auto create(size_t size, U&&... args)
         {
-            auto buffer = BufferUPtr(
+            auto buffer = std::unique_ptr<BufferBase>(
                 new BufferT(*this, size, std::forward<U>(args)...)
             );
             mBuffers.push_back(std::move(buffer));
@@ -79,7 +79,7 @@ namespace tov
         }
 
     private:
-        using BufferList = std::vector<BufferUPtr>;
+        using BufferList = std::vector<std::unique_ptr<BufferBase>>;
         BufferList mBuffers;
     };
 

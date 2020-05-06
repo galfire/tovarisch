@@ -6,33 +6,33 @@
 
 namespace tov
 {
-	TOV_NAMESPACE_BEGIN(rendering)
+    TOV_NAMESPACE_BEGIN(rendering)
 
-	WindowRendererComponent::WindowRendererComponent(Window& parentWindow)
-		: mParentWindow(parentWindow)
-	{}
+    WindowRendererComponent::WindowRendererComponent(Window& parentWindow)
+        : mParentWindow(parentWindow)
+    {}
 
-	auto WindowRendererComponent::getRenderContext() const -> const RenderContext&
-	{
-		return *mRenderContext.get();
-	}
+    auto WindowRendererComponent::getRenderContext() const -> const RenderContext&
+    {
+        return *mRenderContext.get();
+    }
 
-	void WindowRendererComponent::create()
-	{
-		createRenderContext();
-		bool success = makeContextCurrent();
-		assert(success);
-	}
+    void WindowRendererComponent::create()
+    {
+        createRenderContext();
+        bool success = makeContextCurrent();
+        assert(success);
+    }
 
-	void WindowRendererComponent::destroy()
-	{
-		// ???
-	}
+    void WindowRendererComponent::destroy()
+    {
+        // ???
+    }
 
-	bool WindowRendererComponent::makeContextCurrent()
-	{
-		return mRenderContext->makeCurrent();
-	}
+    bool WindowRendererComponent::makeContextCurrent()
+    {
+        return mRenderContext->makeCurrent();
+    }
 
-	TOV_NAMESPACE_END // rendering
+    TOV_NAMESPACE_END // rendering
 }

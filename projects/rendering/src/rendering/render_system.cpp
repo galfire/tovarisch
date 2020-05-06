@@ -11,7 +11,7 @@ namespace tov
         WindowPlatformSupport& windowPlatformSupport,
         WindowRendererSupport& windowRendererSupport
     ) noexcept
-        : mRenderTargetManager(*this)
+        : mRenderTargetManager()
         , mWindowPlatformSupport(windowPlatformSupport)
         , mWindowRendererSupport(windowRendererSupport)
     {}
@@ -29,9 +29,9 @@ namespace tov
         return *renderWindow;
     }
 
-    void RenderSystem::queueFrame()
+    void RenderSystem::swapBuffers()
     {
-        mRenderTargetManager.queueTargets();
+        mRenderTargetManager.swapBuffers();
     }
 
     void RenderSystem::renderFrame()

@@ -3,8 +3,6 @@
 
 #include "rendering_core.h"
 
-#include "render_target.h"
-
 #include <vector>
 
 namespace tov
@@ -17,27 +15,23 @@ namespace tov
     class RenderTargetManager
     {
     public:
-        RenderTargetManager(RenderSystem& renderSystem) noexcept
-            : mRenderSystem(renderSystem)
-        {}
-
-        ~RenderTargetManager() noexcept = default;
+        RenderTargetManager() noexcept;
+        ~RenderTargetManager() noexcept;
 
         template<class T, class... U>
         auto create(U&&... args)
         {
             auto renderTarget = std::unique_ptr<T>(
-                new T(mRenderSystem, std::forward<U>(args)...)
+                new T(std::forward<U>(args)...)
             );
             mRenderTargets.push_back(std::move(renderTarget));
             auto ret = mRenderTargets.back().get();
             return static_cast<T*>(ret);
         }
 
-        void queueTargets();
+        void swapBuffers();
 
     private:
-        RenderSystem& mRenderSystem;
         std::vector<std::unique_ptr<RenderTarget>> mRenderTargets;
     };
 

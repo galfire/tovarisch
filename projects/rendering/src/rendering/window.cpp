@@ -35,6 +35,9 @@ namespace tov
         mRendererComponent->create();
     }
 
+    Window::~Window()
+    {}
+
     const WindowPlatformComponent& Window::getPlatformComponent() const
     {
         return *mPlatformComponent.get();

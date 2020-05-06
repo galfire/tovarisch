@@ -5,37 +5,37 @@
 
 namespace tov
 {
-	TOV_NAMESPACE_BEGIN(memory)
-	TOV_NAMESPACE_BEGIN(policies)
-	TOV_NAMESPACE_BEGIN(allocation)
+    TOV_NAMESPACE_BEGIN(memory)
+    TOV_NAMESPACE_BEGIN(policies)
+    TOV_NAMESPACE_BEGIN(allocation)
 
-	class Linear
-	{
-	private:
-		struct BlockHeader
-		{
-			size_t mAllocationSize;
-		};
+    class Linear
+    {
+    private:
+        struct BlockHeader
+        {
+            size_t mAllocationSize;
+        };
 
-	public:
-		inline explicit Linear(const void* start, const void* end) noexcept;
-		inline ~Linear() noexcept = default;
+    public:
+        inline explicit Linear(const void* start, const void* end) noexcept;
+        inline ~Linear() noexcept = default;
 
-		inline void* allocate(size_t size);
-		inline void deallocate(void* ptr) noexcept;
-		inline void reset() noexcept;
+        inline void* allocate(size_t size);
+        inline void deallocate(void* ptr) noexcept;
+        inline void reset() noexcept;
 
-		inline size_t getAllocationSize(void* ptr) const noexcept;
+        inline size_t getAllocationSize(void* ptr) const noexcept;
 
-	private:
-		const void* mStart = nullptr;
-		const void* mEnd = nullptr;
-		void* mCurrent = nullptr;
-	};
+    private:
+        const void* mStart = nullptr;
+        const void* mEnd = nullptr;
+        void* mCurrent = nullptr;
+    };
 
-	TOV_NAMESPACE_END // allocation
-	TOV_NAMESPACE_END // policies
-	TOV_NAMESPACE_END // memory
+    TOV_NAMESPACE_END // allocation
+    TOV_NAMESPACE_END // policies
+    TOV_NAMESPACE_END // memory
 }
 
 #include "linear.inl"

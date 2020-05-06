@@ -22,7 +22,6 @@ namespace tov
 		MeshComponent(mesh::Mesh& mesh);
 		~MeshComponent() = default;
 
-		auto getMeshInstance() -> auto & { return mMeshInstance; }
 		auto getMeshInstance() const -> auto const& { return mMeshInstance; }
 
 	private:

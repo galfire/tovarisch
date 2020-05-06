@@ -7,26 +7,26 @@
 
 namespace tov
 {
-	TOV_NAMESPACE_BEGIN(rendering)
-	TOV_NAMESPACE_BEGIN(node)
+    TOV_NAMESPACE_BEGIN(rendering)
+    TOV_NAMESPACE_BEGIN(node)
 
-	class Node
-	{
-	public:
-		Node() = default;
-		virtual ~Node() = default;
+    class Node
+    {
+    public:
+        Node() = default;
+        virtual ~Node() = default;
 
-		auto getTransform() const -> auto const & { return mTransform; }
-		auto getTransform() -> auto & { return mTransform; }
+        auto getTransform() const -> auto const & { return mTransform; }
+        auto getTransform() -> auto & { return mTransform; }
 
-		auto getDerivedTransform() { return mTransform; }
+        auto getDerivedTransform() { return mTransform; }
 
-	protected:
-		Transform mTransform;
-	};
+    protected:
+        Transform mTransform;
+    };
 
-	TOV_NAMESPACE_END // node
-	TOV_NAMESPACE_END // rendering
+    TOV_NAMESPACE_END // node
+    TOV_NAMESPACE_END // rendering
 };
 
 #endif

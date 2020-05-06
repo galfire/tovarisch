@@ -3,8 +3,8 @@
 
 #include <tov/rendering/rendering_core.h>
 
-#include "lock_settings.h"
 #include "buffer.h"
+#include "lock_settings.h"
 
 namespace tov
 {
@@ -14,9 +14,11 @@ namespace tov
     class BufferObject
     {
     public:
-        BufferObject(BufferBase& buffer)
+        BufferObject(BufferBase& buffer) noexcept
             : mBuffer(buffer)
         {}
+        
+        ~BufferObject() noexcept = default;
 
         auto lock(size_t offset, size_t length, LockSettings lockSettings)
         {
@@ -38,8 +40,6 @@ namespace tov
     private:
         BufferBase& mBuffer;
     };
-
-    using BufferObjectUPtr = std::unique_ptr<BufferObject>;
 
     TOV_NAMESPACE_END // buffers
     TOV_NAMESPACE_END // rendering

@@ -20,7 +20,6 @@ namespace tov
     {
     public:
         RenderWindow(
-            RenderSystem& renderSystem,
             const WindowPlatformSupport& platformSupport,
             const WindowRendererSupport& rendererSupport,
             const char* name,

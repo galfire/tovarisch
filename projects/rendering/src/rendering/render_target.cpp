@@ -9,19 +9,19 @@ namespace tov
     TOV_NAMESPACE_BEGIN(rendering)
 
     RenderTarget::RenderTarget(
-        RenderSystem& renderSystem,
         uint width,
         uint height,
         PixelFormat pixelFormat
     ) noexcept 
-        : mRenderSystem(renderSystem)
-        , mWidth(width)
+        : mWidth(width)
         , mHeight(height)
         , mPixelFormat(pixelFormat)
     {}
 
+    RenderTarget::~RenderTarget()
+    {}
+
     auto RenderTarget::createViewport(
-        Camera& camera,
         int zIndex,
         float normalizedLeft,
         float normalizedTop,
@@ -32,9 +32,7 @@ namespace tov
     {
         auto viewport = std::unique_ptr<Viewport>(
             new Viewport(
-                mRenderSystem,
                 *this,
-                camera,
                 zIndex,
                 normalizedLeft,
                 normalizedTop,
@@ -44,14 +42,6 @@ namespace tov
             ));
         mViewports.push_back(std::move(viewport));
         return *mViewports.back().get();
-    }
-
-    void RenderTarget::queueViewports()
-    {
-        for (auto&& viewport : mViewports)
-        {
-            viewport->queue();
-        }
     }
 
     TOV_NAMESPACE_END

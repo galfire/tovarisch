@@ -5,14 +5,13 @@
 
 #include "scene_object.h"
 
-#include "component.h"
-
 #include <vector>
 
 namespace tov
 {
     TOV_NAMESPACE_BEGIN(rendering)
 
+    class Component;
     class MeshComponent;
 
     TOV_NAMESPACE_BEGIN(mesh)
@@ -26,11 +25,9 @@ namespace tov
     {
         TOV_MOVABLE_ONLY(Entity)
 
-        using ComponentList = std::vector<ComponentUPtr>;
-
     public:
-        Entity() = default;
-        ~Entity() = default;
+        Entity() noexcept;
+        ~Entity() noexcept;
 
         auto createMeshComponent(mesh::Mesh& mesh) -> MeshComponent&;
 
@@ -49,6 +46,7 @@ namespace tov
         }
 
     private:
+        using ComponentList = std::vector<std::unique_ptr<Component>>;
         ComponentList mComponents;
         MeshComponent* mMeshComponent = nullptr;
     };

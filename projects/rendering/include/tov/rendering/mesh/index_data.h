@@ -3,13 +3,16 @@
 
 #include <tov/rendering/rendering_core.h>
 
-#include <tov/rendering/buffers/buffer_manager.h>
-#include <tov/rendering/buffers/buffer_object.h>
-#include <tov/rendering/buffers/index_buffer_object.h>
-
 namespace tov
 {
     TOV_NAMESPACE_BEGIN(rendering)
+    TOV_NAMESPACE_BEGIN(buffers)
+
+    class BufferManagerBase;
+    class IndexBufferObject;
+
+    TOV_NAMESPACE_END // buffers
+
     TOV_NAMESPACE_BEGIN(mesh)
 
     class IndexData
@@ -20,28 +23,14 @@ namespace tov
         IndexData(
             buffers::BufferManagerBase& bufferManager,
             uint numIndices
-        ) noexcept
-        {
-            auto buffer = bufferManager.createIndexBuffer(numIndices);
-            auto bufferObject = buffers::BufferObjectUPtr(
-                new buffers::IndexBufferObject(*buffer, numIndices)
-            );
-            mIndexBufferObject = std::move(bufferObject);
-        }
+        ) noexcept;
+        ~IndexData() noexcept;
 
-        ~IndexData() noexcept = default;
-
-        auto getBufferObject() const -> auto&
-        {
-            auto ibo = mIndexBufferObject.get();
-            return *static_cast<buffers::IndexBufferObject*>(ibo);
-        }
+        auto getBufferObject() const -> buffers::IndexBufferObject&;
 
     private:
-        buffers::BufferObjectUPtr mIndexBufferObject;
+        std::unique_ptr<buffers::IndexBufferObject> mIndexBufferObject;
     };
-
-    using IndexDataUPtr = std::unique_ptr<IndexData>;
 
     TOV_NAMESPACE_END // mesh
     TOV_NAMESPACE_END // rendering

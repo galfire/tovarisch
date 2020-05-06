@@ -16,8 +16,6 @@ namespace tov
 		virtual ~Component() = default;
 	};
 
-	using ComponentUPtr = std::unique_ptr<Component>;
-
 	TOV_NAMESPACE_END // rendering
 }
 

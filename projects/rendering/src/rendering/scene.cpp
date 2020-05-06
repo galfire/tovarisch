@@ -5,7 +5,9 @@
 #include "rendering/entity.h"
 #include "rendering/render_system.h"
 #include "rendering/scene_node.h"
+#include "rendering/scene_object.h"
 #include "rendering/viewport.h"
+
 #include "rendering/commands/commands.h"
 #include "rendering/commands/command_bucket.h"
 
@@ -22,6 +24,9 @@ namespace tov
             new SceneNode()
         );
     }
+
+    Scene::~Scene() noexcept
+    {}
 
     auto Scene::createCamera() -> Camera&
     {
@@ -41,7 +46,7 @@ namespace tov
         return *mRootNode.get();
     }
 
-    void Scene::renderCameras()
+    void Scene::queue()
     {
         auto& bucket = mRenderSystem.getGBufferBucket();
 
@@ -50,18 +55,17 @@ namespace tov
             auto drawContext = DrawContext{};
             camera.get().populateDrawContext(drawContext);
 
-            auto nodes = drawContext.getSceneNodes();
+            auto& nodes = drawContext.getSceneNodes();
+            auto const& viewMatrix = camera.get().getViewMatrix();
 
             auto& viewports = camera.get().getViewports();
-
             for (auto&& viewport : viewports)
             {
-                {
-                    auto width = static_cast<float>(viewport->getWidth());
-                    auto height = static_cast<float>(viewport->getHeight());
-                    auto aspectRatio = width / height;
-                    camera.get().setAspectRatio(aspectRatio);
-                }
+                auto width = static_cast<float>(viewport->getWidth());
+                auto height = static_cast<float>(viewport->getHeight());
+                auto aspectRatio = width / height;
+                camera.get().setAspectRatio(aspectRatio);
+                auto const& projectionMatrix = camera.get().getProjectionMatrix();
 
                 {
                     auto& command = bucket.addCommand<commands::ApplyViewport>(viewport->getZIndex());
@@ -75,13 +79,7 @@ namespace tov
 
                 for (auto&& node : nodes)
                 {
-                    const auto& projectionMatrix = camera.get().getProjectionMatrix();
-                    const auto& viewMatrix = camera.get().getViewMatrix();
-                    const auto& modelMatrix = node->getTransform().getHomogeneousMatrix();
-
-                    // state = program.getState()
-                    // bucket.addCommand<SetShaderState>(state)
-                    //   -> at submit time, set all uniforms to the values in state
+                    auto const& modelMatrix = node->getTransform().getHomogeneousMatrix();
 
                     auto const& sceneObjects = node->getSceneObjects();
                     for (auto&& sceneObject : sceneObjects)
@@ -90,10 +88,10 @@ namespace tov
                         for (auto&& drawData : drawDataList)
                         {
                             auto& command = bucket.addCommand<commands::Draw>(0);
-                            command.drawData = &drawData;
                             command.modelMatrix = modelMatrix;
                             command.viewMatrix = viewMatrix;
                             command.projectionMatrix = projectionMatrix;
+                            command.drawData = &drawData;
                         }
                     }
                 }

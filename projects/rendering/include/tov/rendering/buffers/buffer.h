@@ -80,8 +80,6 @@ namespace tov
         bool mLocked = false;
     };
 
-    using BufferUPtr = std::unique_ptr<BufferBase>;
-
     template<
         class ReaderT,
         class WriterT,

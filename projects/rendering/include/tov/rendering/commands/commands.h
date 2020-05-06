@@ -4,8 +4,7 @@
 #include <tov/rendering/rendering_core.h>
 
 #include "dispatch_function.h"
-
-#include <tov/rendering/backend_dispatch.h>
+#include "command_dispatch.h"
 
 #include <tov/math/matrix.h>
 
@@ -33,13 +32,13 @@ namespace tov
     struct ApplyViewport
     {
         Viewport const * viewport;
-        static inline DispatchFunction DispatchFunction = BackendDispatch::ApplyViewport;
+        static inline DispatchFunction DispatchFunction = CommandDispatch::ApplyViewport;
     };
 
     struct ClearViewport
     {
         Viewport const * viewport;
-        static inline DispatchFunction DispatchFunction = BackendDispatch::ClearViewport;
+        static inline DispatchFunction DispatchFunction = CommandDispatch::ClearViewport;
     };
 
     struct Draw
@@ -48,7 +47,7 @@ namespace tov
         math::Matrix4 viewMatrix;
         math::Matrix4 projectionMatrix;
         mesh::DrawData const * drawData;
-        static inline DispatchFunction DispatchFunction = BackendDispatch::Draw;
+        static inline DispatchFunction DispatchFunction = CommandDispatch::Draw;
     };
 
     TOV_NAMESPACE_END // commands

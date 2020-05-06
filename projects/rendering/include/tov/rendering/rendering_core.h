@@ -5,7 +5,8 @@
 
 #include "definitions.h"
 
-#include <cassert>
+#include <cassert> // assert
+#include <cstring> // memcpy
 
 #if TOV_DEBUG
 #	include <iostream>
