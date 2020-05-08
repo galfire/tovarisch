@@ -1,6 +1,12 @@
 #include <rendering/mesh/mesh.h>
 
+#include <rendering/buffers/index_buffer_object.h>
+#include <rendering/buffers/vertex_buffer_object.h>
+
+#include <rendering/mesh/draw_data.h>
+#include <rendering/mesh/index_data.h>
 #include <rendering/mesh/submesh.h>
+#include <rendering/mesh/vertex_data.h>
 
 #include <rendering/pipeline/program.h>
 
@@ -11,16 +17,10 @@ namespace tov
 
     Mesh::Mesh(MeshManager& manager) noexcept
         : mManager(manager)
-        , mDrawDataList({})
     {}
 
     Mesh::~Mesh() noexcept
     {}
-
-    void Mesh::addDrawData(DrawData drawData)
-    {
-        mDrawDataList.push_back(drawData);
-    }
 
     auto Mesh::createSubmesh(geometry::Geometry const& geometry, pipeline::Program& program) -> Submesh&
     {
@@ -34,7 +34,24 @@ namespace tov
 
     auto Mesh::instantiate() const -> MeshInstance
     {
-        return MeshInstance(mDrawDataList);
+        using DrawDataList = std::vector<DrawData>;
+        DrawDataList drawDataList;
+
+        for (auto&& submesh : mSubmeshes)
+        {
+            auto const& ibo = submesh->getIndexData()->getBufferObject();
+            auto& vbos = submesh->getVertexData()->getBufferObjects();
+
+            for (auto&& vbo : vbos)
+            {
+                auto const& vbor = *vbo;
+                auto& programInstance = submesh->getProgram().instantiate();
+                auto drawData = DrawData(ibo, vbor, programInstance);
+                drawDataList.push_back(drawData);
+            }
+        }
+        
+        return MeshInstance(drawDataList);
     }
 
     TOV_NAMESPACE_END // mesh

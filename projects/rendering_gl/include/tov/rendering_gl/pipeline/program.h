@@ -26,8 +26,18 @@ namespace tov
         Program();
         ~Program();
 
+        void setMatrix4(std::string name, void const *const data) const override;
+        void setVector2(std::string name, void const *const data) const override;
+        void setVector3(std::string name, void const *const data) const override;
+        void setVector4(std::string name, void const *const data) const override;
+
     private:
-        auto instantiateImpl() const -> rendering::pipeline::ProgramInstance* override;
+        void attachShaderImpl(rendering::pipeline::Shader& shader) const override;
+        void detachShaderImpl(rendering::pipeline::Shader& shader) const override;
+        void linkImpl() const override;
+        void useImpl() const override;
+
+        auto getUniformLocation(std::string name) const -> int;
 
     private:
         uint mProgramID;

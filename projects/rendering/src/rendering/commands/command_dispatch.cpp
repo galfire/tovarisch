@@ -41,10 +41,11 @@ namespace tov
 
         auto drawData = command->drawData;
         auto& programInstance = drawData->getProgramInstance();
-
-        programInstance.setMatrix4("modelMatrix", modelMatrix);
-        programInstance.setMatrix4("viewMatrix", viewMatrix);
-        programInstance.setMatrix4("projectionMatrix", projectionMatrix);
+        
+        programInstance.uploadConstants();
+        programInstance.uploadConstantData("modelMatrix", modelMatrix.data());
+        programInstance.uploadConstantData("viewMatrix", viewMatrix.data());
+        programInstance.uploadConstantData("projectionMatrix", projectionMatrix.data());
 
         backend::Draw(drawData);
     }

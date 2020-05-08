@@ -37,6 +37,11 @@ namespace tov
         Submesh(Mesh& parentMesh, const geometry::Geometry& geometry, pipeline::Program& program) noexcept;
         ~Submesh() noexcept;
 
+        auto getIndexData() const -> auto const& { return mIndexData; }
+        auto getVertexData() const -> auto const& { return mVertexData; }
+        auto getProgram() -> auto& { return mProgram; }
+        auto getProgram() const -> auto const& { return mProgram; }
+
     private:
         void build();
         void buildIndexData();

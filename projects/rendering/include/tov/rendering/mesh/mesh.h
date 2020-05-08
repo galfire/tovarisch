@@ -3,7 +3,6 @@
 
 #include <tov/rendering/rendering_core.h>
 
-#include "draw_data.h"
 #include "mesh_instance.h"
 
 #include <vector>
@@ -35,9 +34,6 @@ namespace tov
         Mesh(MeshManager& manager) noexcept;
         ~Mesh() noexcept;
 
-        void addDrawData(DrawData drawData);
-
-        auto getDrawDataList() const -> auto& { return mDrawDataList; }
         auto getManager() const -> auto const& { return mManager; }
 
         auto createSubmesh(geometry::Geometry const& geometry, pipeline::Program& program) -> Submesh&;
@@ -48,9 +44,6 @@ namespace tov
 
         using SubmeshList = std::vector<std::unique_ptr<Submesh>>;
         SubmeshList mSubmeshes;
-
-        using DrawDataList = std::vector<DrawData>;
-        DrawDataList mDrawDataList;
     };
 
     TOV_NAMESPACE_END // mesh

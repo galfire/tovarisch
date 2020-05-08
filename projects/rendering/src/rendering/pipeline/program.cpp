@@ -12,16 +12,8 @@ namespace tov
     auto Program::instantiate() -> ProgramInstance&
     {
         auto instance = std::unique_ptr<ProgramInstance>(
-            instantiateImpl()
+            new ProgramInstance(*this, mConstantBufferSize, mConstantBufferDescriptorMap)
         );
-
-        for (auto&& shader : mShaders)
-        {
-            instance->attachShader(shader);
-        }
-
-        instance->link();
-
         mInstances.push_back(std::move(instance));
         auto ret = mInstances.back().get();
         return *ret;
@@ -30,8 +22,30 @@ namespace tov
 	void Program::attachShader(Shader& shader)
     {
         mShaders.push_back(shader);
+        attachShaderImpl(shader);
 
         // TODO: Parse shader source and automatically add constant definitions
+    }
+
+    void Program::detachShader(Shader& shader) const
+    {
+        detachShaderImpl(shader);
+    }
+
+    void Program::link() const
+    {
+        linkImpl();
+
+        // Always detach shaders after the program is linked
+        for (auto&& shader : mShaders)
+        {
+            detachShader(shader);
+        }
+    }
+
+    void Program::use() const
+    {
+        useImpl();
     }
 
 	TOV_NAMESPACE_END // pipeline

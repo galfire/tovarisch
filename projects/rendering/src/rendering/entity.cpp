@@ -36,6 +36,12 @@ namespace tov
         }
     }
 
+    auto Entity::getDrawDataList() -> DrawDataList&
+    {
+        auto& meshInstance = mMeshComponent->getMeshInstance();
+        auto& drawDataList = meshInstance.getDrawDataList();
+        return drawDataList;
+    }
 
     TOV_NAMESPACE_END // rendering
 }

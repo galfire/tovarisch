@@ -4,13 +4,13 @@
 
 namespace tov
 {
-	TOV_NAMESPACE_BEGIN(rendering)
+    TOV_NAMESPACE_BEGIN(rendering)
 
-	MeshComponent::MeshComponent(mesh::Mesh& mesh)
-		: Component()
-		, mMesh(mesh)
-		, mMeshInstance(mesh.instantiate())
-	{}
+    MeshComponent::MeshComponent(mesh::Mesh& mesh)
+        : Component()
+        , mMesh(mesh)
+        , mMeshInstance(mesh.instantiate())
+    {}
 
-	TOV_NAMESPACE_END // rendering
+    TOV_NAMESPACE_END // rendering
 }

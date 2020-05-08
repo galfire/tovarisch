@@ -3,13 +3,18 @@
 
 #include <tov/rendering/rendering_core.h>
 
+#include "constant_definition.h"
 #include "program_state.h"
+
+#include <string>
+#include <unordered_map>
 
 namespace tov
 {
     TOV_NAMESPACE_BEGIN(rendering)
     TOV_NAMESPACE_BEGIN(pipeline)
 
+    class Program;
     class Shader;
 
     class ProgramInstance
@@ -17,50 +22,75 @@ namespace tov
         TOV_MOVABLE_ONLY(ProgramInstance)
 
     public:
+        struct ConstantDescriptor
+        {
+            ptrdiff_t offset;
+            ConstantType type;
+        };
+
+        using ConstantBufferDescriptorMap = std::unordered_map<std::string, ConstantDescriptor>;
+
+    private:
+        auto getConstantDescriptor(std::string name) const
+        {
+            return mConstantBufferDescriptorMap.at(name);
+        }
+
+        auto getConstantOffset(std::string name) const
+        {
+            return getConstantDescriptor(name).offset;
+        }
+
+        auto getConstantLocation(std::string name) const
+        {
+            auto buffer = mProgramState.getBuffer();
+            auto location = static_cast<byte*>(buffer) + getConstantOffset(name);
+            return location;
+        }
+
+        auto getConstantType(std::string name) const
+        {
+            return getConstantDescriptor(name).type;
+        }
+
+    public:
         ProgramInstance(
+            Program const& program,
             size_t constantBufferSize,
-            ProgramState::ConstantBufferOffsetMap const& constantBufferOffsetMap
+            ConstantBufferDescriptorMap const& constantBufferDescriptorMap
         )
-            : mProgramState(constantBufferSize, constantBufferOffsetMap)
-        {}
-
-        virtual ~ProgramInstance() = default;
-
-        template <class T>
-        auto getConstant(const char* name) const -> auto const&
+            : mProgram(program)
+            , mProgramState(constantBufferSize)
+            , mConstantBufferDescriptorMap(constantBufferDescriptorMap)
+            , mConstantNames(std::vector<std::string> {})
         {
-            return mProgramState.template getConstant<T>(name);
+            mConstantNames.reserve(mConstantBufferDescriptorMap.size());
+            for (auto&& kv : mConstantBufferDescriptorMap)
+            {
+                mConstantNames.push_back(kv.first);
+            }
         }
 
+        ~ProgramInstance() = default;
+
         template <class T>
-        auto setConstant(const char* name, T const& value)
+        auto setConstant(const char* name, T const value)
         {
-            mProgramState.template setConstant<T>(name, value);
+            void* ptr = getConstantLocation(name);
+            memcpy(ptr, &value, sizeof(T));
         }
 
-        auto getProgramState() const -> auto const& { return mProgramState; }
+        void uploadConstants() const;
+        void uploadConstant(std::string name) const;
+        void uploadConstantData(std::string name, void const *const data) const;
 
-        void attachShader(Shader& shader);
-
-        void link() const;
         void use() const;
-
-        virtual void setMatrix4(const char* name, const math::Matrix4& value) const TOV_ABSTRACT;
-        virtual void setVector2(const char* name, const math::Vector2& value) const TOV_ABSTRACT;
-        virtual void setVector3(const char* name, const math::Vector3& value) const TOV_ABSTRACT;
-        virtual void setVector4(const char* name, const math::Vector4& value) const TOV_ABSTRACT;
-
+        
     private:
-        void detachShader(Shader& shader);
-
-        virtual void attachShaderImpl(Shader& shader) TOV_ABSTRACT;
-        virtual void detachShaderImpl(Shader& shader) TOV_ABSTRACT;
-
-        virtual void linkImpl() const TOV_ABSTRACT;
-        virtual void useImpl() const TOV_ABSTRACT;
-
-    private:
+        Program const& mProgram;
         ProgramState mProgramState;
+        ConstantBufferDescriptorMap mConstantBufferDescriptorMap;
+        std::vector<std::string> mConstantNames;
     };
 
     TOV_NAMESPACE_END // pipeline

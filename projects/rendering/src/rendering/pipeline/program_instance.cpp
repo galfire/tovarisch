@@ -1,34 +1,48 @@
 #include <rendering/pipeline/program_instance.h>
 
+#include <rendering/pipeline/program.h>
+
 namespace tov
 {
     TOV_NAMESPACE_BEGIN(rendering)
     TOV_NAMESPACE_BEGIN(pipeline)
 
-    void ProgramInstance::detachShader(Shader& shader)
+    void ProgramInstance::uploadConstants() const
     {
-        detachShaderImpl(shader);
-    }
-
-    void ProgramInstance::attachShader(Shader& shader)
-    {
-        attachShaderImpl(shader);
-    }
-
-    void ProgramInstance::link() const
-    {
-        linkImpl();
-
-        // Always detach shaders after the program is linked
-        /*for (auto&& shader : mShaders)
+        for (auto&& name : mConstantNames)
         {
-            detachShader(shader);
-        }*/
+            uploadConstant(name);
+        }
+    }
+
+    void ProgramInstance::uploadConstant(std::string name) const
+    {
+        auto constantLocation = getConstantLocation(name);
+        uploadConstantData(name, constantLocation);
+    }
+
+    void ProgramInstance::uploadConstantData(std::string name, void const *const data) const
+    {
+        auto type = getConstantType(name);
+        switch (type)
+        {
+        case ConstantType::MATRIX_3:
+            break;
+        case ConstantType::MATRIX_4:
+            mProgram.setMatrix4(name, data);
+            break;
+        case ConstantType::VECTOR_3:
+            mProgram.setVector3(name, data);
+            break;
+        case ConstantType::VECTOR_2:
+            mProgram.setVector2(name, data);
+            break;
+        }
     }
 
     void ProgramInstance::use() const
     {
-        useImpl();
+        mProgram.use();
     }
 
     TOV_NAMESPACE_END // pipeline

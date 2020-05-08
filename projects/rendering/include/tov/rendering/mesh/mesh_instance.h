@@ -26,7 +26,7 @@ namespace tov
 
     private:
         using DrawDataList = std::vector<DrawData>;
-        const DrawDataList mDrawDataList;
+        DrawDataList mDrawDataList;
     };
 
     TOV_NAMESPACE_END // mesh

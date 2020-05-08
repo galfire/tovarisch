@@ -10,7 +10,6 @@
 
 #include <rendering/geometry/geometry.h>
 
-#include <rendering/mesh/draw_data.h>
 #include <rendering/mesh/index_data.h>
 #include <rendering/mesh/mesh.h>
 #include <rendering/mesh/mesh_manager.h>
@@ -136,16 +135,6 @@ namespace tov
     {
         this->buildIndexData();
         this->buildVertexData();
-
-        auto& ibo = mIndexData->getBufferObject();
-        auto& vbos = mVertexData->getBufferObjects();
-        auto& programInstance = mProgram.instantiate();
-
-        for (auto&& vbo : vbos)
-        {
-            auto drawData = DrawData(ibo, *vbo, programInstance);
-            mParentMesh.addDrawData(drawData);
-        }
     }
 
     void Submesh::buildIndexData()

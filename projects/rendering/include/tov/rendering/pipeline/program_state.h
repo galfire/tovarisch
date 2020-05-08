@@ -3,16 +3,7 @@
 
 #include <tov/rendering/rendering_core.h>
 
-#include "constant_definition.h"
-
-#include <tov/math/matrix.h>
-#include <tov/math/vector.h>
-
 #include <tov/memory/heap_area.h>
-
-#include <string>
-#include <unordered_map>
-#include <vector>
 
 namespace tov
 {
@@ -24,48 +15,21 @@ namespace tov
         TOV_MOVABLE_ONLY(ProgramState)
 
     public:
-        using ConstantBufferOffsetMap = std::unordered_map<std::string, ptrdiff_t>;
-
-    private:
-        auto getConstantOffset(const char* name) const
-        {
-            return mConstantBufferOffsetMap.at(name);
-        }
-
-        auto getConstantLocation(const char* name) const
-        {
-            auto buffer = mHeapArea->getStart();
-            auto location = static_cast<byte*>(buffer) + getConstantOffset(name);
-            return location;
-        }
-
-    public:
-        ProgramState(size_t constantBufferSize, ConstantBufferOffsetMap const& constantBufferOffsetMap)
+        ProgramState(size_t constantBufferSize)
             : mConstantBufferSize(constantBufferSize)
-            , mConstantBufferOffsetMap(constantBufferOffsetMap)
         {
             mHeapArea = std::make_unique<memory::HeapArea>(mConstantBufferSize);
         }
 
         ~ProgramState() = default;
 
-        template <class T>
-        auto getConstant(const char* name) const -> auto const&
+        auto getBuffer() const
         {
-            void* ptr = getConstantLocation(name);
-            return *static_cast<T*>(ptr);
-        }
-
-        template <class T>
-        auto setConstant(const char* name, const T& value)
-        {
-            void* ptr = getConstantLocation(name);
-            memcpy(ptr, &value, sizeof(T));
+            return mHeapArea->getStart();
         }
 
     private:
         size_t mConstantBufferSize = 0;
-        ConstantBufferOffsetMap mConstantBufferOffsetMap;
 
         std::unique_ptr<memory::HeapArea> mHeapArea;
     };

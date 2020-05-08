@@ -9,6 +9,8 @@
 #include <tov/math/matrix.h>
 #include <tov/math/vector.h>
 
+#include <string>
+
 namespace tov
 {
     TOV_NAMESPACE_BEGIN(rendering)
@@ -30,20 +32,32 @@ namespace tov
         template<class T>
         void addConstantDefinition(const char* name, ConstantDefinition<T> definition)
         {
-            mConstantBufferOffsetMap.emplace(name, mConstantBufferSize);
+            auto descriptor = ProgramInstance::ConstantDescriptor{ static_cast<ptrdiff_t>(mConstantBufferSize), definition.getType() };
+            mConstantBufferDescriptorMap.emplace(name, descriptor);
             mConstantBufferSize += sizeof(typename ConstantDefinition<T>::Type);
         }
 
         auto instantiate() -> ProgramInstance&;
 
         void attachShader(Shader& shader);
+        void link() const;
+        void use() const;
+
+        virtual void setMatrix4(std::string name, void const *const data) const TOV_ABSTRACT;
+        virtual void setVector2(std::string name, void const *const data) const TOV_ABSTRACT;
+        virtual void setVector3(std::string name, void const *const data) const TOV_ABSTRACT;
+        virtual void setVector4(std::string name, void const *const data) const TOV_ABSTRACT;
 
     private:
-        virtual auto instantiateImpl() const->ProgramInstance* TOV_ABSTRACT;
+        void detachShader(Shader& shader) const;
+        virtual void attachShaderImpl(Shader& shader) const TOV_ABSTRACT;
+        virtual void detachShaderImpl(Shader& shader) const TOV_ABSTRACT;
+        virtual void linkImpl() const TOV_ABSTRACT;
+        virtual void useImpl() const TOV_ABSTRACT;
 
     protected:
         size_t mConstantBufferSize = 0;
-        ProgramState::ConstantBufferOffsetMap mConstantBufferOffsetMap;
+        ProgramInstance::ConstantBufferDescriptorMap mConstantBufferDescriptorMap;
 
         ShaderList mShaders;
         std::vector<std::unique_ptr<ProgramInstance>> mInstances;

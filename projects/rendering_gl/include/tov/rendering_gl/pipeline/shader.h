@@ -14,7 +14,7 @@ namespace tov
     class Shader
         : public rendering::pipeline::Shader
     {
-        friend class ProgramInstance;
+        friend class Program;
 
     private:
         static GLenum getGLShaderType(rendering::pipeline::ShaderType shaderType);

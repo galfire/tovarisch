@@ -8,28 +8,29 @@
 
 namespace tov
 {
-	TOV_NAMESPACE_BEGIN(rendering)
-	TOV_NAMESPACE_BEGIN(mesh)
+    TOV_NAMESPACE_BEGIN(rendering)
+    TOV_NAMESPACE_BEGIN(mesh)
 
-	class Mesh;
+    class Mesh;
 
-	TOV_NAMESPACE_END // mesh
+    TOV_NAMESPACE_END // mesh
 
-	class MeshComponent
-		: public Component
-	{
-	public:
-		MeshComponent(mesh::Mesh& mesh);
-		~MeshComponent() = default;
+    class MeshComponent
+        : public Component
+    {
+    public:
+        MeshComponent(mesh::Mesh& mesh);
+        ~MeshComponent() = default;
 
-		auto getMeshInstance() const -> auto const& { return mMeshInstance; }
+        auto getMeshInstance() -> auto& { return mMeshInstance; }
+        auto getMeshInstance() const -> auto const& { return mMeshInstance; }
 
-	private:
-		mesh::Mesh& mMesh;
-		mesh::MeshInstance mMeshInstance;
-	};
+    private:
+        mesh::Mesh& mMesh;
+        mesh::MeshInstance mMeshInstance;
+    };
 
-	TOV_NAMESPACE_END // rendering
+    TOV_NAMESPACE_END // rendering
 }
 
 #endif // !TOV_RENDERING_MESH_COMPONENT_H

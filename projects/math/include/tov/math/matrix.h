@@ -104,7 +104,7 @@ namespace tov
 
         auto data() const
         {
-            return this->mArr.data();
+            return static_cast<void const *const>(this->mArr.data());
         }
 
 #if TOV_DEBUG

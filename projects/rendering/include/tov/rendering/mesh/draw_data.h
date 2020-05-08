@@ -17,8 +17,8 @@ namespace tov
     {
     public:
         DrawData(
-            buffers::BufferObject& indexBufferObject, 
-            buffers::BufferObject& vertexBufferObject,
+            buffers::BufferObject const& indexBufferObject, 
+            buffers::BufferObject const& vertexBufferObject,
             pipeline::ProgramInstance& programInstance
         ) noexcept
             : mIndexBufferObject(indexBufferObject)
@@ -34,8 +34,8 @@ namespace tov
         auto getProgramInstance() const -> auto const& { return mProgramInstance; }
 
     private:
-        buffers::BufferObject& mIndexBufferObject;
-        buffers::BufferObject& mVertexBufferObject;
+        buffers::BufferObject const& mIndexBufferObject;
+        buffers::BufferObject const& mVertexBufferObject;
         pipeline::ProgramInstance& mProgramInstance;
     };
 

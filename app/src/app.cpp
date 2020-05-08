@@ -16,6 +16,7 @@
 #include <tov/rendering/entity.h>
 #include <tov/rendering/mesh/mesh.h>
 #include <tov/rendering/mesh/mesh_manager.h>
+#include <tov/rendering/mesh_component.h>
 
 #include <tov/rendering/render_system.h>
 #include <tov/rendering/render_window.h>
@@ -33,7 +34,7 @@ using WindowPlatformSupport = tov::rendering::win32::WindowPlatformSupport;
 using WindowRendererSupport = tov::rendering::win32::gl::WindowRendererSupport;
 using RenderSystem = tov::rendering::RenderSystem;
 
-// TOUCH
+// adfadf
 
 int main(int argc, char** argv)
 {
@@ -64,10 +65,16 @@ int main(int argc, char** argv)
     tov::rendering::gl::pipeline::Program program;
     program.attachShader(vertexShader);
     program.attachShader(fragmentShader);
+    program.link();
 
+    using Vector3 = tov::math::Vector3;
     using Matrix4 = tov::math::Matrix4;
     auto def = tov::rendering::pipeline::ConstantDefinition<Matrix4>::DEFINITION;
+    auto vec3 = tov::rendering::pipeline::ConstantDefinition<Vector3>::DEFINITION;
     program.addConstantDefinition("modelMatrix", def);
+    program.addConstantDefinition("viewMatrix", def);
+    program.addConstantDefinition("projectionMatrix", def);
+    program.addConstantDefinition("colour", vec3);
 
     auto sphere = tov::rendering::geometry::Sphere(5.0f);
 
@@ -83,6 +90,12 @@ int main(int argc, char** argv)
         auto& entityNode = root.createChild();
         auto& entity = scene.createEntity();
         entity.createMeshComponent(*mesh);
+        auto& drawDataList = entity.getDrawDataList();
+        for (auto&& drawData : drawDataList)
+        {
+            auto& programInstance = drawData.getProgramInstance();
+            programInstance.setConstant<tov::math::Vector3>("colour", tov::math::Vector3(1.0f, 0.0f, 1.0f));
+        }
         entityNode.attachSceneObject(&entity);
         tov::math::Vector3 translation(0, 0, -40);
         entityNode.getTransform().setTranslation(translation);
@@ -92,6 +105,12 @@ int main(int argc, char** argv)
         auto& entityNode = root.createChild();
         auto& entity = scene.createEntity();
         entity.createMeshComponent(*mesh);
+        auto& drawDataList = entity.getDrawDataList();
+        for (auto&& drawData : drawDataList)
+        {
+            auto& programInstance = drawData.getProgramInstance();
+            programInstance.setConstant<tov::math::Vector3>("colour", tov::math::Vector3(0.0f, 0.0f, 1.0f));
+        }
         entityNode.attachSceneObject(&entity);
         tov::math::Vector3 translation(5, 5, -30);
         entityNode.getTransform().setTranslation(translation);
