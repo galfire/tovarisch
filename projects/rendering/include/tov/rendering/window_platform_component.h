@@ -6,38 +6,38 @@
 
 namespace tov
 {
-	TOV_NAMESPACE_BEGIN(rendering)
+    TOV_NAMESPACE_BEGIN(rendering)
 
-	class Window;
+    class Window;
 
-	class WindowPlatformComponent
-	{
-	public:
-		WindowPlatformComponent(Window& parentWindow);
-		virtual ~WindowPlatformComponent() = default;
+    class WindowPlatformComponent
+    {
+    public:
+        WindowPlatformComponent(Window& parentWindow);
+        virtual ~WindowPlatformComponent() = default;
 
-		inline auto& getParentWindow() const { return mParentWindow; }
-		inline auto const& getDeviceContext() const { return *mDeviceContext.get(); }
+        inline auto& getParentWindow() const { return mParentWindow; }
+        inline auto const& getDeviceContext() const { return *mDeviceContext.get(); }
 
-		void create();
-		void destroy();
+        void create();
+        void destroy();
 
-		virtual void swapBuffers() TOV_ABSTRACT;
+        virtual void swapBuffers() TOV_ABSTRACT;
 
-	private:
-		virtual void _create() TOV_ABSTRACT;
-		virtual void _destroy() TOV_ABSTRACT;
+    private:
+        virtual void createImpl() TOV_ABSTRACT;
+        virtual void destroyImpl() TOV_ABSTRACT;
 
-	protected:
-		Window& mParentWindow;
+    protected:
+        Window& mParentWindow;
 
-		std::unique_ptr<DeviceContext> mDeviceContext;
-		uint mLeft = 0;
-		uint mTop = 0;
-		uint mColourDepth = 0;
-	};
+        std::unique_ptr<DeviceContext> mDeviceContext;
+        uint mLeft = 0;
+        uint mTop = 0;
+        uint mColourDepth = 0;
+    };
 
-	TOV_NAMESPACE_END // rendering
+    TOV_NAMESPACE_END // rendering
 }
 
 #endif

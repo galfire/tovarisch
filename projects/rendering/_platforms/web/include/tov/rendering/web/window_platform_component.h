@@ -6,28 +6,28 @@
 
 namespace tov
 {
-	TOV_NAMESPACE_BEGIN(rendering)
-	
-	class Window;
+    TOV_NAMESPACE_BEGIN(rendering)
+    
+    class Window;
 
-	TOV_NAMESPACE_BEGIN(web)
+    TOV_NAMESPACE_BEGIN(web)
 
-	class WindowPlatformComponent
-		: public rendering::WindowPlatformComponent
-	{
-	public:
-		WindowPlatformComponent(Window& window);
-		~WindowPlatformComponent() = default;
+    class WindowPlatformComponent
+        : public rendering::WindowPlatformComponent
+    {
+    public:
+        WindowPlatformComponent(Window& window);
+        ~WindowPlatformComponent() = default;
 
-		void swapBuffers() override;
+        void swapBuffers() override;
 
-	private:
-		void _create() override;
-		void _destroy() override;
-	};
+    private:
+        void createImpl() override;
+        void destroyImpl() override;
+    };
 
-	TOV_NAMESPACE_END // web
-	TOV_NAMESPACE_END // rendering
+    TOV_NAMESPACE_END // web
+    TOV_NAMESPACE_END // rendering
 }
 
 #endif

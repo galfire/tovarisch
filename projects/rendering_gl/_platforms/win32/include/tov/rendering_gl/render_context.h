@@ -24,9 +24,9 @@ namespace tov
         ~RenderContext() = default;
 
     private:
-        bool _makeCurrent() override;
-        bool _endCurrent() override;
-        bool _release() override;
+        auto makeCurrentImpl() -> bool override;
+        auto endCurrentImpl() -> bool override;
+        auto releaseImpl() -> bool override;
 
     private:
         HGLRC mGLRC;

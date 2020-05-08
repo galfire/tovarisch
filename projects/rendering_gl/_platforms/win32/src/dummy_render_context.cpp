@@ -26,20 +26,20 @@ namespace tov
         fprintf(stdout, "Status: Using GLEW %s\n", glewGetString(GLEW_VERSION));
     }
 
-    bool DummyRenderContext::_makeCurrent()
+    auto DummyRenderContext::makeCurrentImpl() -> bool
     {
         HDC hdc = static_cast<const DeviceContext&>(mDeviceContext).getHDC();
         bool success = wglMakeCurrent(hdc, mGLRC);
         return success;
     }
 
-    bool DummyRenderContext::_endCurrent()
+    auto DummyRenderContext::endCurrentImpl() -> bool
     {
         bool success = wglMakeCurrent(nullptr, nullptr);
         return success;
     }
 
-    bool DummyRenderContext::_release()
+    auto DummyRenderContext::releaseImpl() -> bool
     {
         bool success = false;
         if(mGLRC)

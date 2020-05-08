@@ -6,30 +6,30 @@
 
 namespace tov
 {
-	TOV_NAMESPACE_BEGIN(rendering)
+    TOV_NAMESPACE_BEGIN(rendering)
 
-	class DeviceContext;
+    class DeviceContext;
 
-	TOV_NAMESPACE_BEGIN(web)
+    TOV_NAMESPACE_BEGIN(web)
 
-	class DeviceContext
-		: public rendering::DeviceContext
-	{
-	public:
-		DeviceContext(const char* canvasID)
-			: rendering::DeviceContext()
-			, mCanvasID(canvasID)
-		{}
-		~DeviceContext() = default;
+    class DeviceContext
+        : public rendering::DeviceContext
+    {
+    public:
+        DeviceContext(const char* canvasID)
+            : rendering::DeviceContext()
+            , mCanvasID(canvasID)
+        {}
+        ~DeviceContext() = default;
 
-		const char* getCanvasID() const { return mCanvasID; }
-		
-	private:
-		const char* mCanvasID;
-	};
+        const char* getCanvasID() const { return mCanvasID; }
+        
+    private:
+        const char* mCanvasID;
+    };
 
-	TOV_NAMESPACE_END // web
-	TOV_NAMESPACE_END // rendering
+    TOV_NAMESPACE_END // web
+    TOV_NAMESPACE_END // rendering
 }
 
 #endif

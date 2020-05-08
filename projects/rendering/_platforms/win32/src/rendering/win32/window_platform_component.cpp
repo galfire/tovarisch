@@ -17,7 +17,7 @@ namespace tov
         , mWindowClassName(windowClassName)
     {}
 
-    void WindowPlatformComponent::_create()
+    void WindowPlatformComponent::createImpl()
     {
         if(mHWnd)
             destroy();
@@ -158,7 +158,7 @@ namespace tov
         }
     }
 
-    void WindowPlatformComponent::_destroy()
+    void WindowPlatformComponent::destroyImpl()
     {
         if (!mHWnd)
             return;

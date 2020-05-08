@@ -10,12 +10,12 @@ namespace tov
 
     void WindowPlatformComponent::create()
     {
-        _create();
+        createImpl();
     }
 
     void WindowPlatformComponent::destroy()
     {
-        _destroy();
+        destroyImpl();
     }
 
     TOV_NAMESPACE_END // rendering

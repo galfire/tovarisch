@@ -18,14 +18,14 @@ namespace tov
 
         virtual ~RenderContext() noexcept = default;
 
-        auto makeCurrent() { return _makeCurrent(); }
-        auto endCurrent() { return _endCurrent(); }
-        auto release() { return _release(); }
+        auto makeCurrent() { return makeCurrentImpl(); }
+        auto endCurrent() { return endCurrentImpl(); }
+        auto release() { return releaseImpl(); }
 
     private:
-        virtual auto _makeCurrent() -> bool TOV_ABSTRACT;
-        virtual auto _endCurrent() -> bool TOV_ABSTRACT;
-        virtual auto _release() -> bool TOV_ABSTRACT;
+        virtual auto makeCurrentImpl() -> bool TOV_ABSTRACT;
+        virtual auto endCurrentImpl() -> bool TOV_ABSTRACT;
+        virtual auto releaseImpl() -> bool TOV_ABSTRACT;
 
     protected:
         const DeviceContext& mDeviceContext;

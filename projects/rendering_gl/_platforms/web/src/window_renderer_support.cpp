@@ -4,16 +4,16 @@
 
 namespace tov
 {
-	TOV_NAMESPACE_BEGIN(rendering)
-	TOV_NAMESPACE_BEGIN(web)
-	TOV_NAMESPACE_BEGIN(gl)
+    TOV_NAMESPACE_BEGIN(rendering)
+    TOV_NAMESPACE_BEGIN(web)
+    TOV_NAMESPACE_BEGIN(gl)
 
-	std::unique_ptr<rendering::WindowRendererComponent> WindowRendererSupport::buildComponent(Window& parentWindow) const
-	{
-		return std::unique_ptr<rendering::WindowRendererComponent>(new WindowRendererComponent(parentWindow));
-	}
+    auto WindowRendererSupport::buildComponentImpl(Window& parentWindow) const -> rendering::WindowRendererComponent *const
+    {
+        return new WindowRendererComponent(parentWindow);
+    }
 
-	TOV_NAMESPACE_END // gl
-	TOV_NAMESPACE_END // web
-	TOV_NAMESPACE_END // rendering
+    TOV_NAMESPACE_END // gl
+    TOV_NAMESPACE_END // web
+    TOV_NAMESPACE_END // rendering
 }

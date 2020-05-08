@@ -11,9 +11,7 @@
 //#include <immintrin.h>
 
 #define SIMDE_ENABLE_NATIVE_ALIASES
-#define SIMDE_X86_SSSE3_NATIVE
 
-#include <simde/x86/ssse3.h>
 #include <simde/x86/sse3.h>
 
 namespace tov

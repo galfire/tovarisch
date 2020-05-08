@@ -28,8 +28,8 @@ namespace tov
 		virtual void createRenderContext() TOV_ABSTRACT;
 
 	private:
-		virtual void _create() TOV_ABSTRACT;
-		virtual void _destroy() TOV_ABSTRACT;
+		virtual void createImpl() TOV_ABSTRACT;
+		virtual void destroyImpl() TOV_ABSTRACT;
 
 	protected:
 		Window& mParentWindow;

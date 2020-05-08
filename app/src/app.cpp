@@ -1,56 +1,39 @@
 #include <iostream>
 
-#include <array>
-#include <vector>
-
 #include <tov/core.h>
-#include <tov/memory.h>
-
-#include <tov/memory_config.h>
 
 #include <tov/math/matrix.h>
 #include <tov/math/quaternion.h>
 #include <tov/math/radian.h>
 #include <tov/math/vector.h>
 
-#include <tov/rendering/render_target.h>
 #include <tov/rendering/colour.h>
 #include <tov/rendering/camera.h>
 
+#include <tov/rendering/geometry/sphere.h>
+#include <tov/rendering/geometry/triangle.h>
+
 #include <tov/rendering/entity.h>
-#include <tov/rendering/mesh_component.h>
 #include <tov/rendering/mesh/mesh.h>
 #include <tov/rendering/mesh/mesh_manager.h>
-#include <tov/rendering/mesh/draw_data.h>
 
 #include <tov/rendering/render_system.h>
 #include <tov/rendering/render_window.h>
 #include <tov/rendering/scene.h>
 #include <tov/rendering/scene_node.h>
 
-#include <tov/rendering/commands/command_bucket.h>
-#include <tov/rendering/commands/commands.h>
-
-#include <tov/rendering/pipeline/pipeline_state_object.h>
 #include <tov/rendering_gl/pipeline/shader.h>
 #include <tov/rendering_gl/pipeline/program.h>
-#include <tov/rendering/pipeline/program_instance.h>
-
 #include <tov/rendering_gl/buffers/buffer_manager.h>
 
-#include <tov/rendering/geometry/sphere.h>
-#include <tov/rendering/geometry/triangle.h>
-
 #include <tov/rendering/win32/window_platform_support.h>
-#include <tov/rendering/win32/window_events.h>
-
 #include <tov/rendering_gl/window_renderer_support.h>
-
-#include <iostream>
 
 using WindowPlatformSupport = tov::rendering::win32::WindowPlatformSupport;
 using WindowRendererSupport = tov::rendering::win32::gl::WindowRendererSupport;
 using RenderSystem = tov::rendering::RenderSystem;
+
+// TOUCH
 
 int main(int argc, char** argv)
 {
@@ -66,16 +49,8 @@ int main(int argc, char** argv)
     auto& camera = scene.createCamera();
     cameraNode.attachSceneObject(&camera);
 
-    //{
-    //    auto& window = rs.createRenderWindow("WINDWOWWW", 800, 600, false);
-    //    auto& vp1 = window.createViewport(0, 0.0f, 0.0f, 0.5f, 1.0f, tov::rendering::Colour::Red);
-    //    auto& vp2 = window.createViewport(1, 0.5f, 0.0f, 0.5f, 1.0f, tov::rendering::Colour::Green);
-    //    camera.attachViewport(vp1);
-    //    camera.attachViewport(vp2);
-    //}
-
     {
-        auto& window = rs.createRenderWindow("WINDWOWWW2222", 800, 600, false);
+        auto& window = rs.createRenderWindow("Window", 800, 600, false);
         auto& vp = window.createViewport(2, 0.0f, 0.0f, 1.0f, 1.0f, tov::rendering::Colour::Black);
         camera.attachViewport(vp);
     }

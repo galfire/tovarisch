@@ -29,7 +29,7 @@ namespace tov
         }
     }
 
-    VertexData::~VertexData()
+    VertexData::~VertexData() noexcept
     {}
 
     TOV_NAMESPACE_END // mesh

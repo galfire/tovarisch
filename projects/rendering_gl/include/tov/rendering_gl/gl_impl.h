@@ -24,7 +24,7 @@
     {
     public:
         template<class... U>
-        GLPrinter(char* step, U&&... args)
+        GLPrinter(const char* step, U&&... args)
             : mStep(step)
         {
             printStep(mStep, std::forward<U>(args)...);
@@ -40,13 +40,13 @@
         }
 
     private:
-        inline void printStep(char* step)
+        inline void printStep(const char* step)
         {
             std::cout << "Performing " << step << "...\t";
         }
 
         template<class Arg, class... Args>
-        inline void printStep(char* step, Arg&& arg, Args&&... args)
+        inline void printStep(const char* step, Arg&& arg, Args&&... args)
         {
             std::cout << "Performing " << step << "(";
             std::cout << std::forward<Arg>(arg);
@@ -55,12 +55,12 @@
         }
 
     private:
-        char* mStep;
+        const char* mStep;
     };
 #endif
 
 template<class... U>
-auto log_gl_op(char* step, U&&... args)
+auto log_gl_op(const char* step, U&&... args)
 {
 #if TOV_DEBUG
     return GLPrinter(step, std::forward<U>(args)...);

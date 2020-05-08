@@ -31,7 +31,7 @@ namespace tov
         void addConstantDefinition(const char* name, ConstantDefinition<T> definition)
         {
             mConstantBufferOffsetMap.emplace(name, mConstantBufferSize);
-            mConstantBufferSize += sizeof(ConstantDefinition<T>::Type);
+            mConstantBufferSize += sizeof(typename ConstantDefinition<T>::Type);
         }
 
         auto instantiate() -> ProgramInstance&;

@@ -45,7 +45,7 @@ namespace tov
 
     const WindowRendererComponent& Window::getRendererComponent() const
     {
-        return *mRendererComponent.get();
+        return *mRendererComponent;
     }
 
     TOV_NAMESPACE_END // rendering

@@ -19,7 +19,8 @@ namespace tov
         WindowRendererSupport() = default;
         ~WindowRendererSupport() = default;
 
-        std::unique_ptr<rendering::WindowRendererComponent> buildComponent(Window& parentWindow) const override;
+    private:
+        auto buildComponentImpl(Window& parentWindow) const -> rendering::WindowRendererComponent *const override;
     };
 
     TOV_NAMESPACE_END // gl

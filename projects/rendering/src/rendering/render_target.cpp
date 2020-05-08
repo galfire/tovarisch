@@ -18,7 +18,7 @@ namespace tov
         , mPixelFormat(pixelFormat)
     {}
 
-    RenderTarget::~RenderTarget()
+    RenderTarget::~RenderTarget() noexcept
     {}
 
     auto RenderTarget::createViewport(

@@ -22,6 +22,14 @@ namespace tov
     class BufferManager
         : public base::BufferManager<BufferManager>
     {
+    private:
+        template<base::UsageSettings usageSettings, base::AccessSettings accessSettings>
+        auto create(size_t size, GLenum bufferTarget)
+        {
+            using BufferT = Buffer<usageSettings, accessSettings>;
+            return base::BufferManager<BufferManager>::create<BufferT>(size, bufferTarget);
+        }
+
     public:
         auto createIndexBufferImpl(size_t size)
         {
@@ -35,14 +43,6 @@ namespace tov
             constexpr auto usageSettings = buffers::UsageSettings::STATIC;
             constexpr auto accessSettings = buffers::AccessSettings::WRITE;
             return create<usageSettings, accessSettings>(size, GL_ARRAY_BUFFER);
-        }
-
-    protected:
-        template<base::UsageSettings usageSettings, base::AccessSettings accessSettings>
-        auto create(size_t size, GLenum bufferTarget)
-        {
-            using BufferT = Buffer<usageSettings, accessSettings>;
-            return base::BufferManager<BufferManager>::create<BufferT>(size, bufferTarget);
         }
     };
 

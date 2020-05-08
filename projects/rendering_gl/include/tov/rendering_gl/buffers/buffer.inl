@@ -67,7 +67,7 @@ namespace tov
     void Buffer<usageSettings, accessSettings>::discard()
     {
         auto b = bind();
-        auto op = log_gl_op("buffer data", mBufferTarget, mBytes, sGLUsageSettings);
+        auto op = log_gl_op("buffer data", this->mBufferTarget, this->mBytes, sGLUsageSettings);
         glBufferData(this->mBufferTarget, this->mBytes, nullptr, sGLUsageSettings);
     }
 

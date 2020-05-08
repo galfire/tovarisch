@@ -8,11 +8,9 @@ namespace tov
     TOV_NAMESPACE_BEGIN(win32)
     TOV_NAMESPACE_BEGIN(gl)
 
-    std::unique_ptr<rendering::WindowRendererComponent> WindowRendererSupport::buildComponent(Window& parentWindow) const
+    auto WindowRendererSupport::buildComponentImpl(Window& parentWindow) const -> rendering::WindowRendererComponent *const
     {
-        return std::unique_ptr<rendering::WindowRendererComponent>(
-            new WindowRendererComponent(parentWindow)
-        );
+        return new WindowRendererComponent(parentWindow);
     }
 
     TOV_NAMESPACE_END // gl

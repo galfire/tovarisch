@@ -10,52 +10,52 @@
 
 namespace tov
 {
-	TOV_NAMESPACE_BEGIN(rendering)
+    TOV_NAMESPACE_BEGIN(rendering)
 
-	class Window;
+    class Window;
 
-	TOV_NAMESPACE_BEGIN(win32)
+    TOV_NAMESPACE_BEGIN(win32)
 
-	class WindowPlatformComponent
-		: public rendering::WindowPlatformComponent
-	{
-	public:
-		WindowPlatformComponent(Window& parentWindow, const char* windowClassName);
-		~WindowPlatformComponent() = default;
+    class WindowPlatformComponent
+        : public rendering::WindowPlatformComponent
+    {
+    public:
+        WindowPlatformComponent(Window& parentWindow, const char* windowClassName);
+        ~WindowPlatformComponent() = default;
 
-		void swapBuffers() override;
+        void swapBuffers() override;
 
-		void adjustWindow(
-			uint clientWidth,
-			uint clientHeight,
-			uint& outWindowWidth,
-			uint& outWindowHeight
-		);
+        void adjustWindow(
+            uint clientWidth,
+            uint clientHeight,
+            uint& outWindowWidth,
+            uint& outWindowHeight
+        );
 
-	private:
-		void _create() override;
-		void _destroy() override;
+    private:
+        void createImpl() override;
+        void destroyImpl() override;
 
-		DWORD getWindowStyle(bool fullscreen)
-		{
-			if(fullscreen)
-				return getFullscreenWindowStyle();
-			else
-				return getWindowedWindowStyle();
-		}
-		DWORD getFullscreenWindowStyle() { return mFullscreenWindowStyle; }
-		DWORD getWindowedWindowStyle() { return mWindowedWindowStyle; }
-		
-	protected:
-		const char* mWindowClassName;
+        DWORD getWindowStyle(bool fullscreen)
+        {
+            if(fullscreen)
+                return getFullscreenWindowStyle();
+            else
+                return getWindowedWindowStyle();
+        }
+        DWORD getFullscreenWindowStyle() { return mFullscreenWindowStyle; }
+        DWORD getWindowedWindowStyle() { return mWindowedWindowStyle; }
+        
+    protected:
+        const char* mWindowClassName;
 
-		HWND mHWnd = nullptr;
-		DWORD mFullscreenWindowStyle = 0;
-		DWORD mWindowedWindowStyle = 0;
-	};
+        HWND mHWnd = nullptr;
+        DWORD mFullscreenWindowStyle = 0;
+        DWORD mWindowedWindowStyle = 0;
+    };
 
-	TOV_NAMESPACE_END // win32
-	TOV_NAMESPACE_END // rendering
+    TOV_NAMESPACE_END // win32
+    TOV_NAMESPACE_END // rendering
 }
 
 #endif

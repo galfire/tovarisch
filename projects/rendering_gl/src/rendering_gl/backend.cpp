@@ -52,7 +52,7 @@ namespace tov
         );
 
         flags |= GL_DEPTH_BUFFER_BIT;
-        glClearDepth(1.0f);
+        //glClearDepth(1.0f);
 
         flags |= GL_STENCIL_BUFFER_BIT;
 

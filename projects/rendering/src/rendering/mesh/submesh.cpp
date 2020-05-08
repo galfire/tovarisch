@@ -129,7 +129,7 @@ namespace tov
         this->build();
     }
 
-    Submesh::~Submesh()
+    Submesh::~Submesh() noexcept
     {}
 
     void Submesh::build()

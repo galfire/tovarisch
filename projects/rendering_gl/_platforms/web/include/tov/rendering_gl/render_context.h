@@ -9,32 +9,32 @@
 
 namespace tov
 {
-	TOV_NAMESPACE_BEGIN(rendering)
+    TOV_NAMESPACE_BEGIN(rendering)
 
-	class DeviceContext;
+    class DeviceContext;
 
-	TOV_NAMESPACE_BEGIN(web)
-	TOV_NAMESPACE_BEGIN(gl)
+    TOV_NAMESPACE_BEGIN(web)
+    TOV_NAMESPACE_BEGIN(gl)
 
-	class RenderContext
-		: public rendering::RenderContext
-	{
-	public:
-		RenderContext(const rendering::DeviceContext& deviceContext);
-		~RenderContext() = default;
+    class RenderContext
+        : public rendering::RenderContext
+    {
+    public:
+        RenderContext(const rendering::DeviceContext& deviceContext);
+        ~RenderContext() = default;
 
-	private:
-		bool _makeCurrent() override;
-		bool _endCurrent() override;
-		bool _release() override;
+    private:
+        auto makeCurrentImpl() -> bool override;
+        auto endCurrentImpl() -> bool override;
+        auto releaseImpl() -> bool override;
 
-	private:
-		EMSCRIPTEN_WEBGL_CONTEXT_HANDLE mGLRC;
-	};
+    private:
+        EMSCRIPTEN_WEBGL_CONTEXT_HANDLE mGLRC;
+    };
 
-	TOV_NAMESPACE_END // gl
-	TOV_NAMESPACE_END // web
-	TOV_NAMESPACE_END // rendering
+    TOV_NAMESPACE_END // gl
+    TOV_NAMESPACE_END // web
+    TOV_NAMESPACE_END // rendering
 }
 
 #endif

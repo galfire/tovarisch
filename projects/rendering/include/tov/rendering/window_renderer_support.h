@@ -2,13 +2,13 @@
 #define TOV_RENDERING_WINDOW_RENDERER_SUPPORT_H
 
 #include "rendering_core.h"
+#include "window_renderer_component.h"
 
 namespace tov
 {
 	TOV_NAMESPACE_BEGIN(rendering)
 
 	class Window;
-	class WindowRendererComponent;
 
 	class WindowRendererSupport
 	{
@@ -16,7 +16,15 @@ namespace tov
 		WindowRendererSupport() = default;
 		virtual ~WindowRendererSupport() = default;
 
-		virtual auto buildComponent(Window& parentWindow) const -> std::unique_ptr<WindowRendererComponent> TOV_ABSTRACT;
+		auto buildComponent(Window& parentWindow) const -> std::unique_ptr<WindowRendererComponent>
+		{
+			return std::unique_ptr<WindowRendererComponent>(
+				buildComponentImpl(parentWindow)
+			);
+		}
+
+	private:
+		virtual auto buildComponentImpl(Window& parentWindow) const -> WindowRendererComponent *const TOV_ABSTRACT;
 	};
 
 	TOV_NAMESPACE_END

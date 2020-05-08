@@ -15,7 +15,7 @@ namespace tov
     RenderContext::RenderContext(const rendering::DeviceContext& deviceContext)
         : rendering::RenderContext(deviceContext)
     {
-        HDC hdc = static_cast<const DeviceContext&>(mDeviceContext).getHDC();
+        auto hdc = static_cast<const DeviceContext&>(mDeviceContext).getHDC();
         
         int contextattribs[] =
         {
@@ -38,22 +38,22 @@ namespace tov
         enableGLOutput();
     }
 
-    bool RenderContext::_makeCurrent()
+    auto RenderContext::makeCurrentImpl() -> bool
     {
-        HDC hdc = static_cast<const DeviceContext&>(mDeviceContext).getHDC();
-        bool success = wglMakeCurrent(hdc, sSharedGLRC);
+        auto hdc = static_cast<const DeviceContext&>(mDeviceContext).getHDC();
+        auto success = wglMakeCurrent(hdc, sSharedGLRC);
         return success;
     }
 
-    bool RenderContext::_endCurrent()
+    auto RenderContext::endCurrentImpl() -> bool
     {
-        bool success = wglMakeCurrent(nullptr, nullptr);
+        auto success = wglMakeCurrent(nullptr, nullptr);
         return success;
     }
 
-    bool RenderContext::_release()
+    auto RenderContext::releaseImpl() -> bool
     {
-        bool success = false;
+        auto success = false;
         if(mGLRC)
         {
             success = wglDeleteContext(mGLRC);

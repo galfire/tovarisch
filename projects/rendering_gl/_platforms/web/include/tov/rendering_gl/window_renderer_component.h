@@ -5,30 +5,30 @@
 
 namespace tov
 {
-	TOV_NAMESPACE_BEGIN(rendering)
+    TOV_NAMESPACE_BEGIN(rendering)
 
-	class Window;
+    class Window;
 
-	TOV_NAMESPACE_BEGIN(web)
-	TOV_NAMESPACE_BEGIN(gl)
+    TOV_NAMESPACE_BEGIN(web)
+    TOV_NAMESPACE_BEGIN(gl)
 
-	class WindowRendererComponent
-		: public rendering::WindowRendererComponent
-	{
-	public:
-		WindowRendererComponent(Window& parentWindow);
-		~WindowRendererComponent() = default;
+    class WindowRendererComponent
+        : public rendering::WindowRendererComponent
+    {
+    public:
+        WindowRendererComponent(Window& parentWindow);
+        ~WindowRendererComponent() = default;
 
-	private:
-		void _create() override {}
-		void _destroy() override {}
+    private:
+        void createImpl() override {}
+        void destroyImpl() override {}
 
-		void createRenderContext() override;
-	};
+        void createRenderContext() override;
+    };
 
-	TOV_NAMESPACE_END // gl
-	TOV_NAMESPACE_END // web
-	TOV_NAMESPACE_END // rendering
+    TOV_NAMESPACE_END // gl
+    TOV_NAMESPACE_END // web
+    TOV_NAMESPACE_END // rendering
 }
 
 #endif

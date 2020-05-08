@@ -32,17 +32,7 @@ namespace tov
         {
             auto b = bind();
             auto op = log_gl_op("buffer subdata", mBufferTarget, offset, length, mSource);
-
-            if (mBufferTarget == GL_ARRAY_BUFFER)
-            {
-                float* f = reinterpret_cast<float*>(mSource);
-                glBufferSubData(mBufferTarget, offset, length, mSource);
-
-            }
-            else
-            {
-                glBufferSubData(mBufferTarget, offset, length, mSource);
-            }
+            glBufferSubData(mBufferTarget, offset, length, mSource);
         }
 
     private:

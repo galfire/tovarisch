@@ -19,8 +19,6 @@ namespace tov
     TOV_NAMESPACE_BEGIN(rendering)
     TOV_NAMESPACE_BEGIN(buffers)
 
-    class BufferBase;
-
     class BufferManagerBase
     {
         TOV_MOVABLE_ONLY(BufferManagerBase)
@@ -33,8 +31,8 @@ namespace tov
         void deallocateScratch(void* ptr);
         void checkBounds(void* ptr) const;
 
-        virtual BufferBase* createIndexBuffer(uint numIndices) TOV_ABSTRACT;
-        virtual BufferBase* createVertexBuffer(VertexBufferFormat format, uint numVertices) TOV_ABSTRACT;
+        virtual auto createIndexBuffer(uint numIndices) -> BufferBase* TOV_ABSTRACT;
+        virtual auto createVertexBuffer(VertexBufferFormat format, uint numVertices) -> BufferBase* TOV_ABSTRACT;
 
     private:
         memory::ArenaNewDelete mMemoryArena;
@@ -48,7 +46,7 @@ namespace tov
         BufferManager() noexcept = default;
         virtual ~BufferManager() noexcept = default;
 
-        BufferBase* createVertexBuffer(VertexBufferFormat format, uint numVertices) override
+        auto createVertexBuffer(VertexBufferFormat format, uint numVertices) -> BufferBase* override
         {
             auto vertexFormat = format.getVertexFormat();
             auto vertexSize = vertexFormat.getSize();
@@ -57,7 +55,7 @@ namespace tov
             return buffer;
         }
 
-        BufferBase* createIndexBuffer(uint numIndices) override
+        auto createIndexBuffer(uint numIndices) -> BufferBase* override
         {
             auto indexType = getIndexType(numIndices);
             auto indexSize = getIndexTypeSize(indexType);

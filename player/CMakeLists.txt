@@ -31,11 +31,11 @@ target_link_libraries(player rendering_web)
 target_link_libraries(player rendering_web_gl)
 
 set_target_properties(player
-	PROPERTIES
-	RUNTIME_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/player/public"
+    PROPERTIES
+    RUNTIME_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/player/public"
 )
 
 set_target_properties(player
-	PROPERTIES
-	LINK_FLAGS "--preload-file ${CMAKE_SOURCE_DIR}/player/shaders@/shaders -s WASM=1 -s USE_WEBGL2=1 -s USE_GLFW=3 -s OFFSCREENCANVAS_SUPPORT=1 -s TOTAL_MEMORY=64MB -s BINARYEN_METHOD='native-wasm' -s EXTRA_EXPORTED_RUNTIME_METHODS='[\"ccall\", \"cwrap\"]'"
+    PROPERTIES
+    LINK_FLAGS "--preload-file ${CMAKE_SOURCE_DIR}/player/shaders@/shaders -s WASM=1 -s USE_WEBGL2=1 -s OFFSCREENCANVAS_SUPPORT=1 -s TOTAL_MEMORY=64MB -s BINARYEN_METHOD='native-wasm' -s EXTRA_EXPORTED_RUNTIME_METHODS='[\"ccall\", \"cwrap\"]'"
 )

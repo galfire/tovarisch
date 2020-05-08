@@ -15,18 +15,18 @@ namespace tov
     RenderContext::RenderContext(const rendering::DeviceContext& deviceContext)
         : rendering::RenderContext(deviceContext)
     {
-        const char* canvasID = static_cast<const DeviceContext&>(mDeviceContext).getCanvasID();
+        auto canvasID = static_cast<const DeviceContext&>(mDeviceContext).getCanvasID();
 
-        EmscriptenWebGLContextAttributes ctxAttrs;
+        auto ctxAttrs = EmscriptenWebGLContextAttributes{};
         emscripten_webgl_init_context_attributes(&ctxAttrs);
         ctxAttrs.majorVersion = 2;
         ctxAttrs.minorVersion = 0;
         mGLRC = emscripten_webgl_create_context(canvasID, &ctxAttrs);
     }
 
-    bool RenderContext::_makeCurrent()
+    auto RenderContext::makeCurrentImpl() -> bool
     {
-        EMSCRIPTEN_RESULT result = emscripten_webgl_make_context_current(mGLRC);
+        auto result = emscripten_webgl_make_context_current(mGLRC);
 
         switch (result)
         {
@@ -60,16 +60,16 @@ namespace tov
         return false;
     }
 
-    bool RenderContext::_endCurrent()
+    auto RenderContext::endCurrentImpl() -> bool
     {
-        //bool success = emscripten_webgl_make_context_current(nullptr);
+        //auto success = emscripten_webgl_make_context_current(nullptr);
         //return success;
         return true;
     }
 
-    bool RenderContext::_release()
+    auto RenderContext::releaseImpl() -> bool
     {
-        bool success = false;
+        auto success = false;
         if(mGLRC)
         {
             success = emscripten_webgl_destroy_context(mGLRC);

@@ -8,18 +8,18 @@
 
 namespace tov
 {
-	TOV_NAMESPACE_BEGIN(rendering)
-	TOV_NAMESPACE_BEGIN(win32)
+    TOV_NAMESPACE_BEGIN(rendering)
+    TOV_NAMESPACE_BEGIN(win32)
 
-	class WindowEvents
-	{
-	public:
-		static void	messageHandler(void);
-		static LRESULT CALLBACK wndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
-	};
+    class WindowEvents
+    {
+    public:
+        static void	messageHandler(void);
+        static LRESULT CALLBACK wndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
+    };
 
-	TOV_NAMESPACE_END // win32
-	TOV_NAMESPACE_END // rendering
+    TOV_NAMESPACE_END // win32
+    TOV_NAMESPACE_END // rendering
 }
 
 #endif

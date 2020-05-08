@@ -8,33 +8,33 @@
 
 namespace tov
 {
-	TOV_NAMESPACE_BEGIN(rendering)
-	TOV_NAMESPACE_BEGIN(web)
+    TOV_NAMESPACE_BEGIN(rendering)
+    TOV_NAMESPACE_BEGIN(web)
 
-	WindowPlatformComponent::WindowPlatformComponent(Window& window)
-		: rendering::WindowPlatformComponent(window)
-	{
-	}
+    WindowPlatformComponent::WindowPlatformComponent(Window& window)
+        : rendering::WindowPlatformComponent(window)
+    {
+    }
 
-	void WindowPlatformComponent::swapBuffers()
-	{
-	}
+    void WindowPlatformComponent::swapBuffers()
+    {
+    }
 
-	void WindowPlatformComponent::_create()
-	{
-		const char* canvasID = mParentWindow.getName();
-		mDeviceContext = std::make_unique<DeviceContext>(canvasID);
+    void WindowPlatformComponent::createImpl()
+    {
+        const char* canvasID = mParentWindow.getName();
+        mDeviceContext = std::make_unique<DeviceContext>(canvasID);
 
-		const uint width = mParentWindow.getWidth();
-		const uint height = mParentWindow.getHeight();
+        const uint width = mParentWindow.getWidth();
+        const uint height = mParentWindow.getHeight();
 
-		emscripten_set_canvas_element_size(canvasID, width, height);
-	}
+        emscripten_set_canvas_element_size(canvasID, width, height);
+    }
 
-	void WindowPlatformComponent::_destroy()
-	{
-	}
+    void WindowPlatformComponent::destroyImpl()
+    {
+    }
 
-	TOV_NAMESPACE_END // web
-	TOV_NAMESPACE_END // rendering
+    TOV_NAMESPACE_END // web
+    TOV_NAMESPACE_END // rendering
 }
