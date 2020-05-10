@@ -7,6 +7,9 @@
 
 #include <tov/rendering_gl/gl_impl.h>
 
+#include <string>
+#include <unordered_map>
+
 namespace tov
 {
     TOV_NAMESPACE_BEGIN(rendering)
@@ -35,12 +38,15 @@ namespace tov
         void attachShaderImpl(rendering::pipeline::Shader& shader) const override;
         void detachShaderImpl(rendering::pipeline::Shader& shader) const override;
         void linkImpl() const override;
+        void buildLocationMapImpl() override;
         void useImpl() const override;
 
         auto getUniformLocation(std::string name) const -> int;
 
     private:
         uint mProgramID;
+
+        std::unordered_map<std::string, int> mUniformLocationMap;
     };
 
     TOV_NAMESPACE_END // pipeline

@@ -58,7 +58,7 @@ namespace tov
 		float mNearDistance = 0.1f;
 		float mFarDistance = 100.0f;
 		float mAspectRatio = 4.0f / 3.0f;
-		math::Radian mFieldOfViewY = math::Radian(math::PI / 4.0f);
+		math::Radian mFieldOfViewY = math::PI / 4.0f;
 		math::Matrix4 mProjectionMatrix = math::Matrix4::ZERO;
 	};
 

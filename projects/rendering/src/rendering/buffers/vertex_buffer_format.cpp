@@ -8,12 +8,12 @@ namespace tov
     VertexBufferFormat::VertexBufferFormat(SequenceType sequenceType, VertexFormat vertexFormat)
         : mSequenceType(sequenceType)
         , mVertexFormat(vertexFormat)
-    {}
-
-    auto VertexBufferFormat::getDescriptor() const -> Descriptor
     {
-        Descriptor descriptor;
+        buildDescriptor();
+    }
 
+    void VertexBufferFormat::buildDescriptor()
+    {
         auto numAttributes = mVertexFormat.getAttributes().size();
         auto vertexSize = mVertexFormat.getSize();
         
@@ -42,10 +42,8 @@ namespace tov
             default:
                 break;
             }
-            descriptor.attributeDescriptors.push_back(attributeDescriptor);
+            mDescriptor.attributeDescriptors.push_back(attributeDescriptor);
         }
-
-        return descriptor;
     }
 
     TOV_NAMESPACE_END // buffers

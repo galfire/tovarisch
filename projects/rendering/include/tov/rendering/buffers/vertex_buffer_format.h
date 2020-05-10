@@ -75,14 +75,16 @@ namespace tov
         ~VertexBufferFormat() = default;
 
         auto getSequenceType() const { return mSequenceType; }
-        auto getVertexFormat() const { return mVertexFormat; }
+        auto getVertexFormat() const -> auto const& { return mVertexFormat; }
+        auto getDescriptor() const -> auto const& { return mDescriptor; }
 
-        auto getDescriptor() const -> Descriptor;
+    private:
+        void buildDescriptor();
 
     private:
         SequenceType mSequenceType;
-
         VertexFormat mVertexFormat;
+        Descriptor mDescriptor;
     };
 
     TOV_NAMESPACE_END // buffers

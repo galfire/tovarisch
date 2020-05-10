@@ -2,11 +2,12 @@
 
 layout (location = 0) in vec3 aPos;
   
-out vec4 vertexColor; // specify a color output to the fragment shader
-
 uniform mat4 modelMatrix;
 uniform mat4 viewMatrix;
 uniform mat4 projectionMatrix;
+uniform vec3 colour;
+
+out vec4 fragColour;
 
 void main()
 {
@@ -14,5 +15,5 @@ void main()
 
     gl_Position = mvp * vec4(aPos, 1.0);
 
-    vertexColor = vec4(1.0, 1.0, 1.0, 1.0);
+    fragColour = vec4(colour, 1.0f);
 }

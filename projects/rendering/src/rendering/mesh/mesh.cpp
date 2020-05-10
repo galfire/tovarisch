@@ -40,18 +40,17 @@ namespace tov
         for (auto&& submesh : mSubmeshes)
         {
             auto const& ibo = submesh->getIndexData()->getBufferObject();
-            auto& vbos = submesh->getVertexData()->getBufferObjects();
+            auto const& vbos = submesh->getVertexData()->getBufferObjects();
 
             for (auto&& vbo : vbos)
             {
-                auto const& vbor = *vbo;
                 auto& programInstance = submesh->getProgram().instantiate();
-                auto drawData = DrawData(ibo, vbor, programInstance);
+                auto drawData = DrawData(ibo, *vbo, programInstance);
                 drawDataList.push_back(drawData);
             }
         }
         
-        return MeshInstance(drawDataList);
+        return MeshInstance(std::move(drawDataList));
     }
 
     TOV_NAMESPACE_END // mesh

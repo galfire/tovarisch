@@ -33,7 +33,6 @@ namespace tov
         void renderFrame();
 
         auto getGBufferBucket() -> auto& { return mGBufferBucket; }
-        auto getFrameCommandBucket() -> auto& { return mFrameCommandBucket; }
 
     private:
         void submit();
@@ -42,8 +41,7 @@ namespace tov
         WindowPlatformSupport& mWindowPlatformSupport;
         WindowRendererSupport& mWindowRendererSupport;
 
-        commands::CommandBucket<256> mGBufferBucket;
-        commands::CommandBucket<256> mFrameCommandBucket;
+        commands::CommandBucket<128> mGBufferBucket;
 
         RenderTargetManager mRenderTargetManager;
     };

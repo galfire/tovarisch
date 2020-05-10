@@ -15,9 +15,9 @@ namespace tov
     {
         buffers::VertexFormat vf;
         vf.addAttribute(buffers::VertexAttribute::POSITION, 0);
-        //vf.addAttribute(buffers::VertexAttribute::NORMAL, 1);
+        vf.addAttribute(buffers::VertexAttribute::NORMAL, 1);
         //vf.addAttribute(buffers::VertexAttribute::COLOUR, 2);
-        //vf.addAttribute(buffers::VertexAttribute::TEXTURE_COORDINATE, 3);
+        vf.addAttribute(buffers::VertexAttribute::TEXTURE_COORDINATE, 3);
         buffers::VertexBufferFormat vbf(
             buffers::VertexBufferFormat::SequenceType::INTERLEAVED,
             vf

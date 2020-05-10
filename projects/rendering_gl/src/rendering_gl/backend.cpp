@@ -92,15 +92,14 @@ namespace tov
             auto op = log_gl_op("generate and bind VAO");
             glGenVertexArrays(1, &vao);
             glBindVertexArray(vao);
-
         }
         
         // Bind the index and vertex buffer before drawing
         auto bindIndex = indexBuffer.bind();
         auto bindVertex = vertexBuffer.bind();
 
-        auto vbf = vbo.getBufferFormat();
-        auto desc = vbf.getDescriptor();
+        auto const& vbf = vbo.getBufferFormat();
+        auto const& desc = vbf.getDescriptor();
 
         for (auto&& a : desc.attributeDescriptors)
         {

@@ -78,8 +78,8 @@ namespace tov
         memory::HeapArea mHeapArea;
         memory::ArenaLinear mArena;
 
-        std::array<Key, Size> mKeys;
-        std::array<CommandPacket*, Size> mCommandPackets;
+        std::array<Key, Size> mKeys = {};
+        std::array<CommandPacket*, Size> mCommandPackets = {};
         uint mCurrent = 0;
     };
 

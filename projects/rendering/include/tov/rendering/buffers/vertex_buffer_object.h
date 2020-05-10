@@ -26,7 +26,7 @@ namespace tov
             , mFormat(format)
         {}
 
-        auto getBufferFormat() const { return mFormat; }
+        auto getBufferFormat() const -> auto const& { return mFormat; }
 
     private:
         VertexBufferFormat mFormat;

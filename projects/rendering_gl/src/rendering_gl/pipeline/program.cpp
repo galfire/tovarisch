@@ -55,6 +55,17 @@ namespace tov
         }
     }
 
+    void Program::buildLocationMapImpl()
+    {
+        for (auto&& kv : mConstantBufferDescriptorMap)
+        {
+            auto uniformName = kv.first;
+            auto uniformLocation = glGetUniformLocation(mProgramID, uniformName.c_str());
+            assert(uniformLocation >= 0);
+            mUniformLocationMap.emplace(uniformName, uniformLocation);
+        }
+    }
+
     void Program::useImpl() const
     {
         auto op = log_gl_op("use program", mProgramID);
@@ -63,10 +74,7 @@ namespace tov
 
     auto Program::getUniformLocation(std::string name) const -> int
     {
-        auto op = log_gl_op("get uniform location", name);
-        auto location = glGetUniformLocation(mProgramID, name.c_str());
-        assert(location >= 0);
-        return location;
+        return mUniformLocationMap.at(name);
     }
 
     void Program::setMatrix4(std::string name, void const *const data) const

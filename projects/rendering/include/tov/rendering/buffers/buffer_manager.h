@@ -9,6 +9,8 @@
 #include "usage_settings.h"
 #include "vertex_buffer_format.h"
 
+#include <tov/rendering/pixel_format.h>
+
 #include <tov/memory.h>
 #include <tov/memory_config.h>
 
@@ -32,6 +34,7 @@ namespace tov
         void checkBounds(void* ptr) const;
 
         virtual auto createIndexBuffer(uint numIndices) -> BufferBase* TOV_ABSTRACT;
+        virtual auto createPixelBuffer(uint numPixels) -> BufferBase* TOV_ABSTRACT;
         virtual auto createVertexBuffer(VertexBufferFormat format, uint numVertices) -> BufferBase* TOV_ABSTRACT;
 
     private:
@@ -46,21 +49,29 @@ namespace tov
         BufferManager() noexcept = default;
         virtual ~BufferManager() noexcept = default;
 
-        auto createVertexBuffer(VertexBufferFormat format, uint numVertices) -> BufferBase* override
-        {
-            auto vertexFormat = format.getVertexFormat();
-            auto vertexSize = vertexFormat.getSize();
-            auto size = vertexSize * numVertices;
-            auto buffer = static_cast<DerivedBufferManagerT*>(this)->createVertexBufferImpl(size);
-            return buffer;
-        }
-
         auto createIndexBuffer(uint numIndices) -> BufferBase* override
         {
             auto indexType = getIndexType(numIndices);
             auto indexSize = getIndexTypeSize(indexType);
             auto size = indexSize * numIndices;
             auto buffer = static_cast<DerivedBufferManagerT*>(this)->createIndexBufferImpl(size);
+            return buffer;
+        }
+
+        auto createPixelUnpackBuffer(PixelFormat pixelFormat, uint numPixels) -> BufferBase* override
+        {
+            auto pixelSize = pixelFormat.getBitsColourAlpha();
+            auto size = pixelSize * numPixels;
+            auto buffer = static_cast<DerivedBufferManagerT*>(this)->createPixelUnpackBufferImpl(size);
+            return buffer;
+        }
+
+        auto createVertexBuffer(VertexBufferFormat format, uint numVertices) -> BufferBase* override
+        {
+            auto& vertexFormat = format.getVertexFormat();
+            auto vertexSize = vertexFormat.getSize();
+            auto size = vertexSize * numVertices;
+            auto buffer = static_cast<DerivedBufferManagerT*>(this)->createVertexBufferImpl(size);
             return buffer;
         }
 

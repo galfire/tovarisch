@@ -25,7 +25,7 @@ namespace tov
 
     void writeVertexBufferInterleaved(buffers::VertexBufferObject& vbo, const geometry::Geometry& geometry)
     {
-        auto format = vbo.getBufferFormat();
+        auto const& format = vbo.getBufferFormat();
         auto attributes = format.getVertexFormat().getAttributes();
         auto numVertices = geometry.getNumVertices();
 
@@ -68,7 +68,7 @@ namespace tov
 
     void writeVertexBufferSequential(buffers::VertexBufferObject& vbo, const geometry::Geometry& geometry)
     {
-        auto format = vbo.getBufferFormat();
+        auto const& format = vbo.getBufferFormat();
         auto attributes = format.getVertexFormat().getAttributes();
 
         auto guard = buffers::Guard(vbo, buffers::LockSettings::WRITE);

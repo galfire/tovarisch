@@ -43,6 +43,11 @@ namespace tov
         }
     }
 
+    void Program::buildLocationMap()
+    {
+        buildLocationMapImpl();
+    }
+
     void Program::use() const
     {
         useImpl();

@@ -11,12 +11,10 @@
 #include <tov/rendering/camera.h>
 
 #include <tov/rendering/geometry/sphere.h>
-#include <tov/rendering/geometry/triangle.h>
 
 #include <tov/rendering/entity.h>
 #include <tov/rendering/mesh/mesh.h>
 #include <tov/rendering/mesh/mesh_manager.h>
-#include <tov/rendering/mesh_component.h>
 
 #include <tov/rendering/render_system.h>
 #include <tov/rendering/render_window.h>
@@ -75,14 +73,15 @@ int main(int argc, char** argv)
     program.addConstantDefinition("viewMatrix", def);
     program.addConstantDefinition("projectionMatrix", def);
     program.addConstantDefinition("colour", vec3);
-
-    auto sphere = tov::rendering::geometry::Sphere(5.0f);
+    program.buildLocationMap();
 
     using BufferManager = tov::rendering::gl::buffers::BufferManager;
     BufferManager bufferManager;
 
     using MeshManager = tov::rendering::mesh::MeshManager;
     MeshManager meshManager(bufferManager);
+
+    auto sphere = tov::rendering::geometry::Sphere(5.0f);
     auto mesh = meshManager.create();
     auto& submesh = mesh->createSubmesh(sphere, program);
 

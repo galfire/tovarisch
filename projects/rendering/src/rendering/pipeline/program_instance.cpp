@@ -31,11 +31,14 @@ namespace tov
         case ConstantType::MATRIX_4:
             mProgram.setMatrix4(name, data);
             break;
+        case ConstantType::VECTOR_2:
+            mProgram.setVector2(name, data);
+            break;
         case ConstantType::VECTOR_3:
             mProgram.setVector3(name, data);
             break;
-        case ConstantType::VECTOR_2:
-            mProgram.setVector2(name, data);
+        case ConstantType::VECTOR_4:
+            mProgram.setVector4(name, data);
             break;
         }
     }

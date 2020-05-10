@@ -22,7 +22,7 @@ namespace tov
             auto buffer = bufferManager.createVertexBuffer(bufferFormat, numVertices);
             auto bufferObject = std::unique_ptr<buffers::VertexBufferObject>(
                 new buffers::VertexBufferObject(*buffer, bufferFormat)
-                );
+            );
             mVBOOwningList.push_back(std::move(bufferObject));
             mVBOList.push_back(mVBOOwningList.back().get());
             mHandleToVBOMap.emplace(handle, mVBOOwningList.back().get());

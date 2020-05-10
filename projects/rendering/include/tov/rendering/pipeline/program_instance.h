@@ -8,6 +8,7 @@
 
 #include <string>
 #include <unordered_map>
+#include <vector>
 
 namespace tov
 {
@@ -62,7 +63,6 @@ namespace tov
             : mProgram(program)
             , mProgramState(constantBufferSize)
             , mConstantBufferDescriptorMap(constantBufferDescriptorMap)
-            , mConstantNames(std::vector<std::string> {})
         {
             mConstantNames.reserve(mConstantBufferDescriptorMap.size());
             for (auto&& kv : mConstantBufferDescriptorMap)

@@ -15,7 +15,7 @@ namespace tov
     class MeshInstance
     {
     public:
-        MeshInstance(std::vector<DrawData> const drawData) noexcept
+        MeshInstance(std::vector<DrawData> const&& drawData) noexcept
             : mDrawDataList(drawData)
         {}
 

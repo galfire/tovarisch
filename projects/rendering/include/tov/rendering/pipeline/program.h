@@ -41,6 +41,7 @@ namespace tov
 
         void attachShader(Shader& shader);
         void link() const;
+        void buildLocationMap();
         void use() const;
 
         virtual void setMatrix4(std::string name, void const *const data) const TOV_ABSTRACT;
@@ -53,6 +54,7 @@ namespace tov
         virtual void attachShaderImpl(Shader& shader) const TOV_ABSTRACT;
         virtual void detachShaderImpl(Shader& shader) const TOV_ABSTRACT;
         virtual void linkImpl() const TOV_ABSTRACT;
+        virtual void buildLocationMapImpl() TOV_ABSTRACT;
         virtual void useImpl() const TOV_ABSTRACT;
 
     protected:

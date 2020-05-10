@@ -43,7 +43,6 @@ namespace tov
 
     void RenderSystem::submit()
     {
-        mFrameCommandBucket.submit();
         mGBufferBucket.submit();
     }
 

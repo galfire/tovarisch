@@ -38,6 +38,13 @@ namespace tov
             return create<usageSettings, accessSettings>(size, GL_ELEMENT_ARRAY_BUFFER);
         }
 
+        auto createPixelUnpackBufferImpl(size_t size)
+        {
+            constexpr auto usageSettings = buffers::UsageSettings::STREAM;
+            constexpr auto accessSettings = buffers::AccessSettings::WRITE;
+            return create<usageSettings, accessSettings>(size, GL_PIXEL_UNPACK_BUFFER);
+        }
+
         auto createVertexBufferImpl(size_t size)
         {
             constexpr auto usageSettings = buffers::UsageSettings::STATIC;

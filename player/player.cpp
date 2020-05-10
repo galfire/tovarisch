@@ -43,6 +43,8 @@ WindowRendererSupport rendererSupport;
 RenderSystem rs(platformSupport, rendererSupport);
 tov::rendering::Scene scene(rs);
 
+//dfajdlfj
+
 void oneIteration()
 {
     rs.swapBuffers();
@@ -75,10 +77,17 @@ int main()
     tov::rendering::gl::pipeline::Program program;
     program.attachShader(vertexShader);
     program.attachShader(fragmentShader);
+    program.link();
 
+    using Vector3 = tov::math::Vector3;
     using Matrix4 = tov::math::Matrix4;
     auto def = tov::rendering::pipeline::ConstantDefinition<Matrix4>::DEFINITION;
+    auto vec3 = tov::rendering::pipeline::ConstantDefinition<Vector3>::DEFINITION;
     program.addConstantDefinition("modelMatrix", def);
+    program.addConstantDefinition("viewMatrix", def);
+    program.addConstantDefinition("projectionMatrix", def);
+    program.addConstantDefinition("colour", vec3);
+    program.buildLocationMap();
 
     auto sphere = tov::rendering::geometry::Sphere(5.0f);
 
@@ -94,6 +103,12 @@ int main()
         auto& entityNode = root.createChild();
         auto& entity = scene.createEntity();
         entity.createMeshComponent(*mesh);
+        auto& drawDataList = entity.getDrawDataList();
+        for (auto&& drawData : drawDataList)
+        {
+            auto& programInstance = drawData.getProgramInstance();
+            programInstance.setConstant<tov::math::Vector3>("colour", tov::math::Vector3(1.0f, 0.0f, 1.0f));
+        }
         entityNode.attachSceneObject(&entity);
         tov::math::Vector3 translation(0, 0, -40);
         entityNode.getTransform().setTranslation(translation);
@@ -103,12 +118,18 @@ int main()
         auto& entityNode = root.createChild();
         auto& entity = scene.createEntity();
         entity.createMeshComponent(*mesh);
+        auto& drawDataList = entity.getDrawDataList();
+        for (auto&& drawData : drawDataList)
+        {
+            auto& programInstance = drawData.getProgramInstance();
+            programInstance.setConstant<tov::math::Vector3>("colour", tov::math::Vector3(0.0f, 0.0f, 1.0f));
+        }
         entityNode.attachSceneObject(&entity);
         tov::math::Vector3 translation(5, 5, -30);
         entityNode.getTransform().setTranslation(translation);
     }
 
-	emscripten_set_main_loop(oneIteration, 0, 1);
+    emscripten_set_main_loop(oneIteration, 0, 1);
 
-	return 0;
+    return 0;
 }
