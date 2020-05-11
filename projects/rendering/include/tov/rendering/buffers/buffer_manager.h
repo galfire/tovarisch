@@ -34,7 +34,7 @@ namespace tov
         void checkBounds(void* ptr) const;
 
         virtual auto createIndexBuffer(uint numIndices) -> BufferBase* TOV_ABSTRACT;
-        virtual auto createPixelBuffer(uint numPixels) -> BufferBase* TOV_ABSTRACT;
+        virtual auto createPixelUnpackBuffer(PixelFormat pixelFormat, uint numPixels) -> BufferBase* TOV_ABSTRACT;
         virtual auto createVertexBuffer(VertexBufferFormat format, uint numVertices) -> BufferBase* TOV_ABSTRACT;
 
     private:
@@ -60,7 +60,7 @@ namespace tov
 
         auto createPixelUnpackBuffer(PixelFormat pixelFormat, uint numPixels) -> BufferBase* override
         {
-            auto pixelSize = pixelFormat.getBitsColourAlpha();
+            auto pixelSize = pixelFormat.getSize();
             auto size = pixelSize * numPixels;
             auto buffer = static_cast<DerivedBufferManagerT*>(this)->createPixelUnpackBufferImpl(size);
             return buffer;

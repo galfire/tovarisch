@@ -30,6 +30,8 @@ namespace tov
         ushort getBitsColourAlpha() const { return getBitsColour() + getBitsAlpha(); }
         ushort getBitsDepth() const { return mBitsDepth; }
         ushort getBitsStencil() const { return mBitsStencil; }
+        // Size of a pixel in bytes
+        ushort getSize() const { return getBitsColourAlpha() / 8; }
 
     protected:
         ushort mBitsRed;

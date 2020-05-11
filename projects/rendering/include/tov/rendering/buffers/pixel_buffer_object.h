@@ -23,6 +23,8 @@ namespace tov
             , mPixelFormat(pixelFormat)
         {}
 
+        auto getPixelFormat() const { return mPixelFormat; }
+
     private:
         PixelFormat mPixelFormat;
     };

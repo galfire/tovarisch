@@ -9,6 +9,7 @@
 
 #include <tov/rendering/colour.h>
 #include <tov/rendering/camera.h>
+#include <tov/rendering/pixel_format.h>
 
 #include <tov/rendering/geometry/sphere.h>
 
@@ -25,6 +26,8 @@
 #include <tov/rendering_gl/pipeline/program.h>
 #include <tov/rendering_gl/buffers/buffer_manager.h>
 
+#include <tov/rendering_gl/texture/texture.h>
+
 #include <tov/rendering/win32/window_platform_support.h>
 #include <tov/rendering_gl/window_renderer_support.h>
 
@@ -32,7 +35,7 @@ using WindowPlatformSupport = tov::rendering::win32::WindowPlatformSupport;
 using WindowRendererSupport = tov::rendering::win32::gl::WindowRendererSupport;
 using RenderSystem = tov::rendering::RenderSystem;
 
-// adfadf
+// adfadfdf
 
 int main(int argc, char** argv)
 {
@@ -50,7 +53,7 @@ int main(int argc, char** argv)
 
     {
         auto& window = rs.createRenderWindow("Window", 800, 600, false);
-        auto& vp = window.createViewport(2, 0.0f, 0.0f, 1.0f, 1.0f, tov::rendering::Colour::Black);
+        auto& vp = window.createViewport(2, 0.0f, 0.0f, 1.0f, 1.0f, tov::rendering::Colour::Blue);
         camera.attachViewport(vp);
     }
 
@@ -85,6 +88,23 @@ int main(int argc, char** argv)
     auto mesh = meshManager.create();
     auto& submesh = mesh->createSubmesh(sphere, program);
 
+    auto pixelFormat = tov::rendering::PixelFormat(8, 8, 8, 8, 0, 0);
+    auto texture = tov::rendering::gl::texture::Texture2D(bufferManager, 64, 64, pixelFormat);
+    
+    glEnable(GL_TEXTURE_2D);
+    glActiveTexture(GL_TEXTURE0);
+    auto buffer = new unsigned char[64 * 64 * 4];
+    auto sz = texture.getSize();
+    memset(buffer, 255, sz);
+    for(unsigned int i = 0; i < sz; i += 4)
+    {
+        buffer[i + 0] = i % 255;
+        buffer[i + 1] = i % 255;
+        buffer[i + 2] = i % 255;
+        buffer[i + 3] = i % 255;
+    }
+    texture.updatePixelData(buffer);
+
     {
         auto& entityNode = root.createChild();
         auto& entity = scene.createEntity();
@@ -117,7 +137,19 @@ int main(int argc, char** argv)
 
     while(1)
     {
-        std::cout << "STARTING FRAME...\n";
+        for (unsigned int i = 0; i < sz; i += 4)
+        {
+            buffer[i + 0] += 1;
+            buffer[i + 0] %= 255;
+            buffer[i + 1] += 3;
+            buffer[i + 1] %= 255;
+            buffer[i + 2] += 2;
+            buffer[i + 2] %= 255;
+        }
+        texture.bind();
+        texture.updatePixelData(buffer);
+
+        //std::cout << "STARTING FRAME...\n";
 
         rs.swapBuffers();
         
@@ -125,7 +157,7 @@ int main(int argc, char** argv)
 
         rs.renderFrame();
 
-        std::cout << "END FRAME\n";
+        //std::cout << "END FRAME\n";
     }
 
 #if TOV_COMPILER == TOV_COMPILER_MSVC
