@@ -6,6 +6,8 @@
 #include <tov/rendering/pixel_format.h>
 
 #include <tov/rendering/buffers/buffer_manager.h>
+#include <tov/rendering/buffers/guard.h>
+#include <tov/rendering/buffers/lock_settings.h>
 #include <tov/rendering/buffers/pixel_buffer_object.h>
 
 namespace tov
@@ -16,33 +18,26 @@ namespace tov
     class Texture
     {
     public:
-        Texture(buffers::BufferManagerBase& bufferManager, uint numPixels, PixelFormat pixelFormat)
-            : mBufferManager(bufferManager)
+        Texture(buffers::PixelBufferObject& pbo, uint numPixels, PixelFormat pixelFormat)
+            : mPBO(pbo)
             , mNumPixels(numPixels)
             , mPixelFormat(pixelFormat)
         {
             mSize = mPixelFormat.getSize() * mNumPixels;
-
-            auto buffer = bufferManager.createPixelUnpackBuffer(mPixelFormat, mNumPixels);
-            mPBO = std::unique_ptr<buffers::PixelBufferObject>(
-                new buffers::PixelBufferObject(*buffer, mPixelFormat)
-            );
         }
 
         auto getSize() const { return mSize; }
         auto getNumPixels() const { return mNumPixels; }
         auto getPixelFormat() const { return mPixelFormat; }
 
-        virtual auto updatePixelData(void const* const data) const -> void TOV_ABSTRACT;
+        virtual auto unpackPixelData() const -> void TOV_ABSTRACT;
 
     protected:
-        buffers::BufferManagerBase& mBufferManager;
-
         uint mNumPixels;
         PixelFormat mPixelFormat;
         size_t mSize;
         
-        std::unique_ptr<buffers::PixelBufferObject> mPBO;
+        buffers::PixelBufferObject& mPBO;
     };
 
     class Texture2D
@@ -50,12 +45,12 @@ namespace tov
     {
     public:
         Texture2D(
-            buffers::BufferManagerBase& bufferManager,
+            buffers::PixelBufferObject& pbo,
             uint width,
             uint height,
             PixelFormat pixelFormat
         )
-            : Texture(bufferManager, width * height, pixelFormat)
+            : Texture(pbo, width * height, pixelFormat)
             , mWidth(width)
             , mHeight(height)
         {}

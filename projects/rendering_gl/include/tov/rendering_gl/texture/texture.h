@@ -4,8 +4,6 @@
 #include <tov/rendering/texture/texture.h>
 
 #include <tov/rendering/buffers/buffer_manager.h>
-#include <tov/rendering/buffers/guard.h>
-#include <tov/rendering/buffers/lock_settings.h>
 
 #include <tov/rendering_gl/buffers/buffer.h>
 #include <tov/rendering_gl/gl_impl.h>
@@ -21,12 +19,12 @@ namespace tov
     {
     public:
         Texture2D(
-            rendering::buffers::BufferManagerBase& bufferManager,
+            rendering::buffers::PixelBufferObject& pbo,
             uint width,
             uint height,
             PixelFormat pixelFormat
         )
-            : rendering::texture::Texture2D(bufferManager, width, height, pixelFormat)
+            : rendering::texture::Texture2D(pbo, width, height, pixelFormat)
         {
             glGenTextures(1, &textureId);
             bind();
@@ -50,6 +48,10 @@ namespace tov
                 auto op = log_gl_op("tex image2D");
                 glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
             }
+            {
+                auto op = log_gl_op("pixel store alignment");
+                glPixelStorei(GL_UNPACK_ALIGNMENT, pixelFormat.getSize());
+            }
             unbind();
         }
 
@@ -65,36 +67,26 @@ namespace tov
             glBindTexture(GL_TEXTURE_2D, 0);
         }
 
-        auto updatePixelData(void const* const data) const -> void override
+        auto getPixelBuffer() const -> auto&
         {
-            auto pixelFormat = mPBO->getPixelFormat();
+            constexpr auto usageSettings = buffers::UsageSettings::STREAM;
+            constexpr auto accessSettings = buffers::AccessSettings::WRITE;
+            using Buffer = buffers::Buffer<usageSettings, accessSettings>;
+            auto& buffer = static_cast<Buffer&>(mPBO.getBuffer());
+            return buffer;
+        }
 
-            {
-                auto& pbo = *mPBO.get();
-                auto guard = rendering::buffers::Guard(pbo, rendering::buffers::LockSettings::WRITE);
-                auto lock = guard.getLock();
-                memcpy(lock, data, mSize);
-            }
-
+        auto unpackPixelData() const -> void override
+        {
             // Upload PBO data to texture
-            //bind();
+            bind();
             {
-                auto op = log_gl_op("tex subimage2D");
-                auto& pbo = *mPBO.get();
-                constexpr auto usageSettings = buffers::UsageSettings::STREAM;
-                constexpr auto accessSettings = buffers::AccessSettings::WRITE;
-                using Buffer = buffers::Buffer<usageSettings, accessSettings>;
-                auto& buffer = static_cast<Buffer&>(pbo.getBuffer());
+                auto& buffer = getPixelBuffer();
                 auto bind = buffer.bind();
-
-                {
-                    auto op = log_gl_op("pixel store alignment");
-                    glPixelStorei(GL_UNPACK_ALIGNMENT, pixelFormat.getSize());
-                }
-
+                auto op = log_gl_op("tex subimage2D");
                 glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, mWidth, mHeight, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
             }
-            //unbind();
+            unbind();
         }
 
     private:

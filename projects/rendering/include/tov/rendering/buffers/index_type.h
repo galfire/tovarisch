@@ -46,6 +46,8 @@ namespace tov
             return 2;	// 2 bytes
         case IndexType::BITS_32:
             return 4;	// 4 bytes
+        default:
+            return 0;
         }
     }
 

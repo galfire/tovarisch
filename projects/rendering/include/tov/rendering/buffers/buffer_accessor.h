@@ -3,7 +3,6 @@
 
 #include <tov/rendering/rendering_core.h>
 
-#include <tov/core/functional.h>
 #include <tov/rendering/buffers/access_settings.h>
 
 namespace tov
@@ -11,7 +10,8 @@ namespace tov
     TOV_NAMESPACE_BEGIN(rendering)
     TOV_NAMESPACE_BEGIN(buffers)
 
-    namespace {
+    namespace
+    {
         template<class ReaderT, AccessSettings> class Reader {};
         template<class ReaderT> class Reader<ReaderT, AccessSettings::READ>
         {

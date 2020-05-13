@@ -25,6 +25,13 @@ namespace tov
 
         auto getPixelFormat() const { return mPixelFormat; }
 
+        auto updatePixelData(void const* const data, size_t size) -> void
+        {
+            auto guard = rendering::buffers::Guard(*this, rendering::buffers::LockSettings::WRITE);
+            auto lock = guard.getLock();
+            memcpy(lock, data, size);
+        }
+
     private:
         PixelFormat mPixelFormat;
     };

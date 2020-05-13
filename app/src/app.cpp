@@ -89,10 +89,10 @@ int main(int argc, char** argv)
     auto& submesh = mesh->createSubmesh(sphere, program);
 
     auto pixelFormat = tov::rendering::PixelFormat(8, 8, 8, 8, 0, 0);
-    auto texture = tov::rendering::gl::texture::Texture2D(bufferManager, 64, 64, pixelFormat);
+    auto& pixelBuffer = *bufferManager.createPixelUnpackBuffer(pixelFormat, 64 * 64);
+    auto& pbo = tov::rendering::buffers::PixelBufferObject(pixelBuffer, pixelFormat);
+    auto texture = tov::rendering::gl::texture::Texture2D(pbo, 64, 64, pixelFormat);
     
-    glEnable(GL_TEXTURE_2D);
-    glActiveTexture(GL_TEXTURE0);
     auto buffer = new unsigned char[64 * 64 * 4];
     auto sz = texture.getSize();
     memset(buffer, 255, sz);
@@ -103,7 +103,7 @@ int main(int argc, char** argv)
         buffer[i + 2] = i % 255;
         buffer[i + 3] = i % 255;
     }
-    texture.updatePixelData(buffer);
+    pbo.updatePixelData(buffer, sz);
 
     {
         auto& entityNode = root.createChild();
@@ -146,8 +146,11 @@ int main(int argc, char** argv)
             buffer[i + 2] += 2;
             buffer[i + 2] %= 255;
         }
+        pbo.updatePixelData(buffer, sz);
+
+        texture.unpackPixelData();
         texture.bind();
-        texture.updatePixelData(buffer);
+
 
         //std::cout << "STARTING FRAME...\n";
 
