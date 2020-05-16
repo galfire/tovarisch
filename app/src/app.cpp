@@ -35,7 +35,7 @@ using WindowPlatformSupport = tov::rendering::win32::WindowPlatformSupport;
 using WindowRendererSupport = tov::rendering::win32::gl::WindowRendererSupport;
 using RenderSystem = tov::rendering::RenderSystem;
 
-// adfadfdf
+// adfadf
 
 int main(int argc, char** argv)
 {
@@ -53,40 +53,53 @@ int main(int argc, char** argv)
 
     {
         auto& window = rs.createRenderWindow("Window", 800, 600, false);
-        auto& vp = window.createViewport(2, 0.0f, 0.0f, 1.0f, 1.0f, tov::rendering::Colour::Blue);
+        auto& vp = window.createViewport(2, 0.0f, 0.0f, 1.0f, 1.0f, tov::rendering::Colour::Black);
         camera.attachViewport(vp);
     }
 
-    using ShaderType = tov::rendering::pipeline::ShaderType;
-    tov::rendering::gl::pipeline::Shader vertexShader(ShaderType::VERTEX, "./shaders/vertex.vert.glsl");
-    tov::rendering::gl::pipeline::Shader fragmentShader(ShaderType::FRAGMENT, "./shaders/simple.frag.glsl");
-    vertexShader.compile();
-    fragmentShader.compile();
-
-    tov::rendering::gl::pipeline::Program program;
-    program.attachShader(vertexShader);
-    program.attachShader(fragmentShader);
-    program.link();
-
+    auto fl = tov::rendering::pipeline::ConstantDefinition<float>::DEFINITION;
+    auto integer = tov::rendering::pipeline::ConstantDefinition<int>::DEFINITION;
     using Vector3 = tov::math::Vector3;
     using Matrix4 = tov::math::Matrix4;
-    auto def = tov::rendering::pipeline::ConstantDefinition<Matrix4>::DEFINITION;
+    auto mat4 = tov::rendering::pipeline::ConstantDefinition<Matrix4>::DEFINITION;
     auto vec3 = tov::rendering::pipeline::ConstantDefinition<Vector3>::DEFINITION;
-    program.addConstantDefinition("modelMatrix", def);
-    program.addConstantDefinition("viewMatrix", def);
-    program.addConstantDefinition("projectionMatrix", def);
-    program.addConstantDefinition("colour", vec3);
-    program.buildLocationMap();
+
+    using ShaderType = tov::rendering::pipeline::ShaderType;
+    tov::rendering::gl::pipeline::Shader vertexShader(ShaderType::VERTEX, "./shaders/vertex.vert.glsl");
+    tov::rendering::gl::pipeline::Shader colourShader(ShaderType::FRAGMENT, "./shaders/colour.frag.glsl");
+    tov::rendering::gl::pipeline::Shader textureShader(ShaderType::FRAGMENT, "./shaders/texture.frag.glsl");
+    vertexShader.compile();
+    colourShader.compile();
+    textureShader.compile();
+
+    tov::rendering::gl::pipeline::Program colourProgram;
+    colourProgram.attachShader(vertexShader);
+    colourProgram.attachShader(colourShader);
+    colourProgram.link();
+    colourProgram.addConstantDefinition("modelMatrix", mat4);
+    colourProgram.addConstantDefinition("viewMatrix", mat4);
+    colourProgram.addConstantDefinition("projectionMatrix", mat4);
+    colourProgram.addConstantDefinition("colour", vec3);
+    colourProgram.buildLocationMap();
+
+    tov::rendering::gl::pipeline::Program textureProgram;
+    textureProgram.attachShader(vertexShader);
+    textureProgram.attachShader(textureShader);
+    textureProgram.link();
+    textureProgram.addConstantDefinition("modelMatrix", mat4);
+    textureProgram.addConstantDefinition("viewMatrix", mat4);
+    textureProgram.addConstantDefinition("projectionMatrix", mat4);
+    textureProgram.addConstantDefinition("texture", integer);
+    textureProgram.buildLocationMap();
 
     using BufferManager = tov::rendering::gl::buffers::BufferManager;
     BufferManager bufferManager;
-
     using MeshManager = tov::rendering::mesh::MeshManager;
     MeshManager meshManager(bufferManager);
 
     auto sphere = tov::rendering::geometry::Sphere(5.0f);
     auto mesh = meshManager.create();
-    auto& submesh = mesh->createSubmesh(sphere, program);
+    auto& submesh = mesh->createSubmesh(sphere, textureProgram);
 
     auto pixelFormat = tov::rendering::PixelFormat(8, 8, 8, 8, 0, 0);
     auto& pixelBuffer = *bufferManager.createPixelUnpackBuffer(pixelFormat, 64 * 64);
@@ -113,7 +126,7 @@ int main(int argc, char** argv)
         for (auto&& drawData : drawDataList)
         {
             auto& programInstance = drawData.getProgramInstance();
-            programInstance.setConstant<tov::math::Vector3>("colour", tov::math::Vector3(1.0f, 0.0f, 1.0f));
+            //programInstance.setConstant<tov::math::Vector3>("colour", tov::math::Vector3(1.0f, 0.0f, 1.0f));
         }
         entityNode.attachSceneObject(&entity);
         tov::math::Vector3 translation(0, 0, -40);
@@ -128,7 +141,7 @@ int main(int argc, char** argv)
         for (auto&& drawData : drawDataList)
         {
             auto& programInstance = drawData.getProgramInstance();
-            programInstance.setConstant<tov::math::Vector3>("colour", tov::math::Vector3(0.0f, 0.0f, 1.0f));
+            //programInstance.setConstant<tov::math::Vector3>("colour", tov::math::Vector3(0.0f, 0.0f, 1.0f));
         }
         entityNode.attachSceneObject(&entity);
         tov::math::Vector3 translation(5, 5, -30);
@@ -149,18 +162,18 @@ int main(int argc, char** argv)
         pbo.updatePixelData(buffer, sz);
 
         texture.unpackPixelData();
-        texture.bind();
+        auto textureBind = texture.bind();
 
-
-        //std::cout << "STARTING FRAME...\n";
-
+#if TOV_DEBUG
+        std::cout << "STARTING FRAME...\n";
+#endif
         rs.swapBuffers();
-        
         scene.queue();
-
         rs.renderFrame();
 
-        //std::cout << "END FRAME\n";
+#if TOV_DEBUG
+        std::cout << "END FRAME\n";
+#endif
     }
 
 #if TOV_COMPILER == TOV_COMPILER_MSVC

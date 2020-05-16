@@ -10,6 +10,8 @@ namespace tov
 
     enum class ConstantType
     {
+        FLOAT,
+        INT,
         MATRIX_3,
         MATRIX_4,
         VECTOR_2,

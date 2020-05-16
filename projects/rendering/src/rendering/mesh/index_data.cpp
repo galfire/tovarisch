@@ -16,7 +16,7 @@ namespace tov
         auto buffer = bufferManager.createIndexBuffer(numIndices);
         auto bufferObject = std::unique_ptr<buffers::IndexBufferObject>(
             new buffers::IndexBufferObject(*buffer, numIndices)
-            );
+        );
         mIndexBufferObject = std::move(bufferObject);
     }
 

@@ -24,7 +24,7 @@ namespace tov
             AttributeDescriptor attributeDescriptor;
             attributeDescriptor.semantic = attribute.getSemantic();
             attributeDescriptor.index = attribute.getIndex();
-            attributeDescriptor.location = attribute.getLocation();
+            attributeDescriptor.location = mVertexFormat.getAttributeLocation(attribute);
             attributeDescriptor.count = attribute.getCount();
             attributeDescriptor.type = attribute.getType();
             switch (mSequenceType)

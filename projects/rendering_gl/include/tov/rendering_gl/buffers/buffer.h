@@ -8,6 +8,8 @@
 #include "buffer_binder.h"
 #include "buffer_writer.h"
 
+#include <tov/rendering_gl/gpu_resource.h>
+
 #include <tov/rendering_gl/gl_impl.h>
 
 namespace tov
@@ -36,6 +38,7 @@ namespace tov
     >
     class Buffer
         : public base::Buffer<NullReader, BufferWriter, usageSettings, accessSettings>
+        , public GPUResource<BufferBinder>
     {
     private:
         static GLenum getGLAccessSettings();
@@ -51,7 +54,7 @@ namespace tov
 
         void discard() override;
 
-        auto bind() const { return BufferBinder(mBufferID, mBufferTarget); }
+        auto bind() const -> BufferBinder override { return BufferBinder(mBufferID, mBufferTarget); }
 
     private:
         void map() override {}

@@ -29,10 +29,15 @@ namespace tov
         Program();
         ~Program();
 
-        void setMatrix4(std::string name, void const *const data) const override;
+        void setInteger(std::string name, int data) const override;
+        void setFloat(std::string name, float data) const override;
+        
         void setVector2(std::string name, void const *const data) const override;
         void setVector3(std::string name, void const *const data) const override;
         void setVector4(std::string name, void const *const data) const override;
+
+        void setMatrix3(std::string name, void const* const data) const override;
+        void setMatrix4(std::string name, void const* const data) const override;
 
     private:
         void attachShaderImpl(rendering::pipeline::Shader& shader) const override;

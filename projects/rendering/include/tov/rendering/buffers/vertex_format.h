@@ -27,6 +27,8 @@ namespace tov
 
         auto getAttributes() const -> auto const & { return mAttributes; }
 
+        auto getAttributeLocation(VertexAttribute attribute) const { return mAttributeToLocationMap.at(attribute); }
+
     private:
         VertexAttributeList mAttributes;
         VertexAttributeToLocationMap mAttributeToLocationMap;

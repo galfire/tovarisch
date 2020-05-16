@@ -77,17 +77,23 @@ namespace tov
         return mUniformLocationMap.at(name);
     }
 
-    void Program::setMatrix4(std::string name, void const *const data) const
+    void Program::setFloat(std::string name, float data) const
     {
         auto location = getUniformLocation(name);
-        auto op = log_gl_op("set matrix4", name);
-        auto& matrix = *static_cast<math::Matrix4 const *const>(data);
-        glUniformMatrix4fv(
+        auto op = log_gl_op("set float", name);
+        glUniform1f(
             location,
-            1,
-            GL_FALSE,
-            // Transpose row major to GL column major
-            reinterpret_cast<GLfloat const *const>(matrix.transpose().data())
+            data
+        );
+    }
+
+    void Program::setInteger(std::string name, int data) const
+    {
+        auto location = getUniformLocation(name);
+        auto op = log_gl_op("set integer", name);
+        glUniform1i(
+            location,
+            data
         );
     }
 
@@ -121,6 +127,34 @@ namespace tov
             location,
             1,
             static_cast<GLfloat const* const>(data)
+        );
+    }
+
+    void Program::setMatrix3(std::string name, void const* const data) const
+    {
+        auto location = getUniformLocation(name);
+        auto op = log_gl_op("set matrix3", name);
+        auto& matrix = *static_cast<math::Matrix4 const* const>(data);
+        glUniformMatrix3fv(
+            location,
+            1,
+            GL_FALSE,
+            // Transpose row major to GL column major
+            reinterpret_cast<GLfloat const* const>(matrix.transpose().data())
+        );
+    }
+
+    void Program::setMatrix4(std::string name, void const* const data) const
+    {
+        auto location = getUniformLocation(name);
+        auto op = log_gl_op("set matrix4", name);
+        auto& matrix = *static_cast<math::Matrix4 const* const>(data);
+        glUniformMatrix4fv(
+            location,
+            1,
+            GL_FALSE,
+            // Transpose row major to GL column major
+            reinterpret_cast<GLfloat const* const>(matrix.transpose().data())
         );
     }
 

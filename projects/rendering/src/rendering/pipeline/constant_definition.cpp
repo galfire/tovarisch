@@ -8,6 +8,9 @@ namespace tov
     TOV_NAMESPACE_BEGIN(rendering)
     TOV_NAMESPACE_BEGIN(pipeline)
 
+    template<> const ConstantDefinition<float> ConstantDefinition<float>::DEFINITION(ConstantType::FLOAT);
+    template<> const ConstantDefinition<int> ConstantDefinition<int>::DEFINITION(ConstantType::INT);
+    
     template<> const ConstantDefinition<math::Matrix3> ConstantDefinition<math::Matrix3>::DEFINITION(ConstantType::MATRIX_3);
     template<> const ConstantDefinition<math::Matrix4> ConstantDefinition<math::Matrix4>::DEFINITION(ConstantType::MATRIX_4);
     

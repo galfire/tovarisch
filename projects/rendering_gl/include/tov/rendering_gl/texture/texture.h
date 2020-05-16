@@ -2,6 +2,7 @@
 #define TOV_RENDERING_GL_TEXTURE_TEXTURE_H
 
 #include <tov/rendering/texture/texture.h>
+#include <tov/rendering_gl/gpu_resource.h>
 
 #include <tov/rendering/buffers/buffer_manager.h>
 
@@ -14,8 +15,31 @@ namespace tov
     TOV_NAMESPACE_BEGIN(gl)
     TOV_NAMESPACE_BEGIN(texture)
 
+    class TextureBinder
+    {
+    public:
+        TextureBinder(GLuint textureID, GLenum textureTarget)
+            : mTextureID(textureID)
+            , mTextureTarget(textureTarget)
+        {
+            auto op = log_gl_op("bind texture", mTextureTarget, mTextureID);
+            glBindTexture(mTextureTarget, mTextureID);
+        }
+
+        ~TextureBinder()
+        {
+            auto op = log_gl_op("unbind texture", mTextureTarget, mTextureID);
+            glBindTexture(mTextureTarget, 0);
+        }
+
+    private:
+        GLuint mTextureID;
+        GLenum mTextureTarget;
+    };
+
     class Texture2D
         : public rendering::texture::Texture2D
+        , public GPUResource<TextureBinder>
     {
     public:
         Texture2D(
@@ -26,8 +50,10 @@ namespace tov
         )
             : rendering::texture::Texture2D(pbo, width, height, pixelFormat)
         {
-            glGenTextures(1, &textureId);
-            bind();
+            glGenTextures(1, &mTextureID);
+            
+            auto textureBind = bind();
+
             {
                 auto op = log_gl_op("set texture min filter");
                 glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
@@ -52,20 +78,9 @@ namespace tov
                 auto op = log_gl_op("pixel store alignment");
                 glPixelStorei(GL_UNPACK_ALIGNMENT, pixelFormat.getSize());
             }
-            unbind();
         }
 
-        auto bind() const -> void
-        {
-            auto op = log_gl_op("bind texture2D");
-            glBindTexture(GL_TEXTURE_2D, textureId);
-        }
-
-        auto unbind() const -> void
-        {
-            auto op = log_gl_op("unbind texture2D");
-            glBindTexture(GL_TEXTURE_2D, 0);
-        }
+        auto bind() const -> TextureBinder override { return TextureBinder(mTextureID, GL_TEXTURE_2D); }
 
         auto getPixelBuffer() const -> auto&
         {
@@ -78,19 +93,17 @@ namespace tov
 
         auto unpackPixelData() const -> void override
         {
+            auto& buffer = getPixelBuffer();
+
             // Upload PBO data to texture
-            bind();
-            {
-                auto& buffer = getPixelBuffer();
-                auto bind = buffer.bind();
-                auto op = log_gl_op("tex subimage2D");
-                glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, mWidth, mHeight, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
-            }
-            unbind();
+            auto textureBind = bind();
+            auto bufferBind = buffer.bind();
+            auto op = log_gl_op("tex subimage2D");
+            glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, mWidth, mHeight, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
         }
 
     private:
-        GLuint textureId;
+        GLuint mTextureID;
     };
 
     TOV_NAMESPACE_END // texture
