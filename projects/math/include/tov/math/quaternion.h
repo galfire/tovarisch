@@ -19,19 +19,19 @@ namespace tov
         Quaternion(float w, float x, float y, float z) noexcept;
         Quaternion(Radian angle, const Vector3& axis) noexcept;
 
-        Vector3 rotate(const Vector3& vector) const noexcept;
-        Vector3 operator * (const Vector3& vector) const noexcept;
+        auto rotate(const Vector3& vector) const noexcept -> Vector3;
+        auto operator * (const Vector3& vector) const noexcept -> Vector3;
 
-        Quaternion accumulate(const Quaternion& q) const noexcept;
-        Quaternion operator * (const Quaternion& q) const noexcept;
+        auto accumulate(const Quaternion& q) const noexcept -> Quaternion;
+        auto operator * (const Quaternion& q) const noexcept -> Quaternion;
 
-        Quaternion& accumulateAssign(const Quaternion& q) noexcept;
-        Quaternion& operator *= (const Quaternion& q) noexcept;
+        auto accumulateAssign(const Quaternion& q) noexcept -> Quaternion&;
+        auto operator *= (const Quaternion& q) noexcept -> Quaternion&;
 
-        Radian getAngle() const noexcept;
-        Vector3 getAxis() const noexcept;
+        auto getAngle() const noexcept -> Radian;
+        auto getAxis() const noexcept -> Vector3;
 
-        Matrix3 toRotationMatrix() const noexcept;
+        auto toRotationMatrix() const noexcept -> Matrix3;
 
     public:
         static const Quaternion IDENTITY;

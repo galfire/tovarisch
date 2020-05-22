@@ -26,6 +26,12 @@ namespace tov
         auto type = getConstantType(name);
         switch (type)
         {
+        case ConstantType::FLOAT:
+            mProgram.setFloat(name, *static_cast<float const *const>(data));
+            break;
+        case ConstantType::INT:
+            mProgram.setInteger(name, *static_cast<int const* const>(data));
+            break;
         case ConstantType::MATRIX_3:
             break;
         case ConstantType::MATRIX_4:

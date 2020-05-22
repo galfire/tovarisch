@@ -89,7 +89,7 @@ namespace tov
     private:
         Program const& mProgram;
         ProgramState mProgramState;
-        ConstantBufferDescriptorMap mConstantBufferDescriptorMap;
+        ConstantBufferDescriptorMap const& mConstantBufferDescriptorMap;
         std::vector<std::string> mConstantNames;
     };
 

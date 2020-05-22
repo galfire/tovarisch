@@ -24,7 +24,7 @@ namespace tov
         auto getSceneNodes() -> auto& { return mSceneNodes; }
 
     private:
-        Camera* mCamera;
+        Camera* mCamera = nullptr;
         std::vector<SceneNode*> mSceneNodes;
     };
 

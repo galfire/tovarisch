@@ -5,7 +5,8 @@
 
 #include <tov/math/matrix.h>
 
-#include <tov/rendering/buffers/buffer_object.h>
+#include <tov/rendering/buffers/index_buffer_object.h>
+#include <tov/rendering/buffers/vertex_buffer_object.h>
 #include <tov/rendering/pipeline/program_instance.h>
 
 namespace tov
@@ -17,26 +18,26 @@ namespace tov
     {
     public:
         DrawData(
-            buffers::BufferObject const& indexBufferObject, 
-            buffers::BufferObject const& vertexBufferObject,
-            pipeline::ProgramInstance& programInstance
+            buffers::IndexBufferObject const& indexBufferObject, 
+            std::vector<buffers::VertexBufferObject*> const& vertexBufferObjects,
+            pipeline::ProgramInstance const& programInstance
         ) noexcept
             : mIndexBufferObject(indexBufferObject)
-            , mVertexBufferObject(vertexBufferObject)
+            , mVertexBufferObjects(vertexBufferObjects)
             , mProgramInstance(programInstance)
         {}
 
         ~DrawData() noexcept = default;
 
         auto getIndexBufferObject() const -> auto const& { return mIndexBufferObject; }
-        auto getVertexBufferObject() const -> auto const& { return mVertexBufferObject; }
+        auto getVertexBufferObjects() const -> auto const& { return mVertexBufferObjects; }
         auto getProgramInstance() -> auto & { return mProgramInstance; }
         auto getProgramInstance() const -> auto const& { return mProgramInstance; }
 
     private:
-        buffers::BufferObject const& mIndexBufferObject;
-        buffers::BufferObject const& mVertexBufferObject;
-        pipeline::ProgramInstance& mProgramInstance;
+        buffers::IndexBufferObject const& mIndexBufferObject;
+        std::vector<buffers::VertexBufferObject*> const& mVertexBufferObjects;
+        pipeline::ProgramInstance const& mProgramInstance;
     };
 
     TOV_NAMESPACE_END // mesh

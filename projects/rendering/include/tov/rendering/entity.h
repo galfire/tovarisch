@@ -31,7 +31,6 @@ namespace tov
 
         auto createMeshComponent(mesh::Mesh& mesh) -> MeshComponent&;
         auto getDrawDataList() const -> DrawDataList const& override;
-        auto getDrawDataList() -> DrawDataList&;
 
     private:
         template<class T, class... U>

@@ -4,6 +4,7 @@
 #include <tov/rendering/rendering_core.h>
 
 #include "draw_data.h"
+#include "submesh_instance.h"
 
 #include <vector>
 
@@ -12,20 +13,29 @@ namespace tov
     TOV_NAMESPACE_BEGIN(rendering)
     TOV_NAMESPACE_BEGIN(mesh)
 
+    //class SubmeshInstance;
+
     class MeshInstance
     {
-    public:
-        MeshInstance(std::vector<DrawData> const&& drawData) noexcept
-            : mDrawDataList(drawData)
-        {}
-
-        ~MeshInstance() noexcept = default;
-
-        auto getDrawDataList() -> auto & { return mDrawDataList; }
-        auto getDrawDataList() const -> auto const& { return mDrawDataList; }
-
     private:
         using DrawDataList = std::vector<DrawData>;
+
+    public:
+        MeshInstance() noexcept;
+        ~MeshInstance() noexcept = default;
+
+        auto addSubmeshInstance(SubmeshInstance submeshInstance) -> void;
+        auto getSubmeshInstance(uint index) -> SubmeshInstance&;
+
+        auto getDrawDataList() -> DrawDataList const&;
+
+    private:
+        auto buildDrawDataList() -> void;
+
+    private:
+        using SubmeshInstanceList = std::vector<SubmeshInstance>;
+        SubmeshInstanceList mSubmeshInstanceList;
+
         DrawDataList mDrawDataList;
     };
 

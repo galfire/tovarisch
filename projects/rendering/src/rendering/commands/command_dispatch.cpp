@@ -40,8 +40,9 @@ namespace tov
         auto const& projectionMatrix = command->projectionMatrix;
 
         auto drawData = command->drawData;
+
         auto& programInstance = drawData->getProgramInstance();
-        
+        programInstance.use();
         programInstance.uploadConstants();
         programInstance.uploadConstantData("modelMatrix", modelMatrix.data());
         programInstance.uploadConstantData("viewMatrix", viewMatrix.data());

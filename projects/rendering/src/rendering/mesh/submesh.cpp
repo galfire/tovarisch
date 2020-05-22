@@ -23,7 +23,7 @@ namespace tov
     TOV_NAMESPACE_BEGIN(rendering)
     TOV_NAMESPACE_BEGIN(mesh)
 
-    void writeVertexBufferInterleaved(buffers::VertexBufferObject& vbo, const geometry::Geometry& geometry)
+    void writeVertexBufferInterleaved(buffers::VertexBufferObject& vbo, geometry::Geometry const& geometry)
     {
         auto const& format = vbo.getBufferFormat();
         auto attributes = format.getVertexFormat().getAttributes();
@@ -66,7 +66,7 @@ namespace tov
         }
     }
 
-    void writeVertexBufferSequential(buffers::VertexBufferObject& vbo, const geometry::Geometry& geometry)
+    void writeVertexBufferSequential(buffers::VertexBufferObject& vbo, geometry::Geometry const& geometry)
     {
         auto const& format = vbo.getBufferFormat();
         auto attributes = format.getVertexFormat().getAttributes();
@@ -106,7 +106,7 @@ namespace tov
         }
     }
 
-    void writeVertexBuffer(buffers::VertexBufferObject& vbo, const geometry::Geometry& geometry)
+    void writeVertexBuffer(buffers::VertexBufferObject& vbo, geometry::Geometry const& geometry)
     {
         auto format = vbo.getBufferFormat();
         switch (format.getSequenceType())
@@ -120,34 +120,40 @@ namespace tov
         }
     }
 
-    Submesh::Submesh(Mesh& parentMesh, const geometry::Geometry& geometry, pipeline::Program& program) noexcept
+    Submesh::Submesh(Mesh& parentMesh, const geometry::Geometry& geometry, VertexDataFormat const& vertexDataFormat) noexcept
         : mParentMesh(parentMesh)
-        , mGeometry(geometry)
-        , mProgram(program)
     {
-        this->build();
+        this->build(geometry, vertexDataFormat);
     }
 
     Submesh::~Submesh() noexcept
     {}
 
-    void Submesh::build()
+    auto Submesh::instantiate() -> SubmeshInstance
     {
-        this->buildIndexData();
-        this->buildVertexData();
+        auto const& ibo = getIndexData()->getBufferObject();
+        auto const& vbos = getVertexData()->getBufferObjects();
+        auto submeshInstance = SubmeshInstance(ibo, vbos);
+        return submeshInstance;
     }
 
-    void Submesh::buildIndexData()
+    void Submesh::build(geometry::Geometry const& geometry, VertexDataFormat const& vertexDataFormat)
+    {
+        this->buildIndexData(geometry);
+        this->buildVertexData(geometry, vertexDataFormat);
+    }
+
+    void Submesh::buildIndexData(geometry::Geometry const& geometry)
     {
         mIndexData = std::unique_ptr<IndexData>(
             new IndexData(
                 mParentMesh.getManager().getBufferManager(),
-                mGeometry.getNumIndices()
+                geometry.getNumIndices()
             )
         );
 
-        auto indices = mGeometry.getIndices();
-        auto numIndices = mGeometry.getNumIndices();
+        auto indices = geometry.getIndices();
+        auto numIndices = geometry.getNumIndices();
         auto indexType = buffers::getIndexType(numIndices);
 
         auto& ibo = mIndexData->getBufferObject();
@@ -186,16 +192,13 @@ namespace tov
         }
     }
 
-    void Submesh::buildVertexData()
+    void Submesh::buildVertexData(geometry::Geometry const& geometry, VertexDataFormat const& vertexDataFormat)
     {
-        auto preferredVertexDataFormat = mParentMesh.getManager().getPreferredVertexDataFormat();
-        auto vertexDataFormat = preferredVertexDataFormat;
-
         mVertexData = std::unique_ptr<VertexData>(
             new VertexData(
                 mParentMesh.getManager().getBufferManager(),
                 vertexDataFormat,
-                mGeometry.getNumVertices()
+                geometry.getNumVertices()
             )
         );
 
@@ -203,7 +206,7 @@ namespace tov
         for (auto&& handle : handles)
         {
             auto& vbo = mVertexData->getBufferObjectForHandle(handle);
-            writeVertexBuffer(vbo, mGeometry);
+            writeVertexBuffer(vbo, geometry);
         }
     }
 

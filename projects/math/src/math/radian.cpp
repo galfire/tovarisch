@@ -4,21 +4,21 @@
 
 namespace tov
 {
-	TOV_NAMESPACE_BEGIN(math)
+    TOV_NAMESPACE_BEGIN(math)
 
-	Radian::Radian(const Degree& degree)
-		: mValue(degree.valueRadians())
-	{}
+    Radian::Radian(const Degree& degree)
+        : mValue(degree.valueRadians())
+    {}
 
-	Degree Radian::toDegree() const
-	{
-		return Degree(valueDegrees());
-	}
+    Degree Radian::toDegree() const
+    {
+        return Degree(valueDegrees());
+    }
 
-	float Radian::valueDegrees(void) const
-	{
-		return internal::radiansToDegrees(mValue);
-	}
+    float Radian::valueDegrees(void) const
+    {
+        return internal::radiansToDegrees(mValue);
+    }
 
-	TOV_NAMESPACE_END
+    TOV_NAMESPACE_END
 }

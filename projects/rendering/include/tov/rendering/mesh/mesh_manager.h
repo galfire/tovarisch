@@ -27,12 +27,9 @@ namespace tov
 
         auto create() -> Mesh*;
         auto getBufferManager() const -> auto & { return mBufferManager; }
-        auto getPreferredVertexDataFormat() const -> auto const& { return mPreferredVertexDataFormat; }
 
     private:
         buffers::BufferManagerBase& mBufferManager;
-
-        VertexDataFormat mPreferredVertexDataFormat;
 
         using MeshList = std::vector<std::unique_ptr<Mesh>>;
         MeshList mMeshList;

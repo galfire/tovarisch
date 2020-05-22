@@ -76,16 +76,6 @@ namespace tov
 
     void Draw(mesh::DrawData const *const drawData)
     {
-        auto& programInstance = drawData->getProgramInstance();
-        programInstance.use();
-
-        auto const& ibo = static_cast<buffers::IndexBufferObject const&>(drawData->getIndexBufferObject());
-        auto const& vbo = static_cast<buffers::VertexBufferObject const&>(drawData->getVertexBufferObject());
-
-        using Buffer = rendering::gl::buffers::Buffer<buffers::UsageSettings::STATIC, buffers::AccessSettings::WRITE>;
-        auto& indexBuffer = static_cast<Buffer&>(ibo.getBuffer());
-        auto& vertexBuffer = static_cast<Buffer&>(vbo.getBuffer());
-
         // TODO: Abstract and make a persistent VAO
         GLuint vao;
         {
@@ -93,61 +83,72 @@ namespace tov
             glGenVertexArrays(1, &vao);
             glBindVertexArray(vao);
         }
+
+        // Bind the index buffer and vertex buffers before drawing
+        using Buffer = rendering::gl::buffers::Buffer<buffers::UsageSettings::STATIC, buffers::AccessSettings::WRITE>;
         
-        // Bind the index and vertex buffer before drawing
+        auto const& ibo = static_cast<buffers::IndexBufferObject const&>(drawData->getIndexBufferObject());
+        auto& indexBuffer = static_cast<Buffer&>(ibo.getBuffer());
         auto bindIndex = indexBuffer.bind();
-        auto bindVertex = vertexBuffer.bind();
 
-        auto const& vbf = vbo.getBufferFormat();
-        auto const& desc = vbf.getDescriptor();
-
-        for (auto&& a : desc.attributeDescriptors)
+        auto const& vbos = drawData->getVertexBufferObjects();
+        for (auto&& vbo_ : vbos)
         {
-            auto location = a.location;
-            auto count = a.count;
-            auto stride = a.stride;
-            auto offset = reinterpret_cast<void*>(a.offset);
-            GLenum type = 0;
-            switch (a.type)
-            {
-            case buffers::VertexAttribute::Type::FLOAT:
-                type = GL_FLOAT;
-                break;
-            case buffers::VertexAttribute::Type::INT:
-                type = GL_INT;
-                break;
-            case buffers::VertexAttribute::Type::UINT:
-                type = GL_UNSIGNED_INT;
-                break;
-            case buffers::VertexAttribute::Type::SHORT:
-                type = GL_SHORT;
-                break;
-            case buffers::VertexAttribute::Type::USHORT:
-                type = GL_UNSIGNED_SHORT;
-                break;
-            case buffers::VertexAttribute::Type::BYTE:
-                type = GL_BYTE;
-                break;
-            case buffers::VertexAttribute::Type::UBYTE:
-                type = GL_UNSIGNED_BYTE;
-                break;
-            }
+            auto const& vbo = static_cast<buffers::VertexBufferObject const&>(*vbo_);
 
-            {
-                auto op = log_gl_op("enable vertex attrib", location);
-                glEnableVertexAttribArray(location);
-            }
+            auto& vertexBuffer = static_cast<Buffer&>(vbo.getBuffer());
+            auto bindVertex = vertexBuffer.bind();
 
+            auto const& vbf = vbo.getBufferFormat();
+            auto const& desc = vbf.getDescriptor();
+            for (auto&& a : desc.attributeDescriptors)
             {
-                auto op = log_gl_op("vertex attrib pointer", location, count, getEnumString(type), false, stride, offset);
-                glVertexAttribPointer(
-                    location,
-                    count,
-                    type,
-                    false,
-                    stride,
-                    offset
-                );
+                auto location = a.location;
+                auto count = a.count;
+                auto stride = a.stride;
+                auto offset = reinterpret_cast<void*>(a.offset);
+                GLenum type = 0;
+                switch (a.type)
+                {
+                case buffers::VertexAttribute::Type::FLOAT:
+                    type = GL_FLOAT;
+                    break;
+                case buffers::VertexAttribute::Type::INT:
+                    type = GL_INT;
+                    break;
+                case buffers::VertexAttribute::Type::UINT:
+                    type = GL_UNSIGNED_INT;
+                    break;
+                case buffers::VertexAttribute::Type::SHORT:
+                    type = GL_SHORT;
+                    break;
+                case buffers::VertexAttribute::Type::USHORT:
+                    type = GL_UNSIGNED_SHORT;
+                    break;
+                case buffers::VertexAttribute::Type::BYTE:
+                    type = GL_BYTE;
+                    break;
+                case buffers::VertexAttribute::Type::UBYTE:
+                    type = GL_UNSIGNED_BYTE;
+                    break;
+                }
+
+                {
+                    auto op = log_gl_op("enable vertex attrib", location);
+                    glEnableVertexAttribArray(location);
+                }
+
+                {
+                    auto op = log_gl_op("vertex attrib pointer", location, count, getEnumString(type), false, stride, offset);
+                    glVertexAttribPointer(
+                        location,
+                        count,
+                        type,
+                        false,
+                        stride,
+                        offset
+                    );
+                }
             }
         }
 
@@ -175,11 +176,17 @@ namespace tov
             );
         }
 
-        for (auto&& a : desc.attributeDescriptors)
+        for (auto&& vbo_ : vbos)
         {
-            auto location = a.location;
-            auto op = log_gl_op("disable vertex attrib", location);
-            glDisableVertexAttribArray(location);
+            auto const& vbo = static_cast<buffers::VertexBufferObject const&>(*vbo_);
+            auto const& vbf = vbo.getBufferFormat();
+            auto const& desc = vbf.getDescriptor();
+            for (auto&& a : desc.attributeDescriptors)
+            {
+                auto location = a.location;
+                auto op = log_gl_op("disable vertex attrib", location);
+                glDisableVertexAttribArray(location);
+            }
         }
 
         glDeleteVertexArrays(1, &vao);

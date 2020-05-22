@@ -4,6 +4,7 @@
 #include <tov/rendering/rendering_core.h>
 
 #include "buffer_object.h"
+#include "guard.h"
 
 #include <tov/rendering/pixel_format.h>
 

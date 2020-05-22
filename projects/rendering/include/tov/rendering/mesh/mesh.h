@@ -15,16 +15,12 @@ namespace tov
     class Geometry;
     
     TOV_NAMESPACE_END // geometry
-    TOV_NAMESPACE_BEGIN(pipeline)
-
-    class Program;
-
-    TOV_NAMESPACE_END // pipeline
 
     TOV_NAMESPACE_BEGIN(mesh)
 
     class MeshManager;
     class Submesh;
+    class VertexDataFormat;
 
     class Mesh
     {
@@ -36,7 +32,7 @@ namespace tov
 
         auto getManager() const -> auto const& { return mManager; }
 
-        auto createSubmesh(geometry::Geometry const& geometry, pipeline::Program& program) -> Submesh&;
+        auto createSubmesh(geometry::Geometry const& geometry, VertexDataFormat const& vertexDataFormat) -> Submesh&;
         auto instantiate() const -> MeshInstance;
 
     private:

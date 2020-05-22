@@ -25,22 +25,14 @@ namespace tov
     {
         if (mMeshComponent)
         {
-            auto const& meshInstance = mMeshComponent->getMeshInstance();
+            auto & meshInstance = mMeshComponent->getMeshInstance();
             auto const& drawDataList = meshInstance.getDrawDataList();
             return drawDataList;
         }
         else
         {
-            // FIXME: This will cause undefined behaviour since this returns a reference
             return {};
         }
-    }
-
-    auto Entity::getDrawDataList() -> DrawDataList&
-    {
-        auto& meshInstance = mMeshComponent->getMeshInstance();
-        auto& drawDataList = meshInstance.getDrawDataList();
-        return drawDataList;
     }
 
     TOV_NAMESPACE_END // rendering

@@ -5,18 +5,18 @@
 
 namespace tov
 {
-	TOV_NAMESPACE_BEGIN(math)
+    TOV_NAMESPACE_BEGIN(math)
 
-	struct SIMD
-	{
-		enum Type
-		{
-			_NONE,
-			_128F
-		};
-	};
+    struct SIMD
+    {
+        enum Type
+        {
+            _NONE,
+            _128F
+        };
+    };
 
-	TOV_NAMESPACE_END // math
+    TOV_NAMESPACE_END // math
 }
 
 #endif

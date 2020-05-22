@@ -7,17 +7,17 @@
 
 namespace tov
 {
-	TOV_NAMESPACE_BEGIN(math)
+    TOV_NAMESPACE_BEGIN(math)
 
-	inline float tan(const Radian& value) { return (float)std::tan(value.valueRadians()); }
-	inline float sin(const Radian& value) { return (float)std::sin(value.valueRadians()); }
-	inline float cos(const Radian& value) { return (float)std::cos(value.valueRadians()); }
+    inline float tan(const Radian& value) { return (float)std::tan(value.valueRadians()); }
+    inline float sin(const Radian& value) { return (float)std::sin(value.valueRadians()); }
+    inline float cos(const Radian& value) { return (float)std::cos(value.valueRadians()); }
 
-	inline Radian atan(float fValue) { return Radian(std::atan(fValue)); }
-	inline Radian asin(float fValue) { return Radian(std::asin(fValue)); }
-	inline Radian acos(float fValue) { return Radian(std::acos(fValue)); }
+    inline Radian atan(float fValue) { return Radian(std::atan(fValue)); }
+    inline Radian asin(float fValue) { return Radian(std::asin(fValue)); }
+    inline Radian acos(float fValue) { return Radian(std::acos(fValue)); }
 
-	TOV_NAMESPACE_END
+    TOV_NAMESPACE_END
 }
 
 #endif

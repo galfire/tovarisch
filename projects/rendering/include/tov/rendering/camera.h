@@ -51,9 +51,9 @@ namespace tov
         Transform mCachedTransform;
         ViewFrustum<ProjectionType::PERSPECTIVE> mViewFrustum;
 
-        DrawDataList mDrawDataList;
-
         std::vector<Viewport*> mViewports;
+
+        DrawDataList mDrawDataList;
     };
 
     TOV_NAMESPACE_END

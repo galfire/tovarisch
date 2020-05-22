@@ -1,5 +1,3 @@
-#include <iostream>
-
 #include <tov/core.h>
 
 #include <tov/math/matrix.h>
@@ -14,8 +12,15 @@
 #include <tov/rendering/geometry/sphere.h>
 
 #include <tov/rendering/entity.h>
+#include <tov/rendering/mesh_component.h>
 #include <tov/rendering/mesh/mesh.h>
 #include <tov/rendering/mesh/mesh_manager.h>
+
+#include <tov/rendering/buffers/vertex_buffer_format.h>
+#include <tov/rendering/buffers/vertex_format.h>
+#include <tov/rendering/mesh/vertex_data_format.h>
+
+#include <tov/rendering/buffers/pixel_buffer_object.h>
 
 #include <tov/rendering/render_system.h>
 #include <tov/rendering/render_window.h>
@@ -25,11 +30,12 @@
 #include <tov/rendering_gl/pipeline/shader.h>
 #include <tov/rendering_gl/pipeline/program.h>
 #include <tov/rendering_gl/buffers/buffer_manager.h>
-
 #include <tov/rendering_gl/texture/texture.h>
 
 #include <tov/rendering/win32/window_platform_support.h>
 #include <tov/rendering_gl/window_renderer_support.h>
+
+#include <iostream>
 
 using WindowPlatformSupport = tov::rendering::win32::WindowPlatformSupport;
 using WindowRendererSupport = tov::rendering::win32::gl::WindowRendererSupport;
@@ -89,7 +95,7 @@ int main(int argc, char** argv)
     textureProgram.addConstantDefinition("modelMatrix", mat4);
     textureProgram.addConstantDefinition("viewMatrix", mat4);
     textureProgram.addConstantDefinition("projectionMatrix", mat4);
-    textureProgram.addConstantDefinition("texture", integer);
+    textureProgram.addConstantDefinition("tex", integer);
     textureProgram.buildLocationMap();
 
     using BufferManager = tov::rendering::gl::buffers::BufferManager;
@@ -97,13 +103,40 @@ int main(int argc, char** argv)
     using MeshManager = tov::rendering::mesh::MeshManager;
     MeshManager meshManager(bufferManager);
 
-    auto sphere = tov::rendering::geometry::Sphere(5.0f);
     auto mesh = meshManager.create();
-    auto& submesh = mesh->createSubmesh(sphere, textureProgram);
+
+    auto vertexDataFormat = tov::rendering::mesh::VertexDataFormat();
+
+    {
+        tov::rendering::buffers::VertexFormat vf;
+        vf.addAttribute(tov::rendering::buffers::VertexAttribute::POSITION, 0);
+        //vf.addAttribute(tov::rendering::buffers::VertexAttribute::NORMAL, 1);
+        //vf.addAttribute(tov::rendering::buffers::VertexAttribute::COLOUR, 2);
+        //vf.addAttribute(buffers::VertexAttribute::TEXTURE_COORDINATE, 3);
+        tov::rendering::buffers::VertexBufferFormat vbf(
+            tov::rendering::buffers::VertexBufferFormat::SequenceType::INTERLEAVED,
+            vf
+        );
+        vertexDataFormat.mapHandleToFormat(0, vbf);
+    }
+    {
+        tov::rendering::buffers::VertexFormat vf;
+        vf.addAttribute(tov::rendering::buffers::VertexAttribute::TEXTURE_COORDINATE, 3);
+        tov::rendering::buffers::VertexBufferFormat vbf(
+            tov::rendering::buffers::VertexBufferFormat::SequenceType::INTERLEAVED,
+            vf
+        );
+        vertexDataFormat.mapHandleToFormat(1, vbf);
+    }
+
+    {
+        auto sphere = tov::rendering::geometry::Sphere(5.0f);
+        mesh->createSubmesh(sphere, vertexDataFormat);
+    }
 
     auto pixelFormat = tov::rendering::PixelFormat(8, 8, 8, 8, 0, 0);
-    auto& pixelBuffer = *bufferManager.createPixelUnpackBuffer(pixelFormat, 64 * 64);
-    auto& pbo = tov::rendering::buffers::PixelBufferObject(pixelBuffer, pixelFormat);
+    auto pixelBuffer = bufferManager.createPixelUnpackBuffer(pixelFormat, 64 * 64);
+    auto& pbo = tov::rendering::buffers::PixelBufferObject(*pixelBuffer, pixelFormat);
     auto texture = tov::rendering::gl::texture::Texture2D(pbo, 64, 64, pixelFormat);
     
     auto buffer = new unsigned char[64 * 64 * 4];
@@ -121,13 +154,11 @@ int main(int argc, char** argv)
     {
         auto& entityNode = root.createChild();
         auto& entity = scene.createEntity();
-        entity.createMeshComponent(*mesh);
-        auto& drawDataList = entity.getDrawDataList();
-        for (auto&& drawData : drawDataList)
-        {
-            auto& programInstance = drawData.getProgramInstance();
-            //programInstance.setConstant<tov::math::Vector3>("colour", tov::math::Vector3(1.0f, 0.0f, 1.0f));
-        }
+        auto& component = entity.createMeshComponent(*mesh);
+        auto& submesh = component.getMeshInstance().getSubmeshInstance(0);
+        auto& programInstance = textureProgram.instantiate();
+        programInstance.setConstant<int>("tex", 0);
+        submesh.setProgramInstance(&programInstance);
         entityNode.attachSceneObject(&entity);
         tov::math::Vector3 translation(0, 0, -40);
         entityNode.getTransform().setTranslation(translation);
@@ -136,13 +167,11 @@ int main(int argc, char** argv)
     {
         auto& entityNode = root.createChild();
         auto& entity = scene.createEntity();
-        entity.createMeshComponent(*mesh);
-        auto& drawDataList = entity.getDrawDataList();
-        for (auto&& drawData : drawDataList)
-        {
-            auto& programInstance = drawData.getProgramInstance();
-            //programInstance.setConstant<tov::math::Vector3>("colour", tov::math::Vector3(0.0f, 0.0f, 1.0f));
-        }
+        auto& component = entity.createMeshComponent(*mesh);
+        auto& submesh = component.getMeshInstance().getSubmeshInstance(0);
+        auto& programInstance = colourProgram.instantiate();
+        programInstance.setConstant<tov::math::Vector3>("colour", tov::math::Vector3(0.0f, 0.0f, 1.0f));
+        submesh.setProgramInstance(&programInstance);
         entityNode.attachSceneObject(&entity);
         tov::math::Vector3 translation(5, 5, -30);
         entityNode.getTransform().setTranslation(translation);

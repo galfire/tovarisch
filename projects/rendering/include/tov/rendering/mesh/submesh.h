@@ -3,6 +3,8 @@
 
 #include <tov/rendering/rendering_core.h>
 
+#include "submesh_instance.h"
+
 namespace tov
 {
     TOV_NAMESPACE_BEGIN(rendering)
@@ -17,40 +19,34 @@ namespace tov
     class Geometry;
     
     TOV_NAMESPACE_END // geometry
-    TOV_NAMESPACE_BEGIN(pipeline)
-
-    class Program;
-
-    TOV_NAMESPACE_END // pipeline
 
     TOV_NAMESPACE_BEGIN(mesh)
 
     class IndexData;
     class Mesh;
     class VertexData;
+    class VertexDataFormat;
 
     class Submesh
     {
         TOV_MOVABLE_ONLY(Submesh)
 
     public:
-        Submesh(Mesh& parentMesh, const geometry::Geometry& geometry, pipeline::Program& program) noexcept;
+        Submesh(Mesh& parentMesh, geometry::Geometry const& geometry, VertexDataFormat const& vertexDataFormat) noexcept;
         ~Submesh() noexcept;
 
         auto getIndexData() const -> auto const& { return mIndexData; }
         auto getVertexData() const -> auto const& { return mVertexData; }
-        auto getProgram() -> auto& { return mProgram; }
-        auto getProgram() const -> auto const& { return mProgram; }
+
+        auto instantiate() -> SubmeshInstance;
 
     private:
-        void build();
-        void buildIndexData();
-        void buildVertexData();
+        void build(geometry::Geometry const&, VertexDataFormat const& vertexDataFormat);
+        void buildIndexData(geometry::Geometry const& geometry);
+        void buildVertexData(geometry::Geometry const& geometry, VertexDataFormat const& vertexDataFormat);
 
     private:
         Mesh& mParentMesh;
-        const geometry::Geometry& mGeometry;
-        pipeline::Program& mProgram;
 
         std::unique_ptr<IndexData> mIndexData;
         std::unique_ptr<VertexData> mVertexData;

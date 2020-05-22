@@ -15,7 +15,7 @@ namespace tov
         : mScene(scene)
         , mCachedTransform()
         , mViewFrustum()
-        , mDrawDataList({})
+        , mDrawDataList{}
     {}
 
     void Camera::setNearDistance(float nearDistance)

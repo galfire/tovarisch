@@ -1,8 +1,5 @@
 #include <rendering/mesh/mesh_manager.h>
 
-#include <rendering/buffers/vertex_buffer_format.h>
-#include <rendering/buffers/vertex_format.h>
-
 #include <rendering/mesh/mesh.h>
 
 namespace tov
@@ -12,18 +9,7 @@ namespace tov
 
     MeshManager::MeshManager(buffers::BufferManagerBase& bufferManager) noexcept
         : mBufferManager(bufferManager)
-    {
-        buffers::VertexFormat vf;
-        vf.addAttribute(buffers::VertexAttribute::POSITION, 0);
-        vf.addAttribute(buffers::VertexAttribute::NORMAL, 1);
-        vf.addAttribute(buffers::VertexAttribute::COLOUR, 2);
-        vf.addAttribute(buffers::VertexAttribute::TEXTURE_COORDINATE, 3);
-        buffers::VertexBufferFormat vbf(
-            buffers::VertexBufferFormat::SequenceType::INTERLEAVED,
-            vf
-        );
-        mPreferredVertexDataFormat.mapHandleToFormat(0, vbf);
-    }
+    {}
 
     MeshManager::~MeshManager() noexcept
     {}

@@ -6,9 +6,6 @@
 #include "constant_definition.h"
 #include "program_instance.h"
 
-#include <tov/math/matrix.h>
-#include <tov/math/vector.h>
-
 #include <string>
 
 namespace tov
@@ -46,11 +43,9 @@ namespace tov
 
         virtual void setInteger(std::string name, int data) const TOV_ABSTRACT;
         virtual void setFloat(std::string name, float data) const TOV_ABSTRACT;
-
         virtual void setVector2(std::string name, void const* const data) const TOV_ABSTRACT;
         virtual void setVector3(std::string name, void const* const data) const TOV_ABSTRACT;
         virtual void setVector4(std::string name, void const* const data) const TOV_ABSTRACT;
-        
         virtual void setMatrix3(std::string name, void const *const data) const TOV_ABSTRACT;
         virtual void setMatrix4(std::string name, void const *const data) const TOV_ABSTRACT;
 

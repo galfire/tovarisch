@@ -6,8 +6,8 @@
 
 namespace tov
 {
-	TOV_NAMESPACE_BEGIN(rendering)
-	TOV_NAMESPACE_BEGIN(pipeline)
+    TOV_NAMESPACE_BEGIN(rendering)
+    TOV_NAMESPACE_BEGIN(pipeline)
 
     auto Program::instantiate() -> ProgramInstance&
     {
@@ -19,7 +19,7 @@ namespace tov
         return *ret;
     }
 
-	void Program::attachShader(Shader& shader)
+    void Program::attachShader(Shader& shader)
     {
         mShaders.push_back(shader);
         attachShaderImpl(shader);
@@ -53,6 +53,6 @@ namespace tov
         useImpl();
     }
 
-	TOV_NAMESPACE_END // pipeline
-	TOV_NAMESPACE_END // rendering
+    TOV_NAMESPACE_END // pipeline
+    TOV_NAMESPACE_END // rendering
 }
