@@ -11,6 +11,8 @@ file(GLOB SOURCES src/*.cpp)
 add_executable (app ${SOURCES})
 
 include_directories(${SIMDE_DIR})
+include_directories(${STB_DIR})
+
 include_directories(${CMAKE_SOURCE_DIR}/projects/core/include)
 include_directories(${CMAKE_SOURCE_DIR}/projects/memory/include)
 include_directories(${CMAKE_SOURCE_DIR}/projects/math/include)
@@ -21,6 +23,10 @@ include_directories(${CMAKE_SOURCE_DIR}/projects/rendering_gl/gl)
 add_custom_command(TARGET app POST_BUILD
                    COMMAND ${CMAKE_COMMAND} -E copy_directory
                    ${CMAKE_SOURCE_DIR}/app/shaders/ $<TARGET_FILE_DIR:app>/shaders)
+
+add_custom_command(TARGET app POST_BUILD
+                   COMMAND ${CMAKE_COMMAND} -E copy_directory
+                   ${CMAKE_SOURCE_DIR}/app/assets/ $<TARGET_FILE_DIR:app>/assets)
 
 if(WIN32)
     include_directories(${CMAKE_SOURCE_DIR}/projects/rendering/_platforms/win32/include)

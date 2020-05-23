@@ -24,6 +24,25 @@ endif()
 
 set(SIMDE_DIR ${CMAKE_CURRENT_BINARY_DIR}/simde/src/)
 
+###
+# stb
+
+configure_file(stb.cmake stb/download/CMakeLists.txt)
+execute_process(COMMAND "${CMAKE_COMMAND}" -G "${CMAKE_GENERATOR}" .
+  RESULT_VARIABLE result
+  WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/stb/download)
+if(result)
+  message(FATAL_ERROR "CMake step for stb failed: ${result}")
+endif()
+execute_process(COMMAND "${CMAKE_COMMAND}" --build .
+  RESULT_VARIABLE result
+  WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/stb/download)
+if(result)
+  message(FATAL_ERROR "CMake step for stb failed: ${result}")
+endif()
+
+set(STB_DIR ${CMAKE_CURRENT_BINARY_DIR}/stb/src/)
+
 ### 
 # Catch
 

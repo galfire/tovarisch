@@ -11,6 +11,8 @@ include_directories(include/tov)
 
 include_directories(${SIMDE_DIR})
 
+include_directories(${STB_DIR})
+
 file(GLOB_RECURSE SOURCES src/*.cpp)
 add_library(rendering STATIC ${SOURCES})
 

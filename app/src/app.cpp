@@ -1,5 +1,6 @@
 #include <tov/core.h>
 
+#include <tov/math/radian.h>
 #include <tov/math/matrix.h>
 #include <tov/math/quaternion.h>
 #include <tov/math/radian.h>
@@ -8,8 +9,12 @@
 #include <tov/rendering/colour.h>
 #include <tov/rendering/camera.h>
 #include <tov/rendering/pixel_format.h>
+#include <tov/rendering/image.h>
 
+#include <tov/rendering/geometry/cuboid.h>
+#include <tov/rendering/geometry/rectangle.h>
 #include <tov/rendering/geometry/sphere.h>
+#include <tov/rendering/geometry/triangle.h>
 
 #include <tov/rendering/entity.h>
 #include <tov/rendering/mesh_component.h>
@@ -63,6 +68,9 @@ int main(int argc, char** argv)
         camera.attachViewport(vp);
     }
 
+    glEnable(GL_CULL_FACE);
+    glCullFace(GL_BACK);
+
     auto fl = tov::rendering::pipeline::ConstantDefinition<float>::DEFINITION;
     auto integer = tov::rendering::pipeline::ConstantDefinition<int>::DEFINITION;
     using Vector3 = tov::math::Vector3;
@@ -103,16 +111,13 @@ int main(int argc, char** argv)
     using MeshManager = tov::rendering::mesh::MeshManager;
     MeshManager meshManager(bufferManager);
 
-    auto mesh = meshManager.create();
-
     auto vertexDataFormat = tov::rendering::mesh::VertexDataFormat();
 
     {
         tov::rendering::buffers::VertexFormat vf;
         vf.addAttribute(tov::rendering::buffers::VertexAttribute::POSITION, 0);
-        //vf.addAttribute(tov::rendering::buffers::VertexAttribute::NORMAL, 1);
-        //vf.addAttribute(tov::rendering::buffers::VertexAttribute::COLOUR, 2);
-        //vf.addAttribute(buffers::VertexAttribute::TEXTURE_COORDINATE, 3);
+        vf.addAttribute(tov::rendering::buffers::VertexAttribute::NORMAL, 1);
+        vf.addAttribute(tov::rendering::buffers::VertexAttribute::COLOUR, 2);
         tov::rendering::buffers::VertexBufferFormat vbf(
             tov::rendering::buffers::VertexBufferFormat::SequenceType::INTERLEAVED,
             vf
@@ -129,17 +134,47 @@ int main(int argc, char** argv)
         vertexDataFormat.mapHandleToFormat(1, vbf);
     }
 
+    auto rectangleMesh = meshManager.create();
+
     {
-        auto sphere = tov::rendering::geometry::Sphere(5.0f);
-        mesh->createSubmesh(sphere, vertexDataFormat);
+        auto geometry = tov::rendering::geometry::Rectangle(10.0f, 5.0f);
+        rectangleMesh->createSubmesh(geometry, vertexDataFormat);
     }
 
+    auto sphereMesh = meshManager.create();
+
+    {
+        auto sphere = tov::rendering::geometry::Sphere(5.0f);
+        sphereMesh->createSubmesh(sphere, vertexDataFormat);
+    }
+
+    auto triangleMesh = meshManager.create();
+
+    {
+        auto triangle = tov::rendering::geometry::Triangle();
+        triangleMesh->createSubmesh(triangle, vertexDataFormat);
+    }
+
+    auto cuboidMesh = meshManager.create();
+
+    {
+        auto cuboid = tov::rendering::geometry::Cuboid(5, 5, 5);
+        cuboidMesh->createSubmesh(cuboid, vertexDataFormat);
+    }
+
+    auto image = tov::rendering::Image("./assets/skybox.png");
+    auto data = image.data();
+    auto size = image.getSize();
+
     auto pixelFormat = tov::rendering::PixelFormat(8, 8, 8, 8, 0, 0);
-    auto pixelBuffer = bufferManager.createPixelUnpackBuffer(pixelFormat, 64 * 64);
-    auto& pbo = tov::rendering::buffers::PixelBufferObject(*pixelBuffer, pixelFormat);
-    auto texture = tov::rendering::gl::texture::Texture2D(pbo, 64, 64, pixelFormat);
+    auto& pixelBuffer = *bufferManager.createPixelUnpackBuffer(pixelFormat, size);
+    auto& pbo = tov::rendering::buffers::PixelBufferObject(pixelBuffer, pixelFormat);
+    auto texture = tov::rendering::gl::texture::Texture2D(pbo, image.getWidth(), image.getHeight(), pixelFormat);
     
-    auto buffer = new unsigned char[64 * 64 * 4];
+    pbo.updatePixelData(data, size);
+    texture.unpackPixelData();
+
+    /*auto buffer = new unsigned char[64 * 64 * 4];
     auto sz = texture.getSize();
     memset(buffer, 255, sz);
     for(unsigned int i = 0; i < sz; i += 4)
@@ -149,12 +184,13 @@ int main(int argc, char** argv)
         buffer[i + 2] = i % 255;
         buffer[i + 3] = i % 255;
     }
-    pbo.updatePixelData(buffer, sz);
+    pbo.updatePixelData(buffer, sz);*/
+
 
     {
         auto& entityNode = root.createChild();
         auto& entity = scene.createEntity();
-        auto& component = entity.createMeshComponent(*mesh);
+        auto& component = entity.createMeshComponent(*sphereMesh);
         auto& submesh = component.getMeshInstance().getSubmeshInstance(0);
         auto& programInstance = textureProgram.instantiate();
         programInstance.setConstant<int>("tex", 0);
@@ -167,7 +203,7 @@ int main(int argc, char** argv)
     {
         auto& entityNode = root.createChild();
         auto& entity = scene.createEntity();
-        auto& component = entity.createMeshComponent(*mesh);
+        auto& component = entity.createMeshComponent(*sphereMesh);
         auto& submesh = component.getMeshInstance().getSubmeshInstance(0);
         auto& programInstance = colourProgram.instantiate();
         programInstance.setConstant<tov::math::Vector3>("colour", tov::math::Vector3(0.0f, 0.0f, 1.0f));
@@ -177,9 +213,24 @@ int main(int argc, char** argv)
         entityNode.getTransform().setTranslation(translation);
     }
 
+
+    //{
+        auto& entityNode = root.createChild();
+        auto& entity = scene.createEntity();
+        auto& component = entity.createMeshComponent(*cuboidMesh);
+        //auto& component = entity.createMeshComponent(*rectangleMesh);
+        auto& submesh = component.getMeshInstance().getSubmeshInstance(0);
+        auto& programInstance = textureProgram.instantiate();
+        programInstance.setConstant<int>("tex", 0);
+        submesh.setProgramInstance(&programInstance);
+        entityNode.attachSceneObject(&entity);
+        tov::math::Vector3 translation(-2, 0, -15);
+        entityNode.getTransform().setTranslation(translation);
+    //}
+
     while(1)
     {
-        for (unsigned int i = 0; i < sz; i += 4)
+        /*for (unsigned int i = 0; i < sz; i += 4)
         {
             buffer[i + 0] += 1;
             buffer[i + 0] %= 255;
@@ -188,9 +239,14 @@ int main(int argc, char** argv)
             buffer[i + 2] += 2;
             buffer[i + 2] %= 255;
         }
-        pbo.updatePixelData(buffer, sz);
+        pbo.updatePixelData(buffer, sz);*/
 
-        texture.unpackPixelData();
+        auto axis = tov::math::Vector3(0.0f, 1.0f, 0.0f);
+        auto angle = tov::math::Radian(0.001f);
+        auto rotation = tov::math::Quaternion(angle, axis);
+        entityNode.getTransform().rotate(rotation);
+
+        //texture.unpackPixelData();
         auto textureBind = texture.bind();
 
 #if TOV_DEBUG

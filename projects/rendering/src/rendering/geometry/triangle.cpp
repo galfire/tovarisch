@@ -26,7 +26,8 @@ namespace tov
         math::Vector3 v3(0.0f, 0.0f, 0.0f);
         this->addPosition(v3);
 
-        this->addIndices(0, 1, 2);
+        // CCW vertex winding
+        this->addIndices(0, 2, 1);
     }
 
     TOV_NAMESPACE_END // geometry
