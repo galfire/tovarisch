@@ -5,9 +5,6 @@
 
 #include "pixel_format.h"
 
-#define STB_IMAGE_IMPLEMENTATION
-#include <stb_image.h>
-
 #include <tov/memory/heap_area.h>
 
 namespace tov
@@ -17,38 +14,20 @@ namespace tov
     class Image
     {
     public:
-        Image(const char* path)
-            : mPixelFormat(8, 8, 8, 8, 0, 0)
-        {
-            stbi_set_flip_vertically_on_load(true);
-            byte* image = stbi_load(
-                path,
-                &mWidth,
-                &mHeight,
-                &mChannels,
-                STBI_rgb_alpha
-            );
-
-            uint numPixels = mWidth * mHeight;
-            size_t size = numPixels * mChannels;
-            mHeapArea = std::make_unique<memory::HeapArea>(size);
-            memcpy(mHeapArea->getStart(), image, size);
-
-            stbi_image_free(image);
-        }
-
+        Image(const char* path);
         ~Image() = default;
 
         auto data() const { return mHeapArea->getStart(); }
         auto getSize() const { return mHeapArea->getSize(); }
+        auto getPixelFormat() const { return mPixelFormat; }
         auto getWidth() const { return mWidth; }
         auto getHeight() const { return mHeight; }
 
     private:
+        int mChannels;
         int mWidth;
         int mHeight;
-        int mChannels;
-
+  
         PixelFormat mPixelFormat;
 
         std::unique_ptr<memory::HeapArea> mHeapArea;

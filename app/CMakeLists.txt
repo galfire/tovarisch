@@ -11,7 +11,6 @@ file(GLOB SOURCES src/*.cpp)
 add_executable (app ${SOURCES})
 
 include_directories(${SIMDE_DIR})
-include_directories(${STB_DIR})
 
 include_directories(${CMAKE_SOURCE_DIR}/projects/core/include)
 include_directories(${CMAKE_SOURCE_DIR}/projects/memory/include)

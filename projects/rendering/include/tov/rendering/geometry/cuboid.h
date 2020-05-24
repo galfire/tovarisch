@@ -13,7 +13,7 @@ namespace tov
 	{
 	public:
 		Cuboid(float width, float height, float depth) noexcept;
-		~Cuboid() = default;
+		virtual ~Cuboid() = default;
 
 	private:
 		void generateVertices();

@@ -42,7 +42,6 @@ namespace tov
         GLbitfield flags = 0;
 
         flags |= GL_COLOR_BUFFER_BIT;
-
         auto colour = viewport->getBackgroundColour();
         glClearColor(
             colour.r,
@@ -52,7 +51,7 @@ namespace tov
         );
 
         flags |= GL_DEPTH_BUFFER_BIT;
-        //glClearDepth(1.0f);
+        glClearDepthf(1.0f);
 
         flags |= GL_STENCIL_BUFFER_BIT;
 
