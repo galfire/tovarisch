@@ -9,7 +9,7 @@ namespace tov
 
     void ProgramInstance::uploadConstants() const
     {
-        for (auto&& name : mConstantNames)
+        for (auto&& name : mCPUBuffer.getConstantNames())
         {
             uploadConstant(name);
         }
@@ -17,13 +17,13 @@ namespace tov
 
     void ProgramInstance::uploadConstant(std::string name) const
     {
-        auto constantLocation = getConstantLocation(name);
+        auto constantLocation = mCPUBuffer.getConstantLocation(name);
         uploadConstantData(name, constantLocation);
     }
 
     void ProgramInstance::uploadConstantData(std::string name, void const *const data) const
     {
-        auto type = getConstantType(name);
+        auto type = mCPUBuffer.getConstantType(name);
         switch (type)
         {
         case ConstantType::FLOAT:
@@ -36,6 +36,12 @@ namespace tov
             break;
         case ConstantType::MATRIX_4:
             mProgram.setMatrix4(name, data);
+            break;
+        case ConstantType::TEXTURE_2D:
+            mProgram.setInteger(name, *static_cast<int const* const>(data));
+            break;
+        case ConstantType::TEXTURE_3D:
+            mProgram.setInteger(name, *static_cast<int const* const>(data));
             break;
         case ConstantType::VECTOR_2:
             mProgram.setVector2(name, data);

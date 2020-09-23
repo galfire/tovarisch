@@ -44,6 +44,7 @@ class DummyBufferManager
     : public tov::rendering::buffers::BufferManager<DummyBufferManager>
 {
 public:
+    tov::rendering::buffers::BufferBase* createConstantBufferImpl(size_t size) { return nullptr; }
     tov::rendering::buffers::BufferBase* createIndexBufferImpl(size_t size) { return nullptr; }
     tov::rendering::buffers::BufferBase* createPixelUnpackBufferImpl(size_t size) { return nullptr; }
     tov::rendering::buffers::BufferBase* createVertexBufferImpl(size_t size) { return nullptr; }

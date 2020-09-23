@@ -31,6 +31,13 @@ namespace tov
         }
 
     public:
+        auto createConstantBufferImpl(size_t size)
+        {
+            constexpr auto usageSettings = buffers::UsageSettings::STATIC;
+            constexpr auto accessSettings = buffers::AccessSettings::WRITE;
+            return create<usageSettings, accessSettings>(size, GL_UNIFORM_BUFFER);
+        }
+
         auto createIndexBufferImpl(size_t size)
         {
             constexpr auto usageSettings = buffers::UsageSettings::STATIC;

@@ -15,6 +15,9 @@
 #   include <gl/wglext.h>
 #	include <gl/GL.h>
 #	include <gl/GLU.h>
+#   ifdef _MSC_VER
+#       pragma comment(lib, "opengl32.lib")
+#   endif
 #endif
 
 #if TOV_DEBUG

@@ -18,7 +18,7 @@ namespace tov
             : mBuffer(buffer)
         {}
         
-        ~BufferObject() noexcept = default;
+        virtual ~BufferObject() noexcept = default;
 
         auto lock(size_t offset, size_t length, LockSettings lockSettings)
         {

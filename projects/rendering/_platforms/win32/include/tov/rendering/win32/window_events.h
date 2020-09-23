@@ -3,6 +3,10 @@
 
 #include <tov/rendering/rendering_core.h>
 
+#pragma comment(lib, "Winmm.lib")
+#pragma comment(lib, "user32.lib")
+#pragma comment(lib, "Gdi32.lib")
+
 #define NOMINMAX
 #include <Windows.h>
 

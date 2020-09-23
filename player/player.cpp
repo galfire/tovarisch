@@ -73,12 +73,15 @@ int main()
         camera.attachViewport(vp);
     }
 
-    auto fl = tov::rendering::pipeline::ConstantDefinition<float>::DEFINITION;
-    auto integer = tov::rendering::pipeline::ConstantDefinition<int>::DEFINITION;
+    using CType = tov::rendering::pipeline::ConstantType;
+
+    auto fl = tov::rendering::pipeline::ConstantDefinition<CType::FLOAT, float>::DEFINITION;
+    auto integer = tov::rendering::pipeline::ConstantDefinition<CType::INT, int>::DEFINITION;
     using Vector3 = tov::math::Vector3;
     using Matrix4 = tov::math::Matrix4;
-    auto mat4 = tov::rendering::pipeline::ConstantDefinition<Matrix4>::DEFINITION;
-    auto vec3 = tov::rendering::pipeline::ConstantDefinition<Vector3>::DEFINITION;
+    auto mat4 = tov::rendering::pipeline::ConstantDefinition<CType::MATRIX_4, Matrix4>::DEFINITION;
+    auto vec3 = tov::rendering::pipeline::ConstantDefinition<CType::VECTOR_3, Vector3>::DEFINITION;
+    auto tex2D = tov::rendering::pipeline::ConstantDefinition<CType::TEXTURE_2D, int>::DEFINITION;
 
     using ShaderType = tov::rendering::pipeline::ShaderType;
     tov::rendering::gl::pipeline::Shader vertexShader(ShaderType::VERTEX, "./shaders/vertex.vert.glsl");
@@ -113,11 +116,35 @@ int main()
     using MeshManager = tov::rendering::mesh::MeshManager;
     MeshManager meshManager(bufferManager);
 
+    auto vertexDataFormat = tov::rendering::mesh::VertexDataFormat();
+
+    {
+        tov::rendering::buffers::VertexFormat vf;
+        vf.addAttribute(tov::rendering::buffers::VertexAttribute::POSITION, 0);
+        vf.addAttribute(tov::rendering::buffers::VertexAttribute::NORMAL, 1);
+        vf.addAttribute(tov::rendering::buffers::VertexAttribute::COLOUR, 2);
+        tov::rendering::buffers::VertexBufferFormat vbf(
+            tov::rendering::buffers::VertexBufferFormat::SequenceType::INTERLEAVED,
+            vf
+        );
+        vertexDataFormat.mapHandleToFormat(0, vbf);
+    }
+    {
+        tov::rendering::buffers::VertexFormat vf;
+        vf.addAttribute(tov::rendering::buffers::VertexAttribute::TEXTURE_COORDINATE, 3);
+        tov::rendering::buffers::VertexBufferFormat vbf(
+            tov::rendering::buffers::VertexBufferFormat::SequenceType::INTERLEAVED,
+            vf
+        );
+        vertexDataFormat.mapHandleToFormat(1, vbf);
+    }
+
+
     auto mesh = meshManager.create();
 
     {
         auto sphere = tov::rendering::geometry::Sphere(5.0f);
-        mesh->createSubmesh(sphere);
+        mesh->createSubmesh(sphere, vertexDataFormat);
     }
 
     auto pixelFormat = tov::rendering::PixelFormat(8, 8, 8, 8, 0, 0);

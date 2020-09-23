@@ -12,7 +12,7 @@ namespace tov
     auto Program::instantiate() -> ProgramInstance&
     {
         auto instance = std::unique_ptr<ProgramInstance>(
-            new ProgramInstance(*this, mConstantBufferSize, mConstantBufferDescriptorMap)
+            new ProgramInstance(*this, mCPUBufferDescriptor)
         );
         mInstances.push_back(std::move(instance));
         auto ret = mInstances.back().get();

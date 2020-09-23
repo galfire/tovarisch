@@ -3,6 +3,8 @@
 #
 cmake_minimum_required (VERSION 3.8)
 
+set(CMAKE_SYSTEM_NAME Generic)
+
 project ("tovarisch")
 
 ###
@@ -63,6 +65,13 @@ endif()
 set(CATCH_DIR ${CMAKE_CURRENT_BINARY_DIR}/catch/src/)
 
 # Include sub-projects.
+
+include(${CMAKE_SOURCE_DIR}/projects/cmake/compiler.cmake)
+include(${CMAKE_SOURCE_DIR}/projects/cmake/platform.cmake)
+
+if(${COMPILER} EQUAL ${COMPILER_MSVC})
+    add_compile_options("/EHsc")
+endif()
 
 add_subdirectory("projects/memory")
 add_subdirectory("projects/math")

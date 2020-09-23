@@ -33,6 +33,7 @@ namespace tov
         void deallocateScratch(void* ptr);
         void checkBounds(void* ptr) const;
 
+        virtual auto createConstantBuffer(size_t size) -> BufferBase* TOV_ABSTRACT;
         virtual auto createIndexBuffer(uint numIndices) -> BufferBase* TOV_ABSTRACT;
         virtual auto createPixelUnpackBuffer(PixelFormat pixelFormat, uint numPixels) -> BufferBase* TOV_ABSTRACT;
         virtual auto createVertexBuffer(VertexBufferFormat format, uint numVertices) -> BufferBase* TOV_ABSTRACT;
@@ -48,6 +49,13 @@ namespace tov
     public:
         BufferManager() noexcept = default;
         virtual ~BufferManager() noexcept = default;
+
+
+        auto createConstantBuffer(size_t size) -> BufferBase* override
+        {
+            auto buffer = static_cast<DerivedBufferManagerT*>(this)->createConstantBufferImpl(size);
+            return buffer;
+        }
 
         auto createIndexBuffer(uint numIndices) -> BufferBase* override
         {

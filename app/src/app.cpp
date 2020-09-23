@@ -10,6 +10,10 @@
 #include <tov/rendering/pixel_format.h>
 #include <tov/rendering/image.h>
 
+#include <tov/rendering/material.h>
+
+#include <tov/rendering/pipeline/pipeline_state_descriptor.h>
+
 #include <tov/rendering/geometry/cube.h>
 #include <tov/rendering/geometry/rectangle.h>
 #include <tov/rendering/geometry/sphere.h>
@@ -70,12 +74,15 @@ int main(int argc, char** argv)
     glEnable(GL_CULL_FACE);
     glCullFace(GL_BACK);
 
-    auto fl = tov::rendering::pipeline::ConstantDefinition<float>::DEFINITION;
-    auto integer = tov::rendering::pipeline::ConstantDefinition<int>::DEFINITION;
+    using CType = tov::rendering::pipeline::ConstantType;
+
+    auto fl = tov::rendering::pipeline::ConstantDefinition<CType::FLOAT, float>::DEFINITION;
+    auto integer = tov::rendering::pipeline::ConstantDefinition<CType::INT, int>::DEFINITION;
     using Vector3 = tov::math::Vector3;
     using Matrix4 = tov::math::Matrix4;
-    auto mat4 = tov::rendering::pipeline::ConstantDefinition<Matrix4>::DEFINITION;
-    auto vec3 = tov::rendering::pipeline::ConstantDefinition<Vector3>::DEFINITION;
+    auto mat4 = tov::rendering::pipeline::ConstantDefinition<CType::MATRIX_4, Matrix4>::DEFINITION;
+    auto vec3 = tov::rendering::pipeline::ConstantDefinition<CType::VECTOR_3, Vector3>::DEFINITION;
+    auto tex2D = tov::rendering::pipeline::ConstantDefinition<CType::TEXTURE_2D, int>::DEFINITION;
 
     using ShaderType = tov::rendering::pipeline::ShaderType;
     tov::rendering::gl::pipeline::Shader vertexShader(ShaderType::VERTEX, "./shaders/vertex.vert.glsl");
@@ -102,7 +109,7 @@ int main(int argc, char** argv)
     textureProgram.addConstantDefinition("modelMatrix", mat4);
     textureProgram.addConstantDefinition("viewMatrix", mat4);
     textureProgram.addConstantDefinition("projectionMatrix", mat4);
-    textureProgram.addConstantDefinition("tex", integer);
+    textureProgram.addConstantDefinition("tex", tex2D);
     textureProgram.buildLocationMap();
 
     using BufferManager = tov::rendering::gl::buffers::BufferManager;
@@ -133,8 +140,22 @@ int main(int argc, char** argv)
         vertexDataFormat.mapHandleToFormat(1, vbf);
     }
 
-    auto rectangleMesh = meshManager.create();
+    auto colourMaterial = tov::rendering::Material(colourProgram);
+    auto colourPipelineStateDescriptor = tov::rendering::pipeline::PipelineStateDescriptor(
+        colourProgram,
+        vertexDataFormat,
+        colourMaterial.getRasterizerStateDescriptor()
+    );
 
+    auto textureMaterial = tov::rendering::Material(textureProgram);
+    auto texturePipelineStateDescriptor = tov::rendering::pipeline::PipelineStateDescriptor(
+        textureProgram,
+        vertexDataFormat,
+        textureMaterial.getRasterizerStateDescriptor()
+    );
+
+    auto rectangleMesh = meshManager.create();
+        
     {
         auto geometry = tov::rendering::geometry::Rectangle(10.0f, 5.0f);
         rectangleMesh->createSubmesh(geometry, vertexDataFormat);

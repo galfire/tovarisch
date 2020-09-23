@@ -3,37 +3,24 @@
 
 #include <tov/rendering/rendering_core.h>
 
+#include "constant_type.h"
+
 namespace tov
 {
     TOV_NAMESPACE_BEGIN(rendering)
     TOV_NAMESPACE_BEGIN(pipeline)
 
-    enum class ConstantType
-    {
-        FLOAT,
-        INT,
-        MATRIX_3,
-        MATRIX_4,
-        VECTOR_2,
-        VECTOR_3,
-        VECTOR_4
-    };
-
-    template <class T>
+    template <ConstantType C, class T>
     class ConstantDefinition
     {
     public:
         using Type = T;
 
     public:
-        ConstantDefinition(ConstantType type)
-            : mType(type)
-        {}
+        ConstantDefinition() = default;
+        ~ConstantDefinition() = default;
 
-        auto getType() const { return mType; }
-
-    private:
-        ConstantType mType;
+        auto getConstantType() const { return C; }
 
     public:
         static const ConstantDefinition DEFINITION;

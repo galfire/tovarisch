@@ -1,4 +1,5 @@
 #include <tov/rendering/backend.h>
+#include "rendering_gl/gl_backend.h"
 
 #include <tov/math/matrix.h>
 
@@ -21,6 +22,50 @@ namespace tov
 {
     TOV_NAMESPACE_BEGIN(rendering)
     TOV_NAMESPACE_BEGIN(backend)
+
+    TOV_NAMESPACE_BEGIN(gl)
+
+    void SetRasterizerState(pipeline::RasterizerStateDescriptor rasterizerStateDescriptor)
+    {
+        if (rasterizerStateDescriptor.cullingEnabled)
+        {
+            glEnable(GL_CULL_FACE);
+
+            switch (rasterizerStateDescriptor.cullMode)
+            {
+            case pipeline::CullMode::BACK:
+                glCullFace(GL_BACK);
+                break;
+            case pipeline::CullMode::FRONT:
+                glCullFace(GL_FRONT);
+                break;
+            case pipeline::CullMode::FRONT_AND_BACK:
+                glCullFace(GL_FRONT_AND_BACK);
+                break;
+            default:
+                glDisable(GL_CULL_FACE);
+                break;
+            }
+        }
+        else
+        {
+            glDisable(GL_CULL_FACE);
+        }
+
+        switch (rasterizerStateDescriptor.vertexWinding)
+        {
+        case pipeline::VertexWinding::CLOCKWISE:
+            glFrontFace(GL_CW);
+            break;
+        case pipeline::VertexWinding::COUNTERCLOCKWISE:
+            glFrontFace(GL_CCW);
+            break;
+        default:
+            break;
+        }
+    }
+
+    TOV_NAMESPACE_END // gl
 
     void ApplyViewport(Viewport const *const viewport)
     {
@@ -73,6 +118,38 @@ namespace tov
         }
     }
 
+    void SetIndexBuffer(buffers::IndexBufferObject const& indexBufferObject)
+    {
+
+    }
+    
+    void DrawIndexed(uint numIndices, tov::rendering::buffers::IndexType indexType)
+    {
+        GLenum type = 0;
+        switch (indexType)
+        {
+        case buffers::IndexType::BITS_8:
+            type = GL_UNSIGNED_BYTE;
+            break;
+        case buffers::IndexType::BITS_16:
+            type = GL_UNSIGNED_SHORT;
+            break;
+        case buffers::IndexType::BITS_32:
+            type = GL_UNSIGNED_INT;
+            break;
+        }
+
+        {
+            auto op = log_gl_op("draw elements", numIndices, getEnumString(type));
+            glDrawElements(
+                GL_TRIANGLES,
+                numIndices,
+                type,
+                0
+            );
+        }
+    }
+    
     void Draw(mesh::DrawData const *const drawData)
     {
         // TODO: Abstract and make a persistent VAO
@@ -151,31 +228,11 @@ namespace tov
             }
         }
 
-        GLenum type = 0;
-        switch (ibo.getIndexType())
-        {
-        case buffers::IndexType::BITS_8:
-            type = GL_UNSIGNED_BYTE;
-            break;
-        case buffers::IndexType::BITS_16:
-            type = GL_UNSIGNED_SHORT;
-            break;
-        case buffers::IndexType::BITS_32:
-            type = GL_UNSIGNED_INT;
-            break;
-        }
+        DrawIndexed(ibo.getNumIndices(), ibo.getIndexType());
 
-        {
-            auto op = log_gl_op("draw elements", ibo.getNumIndices(), getEnumString(type));
-            glDrawElements(
-                GL_TRIANGLES,
-                ibo.getNumIndices(),
-                type,
-                0
-            );
-        }
-
-        for (auto&& vbo_ : vbos)
+        // May not be necessary
+        // Vertex attributes are encapsulated by the VAO and will be unset when the VAO is unbound or deleted
+        /*for (auto&& vbo_ : vbos)
         {
             auto const& vbo = static_cast<buffers::VertexBufferObject const&>(*vbo_);
             auto const& vbf = vbo.getBufferFormat();
@@ -186,7 +243,7 @@ namespace tov
                 auto op = log_gl_op("disable vertex attrib", location);
                 glDisableVertexAttribArray(location);
             }
-        }
+        }*/
 
         glDeleteVertexArrays(1, &vao);
     }

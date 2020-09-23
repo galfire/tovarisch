@@ -16,7 +16,7 @@
       "variables": [
         {
           "name": "DEBUG",
-          "value": true,
+          "value": "True",
           "type": "BOOL"
         },
         {
@@ -27,7 +27,7 @@
         {
           "name": "CMAKE_C_COMPILER",
           "value": "$EMSDK/upstream/emscripten/emcc",
-          "type": "STRING"
+          "type": "FILEPATH"
         },
         {
           "name": "CMAKE_C_COMPILER_AR",
@@ -42,7 +42,7 @@
         {
           "name": "CMAKE_CXX_COMPILER",
           "value": "$EMSDK/upstream/emscripten/em++",
-          "type": "STRING"
+          "type": "FILEPATH"
         },
         {
           "name": "CMAKE_CXX_COMPILER_AR",
@@ -108,80 +108,184 @@
       ]
     },
     {
-      "name": "WSL-Debug",
-      "generator": "Unix Makefiles",
-      "configurationType": "Debug",
-      "buildRoot": "${projectDir}\\out\\build\\${name}",
-      "installRoot": "${projectDir}\\out\\install\\${name}",
-      "cmakeExecutable": "/usr/local/bin/cmake",
-      "cmakeCommandArgs": "",
-      "buildCommandArgs": "",
-      "ctestCommandArgs": "",
-      "inheritEnvironments": [ "linux_x64" ],
-      "wslPath": "${defaultWSLPath}",
-      "addressSanitizerRuntimeFlags": "detect_leaks=0",
-      "variables": [
-        {
-          "name": "EXECUTABLE_SUBDIRECTORY",
-          "value": "app",
-          "type": "STRING"
-        }
-      ]
-    },
-    {
-      "name": "WSL-Release",
-      "generator": "Unix Makefiles",
-      "configurationType": "RelWithDebInfo",
-      "buildRoot": "${projectDir}\\out\\build\\${name}",
-      "installRoot": "${projectDir}\\out\\install\\${name}",
-      "cmakeExecutable": "/usr/local/bin/cmake",
-      "cmakeCommandArgs": "",
-      "buildCommandArgs": "",
-      "ctestCommandArgs": "",
-      "inheritEnvironments": [ "linux_x64" ],
-      "wslPath": "${defaultWSLPath}",
-      "addressSanitizerRuntimeFlags": "detect_leaks=0",
-      "variables": [
-        {
-          "name": "EXECUTABLE_SUBDIRECTORY",
-          "value": "app",
-          "type": "STRING"
-        }
-      ]
-    },
-    {
       "name": "x86-Debug",
-      "generator": "Ninja",
+      "generator": "Visual Studio 16 2019",
       "configurationType": "Debug",
       "buildRoot": "${projectDir}\\out\\build\\${name}",
       "installRoot": "${projectDir}\\out\\install\\${name}",
       "cmakeCommandArgs": "",
-      "buildCommandArgs": "-v",
+      "buildCommandArgs": "-v:normal",
       "ctestCommandArgs": "",
       "inheritEnvironments": [ "msvc_x86" ],
       "variables": [
         {
+          "name": "DEBUG",
+          "value": "True",
+          "type": "BOOL"
+        },
+        {
           "name": "EXECUTABLE_SUBDIRECTORY",
           "value": "app",
+          "type": "STRING"
+        },
+        {
+          "name": "CMAKE_SYSTEM_NAME",
+          "value": "Generic",
           "type": "STRING"
         }
       ]
     },
     {
       "name": "x86-Release",
-      "generator": "Ninja",
+      "generator": "Visual Studio 16 2019",
       "configurationType": "RelWithDebInfo",
       "buildRoot": "${projectDir}\\out\\build\\${name}",
       "installRoot": "${projectDir}\\out\\install\\${name}",
       "cmakeCommandArgs": "",
-      "buildCommandArgs": "-v",
+      "buildCommandArgs": "-v:normal",
       "ctestCommandArgs": "",
       "inheritEnvironments": [ "msvc_x86" ],
       "variables": [
         {
+          "name": "DEBUG",
+          "value": "False",
+          "type": "BOOL"
+        },
+        {
           "name": "EXECUTABLE_SUBDIRECTORY",
           "value": "app",
           "type": "STRING"
+        },
+        {
+          "name": "CMAKE_SYSTEM_NAME",
+          "value": "Generic",
+          "type": "STRING"
+        }
+      ]
+    },
+    {
+      "name": "EMCC-Debug",
+      "generator": "Ninja",
+      "configurationType": "Debug",
+      "buildRoot": "${projectDir}\\out\\build\\${name}",
+      "installRoot": "${projectDir}\\out\\install\\${name}",
+      "cmakeCommandArgs": "",
+      "buildCommandArgs": "",
+      "ctestCommandArgs": "",
+      "inheritEnvironments": [ "clang_cl_x86" ],
+      "variables": [
+        {
+          "name": "DEBUG",
+          "value": "True",
+          "type": "BOOL"
+        },
+        {
+          "name": "EXECUTABLE_SUBDIRECTORY",
+          "value": "player",
+          "type": "STRING"
+        },
+        {
+          "name": "CMAKE_SYSTEM_NAME",
+          "value": "Generic",
+          "type": "STRING"
+        },
+        {
+          "name": "CMAKE_AR",
+          "value": "D:/emscripten/emsdk/upstream/emscripten/emar.bat",
+          "type": "FILEPATH"
+        },
+        {
+          "name": "CMAKE_C_COMPILER",
+          "value": "D:/emscripten/emsdk/upstream/emscripten/emcc.bat",
+          "type": "FILEPATH"
+        },
+        {
+          "name": "CMAKE_C_COMPILER_AR",
+          "value": "D:/emscripten/emsdk/upstream/emscripten/emar.bat",
+          "type": "FILEPATH"
+        },
+        {
+          "name": "CMAKE_C_COMPILER_RANLIB",
+          "value": "D:/emscripten/emsdk/upstream/emscripten/emranlib.bat",
+          "type": "FILEPATH"
+        },
+        {
+          "name": "CMAKE_CXX_COMPILER",
+          "value": "D:/emscripten/emsdk/upstream/emscripten/em++.bat",
+          "type": "FILEPATH"
+        },
+        {
+          "name": "CMAKE_CXX_COMPILER_AR",
+          "value": "D:/emscripten/emsdk/upstream/emscripten/emar.bat",
+          "type": "FILEPATH"
+        },
+        {
+          "name": "CMAKE_CXX_COMPILER_RANLIB",
+          "value": "D:/emscripten/emsdk/upstream/emscripten/emranlib.bat",
+          "type": "FILEPATH"
+        }
+      ]
+    },
+    {
+      "name": "EMCC-Release",
+      "generator": "Ninja",
+      "configurationType": "Release",
+      "buildRoot": "${projectDir}\\out\\build\\${name}",
+      "installRoot": "${projectDir}\\out\\install\\${name}",
+      "cmakeCommandArgs": "",
+      "buildCommandArgs": "",
+      "ctestCommandArgs": "",
+      "inheritEnvironments": [ "clang_cl_x86" ],
+      "variables": [
+        {
+          "name": "DEBUG",
+          "value": "False",
+          "type": "BOOL"
+        },
+        {
+          "name": "EXECUTABLE_SUBDIRECTORY",
+          "value": "player",
+          "type": "STRING"
+        },
+        {
+          "name": "CMAKE_SYSTEM_NAME",
+          "value": "Generic",
+          "type": "STRING"
+        },
+        {
+          "name": "CMAKE_AR",
+          "value": "D:/emscripten/emsdk/upstream/emscripten/emar.bat",
+          "type": "FILEPATH"
+        },
+        {
+          "name": "CMAKE_C_COMPILER",
+          "value": "D:/emscripten/emsdk/upstream/emscripten/emcc.bat",
+          "type": "FILEPATH"
+        },
+        {
+          "name": "CMAKE_C_COMPILER_AR",
+          "value": "D:/emscripten/emsdk/upstream/emscripten/emar.bat",
+          "type": "FILEPATH"
+        },
+        {
+          "name": "CMAKE_C_COMPILER_RANLIB",
+          "value": "D:/emscripten/emsdk/upstream/emscripten/emranlib.bat",
+          "type": "FILEPATH"
+        },
+        {
+          "name": "CMAKE_CXX_COMPILER",
+          "value": "D:/emscripten/emsdk/upstream/emscripten/em++.bat",
+          "type": "FILEPATH"
+        },
+        {
+          "name": "CMAKE_CXX_COMPILER_AR",
+          "value": "D:/emscripten/emsdk/upstream/emscripten/emar.bat",
+          "type": "FILEPATH"
+        },
+        {
+          "name": "CMAKE_CXX_COMPILER_RANLIB",
+          "value": "D:/emscripten/emsdk/upstream/emscripten/emranlib.bat",
+          "type": "FILEPATH"
         }
       ]
     }

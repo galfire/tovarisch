@@ -9,6 +9,7 @@ file(GLOB SOURCES src/*.cpp)
 
 # Add source to this project's executable.
 add_executable (app ${SOURCES})
+set_target_properties(app PROPERTIES SUFFIX ".exe")
 
 include_directories(${SIMDE_DIR})
 
@@ -27,7 +28,8 @@ add_custom_command(TARGET app POST_BUILD
                    COMMAND ${CMAKE_COMMAND} -E copy_directory
                    ${CMAKE_SOURCE_DIR}/app/assets/ $<TARGET_FILE_DIR:app>/assets)
 
-if(WIN32)
+
+if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
     include_directories(${CMAKE_SOURCE_DIR}/projects/rendering/_platforms/win32/include)
     include_directories(${CMAKE_SOURCE_DIR}/projects/rendering_gl/_platforms/win32/include)
     add_library(glew STATIC IMPORTED)
@@ -40,7 +42,7 @@ target_link_libraries(app math)
 target_link_libraries(app rendering)
 target_link_libraries(app rendering_gl)
 
-if(WIN32)
+if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
     target_link_libraries(app rendering_win32)
     target_link_libraries(app rendering_win32_gl)
 endif()

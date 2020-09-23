@@ -4,7 +4,10 @@
 #include <tov/rendering/rendering_core.h>
 
 #include "constant_definition.h"
+#include "constant_descriptor.h"
 #include "program_instance.h"
+
+#include "cpu_buffer_descriptor.h"
 
 #include <string>
 
@@ -26,13 +29,20 @@ namespace tov
         Program() = default;
         virtual ~Program() = default;
 
-        template<class T>
-        void addConstantDefinition(const char* name, ConstantDefinition<T> definition)
+        auto getCPUBufferDescriptor() const -> auto& { return mCPUBufferDescriptor; }
+
+        template<ConstantType C, class T>
+        void addConstantDefinition(const char* name, ConstantDefinition<C, T> definition)
         {
-            auto descriptor = ProgramInstance::ConstantDescriptor{ static_cast<ptrdiff_t>(mConstantBufferSize), definition.getType() };
-            mConstantBufferDescriptorMap.emplace(name, descriptor);
-            mConstantBufferSize += sizeof(typename ConstantDefinition<T>::Type);
+            mCPUBufferDescriptor.addConstantDefinition(name, definition);
         }
+
+        /*template<>
+        void addConstantDefinition(const char* name, ConstantDefinition<ConstantType::TEXTURE_2D, int> definition)
+        {
+            mNumTextures2D++;
+            mCPUBufferDescriptor.addConstantDefinition(name, definition);
+        }*/
 
         auto instantiate() -> ProgramInstance&;
 
@@ -40,6 +50,9 @@ namespace tov
         void link() const;
         void buildLocationMap();
         void use() const;
+
+        //auto getNumTextures2D() const { return mNumTextures2D; }
+        auto getNumTextures3D() const { return mNumTextures3D; }
 
         virtual void setInteger(std::string name, int data) const TOV_ABSTRACT;
         virtual void setFloat(std::string name, float data) const TOV_ABSTRACT;
@@ -58,8 +71,10 @@ namespace tov
         virtual void useImpl() const TOV_ABSTRACT;
 
     protected:
-        size_t mConstantBufferSize = 0;
-        ProgramInstance::ConstantBufferDescriptorMap mConstantBufferDescriptorMap;
+        uint mNumTextures2D = 0;
+        uint mNumTextures3D = 0;
+
+        CPUBufferDescriptor mCPUBufferDescriptor;
 
         ShaderList mShaders;
         std::vector<std::unique_ptr<ProgramInstance>> mInstances;

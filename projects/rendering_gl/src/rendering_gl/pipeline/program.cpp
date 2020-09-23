@@ -57,7 +57,7 @@ namespace tov
 
     void Program::buildLocationMapImpl()
     {
-        for (auto&& kv : mConstantBufferDescriptorMap)
+        for (auto&& kv : mCPUBufferDescriptor.getConstantDescriptorMap())
         {
             auto uniformName = kv.first;
             auto uniformLocation = glGetUniformLocation(mProgramID, uniformName.c_str());

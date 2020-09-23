@@ -4,10 +4,12 @@
 #include <tov/rendering/rendering_core.h>
 
 #include "constant_definition.h"
-#include "program_state.h"
+#include "constant_descriptor.h"
+
+#include "cpu_buffer.h"
+#include "cpu_buffer_descriptor.h"
 
 #include <string>
-#include <unordered_map>
 #include <vector>
 
 namespace tov
@@ -16,68 +18,26 @@ namespace tov
     TOV_NAMESPACE_BEGIN(pipeline)
 
     class Program;
-    class Shader;
 
     class ProgramInstance
     {
         TOV_MOVABLE_ONLY(ProgramInstance)
 
     public:
-        struct ConstantDescriptor
-        {
-            ptrdiff_t offset;
-            ConstantType type;
-        };
-
-        using ConstantBufferDescriptorMap = std::unordered_map<std::string, ConstantDescriptor>;
-
-    private:
-        auto getConstantDescriptor(std::string name) const
-        {
-            return mConstantBufferDescriptorMap.at(name);
-        }
-
-        auto getConstantOffset(std::string name) const
-        {
-            return getConstantDescriptor(name).offset;
-        }
-
-        auto getConstantLocation(std::string name) const
-        {
-            auto buffer = mProgramState.getBuffer();
-            auto location = static_cast<byte*>(buffer) + getConstantOffset(name);
-            return location;
-        }
-
-        auto getConstantType(std::string name) const
-        {
-            return getConstantDescriptor(name).type;
-        }
-
-    public:
         ProgramInstance(
             Program const& program,
-            size_t constantBufferSize,
-            ConstantBufferDescriptorMap const& constantBufferDescriptorMap
+            CPUBufferDescriptor const& descriptor
         )
             : mProgram(program)
-            , mProgramState(constantBufferSize)
-            , mConstantBufferDescriptorMap(constantBufferDescriptorMap)
-        {
-            mConstantNames.reserve(mConstantBufferDescriptorMap.size());
-            for (auto&& kv : mConstantBufferDescriptorMap)
-            {
-                mConstantNames.push_back(kv.first);
-            }
-        }
+            , mCPUBuffer(descriptor)
+        {}
 
         ~ProgramInstance() = default;
 
         template <class T>
         auto setConstant(const char* name, T const value)
         {
-            void* ptr = getConstantLocation(name);
-            memcpy(ptr, &value, sizeof(T));
+            mCPUBuffer.setConstant(name, value);
         }
 
         void uploadConstants() const;
@@ -88,9 +48,8 @@ namespace tov
         
     private:
         Program const& mProgram;
-        ProgramState mProgramState;
-        ConstantBufferDescriptorMap const& mConstantBufferDescriptorMap;
-        std::vector<std::string> mConstantNames;
+
+        CPUBuffer mCPUBuffer;
     };
 
     TOV_NAMESPACE_END // pipeline

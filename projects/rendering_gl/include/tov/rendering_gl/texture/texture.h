@@ -4,8 +4,6 @@
 #include <tov/rendering/texture/texture.h>
 #include <tov/rendering_gl/gpu_resource.h>
 
-#include <tov/rendering/buffers/buffer_manager.h>
-
 #include <tov/rendering_gl/buffers/buffer.h>
 #include <tov/rendering_gl/gl_impl.h>
 
