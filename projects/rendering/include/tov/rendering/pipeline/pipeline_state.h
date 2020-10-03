@@ -1,5 +1,5 @@
-#ifndef TOV_RENDERING_PIPELINE_STATE_OBJECT_H
-#define TOV_RENDERING_PIPELINE_STATE_OBJECT_H
+#ifndef TOV_RENDERING_PIPELINE_STATE_H
+#define TOV_RENDERING_PIPELINE_STATE_H
 
 #include <tov/rendering/rendering_core.h>
 
@@ -10,10 +10,10 @@ namespace tov
     TOV_NAMESPACE_BEGIN(rendering)
     TOV_NAMESPACE_BEGIN(pipeline)
 
-    class PipelineStateObject
+    class PipelineState
     {
     public:
-        PipelineStateObject(
+        PipelineState(
             RasterizerStateDescriptor rasterizerStateDescriptor
         )
             : mRasterizerStateDescriptor(rasterizerStateDescriptor)

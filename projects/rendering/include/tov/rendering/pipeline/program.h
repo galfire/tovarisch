@@ -37,12 +37,12 @@ namespace tov
             mCPUBufferDescriptor.addConstantDefinition(name, definition);
         }
 
-        /*template<>
+        template<>
         void addConstantDefinition(const char* name, ConstantDefinition<ConstantType::TEXTURE_2D, int> definition)
         {
             mNumTextures2D++;
             mCPUBufferDescriptor.addConstantDefinition(name, definition);
-        }*/
+        }
 
         auto instantiate() -> ProgramInstance&;
 
@@ -51,14 +51,14 @@ namespace tov
         void buildLocationMap();
         void use() const;
 
-        //auto getNumTextures2D() const { return mNumTextures2D; }
+        auto getNumTextures2D() const { return mNumTextures2D; }
         auto getNumTextures3D() const { return mNumTextures3D; }
 
         virtual void setInteger(std::string name, int data) const TOV_ABSTRACT;
         virtual void setFloat(std::string name, float data) const TOV_ABSTRACT;
-        virtual void setVector2(std::string name, void const* const data) const TOV_ABSTRACT;
-        virtual void setVector3(std::string name, void const* const data) const TOV_ABSTRACT;
-        virtual void setVector4(std::string name, void const* const data) const TOV_ABSTRACT;
+        virtual void setVector2(std::string name, void const *const data) const TOV_ABSTRACT;
+        virtual void setVector3(std::string name, void const *const data) const TOV_ABSTRACT;
+        virtual void setVector4(std::string name, void const *const data) const TOV_ABSTRACT;
         virtual void setMatrix3(std::string name, void const *const data) const TOV_ABSTRACT;
         virtual void setMatrix4(std::string name, void const *const data) const TOV_ABSTRACT;
 

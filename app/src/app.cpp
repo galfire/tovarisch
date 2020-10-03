@@ -141,18 +141,19 @@ int main(int argc, char** argv)
     }
 
     auto colourMaterial = tov::rendering::Material(colourProgram);
-    auto colourPipelineStateDescriptor = tov::rendering::pipeline::PipelineStateDescriptor(
+    auto textureMaterial = tov::rendering::Material(textureProgram);
+
+    /*auto colourPipelineStateDescriptor = tov::rendering::pipeline::PipelineStateDescriptor(
         colourProgram,
         vertexDataFormat,
         colourMaterial.getRasterizerStateDescriptor()
     );
 
-    auto textureMaterial = tov::rendering::Material(textureProgram);
     auto texturePipelineStateDescriptor = tov::rendering::pipeline::PipelineStateDescriptor(
         textureProgram,
         vertexDataFormat,
         textureMaterial.getRasterizerStateDescriptor()
-    );
+    );*/
 
     auto rectangleMesh = meshManager.create();
         

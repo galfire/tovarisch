@@ -35,7 +35,12 @@ namespace tov
         {
         }
 
-        void draw(mesh::DrawData const* const drawData, math::Matrix4 model, math::Matrix4 view, math::Matrix4 projection) override
+        void draw(
+            mesh::DrawData const* const drawData,
+            math::Matrix4 model,
+            math::Matrix4 view,
+            math::Matrix4 projection
+        ) override
         {
             auto& command = mCommandBucket.addCommand<commands::Draw>(0);
             command.modelMatrix = model;

@@ -20,6 +20,9 @@ include_directories(${CMAKE_SOURCE_DIR}/projects/rendering/include)
 include_directories(${CMAKE_SOURCE_DIR}/projects/rendering_gl/include)
 include_directories(${CMAKE_SOURCE_DIR}/projects/rendering_gl/gl)
 
+set(TARGET_NAME app)
+include(${CMAKE_SOURCE_DIR}/projects/cmake/debug.cmake)
+
 add_custom_command(TARGET app POST_BUILD
                    COMMAND ${CMAKE_COMMAND} -E copy_directory
                    ${CMAKE_SOURCE_DIR}/app/shaders/ $<TARGET_FILE_DIR:app>/shaders)

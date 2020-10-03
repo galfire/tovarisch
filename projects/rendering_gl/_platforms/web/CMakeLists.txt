@@ -19,6 +19,9 @@ include_directories(${EMSDK_INCLUDE})
 file(GLOB_RECURSE SOURCES src/*.cpp)
 add_library(rendering_web_gl STATIC ${SOURCES})
 
+set(TARGET_NAME rendering_web_gl)
+include(${CMAKE_SOURCE_DIR}/projects/cmake/debug.cmake)
+
 target_link_libraries(rendering_web_gl memory)
 target_link_libraries(rendering_web_gl math)
 target_link_libraries(rendering_web_gl rendering)

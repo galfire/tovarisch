@@ -9,8 +9,7 @@ namespace tov
     Material::Material(pipeline::Program const& program) noexcept
         : mProgram(program)
     {
-        //mTextureList.reserve(program.getNumTextures2D());
-        mTextureList.reserve(1);
+        mTextureList.reserve(program.getNumTextures2D());
     }
 
     void Material::setTextureSlot(texture::Texture const* const texture, uint slot)
