@@ -15,6 +15,8 @@
 #include <tov/rendering/pipeline/program_instance.h>
 
 #include "rendering_gl/buffers/buffer.h"
+#include "rendering_gl/mesh/draw_data_context.h"
+
 
 #include "rendering_gl/gl_impl.h"
 
@@ -27,11 +29,11 @@ namespace tov
 
     void SetRasterizerState(pipeline::RasterizerStateDescriptor rasterizerStateDescriptor)
     {
-        if (rasterizerStateDescriptor.cullingEnabled)
+        if (rasterizerStateDescriptor.getCullingEnabled())
         {
             glEnable(GL_CULL_FACE);
 
-            switch (rasterizerStateDescriptor.cullMode)
+            switch (rasterizerStateDescriptor.getCullMode())
             {
             case pipeline::CullMode::BACK:
                 glCullFace(GL_BACK);
@@ -52,7 +54,7 @@ namespace tov
             glDisable(GL_CULL_FACE);
         }
 
-        switch (rasterizerStateDescriptor.vertexWinding)
+        switch (rasterizerStateDescriptor.getVertexWinding())
         {
         case pipeline::VertexWinding::CLOCKWISE:
             glFrontFace(GL_CW);
@@ -120,7 +122,10 @@ namespace tov
 
     void SetIndexBuffer(buffers::IndexBufferObject const& indexBufferObject)
     {
+        using Buffer = rendering::gl::buffers::Buffer<buffers::UsageSettings::STATIC, buffers::AccessSettings::WRITE>;
 
+        auto& indexBuffer = static_cast<Buffer&>(indexBufferObject.getBuffer());
+        auto bindIndex = indexBuffer.bind();
     }
     
     void DrawIndexed(uint numIndices, tov::rendering::buffers::IndexType indexType)
@@ -152,13 +157,16 @@ namespace tov
     
     void Draw(mesh::DrawData const *const drawData)
     {
+        auto rasterizerStateDescriptor = drawData->getRasterizerStateDescriptor();
+        gl::SetRasterizerState(rasterizerStateDescriptor);
+
         // TODO: Abstract and make a persistent VAO
-        GLuint vao;
+        /*GLuint vao;
         {
             auto op = log_gl_op("generate and bind VAO");
             glGenVertexArrays(1, &vao);
             glBindVertexArray(vao);
-        }
+        }*/
 
         // Bind the index buffer and vertex buffers before drawing
         using Buffer = rendering::gl::buffers::Buffer<buffers::UsageSettings::STATIC, buffers::AccessSettings::WRITE>;
@@ -245,7 +253,12 @@ namespace tov
             }
         }*/
 
-        glDeleteVertexArrays(1, &vao);
+        //glDeleteVertexArrays(1, &vao);
+    }
+
+    mesh::DrawDataContext* createDrawDataContext()
+    {
+        return new rendering::gl::mesh::DrawDataContext();
     }
 
     TOV_NAMESPACE_END // backend

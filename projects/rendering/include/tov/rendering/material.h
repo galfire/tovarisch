@@ -3,10 +3,10 @@
 
 #include "rendering_core.h"
 
-#include "pipeline/cull_mode.h"
 #include "pipeline/pipeline_state_descriptor.h"
 #include "pipeline/rasterizer_state_descriptor.h"
-#include "pipeline/vertex_winding.h"
+
+#include "material_instance.h"
 
 #include <vector>
 
@@ -21,43 +21,32 @@ namespace tov
     class Texture;
     TOV_NAMESPACE_END // texture
 
+
+
     class Material
     {
         TOV_MOVABLE_ONLY(Material)
 
     public:
-        Material(pipeline::Program const& program) noexcept;
+        Material(pipeline::Program& program) noexcept;
         ~Material() noexcept = default;
-
-        void setCullingEnabled(bool enabled) { mCullingEnabled = enabled; }
-        auto getCullingEnabled() const { return mCullingEnabled; }
-
-        void setCullMode(pipeline::CullMode cullMode) { mCullMode = cullMode; }
-        auto getCullMode() const { return mCullMode; }
-
-        void setVertexWinding(pipeline::VertexWinding vertexWinding) { mVertexWinding = vertexWinding; }
-        auto getVertexWinding() const { return mVertexWinding; }
 
         void setTextureSlot(texture::Texture const *const texture, uint slot);
 
-        auto getRasterizerStateDescriptor() const
-        {
-            auto rasterizerStateDescriptor = pipeline::RasterizerStateDescriptor{};
-            rasterizerStateDescriptor.cullingEnabled = mCullingEnabled;
-            rasterizerStateDescriptor.cullMode = mCullMode;
-            rasterizerStateDescriptor.vertexWinding = mVertexWinding;
-            return rasterizerStateDescriptor;
-        }
+        auto getRasterizerStateDescriptor() const { return mRasterizerStateDescriptor; }
+        auto getRasterizerStateDescriptor() -> auto& { return mRasterizerStateDescriptor; }
+
+        auto instantiate() -> MaterialInstance&;
 
     private:
-        pipeline::Program const& mProgram;
+        pipeline::Program& mProgram;
 
         using TextureList = std::vector<texture::Texture const *>;
         TextureList mTextureList;
 
-        bool mCullingEnabled = true;
-        pipeline::CullMode mCullMode = pipeline::CullMode::BACK;
-        pipeline::VertexWinding mVertexWinding = pipeline::VertexWinding::COUNTERCLOCKWISE;
+        pipeline::RasterizerStateDescriptor mRasterizerStateDescriptor;
+
+        std::vector<std::unique_ptr<MaterialInstance>> mInstances;
     };
 
     TOV_NAMESPACE_END // rendering

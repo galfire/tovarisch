@@ -14,6 +14,9 @@ namespace tov
         static void ApplyViewport(const void* data);
         static void ClearViewport(const void* data);
         static void Draw(const void* data);
+
+        static void StartDrawDataContext(const void* data);
+        static void EndDrawDataContext(const void* data);
     };
 
     TOV_NAMESPACE_END // commands

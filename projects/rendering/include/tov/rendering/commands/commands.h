@@ -22,6 +22,7 @@ namespace tov
     TOV_NAMESPACE_BEGIN(mesh)
 
     class DrawData;
+    class DrawDataContext;
 
     TOV_NAMESPACE_END // mesh
     TOV_NAMESPACE_END //rendering
@@ -48,6 +49,18 @@ namespace tov
         math::Matrix4 projectionMatrix;
         mesh::DrawData const * drawData;
         static inline DispatchFunction DispatchFunction = CommandDispatch::Draw;
+    };
+
+    struct StartDrawDataContext
+    {
+        mesh::DrawDataContext const * drawDataContext;
+        static inline DispatchFunction DispatchFunction = CommandDispatch::StartDrawDataContext;
+    };
+
+    struct EndDrawDataContext
+    {
+        mesh::DrawDataContext const * drawDataContext;
+        static inline DispatchFunction DispatchFunction = CommandDispatch::EndDrawDataContext;
     };
 
     TOV_NAMESPACE_END // commands

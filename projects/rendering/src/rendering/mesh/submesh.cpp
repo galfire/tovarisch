@@ -1,5 +1,7 @@
 #include <rendering/mesh/submesh.h>
 
+#include <rendering/material.h>
+
 #include <rendering/buffers/guard.h>
 #include <rendering/buffers/index_buffer_object.h>
 #include <rendering/buffers/index_type.h>
@@ -133,7 +135,8 @@ namespace tov
     {
         auto const& ibo = getIndexData()->getBufferObject();
         auto const& vbos = getVertexData()->getBufferObjects();
-        auto submeshInstance = SubmeshInstance(ibo, vbos);
+        auto& materialInstance = mMaterial->instantiate();
+        auto submeshInstance = SubmeshInstance(ibo, vbos, materialInstance);
         return submeshInstance;
     }
 

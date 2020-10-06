@@ -9,6 +9,7 @@
 #include <rendering/render_target.h>
 #include <rendering/viewport.h>
 #include <rendering/mesh/draw_data.h>
+#include <rendering/mesh/draw_data_context.h>
 
 namespace tov
 {
@@ -49,6 +50,24 @@ namespace tov
         programInstance.uploadConstantData("projectionMatrix", projectionMatrix.data());
 
         backend::Draw(drawData);
+    }
+
+    void CommandDispatch::StartDrawDataContext(const void* data)
+    {
+        auto command = reinterpret_cast<commands::StartDrawDataContext const* const>(data);
+
+        auto drawDataContext = command->drawDataContext;
+        drawDataContext->start();
+    }
+
+    void CommandDispatch::EndDrawDataContext(const void* data)
+    {
+        auto command = reinterpret_cast<commands::EndDrawDataContext const* const>(data);
+
+        auto drawDataContext = command->drawDataContext;
+        drawDataContext->end();
+
+        delete drawDataContext;
     }
 
     TOV_NAMESPACE_END // commands

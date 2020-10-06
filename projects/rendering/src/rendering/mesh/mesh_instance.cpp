@@ -1,6 +1,7 @@
 #include <rendering/mesh/mesh_instance.h>
 
 #include <rendering/mesh/submesh_instance.h>
+#include <rendering/material_instance.h>
 
 namespace tov
 {
@@ -26,10 +27,12 @@ namespace tov
 
         for (auto&& submeshInstance : mSubmeshInstanceList)
         {
+            auto& materialInstance = submeshInstance.getMaterialInstance();
             auto drawData = DrawData(
                 submeshInstance.getIndexBufferObject(),
                 submeshInstance.getVertexBufferObjects(),
-                submeshInstance.getProgramInstance()
+                materialInstance.getProgramInstance(),
+                materialInstance.getRasterizerStateDescriptor()
             );
             mDrawDataList.push_back(drawData);
         }

@@ -8,6 +8,7 @@
 #include <tov/rendering/buffers/index_buffer_object.h>
 #include <tov/rendering/buffers/vertex_buffer_object.h>
 #include <tov/rendering/pipeline/program_instance.h>
+#include <tov/rendering/pipeline/rasterizer_state_descriptor.h>
 
 namespace tov
 {
@@ -20,11 +21,13 @@ namespace tov
         DrawData(
             buffers::IndexBufferObject const& indexBufferObject, 
             std::vector<buffers::VertexBufferObject*> const& vertexBufferObjects,
-            pipeline::ProgramInstance const& programInstance
+            pipeline::ProgramInstance const& programInstance,
+            pipeline::RasterizerStateDescriptor rasterizerStateDescriptor
         ) noexcept
             : mIndexBufferObject(indexBufferObject)
             , mVertexBufferObjects(vertexBufferObjects)
             , mProgramInstance(programInstance)
+            , mRasterizerStateDescriptor(rasterizerStateDescriptor)
         {}
 
         ~DrawData() noexcept = default;
@@ -33,11 +36,13 @@ namespace tov
         auto getVertexBufferObjects() const -> auto const& { return mVertexBufferObjects; }
         auto getProgramInstance() -> auto & { return mProgramInstance; }
         auto getProgramInstance() const -> auto const& { return mProgramInstance; }
+        auto getRasterizerStateDescriptor() const { return mRasterizerStateDescriptor; }
 
     private:
         buffers::IndexBufferObject const& mIndexBufferObject;
         std::vector<buffers::VertexBufferObject*> const& mVertexBufferObjects;
         pipeline::ProgramInstance const& mProgramInstance;
+        pipeline::RasterizerStateDescriptor mRasterizerStateDescriptor;
     };
 
     TOV_NAMESPACE_END // mesh

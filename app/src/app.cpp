@@ -13,6 +13,8 @@
 #include <tov/rendering/material.h>
 
 #include <tov/rendering/pipeline/pipeline_state_descriptor.h>
+#include <tov/rendering/pipeline/cull_mode.h>
+#include <tov/rendering/pipeline/vertex_winding.h>
 
 #include <tov/rendering/geometry/cube.h>
 #include <tov/rendering/geometry/rectangle.h>
@@ -23,6 +25,7 @@
 #include <tov/rendering/mesh_component.h>
 #include <tov/rendering/mesh/mesh.h>
 #include <tov/rendering/mesh/mesh_manager.h>
+#include <tov/rendering/mesh/submesh.h>
 
 #include <tov/rendering/buffers/vertex_buffer_format.h>
 #include <tov/rendering/buffers/vertex_format.h>
@@ -60,6 +63,9 @@ int main(int argc, char** argv)
 
     tov::rendering::Scene scene(rs);
     auto& root = scene.getRootNode();
+
+    using BufferManager = tov::rendering::gl::buffers::BufferManager;
+    BufferManager bufferManager;
 
     auto& cameraNode = root.createChild();
     auto& camera = scene.createCamera();
@@ -112,10 +118,24 @@ int main(int argc, char** argv)
     textureProgram.addConstantDefinition("tex", tex2D);
     textureProgram.buildLocationMap();
 
-    using BufferManager = tov::rendering::gl::buffers::BufferManager;
-    BufferManager bufferManager;
-    using MeshManager = tov::rendering::mesh::MeshManager;
-    MeshManager meshManager(bufferManager);
+    auto colourMaterial = tov::rendering::Material(colourProgram);
+
+    auto image = tov::rendering::Image("./assets/skybox.png");
+    auto data = image.data();
+    auto size = image.getSize();
+    auto pixelFormat = image.getPixelFormat();
+    auto& pixelBuffer = *bufferManager.createPixelUnpackBuffer(pixelFormat, size);
+    auto& pbo = tov::rendering::buffers::PixelBufferObject(pixelBuffer, pixelFormat);
+    auto texture = tov::rendering::gl::texture::Texture2D(pbo, image.getWidth(), image.getHeight(), pixelFormat);
+
+    pbo.updatePixelData(data, size);
+    texture.unpackPixelData();
+
+    auto textureMaterial = tov::rendering::Material(textureProgram);
+    textureMaterial.setTextureSlot(&texture, 0);
+    textureMaterial.getRasterizerStateDescriptor().setCullingEnabled(true);
+    textureMaterial.getRasterizerStateDescriptor().setCullMode(tov::rendering::pipeline::CullMode::BACK);
+    textureMaterial.getRasterizerStateDescriptor().setVertexWinding(tov::rendering::pipeline::VertexWinding::COUNTERCLOCKWISE);
 
     auto vertexDataFormat = tov::rendering::mesh::VertexDataFormat();
 
@@ -140,59 +160,40 @@ int main(int argc, char** argv)
         vertexDataFormat.mapHandleToFormat(1, vbf);
     }
 
-    auto colourMaterial = tov::rendering::Material(colourProgram);
-    auto textureMaterial = tov::rendering::Material(textureProgram);
-
-    /*auto colourPipelineStateDescriptor = tov::rendering::pipeline::PipelineStateDescriptor(
-        colourProgram,
-        vertexDataFormat,
-        colourMaterial.getRasterizerStateDescriptor()
-    );
-
-    auto texturePipelineStateDescriptor = tov::rendering::pipeline::PipelineStateDescriptor(
-        textureProgram,
-        vertexDataFormat,
-        textureMaterial.getRasterizerStateDescriptor()
-    );*/
+    using MeshManager = tov::rendering::mesh::MeshManager;
+    MeshManager meshManager(bufferManager);
 
     auto rectangleMesh = meshManager.create();
         
     {
         auto geometry = tov::rendering::geometry::Rectangle(10.0f, 5.0f);
-        rectangleMesh->createSubmesh(geometry, vertexDataFormat);
+        auto& submesh = rectangleMesh->createSubmesh(geometry, vertexDataFormat);
+        submesh.setMaterial(colourMaterial);
     }
 
     auto sphereMesh = meshManager.create();
 
     {
         auto sphere = tov::rendering::geometry::Sphere(5.0f);
-        sphereMesh->createSubmesh(sphere, vertexDataFormat);
+        auto& submesh = sphereMesh->createSubmesh(sphere, vertexDataFormat);
+        submesh.setMaterial(colourMaterial);
     }
 
     auto triangleMesh = meshManager.create();
 
     {
         auto triangle = tov::rendering::geometry::Triangle();
-        triangleMesh->createSubmesh(triangle, vertexDataFormat);
+        auto& submesh = triangleMesh->createSubmesh(triangle, vertexDataFormat);
+        submesh.setMaterial(colourMaterial);
     }
 
     auto cuboidMesh = meshManager.create();
 
     {
         auto cuboid = tov::rendering::geometry::Cube(5);
-        cuboidMesh->createSubmesh(cuboid, vertexDataFormat);
+        auto& submesh = cuboidMesh->createSubmesh(cuboid, vertexDataFormat);
+        submesh.setMaterial(textureMaterial);
     }
-
-    auto image = tov::rendering::Image("./assets/skybox.png");
-    auto data = image.data();
-    auto size = image.getSize();
-    auto pixelFormat = image.getPixelFormat();
-    auto& pixelBuffer = *bufferManager.createPixelUnpackBuffer(pixelFormat, size);
-    auto& pbo = tov::rendering::buffers::PixelBufferObject(pixelBuffer, pixelFormat);
-    auto texture = tov::rendering::gl::texture::Texture2D(pbo, image.getWidth(), image.getHeight(), pixelFormat);
-    
-    pbo.updatePixelData(data, size);
-    texture.unpackPixelData();
 
     /*auto buffer = new unsigned char[64 * 64 * 4];
     auto sz = texture.getSize();
@@ -210,10 +211,10 @@ int main(int argc, char** argv)
         auto& entityNode = root.createChild();
         auto& entity = scene.createEntity();
         auto& component = entity.createMeshComponent(*sphereMesh);
-        auto& submesh = component.getMeshInstance().getSubmeshInstance(0);
-        auto& programInstance = colourProgram.instantiate();
+        auto& submeshInstance = component.getMeshInstance().getSubmeshInstance(0);
+        auto& materialInstance = submeshInstance.getMaterialInstance();
+        auto& programInstance = materialInstance.getProgramInstance();
         programInstance.setConstant<tov::math::Vector3>("colour", tov::math::Vector3(0.8f, 0.3f, 0.5f));
-        submesh.setProgramInstance(&programInstance);
         entityNode.attachSceneObject(&entity);
         tov::math::Vector3 translation(0, 0, -40);
         entityNode.getTransform().setTranslation(translation);
@@ -223,10 +224,10 @@ int main(int argc, char** argv)
         auto& entityNode = root.createChild();
         auto& entity = scene.createEntity();
         auto& component = entity.createMeshComponent(*sphereMesh);
-        auto& submesh = component.getMeshInstance().getSubmeshInstance(0);
-        auto& programInstance = colourProgram.instantiate();
+        auto& submeshInstance = component.getMeshInstance().getSubmeshInstance(0);
+        auto& materialInstance = submeshInstance.getMaterialInstance();
+        auto& programInstance = materialInstance.getProgramInstance();
         programInstance.setConstant<tov::math::Vector3>("colour", tov::math::Vector3(0.0f, 0.0f, 1.0f));
-        submesh.setProgramInstance(&programInstance);
         entityNode.attachSceneObject(&entity);
         tov::math::Vector3 translation(5, 5, -30);
         entityNode.getTransform().setTranslation(translation);
@@ -236,10 +237,11 @@ int main(int argc, char** argv)
         auto& entityNode = root.createChild();
         auto& entity = scene.createEntity();
         auto& component = entity.createMeshComponent(*cuboidMesh);
-        auto& submesh = component.getMeshInstance().getSubmeshInstance(0);
-        auto& programInstance = textureProgram.instantiate();
+        auto& submeshInstance = component.getMeshInstance().getSubmeshInstance(0);
+        auto& materialInstance = submeshInstance.getMaterialInstance();
+        auto& programInstance = materialInstance.getProgramInstance();
         programInstance.setConstant<int>("tex", 0);
-        submesh.setProgramInstance(&programInstance);
+        materialInstance.getRasterizerStateDescriptor().setCullMode(tov::rendering::pipeline::CullMode::FRONT);
         entityNode.attachSceneObject(&entity);
         tov::math::Vector3 translation(-2, 0, -15);
         entityNode.getTransform().setTranslation(translation);

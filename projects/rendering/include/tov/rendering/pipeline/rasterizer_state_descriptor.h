@@ -11,11 +11,22 @@ namespace tov
     TOV_NAMESPACE_BEGIN(rendering)
     TOV_NAMESPACE_BEGIN(pipeline)
 
-    struct RasterizerStateDescriptor
+    class RasterizerStateDescriptor
     {
-        bool cullingEnabled = true;
-        CullMode cullMode = CullMode::BACK;
-        VertexWinding vertexWinding = VertexWinding::COUNTERCLOCKWISE;
+    public:
+        void setCullingEnabled(bool enabled) { mCullingEnabled = enabled; }
+        auto getCullingEnabled() const { return mCullingEnabled; }
+
+        void setCullMode(pipeline::CullMode cullMode) { mCullMode = cullMode; }
+        auto getCullMode() const { return mCullMode; }
+
+        void setVertexWinding(pipeline::VertexWinding vertexWinding) { mVertexWinding = vertexWinding; }
+        auto getVertexWinding() const { return mVertexWinding; }
+
+    private:
+        bool mCullingEnabled = true;
+        CullMode mCullMode = CullMode::BACK;
+        VertexWinding mVertexWinding = VertexWinding::COUNTERCLOCKWISE;
     };
 
     TOV_NAMESPACE_END // pipeline

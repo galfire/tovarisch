@@ -20,6 +20,8 @@ namespace tov
 
     TOV_NAMESPACE_END // pipeline
 
+    class MaterialInstance;
+
     TOV_NAMESPACE_BEGIN(mesh)
 
     class SubmeshInstance
@@ -27,10 +29,12 @@ namespace tov
     public:
         SubmeshInstance(
             buffers::IndexBufferObject const& ibo,
-            std::vector<buffers::VertexBufferObject*> vbos
+            std::vector<buffers::VertexBufferObject*> vbos,
+            MaterialInstance& materialInstance
         )
             : mIBO(ibo)
             , mVBOs(vbos)
+            , mMaterialInstance(materialInstance)
         {}
 
         ~SubmeshInstance() = default;
@@ -38,12 +42,16 @@ namespace tov
         auto getIndexBufferObject() const -> auto const& { return mIBO; }
         auto getVertexBufferObjects() const -> auto const& { return mVBOs; }
 
-        auto setProgramInstance(pipeline::ProgramInstance* programInstance) { mProgramInstance = programInstance; }
-        auto getProgramInstance() const -> auto const& { return *mProgramInstance; }
+        auto getMaterialInstance() -> auto& { return mMaterialInstance; }
+
+        /*auto setProgramInstance(pipeline::ProgramInstance* programInstance) { mProgramInstance = programInstance; }
+        auto getProgramInstance() const -> auto const& { return *mProgramInstance; }*/
 
     private:
         buffers::IndexBufferObject const& mIBO;
         std::vector<buffers::VertexBufferObject*> mVBOs;
+
+        MaterialInstance& mMaterialInstance;
 
         pipeline::ProgramInstance* mProgramInstance = nullptr;
     };

@@ -11,6 +11,10 @@
 #include "rendering/commands/commands.h"
 #include "rendering/commands/command_bucket.h"
 
+#include "rendering/mesh/draw_data_context.h"
+
+#include "rendering/backend.h"
+
 #include "rendering/pipeline/program_instance.h"
 
 namespace tov
@@ -85,6 +89,13 @@ namespace tov
                     for (auto&& sceneObject : sceneObjects)
                     {
                         auto& drawDataList = sceneObject->getDrawDataList();
+                        auto drawDataListSize = drawDataList.size();
+                        //if (drawDataListSize < 1) return;
+
+                        auto* drawDataContext = backend::createDrawDataContext();
+                        auto& startDrawDataContext = bucket.addCommand<commands::StartDrawDataContext>(0);
+                        startDrawDataContext.drawDataContext = drawDataContext;
+
                         for (auto&& drawData : drawDataList)
                         {
                             auto& command = bucket.addCommand<commands::Draw>(0);
@@ -93,6 +104,9 @@ namespace tov
                             command.projectionMatrix = projectionMatrix;
                             command.drawData = &drawData;
                         }
+
+                        auto& endDrawDataContext = bucket.addCommand<commands::EndDrawDataContext>(0);
+                        endDrawDataContext.drawDataContext = drawDataContext;
                     }
                 }
             }

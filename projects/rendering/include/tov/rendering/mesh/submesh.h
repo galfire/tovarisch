@@ -20,6 +20,8 @@ namespace tov
     
     TOV_NAMESPACE_END // geometry
 
+    class Material;
+
     TOV_NAMESPACE_BEGIN(mesh)
 
     class IndexData;
@@ -38,6 +40,8 @@ namespace tov
         auto getIndexData() const -> auto const& { return mIndexData; }
         auto getVertexData() const -> auto const& { return mVertexData; }
 
+        auto setMaterial(Material& material) -> void { mMaterial = &material; }
+
         auto instantiate() -> SubmeshInstance;
 
     private:
@@ -47,6 +51,8 @@ namespace tov
 
     private:
         Mesh& mParentMesh;
+
+        Material* mMaterial = nullptr;
 
         std::unique_ptr<IndexData> mIndexData;
         std::unique_ptr<VertexData> mVertexData;

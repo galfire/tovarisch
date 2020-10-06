@@ -65,7 +65,7 @@
 template<class... U>
 auto log_gl_op(const char* step, U&&... args)
 {
-#if TOV_DEBUG
+#if TOV_DEBUG && 0
     return GLPrinter(step, std::forward<U>(args)...);
 #else
     return true;

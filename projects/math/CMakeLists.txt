@@ -18,6 +18,9 @@ file(GLOB_RECURSE TEST_SOURCES tests/*.cpp)
 add_executable(math_tests ${TEST_SOURCES})
 set_target_properties(math_tests PROPERTIES SUFFIX ".exe")
 
+set(TARGET_NAME math_tests)
+include(${CMAKE_SOURCE_DIR}/projects/cmake/debug.cmake)
+
 include_directories(${CATCH_DIR}/single_include)
 
 include_directories(${CMAKE_SOURCE_DIR}/projects/math/include)
