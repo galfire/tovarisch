@@ -53,6 +53,7 @@ namespace tov
     void Scene::queue()
     {
         auto& bucket = mRenderSystem.getGBufferBucket();
+        auto programInstance = mRenderSystem.getProgramInstanceGBuffer();
 
         for (auto&& camera : mCameras)
         {
@@ -81,6 +82,10 @@ namespace tov
                     command.viewport = viewport;
                 }
 
+                auto* drawDataContext = backend::createDrawDataContext();
+                auto& startDrawDataContext = bucket.addCommand<commands::StartDrawDataContext>(0);
+                startDrawDataContext.drawDataContext = drawDataContext;
+
                 for (auto&& node : nodes)
                 {
                     auto const& modelMatrix = node->getTransform().getHomogeneousMatrix();
@@ -90,11 +95,12 @@ namespace tov
                     {
                         auto& drawDataList = sceneObject->getDrawDataList();
                         auto drawDataListSize = drawDataList.size();
-                        //if (drawDataListSize < 1) return;
+                        if (drawDataListSize < 1)
+                            continue;
 
-                        auto* drawDataContext = backend::createDrawDataContext();
+                        /*auto* drawDataContext = backend::createDrawDataContext();
                         auto& startDrawDataContext = bucket.addCommand<commands::StartDrawDataContext>(0);
-                        startDrawDataContext.drawDataContext = drawDataContext;
+                        startDrawDataContext.drawDataContext = drawDataContext;*/
 
                         for (auto&& drawData : drawDataList)
                         {
@@ -102,13 +108,14 @@ namespace tov
                             command.modelMatrix = modelMatrix;
                             command.viewMatrix = viewMatrix;
                             command.projectionMatrix = projectionMatrix;
+                            command.programInstance = programInstance;
                             command.drawData = &drawData;
                         }
-
-                        auto& endDrawDataContext = bucket.addCommand<commands::EndDrawDataContext>(0);
-                        endDrawDataContext.drawDataContext = drawDataContext;
                     }
                 }
+
+                auto& endDrawDataContext = bucket.addCommand<commands::EndDrawDataContext>(0);
+                endDrawDataContext.drawDataContext = drawDataContext;
             }
         }
     }

@@ -14,7 +14,7 @@ include_directories(${SIMDE_DIR})
 include_directories(${STB_DIR})
 
 file(GLOB_RECURSE SOURCES src/*.cpp)
-add_library(rendering STATIC ${SOURCES})
+add_library(rendering STATIC ${SOURCES} "include/tov/rendering/pipeline/framebuffer.h")
 
 set(TARGET_NAME rendering)
 include(${CMAKE_SOURCE_DIR}/projects/cmake/debug.cmake)
@@ -32,7 +32,7 @@ endif()
 
 # TESTS
 file(GLOB_RECURSE TEST_SOURCES tests/*.cpp)
-add_executable(rendering_tests ${TEST_SOURCES})
+add_executable(rendering_tests ${TEST_SOURCES} "include/tov/rendering/pipeline/framebuffer.h")
 set_target_properties(rendering_tests PROPERTIES SUFFIX ".exe")
 
 set(TARGET_NAME rendering_tests)

@@ -15,8 +15,15 @@
 #include <tov/rendering/pipeline/program_instance.h>
 
 #include "rendering_gl/buffers/buffer.h"
+#include "rendering_gl/buffers/buffer_manager.h"
+
 #include "rendering_gl/mesh/draw_data_context.h"
 
+#include "rendering_gl/pipeline/framebuffer.h"
+#include "rendering_gl/pipeline/program.h"
+#include "rendering_gl/pipeline/shader.h"
+
+#include "rendering_gl/texture/texture.h"
 
 #include "rendering_gl/gl_impl.h"
 
@@ -160,13 +167,14 @@ namespace tov
         auto rasterizerStateDescriptor = drawData->getRasterizerStateDescriptor();
         gl::SetRasterizerState(rasterizerStateDescriptor);
 
-        // TODO: Abstract and make a persistent VAO
-        /*GLuint vao;
+        auto textureDescriptors = drawData->getTextureDescriptors();
+
+        for (auto&& textureDescriptor : textureDescriptors)
         {
-            auto op = log_gl_op("generate and bind VAO");
-            glGenVertexArrays(1, &vao);
-            glBindVertexArray(vao);
-        }*/
+            auto texture = static_cast<rendering::gl::texture::Texture2D const*>(textureDescriptor.texture);
+            auto slot = textureDescriptor.slot;
+            texture->activate(textureDescriptor.slot);
+        }
 
         // Bind the index buffer and vertex buffers before drawing
         using Buffer = rendering::gl::buffers::Buffer<buffers::UsageSettings::STATIC, buffers::AccessSettings::WRITE>;
@@ -238,6 +246,12 @@ namespace tov
 
         DrawIndexed(ibo.getNumIndices(), ibo.getIndexType());
 
+        for (auto&& textureDescriptor : textureDescriptors)
+        {
+            auto texture = static_cast<rendering::gl::texture::Texture2D const*>(textureDescriptor.texture);
+            //texture->deactivate();
+        }
+
         // May not be necessary
         // Vertex attributes are encapsulated by the VAO and will be unset when the VAO is unbound or deleted
         /*for (auto&& vbo_ : vbos)
@@ -252,13 +266,41 @@ namespace tov
                 glDisableVertexAttribArray(location);
             }
         }*/
-
-        //glDeleteVertexArrays(1, &vao);
     }
 
-    mesh::DrawDataContext* createDrawDataContext()
+    auto createBufferManager() -> buffers::BufferManagerBase*
+    {
+        return new rendering::gl::buffers::BufferManager();
+    }
+
+    auto createDrawDataContext() -> mesh::DrawDataContext*
     {
         return new rendering::gl::mesh::DrawDataContext();
+    }
+
+    auto createFramebuffer(bool isDefault) -> pipeline::Framebuffer*
+    {
+        return new rendering::gl::pipeline::Framebuffer(isDefault);
+    }
+
+    auto createProgram()->pipeline::Program*
+    {
+        return new rendering::gl::pipeline::Program();
+    }
+
+    auto createShader(pipeline::ShaderType shaderType, const char* sourceFilePath)->pipeline::Shader*
+    {
+        return new rendering::gl::pipeline::Shader(shaderType, sourceFilePath);
+    }
+
+    auto createTexture2D(
+        rendering::buffers::PixelBufferObject& pbo,
+        uint width,
+        uint height,
+        PixelFormat pixelFormat
+    ) -> texture::Texture2D*
+    {
+        return new tov::rendering::gl::texture::Texture2D(pbo, width, height, pixelFormat);
     }
 
     TOV_NAMESPACE_END // backend

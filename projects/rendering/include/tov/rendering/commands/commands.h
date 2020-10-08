@@ -47,6 +47,7 @@ namespace tov
         math::Matrix4 modelMatrix;
         math::Matrix4 viewMatrix;
         math::Matrix4 projectionMatrix;
+        pipeline::ProgramInstance const * programInstance;
         mesh::DrawData const * drawData;
         static inline DispatchFunction DispatchFunction = CommandDispatch::Draw;
     };

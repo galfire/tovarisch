@@ -42,8 +42,8 @@ namespace tov
 
         void end() const override
         {
-            auto op = log_gl_op("unbind VAO");
-            glBindVertexArray(0);
+            /*auto op = log_gl_op("unbind VAO");
+            glBindVertexArray(0);*/
         }
 
     private:

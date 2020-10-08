@@ -6,23 +6,14 @@ namespace tov
 {
     TOV_NAMESPACE_BEGIN(rendering)
 
-    Material::Material(pipeline::Program& program) noexcept
-        : mProgram(program)
+    Material::Material() noexcept
     {
-        mTextureList.reserve(program.getNumTextures2D());
-    }
-
-    void Material::setTextureSlot(texture::Texture const* const texture, uint slot)
-    {
-        mTextureList.emplace(mTextureList.begin() + slot, texture);
     }
 
     auto Material::instantiate() -> MaterialInstance&
     {
-        auto& programInstance = mProgram.instantiate();
-
         auto instance = std::unique_ptr<MaterialInstance>(
-            new MaterialInstance(programInstance, mRasterizerStateDescriptor)
+            new MaterialInstance(*this, mRasterizerStateDescriptor)
         );
         mInstances.push_back(std::move(instance));
         auto ret = mInstances.back().get();

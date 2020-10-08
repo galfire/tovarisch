@@ -5,16 +5,12 @@
 
 #include <tov/memory/heap_area.h>
 
+#include "shader_type.h"
+
 namespace tov
 {
     TOV_NAMESPACE_BEGIN(rendering)
     TOV_NAMESPACE_BEGIN(pipeline)
-
-    enum class ShaderType
-    {
-        VERTEX,
-        FRAGMENT
-    };
 
     class Shader
     {

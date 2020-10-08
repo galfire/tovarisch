@@ -40,14 +40,14 @@ namespace tov
         auto const& viewMatrix = command->viewMatrix;
         auto const& projectionMatrix = command->projectionMatrix;
 
-        auto drawData = command->drawData;
-
-        auto& programInstance = drawData->getProgramInstance();
-        programInstance.use();
+        auto const& programInstance = *command->programInstance;
+        //programInstance.use();
         programInstance.uploadConstants();
         programInstance.uploadConstantData("modelMatrix", modelMatrix.data());
         programInstance.uploadConstantData("viewMatrix", viewMatrix.data());
         programInstance.uploadConstantData("projectionMatrix", projectionMatrix.data());
+
+        auto drawData = command->drawData;
 
         backend::Draw(drawData);
     }

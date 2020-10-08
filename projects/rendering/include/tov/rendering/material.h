@@ -14,37 +14,34 @@ namespace tov
 {
     TOV_NAMESPACE_BEGIN(rendering)
 
-    TOV_NAMESPACE_BEGIN(pipeline)
-    class Program;
-    TOV_NAMESPACE_END // pipeline
     TOV_NAMESPACE_BEGIN(texture)
     class Texture;
     TOV_NAMESPACE_END // texture
-
-
 
     class Material
     {
         TOV_MOVABLE_ONLY(Material)
 
     public:
-        Material(pipeline::Program& program) noexcept;
+        Material() noexcept;
         ~Material() noexcept = default;
-
-        void setTextureSlot(texture::Texture const *const texture, uint slot);
 
         auto getRasterizerStateDescriptor() const { return mRasterizerStateDescriptor; }
         auto getRasterizerStateDescriptor() -> auto& { return mRasterizerStateDescriptor; }
 
         auto instantiate() -> MaterialInstance&;
 
+        auto setAlbedoMap(texture::Texture const* const texture) { mTextureAlbedoMap = texture; }
+        auto getAlbedoMap() const { return mTextureAlbedoMap; }
+
+        auto setNormalMap(texture::Texture const* const texture) { mTextureNormalMap = texture; }
+        auto getNormalMap() const { return mTextureNormalMap; }
+
     private:
-        pipeline::Program& mProgram;
-
-        using TextureList = std::vector<texture::Texture const *>;
-        TextureList mTextureList;
-
         pipeline::RasterizerStateDescriptor mRasterizerStateDescriptor;
+
+        texture::Texture const* mTextureAlbedoMap = nullptr;
+        texture::Texture const* mTextureNormalMap = nullptr;
 
         std::vector<std::unique_ptr<MaterialInstance>> mInstances;
     };

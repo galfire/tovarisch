@@ -3,6 +3,8 @@
 
 #include <tov/rendering/rendering_core.h>
 
+#include <tov/rendering/render_target.h>
+
 #include <tov/rendering/pixel_format.h>
 
 #include <tov/rendering/buffers/buffer_manager.h>
@@ -26,6 +28,8 @@ namespace tov
             mSize = mPixelFormat.getSize() * mNumPixels;
         }
 
+        virtual ~Texture() = default;
+
         auto getSize() const { return mSize; }
         auto getNumPixels() const { return mNumPixels; }
         auto getPixelFormat() const { return mPixelFormat; }
@@ -42,6 +46,7 @@ namespace tov
 
     class Texture2D
         : public Texture
+        , public RenderTarget
     {
     public:
         Texture2D(
@@ -51,13 +56,12 @@ namespace tov
             PixelFormat pixelFormat
         )
             : Texture(pbo, width * height, pixelFormat)
-            , mWidth(width)
-            , mHeight(height)
+            , RenderTarget(width, height, pixelFormat)
         {}
 
-    protected:
-        uint mWidth;
-        uint mHeight;
+        virtual ~Texture2D() = default;
+
+        void swapBuffers() override {}
     };
 
     TOV_NAMESPACE_END // texture

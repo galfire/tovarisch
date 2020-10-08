@@ -78,6 +78,10 @@ namespace tov
             }
         }
 
+        ~Texture2D()
+        {
+        }
+
         auto bind() const -> TextureBinder override { return TextureBinder(mTextureID, GL_TEXTURE_2D); }
 
         auto getPixelBuffer() const -> auto&
@@ -98,6 +102,26 @@ namespace tov
             auto bufferBind = buffer.bind();
             auto op = log_gl_op("tex subimage2D");
             glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, mWidth, mHeight, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+        }
+
+        auto getTextureID() const { return mTextureID; }
+
+        void activate(uint slot) const
+        {
+            {
+                auto op = log_gl_op("glActiveTexture", slot);
+                glActiveTexture(GL_TEXTURE0 + slot);
+            }
+            {
+                auto op = log_gl_op("glBindTexture", mTextureID);
+                glBindTexture(GL_TEXTURE_2D, mTextureID);
+            }
+        }
+
+        void deactivate() const
+        {
+            auto op = log_gl_op("unbind texture", mTextureID);
+            glBindTexture(GL_TEXTURE_2D, 0);
         }
 
     private:

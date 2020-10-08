@@ -2,11 +2,11 @@
   
 layout(location = 0) out vec4 diffuseColour;
 
-in vec2 oTexCoord;
+in vec2 TexCoord;
 
 uniform sampler2D tex;
 
 void main()
 {
-    diffuseColour = texture(tex, oTexCoord);
+    diffuseColour = texture(tex, TexCoord);
 }

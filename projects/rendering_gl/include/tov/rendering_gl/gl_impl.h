@@ -39,7 +39,8 @@
             GLenum error = glGetError();
             if (error != GL_NO_ERROR) success = false;
             if (success) std::cout << "\tSuccessfully completed " << mStep << ".\n";
-            else         std::cout << "\nFailed to complete " << mStep << "!\n";
+            else
+                std::cout << "\nFailed to complete " << mStep << "!\n";
         }
 
     private:
@@ -65,7 +66,7 @@
 template<class... U>
 auto log_gl_op(const char* step, U&&... args)
 {
-#if TOV_DEBUG && 0
+#if TOV_DEBUG && 1
     return GLPrinter(step, std::forward<U>(args)...);
 #else
     return true;

@@ -12,6 +12,7 @@ namespace tov
 {
     TOV_NAMESPACE_BEGIN(rendering)
 
+    class Material;
     TOV_NAMESPACE_BEGIN(pipeline)
     class ProgramInstance;
     TOV_NAMESPACE_END // pipeline
@@ -25,22 +26,23 @@ namespace tov
 
     public:
         MaterialInstance(
-            pipeline::ProgramInstance& programInstance,
+            Material& parentMaterial,
             pipeline::RasterizerStateDescriptor rasterizerStateDescriptor
         ) noexcept;
         ~MaterialInstance() noexcept = default;
 
-        auto getProgramInstance() -> auto& { return mProgramInstance; }
-        auto getProgramInstance() const -> auto const& { return mProgramInstance; }
+        auto setAlbedoMap(texture::Texture const* const texture) { mTextureAlbedoMap = texture; }
+        auto getAlbedoMap() const { return mTextureAlbedoMap; }
+
+        auto setNormalMap(texture::Texture const* const texture) { mTextureNormalMap = texture; }
+        auto getNormalMap() const { return mTextureNormalMap; }
 
         auto getRasterizerStateDescriptor() const { return mRasterizerStateDescriptor; }
         auto getRasterizerStateDescriptor() -> auto& { return mRasterizerStateDescriptor; }
 
     private:
-        pipeline::ProgramInstance& mProgramInstance;
-
-        using TextureList = std::vector<texture::Texture const*>;
-        TextureList mTextureList;
+        texture::Texture const* mTextureAlbedoMap = nullptr;
+        texture::Texture const* mTextureNormalMap = nullptr;
 
         pipeline::RasterizerStateDescriptor mRasterizerStateDescriptor;
     };

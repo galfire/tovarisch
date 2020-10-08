@@ -9,6 +9,7 @@
 #include <tov/rendering/buffers/vertex_buffer_object.h>
 #include <tov/rendering/pipeline/program_instance.h>
 #include <tov/rendering/pipeline/rasterizer_state_descriptor.h>
+#include <tov/rendering/pipeline/texture_descriptor.h>
 
 namespace tov
 {
@@ -21,12 +22,12 @@ namespace tov
         DrawData(
             buffers::IndexBufferObject const& indexBufferObject, 
             std::vector<buffers::VertexBufferObject*> const& vertexBufferObjects,
-            pipeline::ProgramInstance const& programInstance,
+            std::vector<pipeline::TextureDescriptor> const textureDescriptors,
             pipeline::RasterizerStateDescriptor rasterizerStateDescriptor
         ) noexcept
             : mIndexBufferObject(indexBufferObject)
             , mVertexBufferObjects(vertexBufferObjects)
-            , mProgramInstance(programInstance)
+            , mTextureDescriptors(textureDescriptors)
             , mRasterizerStateDescriptor(rasterizerStateDescriptor)
         {}
 
@@ -34,14 +35,13 @@ namespace tov
 
         auto getIndexBufferObject() const -> auto const& { return mIndexBufferObject; }
         auto getVertexBufferObjects() const -> auto const& { return mVertexBufferObjects; }
-        auto getProgramInstance() -> auto & { return mProgramInstance; }
-        auto getProgramInstance() const -> auto const& { return mProgramInstance; }
+        auto getTextureDescriptors() const -> auto const& { return mTextureDescriptors; }
         auto getRasterizerStateDescriptor() const { return mRasterizerStateDescriptor; }
 
     private:
         buffers::IndexBufferObject const& mIndexBufferObject;
         std::vector<buffers::VertexBufferObject*> const& mVertexBufferObjects;
-        pipeline::ProgramInstance const& mProgramInstance;
+        std::vector<pipeline::TextureDescriptor> const mTextureDescriptors;
         pipeline::RasterizerStateDescriptor mRasterizerStateDescriptor;
     };
 

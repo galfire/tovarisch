@@ -2,6 +2,7 @@
 
 #include <rendering/mesh/submesh_instance.h>
 #include <rendering/material_instance.h>
+#include <rendering/pipeline/texture_descriptor.h>
 
 namespace tov
 {
@@ -28,10 +29,17 @@ namespace tov
         for (auto&& submeshInstance : mSubmeshInstanceList)
         {
             auto& materialInstance = submeshInstance.getMaterialInstance();
+
+            std::vector<pipeline::TextureDescriptor> textureDescriptors;
+            if (materialInstance.getAlbedoMap())
+                textureDescriptors.emplace_back(materialInstance.getAlbedoMap(), 0);
+            if (materialInstance.getNormalMap())
+                textureDescriptors.emplace_back(materialInstance.getNormalMap(), 1);
+
             auto drawData = DrawData(
                 submeshInstance.getIndexBufferObject(),
                 submeshInstance.getVertexBufferObjects(),
-                materialInstance.getProgramInstance(),
+                textureDescriptors,
                 materialInstance.getRasterizerStateDescriptor()
             );
             mDrawDataList.push_back(drawData);
