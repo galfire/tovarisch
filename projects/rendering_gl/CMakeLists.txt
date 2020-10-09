@@ -33,7 +33,7 @@ include_directories(${CMAKE_SOURCE_DIR}/projects/rendering_gl/include)
 include_directories(${SIMDE_DIR})
 
 file(GLOB_RECURSE SOURCES src/*.cpp)
-add_library(rendering_gl STATIC ${SOURCES})
+add_library(rendering_gl STATIC ${SOURCES} "src/rendering_gl/render_system.cpp")
 
 set(TARGET_NAME rendering_gl)
 include(${CMAKE_SOURCE_DIR}/projects/cmake/debug.cmake)

@@ -10,12 +10,14 @@ namespace tov
 {
     TOV_NAMESPACE_BEGIN(rendering)
 
+    class RenderSystem;
     class Viewport;
+    class WindowPlatformSupport;
+    class WindowRendererSupport;
 
     TOV_NAMESPACE_BEGIN(buffers)
 
     class BufferManagerBase;
-    class PixelBufferObject;
 
     TOV_NAMESPACE_END // buffers
 
@@ -33,11 +35,6 @@ namespace tov
     class Shader;
 
     TOV_NAMESPACE_END //pipeline
-    TOV_NAMESPACE_BEGIN(texture)
-
-    class Texture2D;
-
-    TOV_NAMESPACE_END // texture
 
     TOV_NAMESPACE_BEGIN(backend)
 
@@ -45,18 +42,17 @@ namespace tov
     void ClearViewport(Viewport const *const viewport);
     void Draw(mesh::DrawData const *const drawData);
 
+    auto createRenderSystem(
+        WindowPlatformSupport& windowPlatformSupport,
+        WindowRendererSupport& windowRednererSupport
+    ) -> RenderSystem*;
+
     auto createBufferManager() -> buffers::BufferManagerBase*;
     auto createDrawDataContext() -> mesh::DrawDataContext*;
     auto createFramebuffer(bool isDefault) -> pipeline::Framebuffer*;
     auto createProgram() -> pipeline::Program*;
     auto createShader(pipeline::ShaderType shaderType, const char* sourceFilePath) -> pipeline::Shader*;
-    auto createTexture2D(
-        rendering::buffers::PixelBufferObject& pbo,
-        uint width,
-        uint height,
-        PixelFormat pixelFormat
-    ) -> texture::Texture2D*;
-
+    
     TOV_NAMESPACE_END // backend
     TOV_NAMESPACE_END // rendering
 }

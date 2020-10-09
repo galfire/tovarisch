@@ -30,7 +30,7 @@ namespace tov
         SubmeshInstance(
             buffers::IndexBufferObject const& ibo,
             std::vector<buffers::VertexBufferObject*> vbos,
-            MaterialInstance& materialInstance
+            MaterialInstance* materialInstance
         )
             : mIBO(ibo)
             , mVBOs(vbos)
@@ -42,7 +42,7 @@ namespace tov
         auto getIndexBufferObject() const -> auto const& { return mIBO; }
         auto getVertexBufferObjects() const -> auto const& { return mVBOs; }
 
-        auto getMaterialInstance() -> auto& { return mMaterialInstance; }
+        auto getMaterialInstance() { return mMaterialInstance; }
 
         /*auto setProgramInstance(pipeline::ProgramInstance* programInstance) { mProgramInstance = programInstance; }
         auto getProgramInstance() const -> auto const& { return *mProgramInstance; }*/
@@ -51,7 +51,7 @@ namespace tov
         buffers::IndexBufferObject const& mIBO;
         std::vector<buffers::VertexBufferObject*> mVBOs;
 
-        MaterialInstance& mMaterialInstance;
+        MaterialInstance* mMaterialInstance;
 
         pipeline::ProgramInstance* mProgramInstance = nullptr;
     };

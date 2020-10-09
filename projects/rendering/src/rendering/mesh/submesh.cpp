@@ -135,7 +135,7 @@ namespace tov
     {
         auto const& ibo = getIndexData()->getBufferObject();
         auto const& vbos = getVertexData()->getBufferObjects();
-        auto& materialInstance = mMaterial->instantiate();
+        auto materialInstance = mMaterial ? &mMaterial->instantiate() : nullptr;
         auto submeshInstance = SubmeshInstance(ibo, vbos, materialInstance);
         return submeshInstance;
     }

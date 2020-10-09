@@ -5,6 +5,8 @@
 #include <tov/math/radian.h>
 #include <tov/math/vector.h>
 
+#include <tov/rendering/backend.h>
+
 #include <tov/rendering/colour.h>
 #include <tov/rendering/camera.h>
 #include <tov/rendering/pixel_format.h>
@@ -31,15 +33,14 @@
 #include <tov/rendering/buffers/vertex_format.h>
 #include <tov/rendering/mesh/vertex_data_format.h>
 
+#include <tov/rendering/texture/texture.h>
+
 #include <tov/rendering/buffers/pixel_buffer_object.h>
 
 #include <tov/rendering/render_system.h>
 #include <tov/rendering/render_window.h>
 #include <tov/rendering/scene.h>
 #include <tov/rendering/scene_node.h>
-
-#include <tov/rendering_gl/buffers/buffer_manager.h>
-#include <tov/rendering_gl/texture/texture.h>
 
 #include <tov/rendering/win32/window_platform_support.h>
 #include <tov/rendering_gl/window_renderer_support.h>
@@ -50,40 +51,41 @@ using WindowPlatformSupport = tov::rendering::win32::WindowPlatformSupport;
 using WindowRendererSupport = tov::rendering::win32::gl::WindowRendererSupport;
 using RenderSystem = tov::rendering::RenderSystem;
 
-// adfadf
+// adfadfadf
 
 int main(int argc, char** argv)
 {
     WindowPlatformSupport platformSupport;
     WindowRendererSupport rendererSupport;
 
-    auto rs = RenderSystem(platformSupport, rendererSupport);
+    auto rs = std::unique_ptr<RenderSystem>(
+        tov::rendering::backend::createRenderSystem(platformSupport, rendererSupport)
+    );
 
-    tov::rendering::Scene scene(rs);
+    tov::rendering::Scene scene(*rs.get());
     auto& root = scene.getRootNode();
 
-    using BufferManager = tov::rendering::gl::buffers::BufferManager;
-    BufferManager bufferManager;
+    auto bufferManager = rs->getBufferManager();
 
     auto& cameraNode = root.createChild();
     auto& camera = scene.createCamera();
     cameraNode.attachSceneObject(&camera);
 
     {
-        auto& window = rs.createRenderWindow("Window", 800, 600, false);
+        auto& window = rs->createRenderWindow("Window", 800, 600, false);
         auto& vp = window.createViewport(2, 0.0f, 0.0f, 1.0f, 1.0f, tov::rendering::Colour::Black);
         camera.attachViewport(vp);
     }
 
-    rs.initialize();
+    rs->initialize();
 
     auto colourMaterial = tov::rendering::Material();
     {
         auto pixelFormat = tov::rendering::PixelFormat(8, 8, 8, 8, 0, 0);
         auto size = 16 * 16 * pixelFormat.getSize();
-        auto& pixelBuffer = *bufferManager.createPixelUnpackBuffer(pixelFormat, size);
+        auto& pixelBuffer = *bufferManager->createPixelUnpackBuffer(pixelFormat, size);
         auto& pbo = tov::rendering::buffers::PixelBufferObject(pixelBuffer, pixelFormat);
-        auto texture = new tov::rendering::gl::texture::Texture2D(pbo, 16, 16, pixelFormat);
+        auto& texture = rs->createTexture2D(pbo, 16, 16, pixelFormat);
 
         auto buffer = new unsigned char[size];
         for (unsigned int i = 0; i < size; i += 4)
@@ -94,9 +96,9 @@ int main(int argc, char** argv)
             buffer[i + 3] = 255;
         }
         pbo.updatePixelData(buffer, size);
-        texture->unpackPixelData();
+        texture.unpackPixelData();
 
-        colourMaterial.setAlbedoMap(texture);
+        colourMaterial.setAlbedoMap(&texture);
     }
 
     auto textureMaterial = tov::rendering::Material();
@@ -104,42 +106,33 @@ int main(int argc, char** argv)
         auto image = tov::rendering::Image("./assets/skybox.png");
         auto pixelFormat = image.getPixelFormat();
         auto size = image.getSize();
-        auto& pixelBuffer = *bufferManager.createPixelUnpackBuffer(pixelFormat, size);
+        auto& pixelBuffer = *bufferManager->createPixelUnpackBuffer(pixelFormat, size);
         auto& pbo = tov::rendering::buffers::PixelBufferObject(pixelBuffer, pixelFormat);
-        auto texture = new tov::rendering::gl::texture::Texture2D(pbo, image.getWidth(), image.getHeight(), pixelFormat);
+        auto& texture = rs->createTexture2D(pbo, image.getWidth(), image.getHeight(), pixelFormat);
 
         auto data = image.data();
         pbo.updatePixelData(data, size);
-        texture->unpackPixelData();
+        texture.unpackPixelData();
 
-        textureMaterial.setAlbedoMap(texture);
+        textureMaterial.setAlbedoMap(&texture);
     }
 
     auto vertexDataFormat = tov::rendering::mesh::VertexDataFormat();
-
     {
         tov::rendering::buffers::VertexFormat vf;
         vf.addAttribute(tov::rendering::buffers::VertexAttribute::POSITION, 0);
         vf.addAttribute(tov::rendering::buffers::VertexAttribute::NORMAL, 1);
         vf.addAttribute(tov::rendering::buffers::VertexAttribute::COLOUR, 2);
+        vf.addAttribute(tov::rendering::buffers::VertexAttribute::TEXTURE_COORDINATE, 3);
         tov::rendering::buffers::VertexBufferFormat vbf(
             tov::rendering::buffers::VertexBufferFormat::SequenceType::INTERLEAVED,
             vf
         );
         vertexDataFormat.mapHandleToFormat(0, vbf);
     }
-    {
-        tov::rendering::buffers::VertexFormat vf;
-        vf.addAttribute(tov::rendering::buffers::VertexAttribute::TEXTURE_COORDINATE, 3);
-        tov::rendering::buffers::VertexBufferFormat vbf(
-            tov::rendering::buffers::VertexBufferFormat::SequenceType::INTERLEAVED,
-            vf
-        );
-        vertexDataFormat.mapHandleToFormat(1, vbf);
-    }
 
     using MeshManager = tov::rendering::mesh::MeshManager;
-    MeshManager meshManager(bufferManager);
+    MeshManager meshManager(*bufferManager);
 
     auto rectangleMesh = meshManager.create();
         
@@ -172,7 +165,6 @@ int main(int argc, char** argv)
         auto& submesh = cuboidMesh->createSubmesh(cuboid, vertexDataFormat);
         submesh.setMaterial(textureMaterial);
     }
-
 
     {
         auto& entityNode = root.createChild();
@@ -226,8 +218,8 @@ int main(int argc, char** argv)
         std::cout << "STARTING FRAME...\n";
 #endif
         scene.queue();
-        rs.renderFrame();
-        rs.swapBuffers();
+        rs->renderFrame();
+        rs->swapBuffers();
 
 #if TOV_DEBUG
         std::cout << "END FRAME\n";

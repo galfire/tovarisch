@@ -44,7 +44,7 @@ namespace tov
 
     private:
         auto attachTextureImpl(rendering::texture::Texture2D const* const texture, rendering::pipeline::FramebufferAttachments attachment) -> void override;
-        auto bindImpl() -> void override;
+        auto bindImpl() const -> void override;
 
     private:
         GLuint mFramebufferID;

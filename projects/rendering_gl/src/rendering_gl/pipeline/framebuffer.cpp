@@ -50,7 +50,7 @@ namespace tov
 		glFramebufferTexture2D(GL_FRAMEBUFFER, glAttachment, GL_TEXTURE_2D, glTextureID, 0);
 	}
 
-	auto Framebuffer::bindImpl() -> void
+	auto Framebuffer::bindImpl() const -> void
 	{
 		glBindFramebuffer(GL_FRAMEBUFFER, mFramebufferID);
 

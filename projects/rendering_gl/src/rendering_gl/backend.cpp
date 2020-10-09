@@ -14,6 +14,8 @@
 
 #include <tov/rendering/pipeline/program_instance.h>
 
+#include "rendering_gl/render_system.h"
+
 #include "rendering_gl/buffers/buffer.h"
 #include "rendering_gl/buffers/buffer_manager.h"
 
@@ -249,7 +251,7 @@ namespace tov
         for (auto&& textureDescriptor : textureDescriptors)
         {
             auto texture = static_cast<rendering::gl::texture::Texture2D const*>(textureDescriptor.texture);
-            //texture->deactivate();
+            texture->deactivate();
         }
 
         // May not be necessary
@@ -266,6 +268,14 @@ namespace tov
                 glDisableVertexAttribArray(location);
             }
         }*/
+    }
+
+    auto createRenderSystem(
+        WindowPlatformSupport& windowPlatformSupport,
+        WindowRendererSupport& windowRednererSupport
+    ) -> RenderSystem*
+    {
+        return new rendering::gl::RenderSystem(windowPlatformSupport, windowRednererSupport);
     }
 
     auto createBufferManager() -> buffers::BufferManagerBase*
@@ -291,16 +301,6 @@ namespace tov
     auto createShader(pipeline::ShaderType shaderType, const char* sourceFilePath)->pipeline::Shader*
     {
         return new rendering::gl::pipeline::Shader(shaderType, sourceFilePath);
-    }
-
-    auto createTexture2D(
-        rendering::buffers::PixelBufferObject& pbo,
-        uint width,
-        uint height,
-        PixelFormat pixelFormat
-    ) -> texture::Texture2D*
-    {
-        return new tov::rendering::gl::texture::Texture2D(pbo, width, height, pixelFormat);
     }
 
     TOV_NAMESPACE_END // backend

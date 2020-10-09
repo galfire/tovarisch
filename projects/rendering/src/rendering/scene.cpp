@@ -1,5 +1,7 @@
 #include "rendering/scene.h"
 
+#include <tov/math/matrix.h>
+
 #include "rendering/camera.h"
 #include "rendering/draw_context.h"
 #include "rendering/entity.h"
@@ -78,8 +80,8 @@ namespace tov
                 }
 
                 {
-                    auto& command = bucket.addCommand<commands::ClearViewport>(viewport->getZIndex());
-                    command.viewport = viewport;
+                    /*auto& command = bucket.addCommand<commands::ClearViewport>(viewport->getZIndex());
+                    command.viewport = viewport;*/
                 }
 
                 auto* drawDataContext = backend::createDrawDataContext();
@@ -104,12 +106,17 @@ namespace tov
 
                         for (auto&& drawData : drawDataList)
                         {
-                            auto& command = bucket.addCommand<commands::Draw>(0);
-                            command.modelMatrix = modelMatrix;
-                            command.viewMatrix = viewMatrix;
-                            command.projectionMatrix = projectionMatrix;
-                            command.programInstance = programInstance;
-                            command.drawData = &drawData;
+                            {
+                                auto& command = bucket.addCommand<commands::UploadMVP>(0);
+                                command.programInstance = programInstance;
+                                command.modelMatrix = modelMatrix;
+                                command.viewMatrix = viewMatrix;
+                                command.projectionMatrix = projectionMatrix;
+                            }
+                            {
+                                auto& command = bucket.addCommand<commands::Draw>(0);
+                                command.drawData = &drawData;
+                            }
                         }
                     }
                 }

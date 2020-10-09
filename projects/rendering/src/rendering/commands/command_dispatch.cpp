@@ -36,20 +36,34 @@ namespace tov
     {
         auto command = reinterpret_cast<commands::Draw const *const>(data);
 
+        /*auto const& modelMatrix = command->modelMatrix;
+        auto const& viewMatrix = command->viewMatrix;
+        auto const& projectionMatrix = command->projectionMatrix;*/
+
+        //auto const& programInstance = *command->programInstance;
+        //programInstance.use();
+        /*programInstance.uploadConstants();
+        programInstance.uploadConstantData("modelMatrix", modelMatrix.data());
+        programInstance.uploadConstantData("viewMatrix", viewMatrix.data());
+        programInstance.uploadConstantData("projectionMatrix", projectionMatrix.data());*/
+
+        auto drawData = command->drawData;
+
+        backend::Draw(drawData);
+    }
+
+    void CommandDispatch::UploadMVP(const void* data)
+    {
+        auto command = reinterpret_cast<commands::UploadMVP const* const>(data);
+
         auto const& modelMatrix = command->modelMatrix;
         auto const& viewMatrix = command->viewMatrix;
         auto const& projectionMatrix = command->projectionMatrix;
 
         auto const& programInstance = *command->programInstance;
-        //programInstance.use();
-        programInstance.uploadConstants();
         programInstance.uploadConstantData("modelMatrix", modelMatrix.data());
         programInstance.uploadConstantData("viewMatrix", viewMatrix.data());
         programInstance.uploadConstantData("projectionMatrix", projectionMatrix.data());
-
-        auto drawData = command->drawData;
-
-        backend::Draw(drawData);
     }
 
     void CommandDispatch::StartDrawDataContext(const void* data)

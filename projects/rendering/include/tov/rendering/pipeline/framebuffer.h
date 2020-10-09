@@ -24,11 +24,11 @@ namespace tov
         virtual ~Framebuffer() = default;
 
         auto attachTexture(texture::Texture2D const * const texture, FramebufferAttachments attachment) -> void;
-        auto bind() -> void { bindImpl(); }
+        auto bind() const -> void { bindImpl(); }
 
     private:
         virtual auto attachTextureImpl(texture::Texture2D const* const texture, FramebufferAttachments attachment) -> void TOV_ABSTRACT;
-        virtual auto bindImpl() -> void TOV_ABSTRACT;
+        virtual auto bindImpl() const -> void TOV_ABSTRACT;
 
     protected:
         bool mIsDefault = false;

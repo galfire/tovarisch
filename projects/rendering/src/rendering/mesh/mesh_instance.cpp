@@ -28,19 +28,22 @@ namespace tov
 
         for (auto&& submeshInstance : mSubmeshInstanceList)
         {
-            auto& materialInstance = submeshInstance.getMaterialInstance();
+            auto materialInstance = submeshInstance.getMaterialInstance();
 
             std::vector<pipeline::TextureDescriptor> textureDescriptors;
-            if (materialInstance.getAlbedoMap())
-                textureDescriptors.emplace_back(materialInstance.getAlbedoMap(), 0);
-            if (materialInstance.getNormalMap())
-                textureDescriptors.emplace_back(materialInstance.getNormalMap(), 1);
+            if (materialInstance)
+            {
+                if (materialInstance->getAlbedoMap())
+                    textureDescriptors.emplace_back(materialInstance->getAlbedoMap(), 0);
+                if (materialInstance->getNormalMap())
+                    textureDescriptors.emplace_back(materialInstance->getNormalMap(), 1);
+            }
 
             auto drawData = DrawData(
                 submeshInstance.getIndexBufferObject(),
                 submeshInstance.getVertexBufferObjects(),
                 textureDescriptors,
-                materialInstance.getRasterizerStateDescriptor()
+                materialInstance->getRasterizerStateDescriptor()
             );
             mDrawDataList.push_back(drawData);
         }
