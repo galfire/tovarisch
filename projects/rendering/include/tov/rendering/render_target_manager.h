@@ -21,12 +21,15 @@ namespace tov
         template<class T, class... U>
         auto create(U&&... args)
         {
-            auto renderTarget = std::unique_ptr<T>(
-                new T(std::forward<U>(args)...)
-            );
-            mRenderTargets.push_back(std::move(renderTarget));
-            auto ret = mRenderTargets.back().get();
-            return static_cast<T*>(ret);
+            {
+                auto renderTarget = std::unique_ptr<T>(
+                    new T(std::forward<U>(args)...)
+                );
+                mRenderTargets.push_back(std::move(renderTarget));
+            }
+
+            auto renderTarget = mRenderTargets.back().get();
+            return static_cast<T*>(renderTarget);
         }
 
         void swapBuffers();

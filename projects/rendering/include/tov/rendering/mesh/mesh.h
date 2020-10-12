@@ -33,13 +33,16 @@ namespace tov
         auto getManager() const -> auto const& { return mManager; }
 
         auto createSubmesh(geometry::Geometry const& geometry, VertexDataFormat const& vertexDataFormat) -> Submesh&;
-        auto instantiate() const -> MeshInstance;
+        auto instantiate() -> MeshInstance&;
 
     private:
         MeshManager& mManager;
 
         using SubmeshList = std::vector<std::unique_ptr<Submesh>>;
         SubmeshList mSubmeshes;
+
+        using MeshInstanceList = std::vector<std::unique_ptr<MeshInstance>>;
+        MeshInstanceList mMeshInstances;
     };
 
     TOV_NAMESPACE_END // mesh

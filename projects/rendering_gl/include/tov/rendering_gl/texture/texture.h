@@ -2,7 +2,7 @@
 #define TOV_RENDERING_GL_TEXTURE_TEXTURE_H
 
 #include <tov/rendering/texture/texture.h>
-#include <tov/rendering_gl/gpu_resource.h>
+//#include <tov/rendering_gl/gpu_resource.h>
 
 #include <tov/rendering_gl/buffers/buffer.h>
 #include <tov/rendering_gl/gl_impl.h>
@@ -37,20 +37,19 @@ namespace tov
 
     class Texture2D
         : public rendering::texture::Texture2D
-        , public GPUResource<TextureBinder>
+        //, public GPUResource<TextureBinder>
     {
     public:
         Texture2D(
-            rendering::buffers::PixelBufferObject& pbo,
             uint width,
             uint height,
             PixelFormat pixelFormat
         )
-            : rendering::texture::Texture2D(pbo, width, height, pixelFormat)
+            : rendering::texture::Texture2D(width, height, pixelFormat)
         {
             glGenTextures(1, &mTextureID);
             
-            auto textureBind = bind();
+            auto bind = binder();
 
             {
                 auto op = log_gl_op("set texture min filter");
@@ -70,6 +69,7 @@ namespace tov
             //}
             {
                 auto op = log_gl_op("tex image2D");
+                // TODO: Determine GL pixel format from mPixelFormat
                 glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
             }
             {
@@ -79,17 +79,14 @@ namespace tov
         }
 
         ~Texture2D()
-        {
-        }
-
-        auto bind() const -> TextureBinder override { return TextureBinder(mTextureID, GL_TEXTURE_2D); }
+        {}
 
         auto getPixelBuffer() const -> auto&
         {
             constexpr auto usageSettings = buffers::UsageSettings::STREAM;
             constexpr auto accessSettings = buffers::AccessSettings::WRITE;
             using Buffer = buffers::Buffer<usageSettings, accessSettings>;
-            auto& buffer = static_cast<Buffer&>(mPBO.getBuffer());
+            auto& buffer = static_cast<Buffer&>(mPBO->getBuffer());
             return buffer;
         }
 
@@ -98,9 +95,10 @@ namespace tov
             auto& buffer = getPixelBuffer();
 
             // Upload PBO data to texture
-            auto textureBind = bind();
-            auto bufferBind = buffer.bind();
+            auto textureBind = binder();
+            auto bufferBind = buffer.binder();
             auto op = log_gl_op("tex subimage2D");
+            // TODO: Determine GL pixel format from mPixelFormat
             glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, mWidth, mHeight, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
         }
 
@@ -118,11 +116,19 @@ namespace tov
             }
         }
 
-        void deactivate() const
+        void deactivate(uint slot) const
         {
-            auto op = log_gl_op("unbind texture", mTextureID);
-            glBindTexture(GL_TEXTURE_2D, 0);
+            {
+                auto op = log_gl_op("glActiveTexture", slot);
+                glActiveTexture(GL_TEXTURE0 + slot);
+            }
+            {
+                auto op = log_gl_op("unbind texture", mTextureID);
+                glBindTexture(GL_TEXTURE_2D, 0);
+            }
         }
+
+        auto binder() const -> TextureBinder { return TextureBinder(mTextureID, GL_TEXTURE_2D); }
 
     private:
         GLuint mTextureID;

@@ -10,6 +10,7 @@
 #include <rendering/viewport.h>
 #include <rendering/mesh/draw_data.h>
 #include <rendering/mesh/draw_data_context.h>
+#include <rendering/pipeline/program_instance.h>
 
 namespace tov
 {
@@ -19,6 +20,7 @@ namespace tov
     void CommandDispatch::ApplyViewport(const void* data)
     {
         auto command = reinterpret_cast<commands::ApplyViewport const *const>(data);
+
         const auto viewport = command->viewport;
         const auto& renderTarget = viewport->getRenderTarget();
         renderTarget.prerender();
@@ -28,6 +30,7 @@ namespace tov
     void CommandDispatch::ClearViewport(const void* data)
     {
         auto command = reinterpret_cast<commands::ApplyViewport const *const>(data);
+
         auto viewport = command->viewport;
         backend::ClearViewport(viewport);
     }
@@ -36,34 +39,30 @@ namespace tov
     {
         auto command = reinterpret_cast<commands::Draw const *const>(data);
 
-        /*auto const& modelMatrix = command->modelMatrix;
-        auto const& viewMatrix = command->viewMatrix;
-        auto const& projectionMatrix = command->projectionMatrix;*/
-
-        //auto const& programInstance = *command->programInstance;
-        //programInstance.use();
-        /*programInstance.uploadConstants();
-        programInstance.uploadConstantData("modelMatrix", modelMatrix.data());
-        programInstance.uploadConstantData("viewMatrix", viewMatrix.data());
-        programInstance.uploadConstantData("projectionMatrix", projectionMatrix.data());*/
-
         auto drawData = command->drawData;
-
         backend::Draw(drawData);
     }
 
-    void CommandDispatch::UploadMVP(const void* data)
+    void CommandDispatch::SetMVP(const void* data)
     {
-        auto command = reinterpret_cast<commands::UploadMVP const* const>(data);
+        auto command = reinterpret_cast<commands::SetMVP const* const>(data);
 
         auto const& modelMatrix = command->modelMatrix;
         auto const& viewMatrix = command->viewMatrix;
         auto const& projectionMatrix = command->projectionMatrix;
 
-        auto const& programInstance = *command->programInstance;
-        programInstance.uploadConstantData("modelMatrix", modelMatrix.data());
-        programInstance.uploadConstantData("viewMatrix", viewMatrix.data());
-        programInstance.uploadConstantData("projectionMatrix", projectionMatrix.data());
+        auto& programInstance = *command->programInstance;
+        programInstance.setConstant("modelMatrix", modelMatrix);
+        programInstance.setConstant("viewMatrix", viewMatrix);
+        programInstance.setConstant("projectionMatrix", projectionMatrix);
+    }
+
+    void CommandDispatch::UploadConstants(const void* data)
+    {
+        auto command = reinterpret_cast<commands::UploadConstants const* const>(data);
+
+        auto& programInstance = *command->programInstance;
+        programInstance.uploadConstants();
     }
 
     void CommandDispatch::StartDrawDataContext(const void* data)

@@ -30,7 +30,7 @@ namespace tov
             mProgram.setFloat(name, *static_cast<float const *const>(data));
             break;
         case ConstantType::INT:
-            mProgram.setInteger(name, *static_cast<int const* const>(data));
+            mProgram.setInteger(name, *static_cast<int const *const>(data));
             break;
         case ConstantType::MATRIX_3:
             break;
@@ -38,10 +38,10 @@ namespace tov
             mProgram.setMatrix4(name, data);
             break;
         case ConstantType::TEXTURE_2D:
-            mProgram.setInteger(name, *static_cast<int const* const>(data));
+            mProgram.setInteger(name, *static_cast<int const *const>(data));
             break;
         case ConstantType::TEXTURE_3D:
-            mProgram.setInteger(name, *static_cast<int const* const>(data));
+            mProgram.setInteger(name, *static_cast<int const *const>(data));
             break;
         case ConstantType::VECTOR_2:
             mProgram.setVector2(name, data);

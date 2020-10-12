@@ -14,14 +14,8 @@
 
 #include <tov/rendering/material.h>
 
-#include <tov/rendering/pipeline/pipeline_state_descriptor.h>
-#include <tov/rendering/pipeline/cull_mode.h>
-#include <tov/rendering/pipeline/vertex_winding.h>
-
 #include <tov/rendering/geometry/cube.h>
-#include <tov/rendering/geometry/rectangle.h>
 #include <tov/rendering/geometry/sphere.h>
-#include <tov/rendering/geometry/triangle.h>
 
 #include <tov/rendering/entity.h>
 #include <tov/rendering/mesh_component.h>
@@ -65,8 +59,6 @@ int main(int argc, char** argv)
     tov::rendering::Scene scene(*rs.get());
     auto& root = scene.getRootNode();
 
-    auto bufferManager = rs->getBufferManager();
-
     auto& cameraNode = root.createChild();
     auto& camera = scene.createCamera();
     cameraNode.attachSceneObject(&camera);
@@ -79,16 +71,20 @@ int main(int argc, char** argv)
 
     rs->initialize();
 
+    auto bufferManager = rs->getBufferManager();
+
     auto colourMaterial = tov::rendering::Material();
     {
         auto pixelFormat = tov::rendering::PixelFormat(8, 8, 8, 8, 0, 0);
-        auto size = 16 * 16 * pixelFormat.getSize();
+        auto& texture = rs->createTexture2D(16, 16, pixelFormat);
+
+        auto size = 16u * 16u * pixelFormat.getSize();
         auto& pixelBuffer = *bufferManager->createPixelUnpackBuffer(pixelFormat, size);
         auto& pbo = tov::rendering::buffers::PixelBufferObject(pixelBuffer, pixelFormat);
-        auto& texture = rs->createTexture2D(pbo, 16, 16, pixelFormat);
+        texture.setPixelBufferObject(pbo);
 
         auto buffer = new unsigned char[size];
-        for (unsigned int i = 0; i < size; i += 4)
+        for (auto i = 0u; i < size; i += 4)
         {
             buffer[i + 0] = 122;
             buffer[i + 1] = 0;
@@ -96,6 +92,8 @@ int main(int argc, char** argv)
             buffer[i + 3] = 255;
         }
         pbo.updatePixelData(buffer, size);
+        delete[] buffer;
+
         texture.unpackPixelData();
 
         colourMaterial.setAlbedoMap(&texture);
@@ -105,10 +103,12 @@ int main(int argc, char** argv)
     {
         auto image = tov::rendering::Image("./assets/skybox.png");
         auto pixelFormat = image.getPixelFormat();
+        auto& texture = rs->createTexture2D(image.getWidth(), image.getHeight(), pixelFormat);
+        
         auto size = image.getSize();
         auto& pixelBuffer = *bufferManager->createPixelUnpackBuffer(pixelFormat, size);
         auto& pbo = tov::rendering::buffers::PixelBufferObject(pixelBuffer, pixelFormat);
-        auto& texture = rs->createTexture2D(pbo, image.getWidth(), image.getHeight(), pixelFormat);
+        texture.setPixelBufferObject(pbo);
 
         auto data = image.data();
         pbo.updatePixelData(data, size);
@@ -122,8 +122,7 @@ int main(int argc, char** argv)
         tov::rendering::buffers::VertexFormat vf;
         vf.addAttribute(tov::rendering::buffers::VertexAttribute::POSITION, 0);
         vf.addAttribute(tov::rendering::buffers::VertexAttribute::NORMAL, 1);
-        vf.addAttribute(tov::rendering::buffers::VertexAttribute::COLOUR, 2);
-        vf.addAttribute(tov::rendering::buffers::VertexAttribute::TEXTURE_COORDINATE, 3);
+        vf.addAttribute(tov::rendering::buffers::VertexAttribute::TEXTURE_COORDINATE, 2);
         tov::rendering::buffers::VertexBufferFormat vbf(
             tov::rendering::buffers::VertexBufferFormat::SequenceType::INTERLEAVED,
             vf
@@ -131,37 +130,18 @@ int main(int argc, char** argv)
         vertexDataFormat.mapHandleToFormat(0, vbf);
     }
 
-    using MeshManager = tov::rendering::mesh::MeshManager;
-    MeshManager meshManager(*bufferManager);
-
-    auto rectangleMesh = meshManager.create();
-        
-    {
-        auto geometry = tov::rendering::geometry::Rectangle(10.0f, 5.0f);
-        auto& submesh = rectangleMesh->createSubmesh(geometry, vertexDataFormat);
-        submesh.setMaterial(colourMaterial);
-    }
-
+    auto& meshManager = *rs->getMeshManager();
+    
     auto sphereMesh = meshManager.create();
-
     {
         auto sphere = tov::rendering::geometry::Sphere(5.0f);
         auto& submesh = sphereMesh->createSubmesh(sphere, vertexDataFormat);
         submesh.setMaterial(colourMaterial);
     }
 
-    auto triangleMesh = meshManager.create();
-
-    {
-        auto triangle = tov::rendering::geometry::Triangle();
-        auto& submesh = triangleMesh->createSubmesh(triangle, vertexDataFormat);
-        submesh.setMaterial(colourMaterial);
-    }
-
     auto cuboidMesh = meshManager.create();
-
     {
-        auto cuboid = tov::rendering::geometry::Cube(5);
+        auto cuboid = tov::rendering::geometry::Cube(5.0f);
         auto& submesh = cuboidMesh->createSubmesh(cuboid, vertexDataFormat);
         submesh.setMaterial(textureMaterial);
     }
@@ -184,41 +164,28 @@ int main(int argc, char** argv)
         entityNode.getTransform().setTranslation(translation);
     }
 
-    //{
+    tov::rendering::SceneNode* node = nullptr;
+    {
         auto& entityNode = root.createChild();
         auto& entity = scene.createEntity();
         entity.createMeshComponent(*cuboidMesh);
         entityNode.attachSceneObject(&entity);
         tov::math::Vector3 translation(-2, 0, -15);
         entityNode.getTransform().setTranslation(translation);
-    //}
+        node = &entityNode;
+    }
 
     while(1)
     {
-        /*for (unsigned int i = 0; i < sz; i += 4)
-        {
-            buffer[i + 0] += 1;
-            buffer[i + 0] %= 255;
-            buffer[i + 1] += 3;
-            buffer[i + 1] %= 255;
-            buffer[i + 2] += 2;
-            buffer[i + 2] %= 255;
-        }
-        pbo.updatePixelData(buffer, sz);*/
-
         auto axis = tov::math::Vector3(0.0f, 1.0f, 0.0f);
         auto angle = tov::math::Radian(0.03f);
         auto rotation = tov::math::Quaternion(angle, axis);
-        entityNode.getTransform().rotate(rotation);
-
-        //texture.unpackPixelData();
-
+        node->getTransform().rotate(rotation);
 
 #if TOV_DEBUG
         std::cout << "STARTING FRAME...\n";
 #endif
-        scene.queue();
-        rs->renderFrame();
+        rs->renderFrame(scene);
         rs->swapBuffers();
 
 #if TOV_DEBUG

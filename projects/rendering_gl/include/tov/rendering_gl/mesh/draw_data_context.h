@@ -36,7 +36,7 @@ namespace tov
 
         void start() const override
         {
-            auto op = log_gl_op("bind VAO");
+            auto op = log_gl_op("bind VAO", mVAO);
             glBindVertexArray(mVAO);
         }
 

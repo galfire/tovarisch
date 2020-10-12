@@ -3,11 +3,8 @@
 
 #include <tov/rendering/rendering_core.h>
 
-#include <tov/math/matrix.h>
-
 #include <tov/rendering/buffers/index_buffer_object.h>
 #include <tov/rendering/buffers/vertex_buffer_object.h>
-#include <tov/rendering/pipeline/program_instance.h>
 #include <tov/rendering/pipeline/rasterizer_state_descriptor.h>
 #include <tov/rendering/pipeline/texture_descriptor.h>
 

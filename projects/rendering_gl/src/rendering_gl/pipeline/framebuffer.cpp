@@ -17,6 +17,7 @@ namespace tov
 		}
 		else
 		{
+			auto op = log_gl_op("generate framebuffer");
 			glGenFramebuffers(1, &mFramebufferID);
 		}
 	}
@@ -47,7 +48,10 @@ namespace tov
 			glAttachment = GL_COLOR_ATTACHMENT3;
 			break;
 		}
-		glFramebufferTexture2D(GL_FRAMEBUFFER, glAttachment, GL_TEXTURE_2D, glTextureID, 0);
+		{
+			auto op = log_gl_op("framebuffer texture2D", glAttachment, glTextureID);
+			glFramebufferTexture2D(GL_FRAMEBUFFER, glAttachment, GL_TEXTURE_2D, glTextureID, 0);
+		}
 	}
 
 	auto Framebuffer::bindImpl() const -> void
@@ -60,6 +64,8 @@ namespace tov
 		if (!mIsDefault)
 		{
 			unsigned int attachments[4] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2, GL_COLOR_ATTACHMENT3 };
+
+			auto op = log_gl_op("set draw buffers", mNumAttachments);
 			glDrawBuffers(mNumAttachments, attachments);
 		}
 	}

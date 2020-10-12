@@ -50,7 +50,6 @@ namespace tov
         BufferManager() noexcept = default;
         virtual ~BufferManager() noexcept = default;
 
-
         auto createConstantBuffer(size_t size) -> BufferBase* override
         {
             auto buffer = static_cast<DerivedBufferManagerT*>(this)->createConstantBufferImpl(size);

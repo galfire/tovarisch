@@ -8,7 +8,7 @@ namespace tov
     TOV_NAMESPACE_BEGIN(rendering)
     TOV_NAMESPACE_BEGIN(gl)
 
-    template<class Binder>
+    /*template<class Binder>
     class GPUResource
     {
     public:
@@ -16,7 +16,7 @@ namespace tov
         virtual ~GPUResource() = default;
 
         virtual auto bind() const -> Binder TOV_ABSTRACT;
-    };
+    };*/
 
     TOV_NAMESPACE_END // gl
     TOV_NAMESPACE_END // rendering

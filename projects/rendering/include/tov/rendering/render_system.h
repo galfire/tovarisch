@@ -12,6 +12,7 @@
 namespace tov
 {
     TOV_NAMESPACE_BEGIN(rendering)
+    class Scene;
 
     TOV_NAMESPACE_BEGIN(buffers)
     class BufferManagerBase;
@@ -51,27 +52,26 @@ namespace tov
             WindowPlatformSupport& windowPlatformSupport,
             WindowRendererSupport& windowRendererSupport
         ) noexcept;
-        virtual ~RenderSystem() noexcept = default;
+        virtual ~RenderSystem() noexcept;
 
         auto getWindowPlatformSupport() const -> auto const& { return mWindowPlatformSupport; }
         auto getWindowRendererSupport() const -> auto const& { return mWindowRendererSupport; }
 
-        auto getBufferManager() const { return mBufferManager; }
-        auto getMeshManager() const { return mMeshManager; }
+        auto getBufferManager() const { return mBufferManager.get(); }
+        auto getMeshManager() const { return mMeshManager.get(); }
 
         auto createRenderWindow(const char* name, uint width, uint height, bool fullscreen) -> RenderWindow&;
         
         virtual auto createTexture2D(
-            rendering::buffers::PixelBufferObject& pbo,
             uint width,
             uint height,
             PixelFormat pixelFormat
-        )->texture::Texture2D& TOV_ABSTRACT;
+        ) -> texture::Texture2D& TOV_ABSTRACT;
 
         void initialize();
 
         void swapBuffers();
-        void renderFrame();
+        void renderFrame(Scene& scene);
 
         auto getGBufferBucket() -> auto& { return mGBufferBucket; }
 
@@ -84,8 +84,9 @@ namespace tov
         WindowPlatformSupport& mWindowPlatformSupport;
         WindowRendererSupport& mWindowRendererSupport;
 
-        buffers::BufferManagerBase* mBufferManager = nullptr;
-        mesh::MeshManager* mMeshManager = nullptr;
+        std::unique_ptr<buffers::BufferManagerBase> mBufferManager = nullptr;
+        std::unique_ptr<mesh::MeshManager> mMeshManager = nullptr;
+
         mesh::Mesh* mFullscreenQuad = nullptr;
         mesh::MeshInstance* mFullscreenQuadInstance = nullptr;
 

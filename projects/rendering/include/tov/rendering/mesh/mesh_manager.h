@@ -21,6 +21,8 @@ namespace tov
 
     class MeshManager
     {
+        TOV_MOVABLE_ONLY(MeshManager)
+
     public:
         MeshManager(buffers::BufferManagerBase& bufferManager) noexcept;
         ~MeshManager() noexcept;

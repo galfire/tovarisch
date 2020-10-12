@@ -19,14 +19,9 @@ namespace tov
         : public rendering::RenderSystem
     {
     public:
-        RenderSystem(
-            WindowPlatformSupport& windowPlatformSupport,
-            WindowRendererSupport& windowRendererSupport
-        ) noexcept;
-        virtual ~RenderSystem() = default;
+        using rendering::RenderSystem::RenderSystem;
 
         virtual auto createTexture2D(
-            rendering::buffers::PixelBufferObject& pbo,
             uint width,
             uint height,
             PixelFormat pixelFormat

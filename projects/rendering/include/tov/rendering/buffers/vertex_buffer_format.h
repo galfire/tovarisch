@@ -58,8 +58,7 @@ namespace tov
             std::vector<AttributeDescriptor> attributeDescriptors;
 
 #if TOV_DEBUG
-            inline friend std::ostream& operator <<
-                (std::ostream& o, const Descriptor& desc)
+            inline friend std::ostream& operator << (std::ostream& o, const Descriptor& desc)
             {
                 for (auto&& ad : desc.attributeDescriptors)
                 {

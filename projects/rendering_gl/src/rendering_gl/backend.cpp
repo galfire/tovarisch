@@ -16,6 +16,8 @@
 
 #include "rendering_gl/render_system.h"
 
+#include "rendering_gl/bindable.h"
+
 #include "rendering_gl/buffers/buffer.h"
 #include "rendering_gl/buffers/buffer_manager.h"
 
@@ -131,10 +133,14 @@ namespace tov
 
     void SetIndexBuffer(buffers::IndexBufferObject const& indexBufferObject)
     {
-        using Buffer = rendering::gl::buffers::Buffer<buffers::UsageSettings::STATIC, buffers::AccessSettings::WRITE>;
+        //using Buffer = rendering::gl::buffers::Buffer<buffers::UsageSettings::STATIC, buffers::AccessSettings::WRITE>;
 
-        auto& indexBuffer = static_cast<Buffer&>(indexBufferObject.getBuffer());
-        auto bindIndex = indexBuffer.bind();
+        //auto& indexBuffer = static_cast<Buffer&>(indexBufferObject.getBuffer());
+        //auto bindIndex = indexBuffer.binder();
+
+        auto& indexBuffer = indexBufferObject.getBuffer();
+        auto& bindable = dynamic_cast<rendering::gl::Bindable&>(indexBuffer);
+        bindable.bind();
     }
     
     void DrawIndexed(uint numIndices, tov::rendering::buffers::IndexType indexType)
@@ -181,17 +187,13 @@ namespace tov
         // Bind the index buffer and vertex buffers before drawing
         using Buffer = rendering::gl::buffers::Buffer<buffers::UsageSettings::STATIC, buffers::AccessSettings::WRITE>;
         
-        auto const& ibo = static_cast<buffers::IndexBufferObject const&>(drawData->getIndexBufferObject());
-        auto& indexBuffer = static_cast<Buffer&>(ibo.getBuffer());
-        auto bindIndex = indexBuffer.bind();
-
         auto const& vbos = drawData->getVertexBufferObjects();
         for (auto&& vbo_ : vbos)
         {
             auto const& vbo = static_cast<buffers::VertexBufferObject const&>(*vbo_);
 
             auto& vertexBuffer = static_cast<Buffer&>(vbo.getBuffer());
-            auto bindVertex = vertexBuffer.bind();
+            auto bindVertex = vertexBuffer.binder();
 
             auto const& vbf = vbo.getBufferFormat();
             auto const& desc = vbf.getDescriptor();
@@ -246,12 +248,19 @@ namespace tov
             }
         }
 
-        DrawIndexed(ibo.getNumIndices(), ibo.getIndexType());
+        {
+            auto const& ibo = static_cast<buffers::IndexBufferObject const&>(drawData->getIndexBufferObject());
+            auto& indexBuffer = static_cast<Buffer&>(ibo.getBuffer());
+            auto bindIndex = indexBuffer.binder();
+
+            DrawIndexed(ibo.getNumIndices(), ibo.getIndexType());
+        }
 
         for (auto&& textureDescriptor : textureDescriptors)
         {
             auto texture = static_cast<rendering::gl::texture::Texture2D const*>(textureDescriptor.texture);
-            texture->deactivate();
+            auto slot = textureDescriptor.slot;
+            texture->deactivate(slot);
         }
 
         // May not be necessary

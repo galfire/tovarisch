@@ -40,12 +40,13 @@ namespace tov
             mCPUBuffer.setConstant(name, value);
         }
 
-        void uploadConstants() const;
-        void uploadConstant(std::string name) const;
-        void uploadConstantData(std::string name, void const *const data) const;
-
         void use() const;
-        
+        void uploadConstants() const;
+
+    private:
+        void uploadConstant(std::string name) const;
+        void uploadConstantData(std::string name, void const* const data) const;
+
     private:
         Program const& mProgram;
 

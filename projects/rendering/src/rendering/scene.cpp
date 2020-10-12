@@ -96,22 +96,18 @@ namespace tov
                     for (auto&& sceneObject : sceneObjects)
                     {
                         auto& drawDataList = sceneObject->getDrawDataList();
-                        auto drawDataListSize = drawDataList.size();
-                        if (drawDataListSize < 1)
-                            continue;
-
-                        /*auto* drawDataContext = backend::createDrawDataContext();
-                        auto& startDrawDataContext = bucket.addCommand<commands::StartDrawDataContext>(0);
-                        startDrawDataContext.drawDataContext = drawDataContext;*/
-
                         for (auto&& drawData : drawDataList)
                         {
                             {
-                                auto& command = bucket.addCommand<commands::UploadMVP>(0);
+                                auto& command = bucket.addCommand<commands::SetMVP>(0);
                                 command.programInstance = programInstance;
                                 command.modelMatrix = modelMatrix;
                                 command.viewMatrix = viewMatrix;
                                 command.projectionMatrix = projectionMatrix;
+                            }
+                            {
+                                auto& command = bucket.addCommand<commands::UploadConstants>(0);
+                                command.programInstance = programInstance;
                             }
                             {
                                 auto& command = bucket.addCommand<commands::Draw>(0);

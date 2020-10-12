@@ -54,7 +54,7 @@ namespace tov
         void addPosition(math::Vector3 position) { mPositions.push_back(position); }
         void addNormal(math::Vector3 normal) { mNormals.push_back(normal); }
         void addTextureCoordinate(math::Vector2 textureCoordinate) { mTextureCoordinates.push_back(textureCoordinate); }
-        void addIndices(int i1, int i2, int i3)
+        void addIndices(uint i1, uint i2, uint i3)
         {
             mIndices.push_back(i1);
             mIndices.push_back(i2);
@@ -65,7 +65,7 @@ namespace tov
         std::vector<math::Vector3> mPositions;
         std::vector<math::Vector3> mNormals;
         std::vector<math::Vector2> mTextureCoordinates;
-        std::vector<int> mIndices;
+        std::vector<uint> mIndices;
     };
 
     TOV_NAMESPACE_END // geometry

@@ -8,7 +8,7 @@ namespace tov
     TOV_NAMESPACE_BEGIN(rendering)
     TOV_NAMESPACE_BEGIN(pipeline)
 
-        enum class ShaderType
+    enum class ShaderType
     {
         VERTEX,
         FRAGMENT

@@ -4,6 +4,8 @@
 #include "rendering/render_window.h"
 #include "rendering/window_platform_support.h"
 
+#include "rendering/scene.h"
+
 #include "rendering/commands/commands.h"
 
 #include "rendering/buffers/buffer_manager.h"
@@ -44,9 +46,16 @@ namespace tov
         , mWindowPlatformSupport(windowPlatformSupport)
         , mWindowRendererSupport(windowRendererSupport)
     {
-        mBufferManager = backend::createBufferManager();
-        mMeshManager = new mesh::MeshManager(*mBufferManager);
+        mBufferManager = std::unique_ptr<buffers::BufferManagerBase>(
+            backend::createBufferManager()
+        );
+        mMeshManager = std::unique_ptr<mesh::MeshManager>(
+            new mesh::MeshManager(*mBufferManager)
+        );
     }
+
+    RenderSystem::~RenderSystem() noexcept
+    {}
 
     auto RenderSystem::createRenderWindow(const char* name, uint width, uint height, bool fullscreen) -> RenderWindow&
     {
@@ -69,29 +78,22 @@ namespace tov
         auto pixelFormat = PixelFormat(8, 8, 8, 8, 0, 0);
         auto width = 800;
         auto height = 600;
-        auto size = width * height * pixelFormat.getSize();
         {
-            auto& pb = *mBufferManager->createPixelUnpackBuffer(pixelFormat, 1);
-            auto& pbo = buffers::PixelBufferObject(pb, pixelFormat);
-            mTexturePosition = &createTexture2D(pbo, width, height, pixelFormat);
+            mTexturePosition = &createTexture2D(width, height, pixelFormat);
             mFramebufferGBuffer->attachTexture(
                 static_cast<texture::Texture2D*>(mTexturePosition),
                 pipeline::FramebufferAttachments::COLOUR_ATTACHMENT_0
             );
         }
         {
-            auto& pb = *mBufferManager->createPixelUnpackBuffer(pixelFormat, 1);
-            auto& pbo = buffers::PixelBufferObject(pb, pixelFormat);
-            mTextureNormal = &createTexture2D(pbo, width, height, pixelFormat);
+            mTextureNormal = &createTexture2D(width, height, pixelFormat);
             mFramebufferGBuffer->attachTexture(
                 static_cast<texture::Texture2D*>(mTextureNormal),
                 pipeline::FramebufferAttachments::COLOUR_ATTACHMENT_1
             );
         }
         {
-            auto& pb = *mBufferManager->createPixelUnpackBuffer(pixelFormat, 1);
-            auto& pbo = buffers::PixelBufferObject(pb, pixelFormat);
-            mTextureAlbedo = &createTexture2D(pbo, width, height, pixelFormat);
+            mTextureAlbedo = &createTexture2D(width, height, pixelFormat);
             mFramebufferGBuffer->attachTexture(
                 static_cast<texture::Texture2D*>(mTextureAlbedo),
                 pipeline::FramebufferAttachments::COLOUR_ATTACHMENT_2
@@ -109,7 +111,7 @@ namespace tov
         mProgramGBuffer = backend::createProgram();
 
         {
-            auto shaderVertex = backend::createShader(pipeline::ShaderType::VERTEX, "./shaders/vertex.vert.glsl");
+            auto shaderVertex = backend::createShader(pipeline::ShaderType::VERTEX, "./shaders/gbuffer.vert.glsl");
             shaderVertex->compile();
             mProgramGBuffer->attachShader(*shaderVertex);
 
@@ -119,41 +121,21 @@ namespace tov
         }
 
         mProgramGBuffer->link();
+        // Model data
         mProgramGBuffer->addConstantDefinition("modelMatrix", MAT_4);
+        // Camera data
         mProgramGBuffer->addConstantDefinition("viewMatrix", MAT_4);
         mProgramGBuffer->addConstantDefinition("projectionMatrix", MAT_4);
+        // GBuffer data
         mProgramGBuffer->addConstantDefinition("albedoTexture", TEX_2D);
         mProgramGBuffer->addConstantDefinition("normalTexture", TEX_2D);
+
         mProgramGBuffer->buildLocationMap();
 
+        // Binding
         mProgramInstanceGBuffer = &mProgramGBuffer->instantiate();
         mProgramInstanceGBuffer->setConstant<int>("albedoTexture", 0);
         mProgramInstanceGBuffer->setConstant<int>("normalTexture", 1);
-
-        //
-        // GBUFFER DEBUG
-
-        /*mProgramGBuffer = backend::createProgram();
-
-        {
-            auto shaderVertex = backend::createShader(pipeline::ShaderType::VERTEX, "./shaders/vertex.vert.glsl");
-            shaderVertex->compile();
-            mProgramGBuffer->attachShader(*shaderVertex);
-
-            auto shaderFragment = backend::createShader(pipeline::ShaderType::FRAGMENT, "./shaders/gbuffer_debug_albedo.frag.glsl");
-            shaderFragment->compile();
-            mProgramGBuffer->attachShader(*shaderFragment);
-        }
-
-        mProgramGBuffer->link();
-        mProgramGBuffer->addConstantDefinition("modelMatrix", MAT_4);
-        mProgramGBuffer->addConstantDefinition("viewMatrix", MAT_4);
-        mProgramGBuffer->addConstantDefinition("projectionMatrix", MAT_4);
-        mProgramGBuffer->addConstantDefinition("albedoTexture", TEX_2D);
-        mProgramGBuffer->buildLocationMap();
-
-        mProgramInstanceGBuffer = &mProgramGBuffer->instantiate();
-        mProgramInstanceGBuffer->setConstant<int>("albedoTexture", 0);*/
 
         //
         // GBUFFER LIGHTING
@@ -202,7 +184,7 @@ namespace tov
             mFullscreenQuad->createSubmesh(geometry, vertexDataFormat);
         }
 
-        //mFullscreenQuadInstance = mFullscreenQuad->instantiate();
+        mFullscreenQuadInstance = &mFullscreenQuad->instantiate();
     }
 
     void RenderSystem::swapBuffers()
@@ -210,27 +192,33 @@ namespace tov
         mRenderTargetManager.swapBuffers();
     }
 
-    void RenderSystem::renderFrame()
+    void RenderSystem::renderFrame(Scene& scene)
     {
         mWindowPlatformSupport.messageHandler();
 
+        scene.queue();
+        
+        //
+        // GBuffer Pass
+
         mFramebufferGBuffer->bind();
         mProgramInstanceGBuffer->use();
-        mProgramInstanceGBuffer->uploadConstants();
         mGBufferBucket.submit();
+
+        //
+        // GBuffer Lighting (combine) Pass
 
         auto* drawDataContext = backend::createDrawDataContext();
 
-        auto& startDrawDataContext = mGBufferLightingBucket.addCommand<commands::StartDrawDataContext>(0);
-        startDrawDataContext.drawDataContext = drawDataContext;
+        auto& submeshInstance = mFullscreenQuadInstance->getSubmeshInstance(0);
 
-        auto meshInstance = mFullscreenQuad->instantiate();
-        auto& submeshInstance = meshInstance.getSubmeshInstance(0);
         std::vector<pipeline::TextureDescriptor> textureDescriptors;
         textureDescriptors.emplace_back(mTexturePosition, 0);
         textureDescriptors.emplace_back(mTextureNormal, 1);
         textureDescriptors.emplace_back(mTextureAlbedo, 2);
+        
         pipeline::RasterizerStateDescriptor rasterizerStateDescriptor;
+        
         auto drawData = mesh::DrawData(
             submeshInstance.getIndexBufferObject(),
             submeshInstance.getVertexBufferObjects(),
@@ -238,17 +226,25 @@ namespace tov
             rasterizerStateDescriptor
         );
 
-        auto& command = mGBufferLightingBucket.addCommand<commands::Draw>(0);
-        command.drawData = &drawData;
-
-        auto& endDrawDataContext = mGBufferLightingBucket.addCommand<commands::EndDrawDataContext>(0);
-        endDrawDataContext.drawDataContext = drawDataContext;
-
-        //adfadfda
-
+        {
+            auto& command = mGBufferLightingBucket.addCommand<commands::StartDrawDataContext>(0);
+            command.drawDataContext = drawDataContext;
+        }
+        {
+            auto& command = mGBufferLightingBucket.addCommand<commands::UploadConstants>(0);
+            command.programInstance = mProgramInstanceGBufferLighting;
+        }
+        {
+            auto& command = mGBufferLightingBucket.addCommand<commands::Draw>(0);
+            command.drawData = &drawData;
+        }
+        {
+            auto& command = mGBufferLightingBucket.addCommand<commands::EndDrawDataContext>(0);
+            command.drawDataContext = drawDataContext;
+        }
+        
         mFramebufferDefault->bind();
         mProgramInstanceGBufferLighting->use();
-        mProgramInstanceGBufferLighting->uploadConstants();
         mGBufferLightingBucket.submit();
     }
 

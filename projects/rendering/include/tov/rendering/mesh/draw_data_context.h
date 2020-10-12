@@ -3,7 +3,6 @@
 
 #include <tov/rendering/rendering_core.h>
 
-
 namespace tov
 {
     TOV_NAMESPACE_BEGIN(rendering)

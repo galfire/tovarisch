@@ -13,10 +13,10 @@ namespace tov
     TOV_NAMESPACE_BEGIN(rendering)
     TOV_NAMESPACE_BEGIN(mesh)
 
-    //class SubmeshInstance;
-
     class MeshInstance
     {
+        TOV_MOVABLE_ONLY(MeshInstance)
+
     private:
         using DrawDataList = std::vector<DrawData>;
 

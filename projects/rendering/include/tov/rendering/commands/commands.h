@@ -44,21 +44,23 @@ namespace tov
 
     struct Draw
     {
-        /*math::Matrix4 modelMatrix;
-        math::Matrix4 viewMatrix;
-        math::Matrix4 projectionMatrix;*/
-        //pipeline::ProgramInstance const * programInstance;
         mesh::DrawData const * drawData;
         static inline DispatchFunction DispatchFunction = CommandDispatch::Draw;
     };
 
-    struct UploadMVP
+    struct SetMVP
     {
         math::Matrix4 modelMatrix;
         math::Matrix4 viewMatrix;
         math::Matrix4 projectionMatrix;
-        pipeline::ProgramInstance const* programInstance;
-        static inline DispatchFunction DispatchFunction = CommandDispatch::UploadMVP;
+        pipeline::ProgramInstance* programInstance;
+        static inline DispatchFunction DispatchFunction = CommandDispatch::SetMVP;
+    };
+
+    struct UploadConstants
+    {
+        pipeline::ProgramInstance* programInstance;
+        static inline DispatchFunction DispatchFunction = CommandDispatch::UploadConstants;
     };
 
     struct StartDrawDataContext

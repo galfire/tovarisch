@@ -27,7 +27,7 @@ namespace tov
 
     private:
         mesh::Mesh& mMesh;
-        mesh::MeshInstance mMeshInstance;
+        mesh::MeshInstance& mMeshInstance;
     };
 
     TOV_NAMESPACE_END // rendering

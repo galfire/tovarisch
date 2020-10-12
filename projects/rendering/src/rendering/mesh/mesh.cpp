@@ -21,25 +21,35 @@ namespace tov
 
     auto Mesh::createSubmesh(geometry::Geometry const& geometry, VertexDataFormat const& vertexDataFormat) -> Submesh&
     {
-        auto submesh = std::unique_ptr<Submesh>(
-            new Submesh(*this, geometry, vertexDataFormat)
-        );
-        mSubmeshes.push_back(std::move(submesh));
-        auto ret = mSubmeshes.back().get();
-        return *ret;
+        {
+            auto submesh = std::unique_ptr<Submesh>(
+                new Submesh(*this, geometry, vertexDataFormat)
+            );
+            mSubmeshes.push_back(std::move(submesh));
+        }
+        
+        auto submesh = mSubmeshes.back().get();
+        return *submesh;
     }
 
-    auto Mesh::instantiate() const -> MeshInstance
+    auto Mesh::instantiate() -> MeshInstance&
     {
-        auto meshInstance = MeshInstance();
+        {
+            auto meshInstance = std::unique_ptr<MeshInstance>(
+                new MeshInstance()
+            );
+            mMeshInstances.push_back(std::move(meshInstance));
+        }
+
+        auto meshInstance = mMeshInstances.back().get();
 
         for (auto&& submesh : mSubmeshes)
         {
             auto submeshInstance = submesh->instantiate();
-            meshInstance.addSubmeshInstance(submeshInstance);
+            meshInstance->addSubmeshInstance(submeshInstance);
         }
         
-        return meshInstance;
+        return *meshInstance;
     }
 
     TOV_NAMESPACE_END // mesh

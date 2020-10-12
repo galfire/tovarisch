@@ -64,12 +64,33 @@ namespace tov
         UsageSettings usageSettings,
         AccessSettings accessSettings
     >
-    void Buffer<usageSettings, accessSettings>::discard()
+    void Buffer<usageSettings, accessSettings>::bind() const
     {
-        auto b = bind();
+        auto op = log_gl_op("bind buffer", mBufferTarget, mBufferID);
+        glBindBuffer(mBufferTarget, mBufferID);
+    }
+
+    template<
+        UsageSettings usageSettings,
+        AccessSettings accessSettings
+    >
+    void Buffer<usageSettings, accessSettings>::unbind() const
+    {
+        auto op = log_gl_op("unbind buffer", mBufferTarget, mBufferID);
+        glBindBuffer(mBufferTarget, 0);
+    }
+
+    template<
+        UsageSettings usageSettings,
+        AccessSettings accessSettings
+    >
+        void Buffer<usageSettings, accessSettings>::discard()
+    {
+        auto bind = binder();
         auto op = log_gl_op("buffer data", this->mBufferTarget, this->mBytes, sGLUsageSettings);
         glBufferData(this->mBufferTarget, this->mBytes, nullptr, sGLUsageSettings);
     }
+
 
     TOV_NAMESPACE_END // buffers
     TOV_NAMESPACE_END // gl

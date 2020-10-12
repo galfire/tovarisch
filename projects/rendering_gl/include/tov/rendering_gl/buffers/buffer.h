@@ -5,10 +5,11 @@
 
 #include <tov/rendering/buffers/access_settings.h>
 #include <tov/rendering/buffers/usage_settings.h>
+
+#include <tov/rendering_gl/bindable.h>
+
 #include "buffer_binder.h"
 #include "buffer_writer.h"
-
-#include <tov/rendering_gl/gpu_resource.h>
 
 #include <tov/rendering_gl/gl_impl.h>
 
@@ -38,7 +39,8 @@ namespace tov
     >
     class Buffer
         : public base::Buffer<NullReader, BufferWriter, usageSettings, accessSettings>
-        , public GPUResource<BufferBinder>
+        , public Bindable
+        //, public GPUResource<BufferBinder>
     {
     private:
         static GLenum getGLAccessSettings();
@@ -52,11 +54,14 @@ namespace tov
         );
         ~Buffer();
 
-        void discard() override;
+        void bind() const override;
+        void unbind() const override;
 
-        auto bind() const -> BufferBinder override { return BufferBinder(mBufferID, mBufferTarget); }
+        auto binder() const -> BufferBinder { return BufferBinder(mBufferID, mBufferTarget); }
 
     private:
+        void discard() override;
+
         void map() override {}
         void unmap() override {}
 
