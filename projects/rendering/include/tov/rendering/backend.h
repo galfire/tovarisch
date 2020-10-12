@@ -49,7 +49,8 @@ namespace tov
 
     auto createBufferManager() -> buffers::BufferManagerBase*;
     auto createDrawDataContext() -> mesh::DrawDataContext*;
-    auto createFramebuffer(bool isDefault) -> pipeline::Framebuffer*;
+    auto getDefaultFramebuffer() -> pipeline::Framebuffer*;
+    auto createFramebuffer() -> pipeline::Framebuffer*;
     auto createProgram() -> pipeline::Program*;
     auto createShader(pipeline::ShaderType shaderType, const char* sourceFilePath) -> pipeline::Shader*;
     

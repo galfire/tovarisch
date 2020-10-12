@@ -8,6 +8,8 @@
 
 #include "commands/command_bucket.h"
 
+#include "producers/gbuffer_producer.h"
+
 
 namespace tov
 {
@@ -16,26 +18,16 @@ namespace tov
 
     TOV_NAMESPACE_BEGIN(buffers)
     class BufferManagerBase;
-    class PixelBufferObject;
     TOV_NAMESPACE_END // buffers
 
     TOV_NAMESPACE_BEGIN(mesh)
-    class Mesh;
-    class MeshInstance;
     class MeshManager;
     TOV_NAMESPACE_END // mesh
 
-    TOV_NAMESPACE_BEGIN(pipeline)
-    class Framebuffer;
-    class Program;
-    class ProgramInstance;
-    class Shader;
-    TOV_NAMESPACE_END // pipeline
-
-    TOV_NAMESPACE_BEGIN(texture)
-    class Texture;
-    class Texture2D;
-    TOV_NAMESPACE_END // texture
+    TOV_NAMESPACE_BEGIN(producers)
+    class Producer;
+    class ResourceBucket;
+    TOV_NAMESPACE_END // producers
 
     TOV_NAMESPACE_END // rendering
         
@@ -73,9 +65,9 @@ namespace tov
         void swapBuffers();
         void renderFrame(Scene& scene);
 
-        auto getGBufferBucket() -> auto& { return mGBufferBucket; }
+        auto getGBufferBucket() -> auto& { return mGBufferProducer->getCommandBucket(); }
 
-        auto getProgramInstanceGBuffer() const { return mProgramInstanceGBuffer; }
+        auto getProgramInstanceGBuffer() const { return mGBufferProducer->getProgramInstance(); }
 
     protected:
         RenderTargetManager mRenderTargetManager;
@@ -87,24 +79,10 @@ namespace tov
         std::unique_ptr<buffers::BufferManagerBase> mBufferManager = nullptr;
         std::unique_ptr<mesh::MeshManager> mMeshManager = nullptr;
 
-        mesh::Mesh* mFullscreenQuad = nullptr;
-        mesh::MeshInstance* mFullscreenQuadInstance = nullptr;
-
-        commands::CommandBucket<128> mGBufferBucket;
-        commands::CommandBucket<32> mGBufferLightingBucket;
-
-        pipeline::Framebuffer* mFramebufferDefault = nullptr;
-        pipeline::Framebuffer* mFramebufferGBuffer = nullptr;
-
-        texture::Texture* mTexturePosition = nullptr;
-        texture::Texture* mTextureNormal = nullptr;
-        texture::Texture* mTextureAlbedo = nullptr;
-
-        pipeline::Program* mProgramGBuffer;
-        pipeline::ProgramInstance* mProgramInstanceGBuffer;
-
-        pipeline::Program* mProgramGBufferLighting;
-        pipeline::ProgramInstance* mProgramInstanceGBufferLighting;
+        std::vector<producers::Producer*> mProducers;
+        producers::Producer* mFinalProducer;
+        producers::GBufferProducer* mGBufferProducer;
+        producers::ResourceBucket* mResourceBucket;
     };
 
     TOV_NAMESPACE_END

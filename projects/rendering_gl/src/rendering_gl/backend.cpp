@@ -297,9 +297,14 @@ namespace tov
         return new rendering::gl::mesh::DrawDataContext();
     }
 
-    auto createFramebuffer(bool isDefault) -> pipeline::Framebuffer*
+    auto getDefaultFramebuffer() -> pipeline::Framebuffer*
     {
-        return new rendering::gl::pipeline::Framebuffer(isDefault);
+        return new rendering::gl::pipeline::Framebuffer(true);
+    }
+
+    auto createFramebuffer() -> pipeline::Framebuffer*
+    {
+        return new rendering::gl::pipeline::Framebuffer(false);
     }
 
     auto createProgram()->pipeline::Program*

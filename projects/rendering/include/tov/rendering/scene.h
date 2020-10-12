@@ -26,12 +26,15 @@ namespace tov
         template<class T, class... U>
         auto create(U&&... args)
         {
-            auto sceneObject = std::unique_ptr<T>(
-                new T(std::forward<U>(args)...)
-            );
-            mSceneObjects.push_back(std::move(sceneObject));
-            auto ret = mSceneObjects.back().get();
-            return static_cast<T*>(ret);
+            {
+                auto sceneObject = std::unique_ptr<T>(
+                    new T(std::forward<U>(args)...)
+                );
+                mSceneObjects.push_back(std::move(sceneObject));
+            }
+
+            auto sceneObject = mSceneObjects.back().get();
+            return static_cast<T*>(sceneObject);
         }
 
         auto createCamera() -> Camera&;

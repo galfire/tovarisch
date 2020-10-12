@@ -78,19 +78,33 @@ namespace tov
                     auto& command = bucket.addCommand<commands::ApplyViewport>(viewport->getZIndex());
                     command.viewport = viewport;
                 }
-
                 {
                     /*auto& command = bucket.addCommand<commands::ClearViewport>(viewport->getZIndex());
                     command.viewport = viewport;*/
                 }
 
                 auto* drawDataContext = backend::createDrawDataContext();
-                auto& startDrawDataContext = bucket.addCommand<commands::StartDrawDataContext>(0);
-                startDrawDataContext.drawDataContext = drawDataContext;
+                
+                {
+                    auto& command = bucket.addCommand<commands::StartDrawDataContext>(0);
+                    command.drawDataContext = drawDataContext;
+                }
 
                 for (auto&& node : nodes)
                 {
                     auto const& modelMatrix = node->getTransform().getHomogeneousMatrix();
+
+                    {
+                        auto& command = bucket.addCommand<commands::SetMVP>(0);
+                        command.programInstance = programInstance;
+                        command.modelMatrix = modelMatrix;
+                        command.viewMatrix = viewMatrix;
+                        command.projectionMatrix = projectionMatrix;
+                    }
+                    {
+                        auto& command = bucket.addCommand<commands::UploadConstants>(0);
+                        command.programInstance = programInstance;
+                    }
 
                     auto const& sceneObjects = node->getSceneObjects();
                     for (auto&& sceneObject : sceneObjects)
@@ -98,27 +112,16 @@ namespace tov
                         auto& drawDataList = sceneObject->getDrawDataList();
                         for (auto&& drawData : drawDataList)
                         {
-                            {
-                                auto& command = bucket.addCommand<commands::SetMVP>(0);
-                                command.programInstance = programInstance;
-                                command.modelMatrix = modelMatrix;
-                                command.viewMatrix = viewMatrix;
-                                command.projectionMatrix = projectionMatrix;
-                            }
-                            {
-                                auto& command = bucket.addCommand<commands::UploadConstants>(0);
-                                command.programInstance = programInstance;
-                            }
-                            {
-                                auto& command = bucket.addCommand<commands::Draw>(0);
-                                command.drawData = &drawData;
-                            }
+                            auto& command = bucket.addCommand<commands::Draw>(0);
+                            command.drawData = &drawData;
                         }
                     }
                 }
 
-                auto& endDrawDataContext = bucket.addCommand<commands::EndDrawDataContext>(0);
-                endDrawDataContext.drawDataContext = drawDataContext;
+                {
+                    auto& command = bucket.addCommand<commands::EndDrawDataContext>(0);
+                    command.drawDataContext = drawDataContext;
+                }
             }
         }
     }
