@@ -1,4 +1,4 @@
-#include "rendering/producers/gbuffer_lighting_producer.h"
+#include "rendering/producers/fullscreen_producer.h"
 
 #include "rendering/backend.h"
 
@@ -34,22 +34,11 @@ namespace tov
         auto TEX_2D = tov::rendering::pipeline::ConstantDefinition<CType::TEXTURE_2D, int>::DEFINITION;
     }
 
-    GBufferLightingProducer::GBufferLightingProducer(RenderSystem& renderSystem, ResourceBucket& resourceBucket) noexcept
+    FullscreenProducer::FullscreenProducer(RenderSystem& renderSystem, ResourceBucket& resourceBucket) noexcept
         : Producer(resourceBucket)
         , mRenderSystem(renderSystem)
     {
-        mFramebuffer = backend::createFramebuffer();
-
-        auto pixelFormat = PixelFormat(8, 8, 8, 8, 0, 0);
-        auto width = 800;
-        auto height = 600;
-        {
-            mTexture = &mRenderSystem.createTexture2D(width, height, pixelFormat);
-            mFramebuffer->attachTexture(
-                static_cast<texture::Texture2D*>(mTexture),
-                pipeline::FramebufferAttachments::COLOUR_ATTACHMENT_0
-            );
-        }
+        mFramebuffer = backend::getDefaultFramebuffer();
 
         mProgram = backend::createProgram();
         {
@@ -57,53 +46,41 @@ namespace tov
             shaderVertex->compile();
             mProgram->attachShader(*shaderVertex);
 
-            auto shaderFragment = backend::createShader(pipeline::ShaderType::FRAGMENT, "./shaders/gbuffer_lighting.frag.glsl");
+            auto shaderFragment = backend::createShader(pipeline::ShaderType::FRAGMENT, "./shaders/pass_through.frag.glsl");
             shaderFragment->compile();
             mProgram->attachShader(*shaderFragment);
         }
 
         mProgram->link();
-        mProgram->addConstantDefinition("gPosition", TEX_2D);
-        mProgram->addConstantDefinition("gNormal", TEX_2D);
-        mProgram->addConstantDefinition("gAlbedo", TEX_2D);
+        mProgram->addConstantDefinition("Texture", TEX_2D);
         mProgram->buildLocationMap();
 
         mProgramInstance = &mProgram->instantiate();
-        mProgramInstance->setConstant<int>("gPosition", 0);
-        mProgramInstance->setConstant<int>("gNormal", 1);
-        mProgramInstance->setConstant<int>("gAlbedo", 2);
+        mProgramInstance->setConstant<int>("Texture", 0);
 
         auto& fullscreenQuad = mRenderSystem.getMeshManager()->getFullscreenQuad();
         mFullscreenQuadInstance = &fullscreenQuad.instantiate();
     }
 
-    void GBufferLightingProducer::setInputs()
+    void FullscreenProducer::setInputs()
     {
-        setInput("positionTexture");
-        setInput("normalTexture");
-        setInput("albedoTexture");
+        setInput("gBufferLighting");
     }
 
-    void GBufferLightingProducer::setOutputs()
+    void FullscreenProducer::setOutputs()
     {
-        Resource texture = { mTexture, this };
-        setOutput("gBufferLighting", texture);
     }
 
-    void GBufferLightingProducer::render()
+    void FullscreenProducer::render()
     {
         auto* drawDataContext = backend::createDrawDataContext();
 
         auto& submeshInstance = mFullscreenQuadInstance->getSubmeshInstance(0);
 
-        auto texturePosition = reinterpret_cast<texture::Texture*>(getResource("positionTexture"));
-        auto textureNormal = reinterpret_cast<texture::Texture*>(getResource("normalTexture"));
-        auto textureAlbedo = reinterpret_cast<texture::Texture*>(getResource("albedoTexture"));
+        auto texture = reinterpret_cast<texture::Texture*>(getResource("gBufferLighting"));
 
         std::vector<pipeline::TextureDescriptor> textureDescriptors;
-        textureDescriptors.emplace_back(texturePosition, 0);
-        textureDescriptors.emplace_back(textureNormal, 1);
-        textureDescriptors.emplace_back(textureAlbedo, 2);
+        textureDescriptors.emplace_back(texture, 0);
 
         pipeline::RasterizerStateDescriptor rasterizerStateDescriptor;
 

@@ -1,5 +1,5 @@
-#ifndef TOV_RENDERING_PRODUCERS_GBUFFER_LIGHTING_PRODUCER_H
-#define TOV_RENDERING_PRODUCERS_GBUFFER_LIGHTING_PRODUCER_H
+#ifndef TOV_RENDERING_PRODUCERS_FULLSCREEN_PRODUCER_H
+#define TOV_RENDERING_PRODUCERS_FULLSCREEN_PRODUCER_H
 
 #include <tov/rendering/rendering_core.h>
 
@@ -17,21 +17,17 @@ namespace tov
     class MeshInstance;
     TOV_NAMESPACE_END // mesh
 
-    TOV_NAMESPACE_BEGIN(texture)
-    class Texture;
-    TOV_NAMESPACE_END // texture
-
     TOV_NAMESPACE_END // rendering
 
     TOV_NAMESPACE_BEGIN(rendering)
     TOV_NAMESPACE_BEGIN(producers)
 
-    class GBufferLightingProducer
+    class FullscreenProducer
         : public Producer
     {
     public:
-        GBufferLightingProducer(RenderSystem& renderSystem, ResourceBucket& resourceBucket) noexcept;
-        virtual ~GBufferLightingProducer() noexcept = default;
+        FullscreenProducer(RenderSystem& renderSystem, ResourceBucket& resourceBucket) noexcept;
+        virtual ~FullscreenProducer() noexcept = default;
 
         auto getCommandBucket() const -> auto& { return mCommandBucket; }
 
@@ -43,8 +39,6 @@ namespace tov
         RenderSystem& mRenderSystem;
 
         commands::CommandBucket<8> mCommandBucket;
-
-        texture::Texture* mTexture = nullptr;
 
         mesh::MeshInstance* mFullscreenQuadInstance = nullptr;
     };

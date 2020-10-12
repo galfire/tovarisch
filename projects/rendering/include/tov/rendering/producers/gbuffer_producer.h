@@ -14,7 +14,6 @@ namespace tov
     class RenderSystem;
 
     TOV_NAMESPACE_BEGIN(pipeline)
-    class Framebuffer;
     class Program;
     class ProgramInstance;
     class Shader;
@@ -51,14 +50,9 @@ namespace tov
 
         commands::CommandBucket<128> mCommandBucket;
 
-        pipeline::Framebuffer* mFramebuffer = nullptr;
-
         texture::Texture* mTexturePosition = nullptr;
         texture::Texture* mTextureNormal = nullptr;
         texture::Texture* mTextureAlbedo = nullptr;
-
-        pipeline::Program* mProgram;
-        pipeline::ProgramInstance* mProgramInstance;
     };
 
     TOV_NAMESPACE_END // producers

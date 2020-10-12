@@ -13,16 +13,9 @@ namespace tov
     class Resource
     {
     public:
-        /*Resource() noexcept = default;
-        ~Resource() noexcept = default;*/
-
-        auto setResource(void* resource) { mResource = resource; }
         auto getResource() const { return mResource; }
-
-        auto setProducer(Producer* producer) { mProducer = producer; }
         auto getProducer() -> auto& { return *mProducer; }
 
-    //private:
         void* mResource = nullptr;
         Producer* mProducer = nullptr;
     };

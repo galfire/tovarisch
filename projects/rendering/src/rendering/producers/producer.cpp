@@ -14,7 +14,6 @@ namespace tov
 
     void Producer::setOutput(const std::string& name, Resource& resource)
     {
-        resource.setProducer(this);
         mResourceBucket.addResource(name, resource);
     }
 
@@ -23,6 +22,11 @@ namespace tov
         auto& resource = mResourceBucket.getResource(name);
         auto& resourceProducer = resource.getProducer();
         this->addDependency(&resourceProducer);
+    }
+
+    auto Producer::getResource(const std::string& name) const -> void*
+    {
+        return mResourceBucket.getResource(name).getResource();
     }
 
     TOV_NAMESPACE_END // producers

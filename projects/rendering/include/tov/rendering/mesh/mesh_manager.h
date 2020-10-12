@@ -27,11 +27,17 @@ namespace tov
         MeshManager(buffers::BufferManagerBase& bufferManager) noexcept;
         ~MeshManager() noexcept;
 
+        void initialize();
+
         auto create() -> Mesh*;
         auto getBufferManager() const -> auto & { return mBufferManager; }
 
+        auto getFullscreenQuad() const -> auto& { return *mFullscreenQuad; }
+
     private:
         buffers::BufferManagerBase& mBufferManager;
+
+        Mesh* mFullscreenQuad;
 
         using MeshList = std::vector<std::unique_ptr<Mesh>>;
         MeshList mMeshList;

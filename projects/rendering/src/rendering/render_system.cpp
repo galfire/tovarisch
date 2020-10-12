@@ -11,6 +11,7 @@
 #include "rendering/producers/resource_bucket.h"
 #include "rendering/producers/gbuffer_producer.h"
 #include "rendering/producers/gbuffer_lighting_producer.h"
+#include "rendering/producers/fullscreen_producer.h"
 
 #include "rendering/backend.h"
 
@@ -53,6 +54,8 @@ namespace tov
 
     void RenderSystem::initialize()
     {
+        mMeshManager->initialize();
+
         mResourceBucket = new producers::ResourceBucket();
 
         auto gbuffer_producer = new producers::GBufferProducer(*this, *mResourceBucket);
@@ -62,7 +65,10 @@ namespace tov
         auto gbuffer_lighting_producer = new producers::GBufferLightingProducer(*this, *mResourceBucket);
         mProducers.push_back(gbuffer_lighting_producer);
 
-        mFinalProducer = gbuffer_lighting_producer;
+        auto fullscreen_producer = new producers::FullscreenProducer(*this, *mResourceBucket);
+        mProducers.push_back(fullscreen_producer);
+
+        mFinalProducer = fullscreen_producer;
     }
 
     void RenderSystem::swapBuffers()
