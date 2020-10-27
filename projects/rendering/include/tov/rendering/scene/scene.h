@@ -1,7 +1,7 @@
-#ifndef TOV_RENDERING_SCENE_H
-#define TOV_RENDERING_SCENE_H
+#ifndef TOV_RENDERING_SCENE_SCENE_H
+#define TOV_RENDERING_SCENE_SCENE_H
 
-#include "rendering_core.h"
+#include <tov/rendering/rendering_core.h>
 
 #include <vector>
 
@@ -14,6 +14,10 @@ namespace tov
     class RenderSystem;
     class SceneNode;
     class SceneObject;
+
+    TOV_NAMESPACE_BEGIN(scene)
+
+    class Skybox;
 
     class Scene
     {
@@ -44,6 +48,12 @@ namespace tov
 
         void queue();
 
+        void setSkybox(Skybox* skybox) { mSkybox = skybox; }
+
+    private:
+        void queueSkybox();
+        void queueGBuffer();
+
     private:
         RenderSystem& mRenderSystem;
 
@@ -56,8 +66,11 @@ namespace tov
         SceneObjectList mSceneObjects;
         CameraList mCameras;
         EntityList mEntities;
+
+        Skybox* mSkybox;
     };
 
+    TOV_NAMESPACE_END // scene
     TOV_NAMESPACE_END // rendering
 }
 

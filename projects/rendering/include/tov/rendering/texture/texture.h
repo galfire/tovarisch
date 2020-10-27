@@ -19,10 +19,11 @@ namespace tov
 
     class Texture
     {
+        TOV_MOVABLE_ONLY(Texture)
+
     public:
         Texture(uint numPixels, PixelFormat pixelFormat)
-            : mPBO(nullptr)
-            , mNumPixels(numPixels)
+            : mNumPixels(numPixels)
             , mPixelFormat(pixelFormat)
         {
             mSize = mPixelFormat.getSize() * mNumPixels;
@@ -34,19 +35,12 @@ namespace tov
         auto getNumPixels() const { return mNumPixels; }
         auto getPixelFormat() const { return mPixelFormat; }
 
-        void setPixelBufferObject(buffers::PixelBufferObject& pbo)
-        {
-            mPBO = &pbo;
-        }
-
-        virtual auto unpackPixelData() const -> void TOV_ABSTRACT;
+        virtual auto unpackPixelData(buffers::PixelBufferObject& pbo) const -> void TOV_ABSTRACT;
 
     protected:
         uint mNumPixels;
         PixelFormat mPixelFormat;
         size_t mSize;
-        
-        buffers::PixelBufferObject* mPBO;
     };
 
     class Texture2D

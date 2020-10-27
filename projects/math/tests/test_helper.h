@@ -1,7 +1,7 @@
 #ifndef TOV_MATH_TESTS_TEST_HELPER_H
 #define TOV_MATH_TESTS_TEST_HELPER_H
 
-#include <catch2/catch.hpp>
+#include <catch2/catch_test_macros.hpp>
 
 inline bool cmpf(float a, float b, float epsilon = 1e-7)
 {

@@ -86,12 +86,15 @@ namespace tov
         template<class BufferT, class... U>
         auto create(size_t size, U&&... args)
         {
-            auto buffer = std::unique_ptr<BufferBase>(
-                new BufferT(*this, size, std::forward<U>(args)...)
-            );
-            mBuffers.push_back(std::move(buffer));
-            auto ret = mBuffers.back().get();
-            return static_cast<BufferT*>(ret);
+            {
+                auto buffer = std::unique_ptr<BufferBase>(
+                    new BufferT(*this, size, std::forward<U>(args)...)
+                );
+                mBuffers.push_back(std::move(buffer));
+            }
+
+            auto buffer = mBuffers.back().get();
+            return static_cast<BufferT*>(buffer);
         }
 
     private:

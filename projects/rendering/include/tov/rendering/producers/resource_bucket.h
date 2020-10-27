@@ -24,7 +24,7 @@ namespace tov
             mResourceMap[name] = resource;
         }
 
-        auto getResource(const std::string& name) const -> Resource
+        auto getResource(const std::string& name) -> Resource&
         {
             return mResourceMap.at(name);
         }

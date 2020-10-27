@@ -26,6 +26,8 @@ namespace tov
 
     class SubmeshInstance
     {
+        TOV_MOVABLE_ONLY(SubmeshInstance)
+
     public:
         SubmeshInstance(
             buffers::IndexBufferObject const& ibo,
@@ -42,10 +44,8 @@ namespace tov
         auto getIndexBufferObject() const -> auto const& { return mIBO; }
         auto getVertexBufferObjects() const -> auto const& { return mVBOs; }
 
-        auto getMaterialInstance() { return mMaterialInstance; }
-
-        /*auto setProgramInstance(pipeline::ProgramInstance* programInstance) { mProgramInstance = programInstance; }
-        auto getProgramInstance() const -> auto const& { return *mProgramInstance; }*/
+        void setMaterialInstance(MaterialInstance* materialInstance) { mMaterialInstance = materialInstance; }
+        auto getMaterialInstance() const { return mMaterialInstance; }
 
     private:
         buffers::IndexBufferObject const& mIBO;

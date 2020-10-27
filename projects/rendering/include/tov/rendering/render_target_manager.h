@@ -9,7 +9,6 @@ namespace tov
 {
     TOV_NAMESPACE_BEGIN(rendering)
 
-    class RenderSystem;
     class RenderTarget;
 
     class RenderTargetManager

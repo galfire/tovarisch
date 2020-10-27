@@ -19,7 +19,7 @@ set_target_properties(memory_tests PROPERTIES SUFFIX ".exe")
 set(TARGET_NAME memory_tests)
 include(${CMAKE_SOURCE_DIR}/projects/cmake/debug.cmake)
 
-include_directories(${CATCH_DIR}/single_include)
+include_directories(${CATCH_DIR}/src)
 
 include_directories(${CMAKE_SOURCE_DIR}/projects/memory/include)
 target_link_libraries(memory_tests memory)

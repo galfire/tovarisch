@@ -21,7 +21,7 @@ set_target_properties(math_tests PROPERTIES SUFFIX ".exe")
 set(TARGET_NAME math_tests)
 include(${CMAKE_SOURCE_DIR}/projects/cmake/debug.cmake)
 
-include_directories(${CATCH_DIR}/single_include)
+include_directories(${CATCH_DIR}/src)
 
 include_directories(${CMAKE_SOURCE_DIR}/projects/math/include)
 target_link_libraries(math_tests math)

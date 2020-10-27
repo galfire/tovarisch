@@ -12,14 +12,14 @@ namespace tov
     MeshInstance::MeshInstance() noexcept
     {}
 
-    auto MeshInstance::addSubmeshInstance(SubmeshInstance submeshInstance) -> void
+    auto MeshInstance::addSubmeshInstance(SubmeshInstance& submeshInstance) -> void
     {
-        mSubmeshInstanceList.push_back(submeshInstance);
+        mSubmeshInstanceList.push_back(&submeshInstance);
     }
 
     auto MeshInstance::getSubmeshInstance(uint index) -> SubmeshInstance&
     {
-        return mSubmeshInstanceList[index];
+        return *mSubmeshInstanceList[index];
     }
 
     auto MeshInstance::buildDrawDataList() -> void
@@ -28,7 +28,7 @@ namespace tov
 
         for (auto&& submeshInstance : mSubmeshInstanceList)
         {
-            auto materialInstance = submeshInstance.getMaterialInstance();
+            auto materialInstance = submeshInstance->getMaterialInstance();
 
             std::vector<pipeline::TextureDescriptor> textureDescriptors;
             if (materialInstance)
@@ -40,8 +40,8 @@ namespace tov
             }
 
             auto drawData = DrawData(
-                submeshInstance.getIndexBufferObject(),
-                submeshInstance.getVertexBufferObjects(),
+                submeshInstance->getIndexBufferObject(),
+                submeshInstance->getVertexBufferObjects(),
                 textureDescriptors,
                 materialInstance->getRasterizerStateDescriptor()
             );

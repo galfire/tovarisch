@@ -31,7 +31,7 @@ namespace tov
     namespace
     {
         using CType = pipeline::ConstantType;
-        auto TEX_2D = tov::rendering::pipeline::ConstantDefinition<CType::TEXTURE_2D, int>::DEFINITION;
+        auto TEX_2D = pipeline::ConstantDefinition<CType::TEXTURE_2D, int>::DEFINITION;
     }
 
     FullscreenProducer::FullscreenProducer(RenderSystem& renderSystem, ResourceBucket& resourceBucket) noexcept
@@ -49,9 +49,10 @@ namespace tov
             auto shaderFragment = backend::createShader(pipeline::ShaderType::FRAGMENT, "./shaders/pass_through.frag.glsl");
             shaderFragment->compile();
             mProgram->attachShader(*shaderFragment);
+
+            mProgram->link();
         }
 
-        mProgram->link();
         mProgram->addConstantDefinition("Texture", TEX_2D);
         mProgram->buildLocationMap();
 
@@ -65,6 +66,7 @@ namespace tov
     void FullscreenProducer::setInputs()
     {
         setInput("gBufferLighting");
+        //setInput("skyboxTexture");
     }
 
     void FullscreenProducer::setOutputs()
@@ -78,6 +80,7 @@ namespace tov
         auto& submeshInstance = mFullscreenQuadInstance->getSubmeshInstance(0);
 
         auto texture = reinterpret_cast<texture::Texture*>(getResource("gBufferLighting"));
+        //auto texture = reinterpret_cast<texture::Texture*>(getResource("skyboxTexture"));
 
         std::vector<pipeline::TextureDescriptor> textureDescriptors;
         textureDescriptors.emplace_back(texture, 0);

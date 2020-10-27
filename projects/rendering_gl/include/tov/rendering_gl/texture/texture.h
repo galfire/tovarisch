@@ -2,7 +2,6 @@
 #define TOV_RENDERING_GL_TEXTURE_TEXTURE_H
 
 #include <tov/rendering/texture/texture.h>
-//#include <tov/rendering_gl/gpu_resource.h>
 
 #include <tov/rendering_gl/buffers/buffer.h>
 #include <tov/rendering_gl/gl_impl.h>
@@ -37,7 +36,6 @@ namespace tov
 
     class Texture2D
         : public rendering::texture::Texture2D
-        //, public GPUResource<TextureBinder>
     {
     public:
         Texture2D(
@@ -47,7 +45,10 @@ namespace tov
         )
             : rendering::texture::Texture2D(width, height, pixelFormat)
         {
-            glGenTextures(1, &mTextureID);
+            {
+                auto op = log_gl_op("gen texture");
+                glGenTextures(1, &mTextureID);
+            }
             
             auto bind = binder();
 
@@ -79,20 +80,17 @@ namespace tov
         }
 
         ~Texture2D()
-        {}
+        {
+            auto op = log_gl_op("delete texture");
+            glDeleteTextures(1, &mTextureID);
+        }
 
-        auto getPixelBuffer() const -> auto&
+        auto unpackPixelData(rendering::buffers::PixelBufferObject& pbo) const -> void override
         {
             constexpr auto usageSettings = buffers::UsageSettings::STREAM;
             constexpr auto accessSettings = buffers::AccessSettings::WRITE;
             using Buffer = buffers::Buffer<usageSettings, accessSettings>;
-            auto& buffer = static_cast<Buffer&>(mPBO->getBuffer());
-            return buffer;
-        }
-
-        auto unpackPixelData() const -> void override
-        {
-            auto& buffer = getPixelBuffer();
+            auto& buffer = static_cast<Buffer&>(pbo.getBuffer());
 
             // Upload PBO data to texture
             auto textureBind = binder();

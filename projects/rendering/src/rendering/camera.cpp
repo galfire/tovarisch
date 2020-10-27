@@ -1,6 +1,6 @@
 #include "rendering/camera.h"
 
-#include "rendering/scene.h"
+#include "rendering/scene/scene.h"
 #include "rendering/scene_node.h"
 
 #include "rendering/draw_context.h"
@@ -11,7 +11,7 @@ namespace tov
 {
     TOV_NAMESPACE_BEGIN(rendering)
 
-    Camera::Camera(Scene& scene) noexcept
+    Camera::Camera(scene::Scene& scene) noexcept
         : mScene(scene)
         , mCachedTransform()
         , mViewFrustum()
@@ -55,8 +55,6 @@ namespace tov
     void Camera::populateDrawContext(DrawContext& drawContext)
     {
         if (mViewports.size() == 0) return;
-
-        this->buildViewMatrix();
 
         drawContext.setCamera(this);
 

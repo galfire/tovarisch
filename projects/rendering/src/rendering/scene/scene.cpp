@@ -1,4 +1,4 @@
-#include "rendering/scene.h"
+#include "rendering/scene/scene.h"
 
 #include <tov/math/matrix.h>
 
@@ -15,6 +15,8 @@
 
 #include "rendering/mesh/draw_data_context.h"
 
+#include "rendering/scene/skybox.h"
+
 #include "rendering/backend.h"
 
 #include "rendering/pipeline/program_instance.h"
@@ -22,6 +24,7 @@
 namespace tov
 {
     TOV_NAMESPACE_BEGIN(rendering)
+    TOV_NAMESPACE_BEGIN(scene)
 
     Scene::Scene(RenderSystem& renderSystem) noexcept
         : mRenderSystem(renderSystem)
@@ -52,7 +55,58 @@ namespace tov
         return *mRootNode.get();
     }
 
-    void Scene::queue()
+    void Scene::queueSkybox()
+    {
+        auto& bucket = mRenderSystem.getSkyboxBucket();
+        auto programInstance = mRenderSystem.getProgramInstanceSkybox();
+
+        for (auto&& camera : mCameras)
+        {
+            auto const& viewMatrix = camera.get().getViewMatrix();
+
+            auto& viewports = camera.get().getViewports();
+            for (auto&& viewport : viewports)
+            {
+                auto width = static_cast<float>(viewport->getWidth());
+                auto height = static_cast<float>(viewport->getHeight());
+                auto aspectRatio = width / height;
+                camera.get().setAspectRatio(aspectRatio);
+                auto const& projectionMatrix = camera.get().getProjectionMatrix();
+
+                auto* drawDataContext = backend::createDrawDataContext();
+
+                {
+                    auto& command = bucket.addCommand<commands::ApplyViewport>(viewport->getZIndex());
+                    command.viewport = viewport;
+                }
+                {
+                    auto& command = bucket.addCommand<commands::StartDrawDataContext>(0);
+                    command.drawDataContext = drawDataContext;
+                }
+                {
+                    auto& command = bucket.addCommand<commands::SetMVP>(0);
+                    command.programInstance = programInstance;
+                    command.modelMatrix = math::Matrix4::IDENTITY;
+                    command.viewMatrix = viewMatrix;
+                    command.projectionMatrix = projectionMatrix;
+                }
+                {
+                    auto& command = bucket.addCommand<commands::UploadConstants>(0);
+                    command.programInstance = programInstance;
+                }
+                {
+                    auto& command = bucket.addCommand<commands::Draw>(0);
+                    command.drawData = &mSkybox->getDrawData();
+                }
+                {
+                    auto& command = bucket.addCommand<commands::EndDrawDataContext>(0);
+                    command.drawDataContext = drawDataContext;
+                }
+            }
+        }
+    }
+
+    void Scene::queueGBuffer()
     {
         auto& bucket = mRenderSystem.getGBufferBucket();
         auto programInstance = mRenderSystem.getProgramInstanceGBuffer();
@@ -79,12 +133,12 @@ namespace tov
                     command.viewport = viewport;
                 }
                 {
-                    /*auto& command = bucket.addCommand<commands::ClearViewport>(viewport->getZIndex());
-                    command.viewport = viewport;*/
+                    //auto& command = bucket.addCommand<commands::ClearViewport>(viewport->getZIndex());
+                    //command.viewport = viewport;
                 }
 
                 auto* drawDataContext = backend::createDrawDataContext();
-                
+
                 {
                     auto& command = bucket.addCommand<commands::StartDrawDataContext>(0);
                     command.drawDataContext = drawDataContext;
@@ -126,5 +180,17 @@ namespace tov
         }
     }
 
+    void Scene::queue()
+    {
+        for (auto&& camera : mCameras)
+        {
+            camera.get().buildViewMatrix();
+        }
+
+        //queueSkybox();
+        queueGBuffer();
+    }
+
+    TOV_NAMESPACE_END // scene
     TOV_NAMESPACE_END // rendering
 }

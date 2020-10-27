@@ -24,7 +24,7 @@ namespace tov
         MeshInstance() noexcept;
         ~MeshInstance() noexcept = default;
 
-        auto addSubmeshInstance(SubmeshInstance submeshInstance) -> void;
+        auto addSubmeshInstance(SubmeshInstance& submeshInstance) -> void;
         auto getSubmeshInstance(uint index) -> SubmeshInstance&;
 
         auto getDrawDataList() -> DrawDataList const&;
@@ -33,7 +33,7 @@ namespace tov
         auto buildDrawDataList() -> void;
 
     private:
-        using SubmeshInstanceList = std::vector<SubmeshInstance>;
+        using SubmeshInstanceList = std::vector<SubmeshInstance*>;
         SubmeshInstanceList mSubmeshInstanceList;
 
         DrawDataList mDrawDataList;

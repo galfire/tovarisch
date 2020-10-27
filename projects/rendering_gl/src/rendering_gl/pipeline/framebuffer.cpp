@@ -26,7 +26,10 @@ namespace tov
 	{
 	}
 
-	auto Framebuffer::attachTextureImpl(rendering::texture::Texture2D const* const texture, rendering::pipeline::FramebufferAttachments attachment) -> void
+	auto Framebuffer::attachTextureImpl(
+		rendering::texture::Texture2D const* const texture, 
+		rendering::pipeline::FramebufferAttachments attachment
+	) -> void
 	{
 		auto bind = FramebufferBinder(mFramebufferID);
 

@@ -50,9 +50,9 @@ namespace tov
 
     struct SetMVP
     {
-        math::Matrix4 modelMatrix;
-        math::Matrix4 viewMatrix;
-        math::Matrix4 projectionMatrix;
+        math::Matrix4 modelMatrix = math::Matrix4::IDENTITY;
+        math::Matrix4 viewMatrix = math::Matrix4::IDENTITY;
+        math::Matrix4 projectionMatrix = math::Matrix4::IDENTITY;
         pipeline::ProgramInstance* programInstance;
         static inline DispatchFunction DispatchFunction = CommandDispatch::SetMVP;
     };

@@ -23,6 +23,11 @@ namespace tov
         return mDependencyGraph.resolveDependencies();
     }
 
+    void DependencyNode::resetDependencies()
+    {
+        mDependencyList.clear();
+    }
+
     TOV_NAMESPACE_END // producers
     TOV_NAMESPACE_END // rendering
 }

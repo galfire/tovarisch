@@ -36,19 +36,18 @@ namespace tov
 
         virtual void setInputs() TOV_ABSTRACT;
         virtual void setOutputs() TOV_ABSTRACT;
-
         virtual void render() TOV_ABSTRACT;
 
     protected:
-        void setOutput(const std::string& name, Resource& resource);
+        void setOutput(const std::string& name, Resource resource);
         void setInput(const std::string& name);
 
         auto getResource(const std::string& name) const -> void*;
 
     protected:
         pipeline::Framebuffer* mFramebuffer = nullptr;
-        pipeline::Program* mProgram;
-        pipeline::ProgramInstance* mProgramInstance;
+        pipeline::Program* mProgram = nullptr;
+        pipeline::ProgramInstance* mProgramInstance = nullptr;
 
     private:
         ResourceBucket& mResourceBucket;

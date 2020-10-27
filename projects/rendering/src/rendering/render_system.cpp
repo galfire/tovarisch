@@ -3,7 +3,7 @@
 #include "rendering/render_window.h"
 #include "rendering/window_platform_support.h"
 
-#include "rendering/scene.h"
+#include "rendering/scene/scene.h"
 
 #include "rendering/buffers/buffer_manager.h"
 #include "rendering/mesh/mesh_manager.h"
@@ -12,9 +12,9 @@
 #include "rendering/producers/gbuffer_producer.h"
 #include "rendering/producers/gbuffer_lighting_producer.h"
 #include "rendering/producers/fullscreen_producer.h"
+#include "rendering/producers/skybox_producer.h"
 
 #include "rendering/backend.h"
-
 
 namespace tov
 {
@@ -58,6 +58,10 @@ namespace tov
 
         mResourceBucket = new producers::ResourceBucket();
 
+        auto skybox_producer = new producers::SkyboxProducer(*this, *mResourceBucket);
+        mSkyboxProducer = skybox_producer;
+        mProducers.push_back(skybox_producer);
+
         auto gbuffer_producer = new producers::GBufferProducer(*this, *mResourceBucket);
         mGBufferProducer = gbuffer_producer;
         mProducers.push_back(gbuffer_producer);
@@ -76,12 +80,17 @@ namespace tov
         mRenderTargetManager.swapBuffers();
     }
 
-    void RenderSystem::renderFrame(Scene& scene)
+    void RenderSystem::renderFrame(scene::Scene& scene)
     {
         mWindowPlatformSupport.messageHandler();
 
         scene.queue();
         
+        for (auto&& producer : mProducers)
+        {
+            producer->resetDependencies();
+        }
+
         for (auto&& producer : mProducers)
         {
             producer->setOutputs();

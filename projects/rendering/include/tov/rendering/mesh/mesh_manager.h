@@ -30,14 +30,18 @@ namespace tov
         void initialize();
 
         auto create() -> Mesh*;
-        auto getBufferManager() const -> auto & { return mBufferManager; }
+        auto getBufferManager() const -> auto& { return mBufferManager; }
 
+        auto getCube() const -> auto& { return *mCube; }
         auto getFullscreenQuad() const -> auto& { return *mFullscreenQuad; }
+        auto getSphere() const -> auto& { return *mSphere; }
 
     private:
         buffers::BufferManagerBase& mBufferManager;
 
-        Mesh* mFullscreenQuad;
+        Mesh* mCube = nullptr;
+        Mesh* mFullscreenQuad = nullptr;
+        Mesh* mSphere = nullptr;
 
         using MeshList = std::vector<std::unique_ptr<Mesh>>;
         MeshList mMeshList;

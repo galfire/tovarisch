@@ -1,7 +1,7 @@
 #ifndef TOV_RENDERING_TESTS_TEST_HELPER_H
 #define TOV_RENDERING_TESTS_TEST_HELPER_H
 
-#include <catch2/catch.hpp>
+#include <catch2/catch_test_macros.hpp>
 
 #include <iostream>
 

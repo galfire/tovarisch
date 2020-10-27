@@ -45,7 +45,7 @@ namespace tov
 
         for (auto&& submesh : mSubmeshes)
         {
-            auto submeshInstance = submesh->instantiate();
+            auto& submeshInstance = submesh->instantiate();
             meshInstance->addSubmeshInstance(submeshInstance);
         }
         

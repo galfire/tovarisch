@@ -12,8 +12,9 @@ namespace tov
         : mResourceBucket(resourceBucket)
     {}
 
-    void Producer::setOutput(const std::string& name, Resource& resource)
+    void Producer::setOutput(const std::string& name, Resource resource)
     {
+        resource.setProducer(this);
         mResourceBucket.addResource(name, resource);
     }
 

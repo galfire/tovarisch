@@ -9,10 +9,9 @@
 
 #include <tov/rendering/colour.h>
 #include <tov/rendering/camera.h>
-#include <tov/rendering/pixel_format.h>
 #include <tov/rendering/image.h>
-
 #include <tov/rendering/material.h>
+#include <tov/rendering/pixel_format.h>
 
 #include <tov/rendering/geometry/cube.h>
 #include <tov/rendering/geometry/sphere.h>
@@ -33,19 +32,22 @@
 
 #include <tov/rendering/render_system.h>
 #include <tov/rendering/render_window.h>
-#include <tov/rendering/scene.h>
 #include <tov/rendering/scene_node.h>
+
+#include <tov/rendering/scene/scene.h>
+#include <tov/rendering/scene/skybox.h>
 
 #include <tov/rendering/win32/window_platform_support.h>
 #include <tov/rendering_gl/window_renderer_support.h>
 
 #include <iostream>
+#include <chrono>
 
 using WindowPlatformSupport = tov::rendering::win32::WindowPlatformSupport;
 using WindowRendererSupport = tov::rendering::win32::gl::WindowRendererSupport;
 using RenderSystem = tov::rendering::RenderSystem;
 
-// adfadfadf
+// adfadfadfadfadf
 
 int main(int argc, char** argv)
 {
@@ -56,12 +58,10 @@ int main(int argc, char** argv)
         tov::rendering::backend::createRenderSystem(platformSupport, rendererSupport)
     );
 
-    tov::rendering::Scene scene(*rs.get());
-    auto& root = scene.getRootNode();
-
-    auto& cameraNode = root.createChild();
+    tov::rendering::scene::Scene scene(*rs.get());
     auto& camera = scene.createCamera();
-    cameraNode.attachSceneObject(&camera);
+    camera.setNearDistance(0.1f);
+    //camera.setFieldOfView(tov::math::PI / 6.0f);
 
     {
         auto& window = rs->createRenderWindow("Window", 800, 600, false);
@@ -69,9 +69,32 @@ int main(int argc, char** argv)
         camera.attachViewport(vp);
     }
 
+    auto& root = scene.getRootNode();
+    auto& cameraNode = root.createChild();
+    cameraNode.attachSceneObject(&camera);
+
     rs->initialize();
 
-    auto bufferManager = rs->getBufferManager();
+    auto& meshManager = *rs->getMeshManager();
+    auto& bufferManager = *rs->getBufferManager();
+
+    auto texture = (tov::rendering::texture::Texture*)nullptr;
+    {
+        auto image = tov::rendering::Image("./assets/equi_bar.jpg");
+        auto pixelFormat = image.getPixelFormat();
+        texture = &rs->createTexture2D(image.getWidth(), image.getHeight(), pixelFormat);
+
+        auto size = image.getSize();
+        auto& pixelBuffer = *bufferManager.createPixelUnpackBuffer(pixelFormat, size);
+        auto& pbo = tov::rendering::buffers::PixelBufferObject(pixelBuffer, pixelFormat);
+
+        auto data = image.data();
+        pbo.updatePixelData(data, size);
+        texture->unpackPixelData(pbo);
+    }
+
+    auto skybox = tov::rendering::scene::Skybox(*rs.get(), texture);
+    scene.setSkybox(&skybox);
 
     auto colourMaterial = tov::rendering::Material();
     {
@@ -79,9 +102,8 @@ int main(int argc, char** argv)
         auto& texture = rs->createTexture2D(16, 16, pixelFormat);
 
         auto size = 16u * 16u * pixelFormat.getSize();
-        auto& pixelBuffer = *bufferManager->createPixelUnpackBuffer(pixelFormat, size);
+        auto& pixelBuffer = *bufferManager.createPixelUnpackBuffer(pixelFormat, size);
         auto& pbo = tov::rendering::buffers::PixelBufferObject(pixelBuffer, pixelFormat);
-        texture.setPixelBufferObject(pbo);
 
         auto buffer = new unsigned char[size];
         for (auto i = 0u; i < size; i += 4)
@@ -94,7 +116,7 @@ int main(int argc, char** argv)
         pbo.updatePixelData(buffer, size);
         delete[] buffer;
 
-        texture.unpackPixelData();
+        texture.unpackPixelData(pbo);
 
         colourMaterial.setAlbedoMap(&texture);
     }
@@ -106,13 +128,12 @@ int main(int argc, char** argv)
         auto& texture = rs->createTexture2D(image.getWidth(), image.getHeight(), pixelFormat);
         
         auto size = image.getSize();
-        auto& pixelBuffer = *bufferManager->createPixelUnpackBuffer(pixelFormat, size);
+        auto& pixelBuffer = *bufferManager.createPixelUnpackBuffer(pixelFormat, size);
         auto& pbo = tov::rendering::buffers::PixelBufferObject(pixelBuffer, pixelFormat);
-        texture.setPixelBufferObject(pbo);
 
         auto data = image.data();
         pbo.updatePixelData(data, size);
-        texture.unpackPixelData();
+        texture.unpackPixelData(pbo);
 
         textureMaterial.setAlbedoMap(&texture);
     }
@@ -130,8 +151,6 @@ int main(int argc, char** argv)
         vertexDataFormat.mapHandleToFormat(0, vbf);
     }
 
-    auto& meshManager = *rs->getMeshManager();
-    
     auto sphereMesh = meshManager.create();
     {
         auto sphere = tov::rendering::geometry::Sphere(5.0f);
@@ -164,7 +183,7 @@ int main(int argc, char** argv)
         entityNode.getTransform().setTranslation(translation);
     }
 
-    tov::rendering::SceneNode* node = nullptr;
+    auto node = (tov::rendering::SceneNode*)nullptr;
     {
         auto& entityNode = root.createChild();
         auto& entity = scene.createEntity();
@@ -175,21 +194,56 @@ int main(int argc, char** argv)
         node = &entityNode;
     }
 
+    using namespace std::chrono_literals;
+
+    constexpr auto timestep(16ms);
+    using clock = std::chrono::high_resolution_clock;
+
+    auto accumulator(0ns);
+    auto currentTime = clock::now();
+
     while(1)
     {
-        auto axis = tov::math::Vector3(0.0f, 1.0f, 0.0f);
-        auto angle = tov::math::Radian(0.03f);
-        auto rotation = tov::math::Quaternion(angle, axis);
-        node->getTransform().rotate(rotation);
+        auto now = clock::now();
+        auto deltaTime = now - currentTime;
+        std::cout << deltaTime.count() << "\n";
+        currentTime = now;
+
+        accumulator += deltaTime;
+
+        while (accumulator >= timestep)
+        {
+            accumulator -= timestep;
+
+            //previous_state = current_state;
+            //update(&current_state); // update at a fixed rate each time
+        }
+
+        auto alpha = (float)accumulator.count() / std::chrono::duration_cast<std::chrono::nanoseconds>(timestep).count();
+
+        {
+            auto axis = tov::math::Vector3(0.0f, 1.0f, 0.0f);
+            auto angle = tov::math::Radian(0.01f) * alpha;
+            auto rotation = tov::math::Quaternion(angle, axis);
+            node->getTransform().rotate(rotation);
+        }
+
+        /*{
+            auto axis = tov::math::Vector3(0.0f, 1.0f, 0.0f);
+            auto angle = tov::math::Radian(0.001f) * alpha;
+            auto rotation = tov::math::Quaternion(angle, axis);
+            cameraNode.getTransform().rotate(rotation);
+        }*/
+
 
 #if TOV_DEBUG
-        std::cout << "STARTING FRAME...\n";
+        //std::cout << "STARTING FRAME...\n";
 #endif
         rs->renderFrame(scene);
         rs->swapBuffers();
 
 #if TOV_DEBUG
-        std::cout << "END FRAME\n";
+        //std::cout << "END FRAME\n";
 #endif
     }
 

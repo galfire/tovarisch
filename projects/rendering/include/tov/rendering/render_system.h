@@ -9,12 +9,12 @@
 #include "commands/command_bucket.h"
 
 #include "producers/gbuffer_producer.h"
+#include "producers/skybox_producer.h"
 
 
 namespace tov
 {
     TOV_NAMESPACE_BEGIN(rendering)
-    class Scene;
 
     TOV_NAMESPACE_BEGIN(buffers)
     class BufferManagerBase;
@@ -28,6 +28,14 @@ namespace tov
     class Producer;
     class ResourceBucket;
     TOV_NAMESPACE_END // producers
+
+    TOV_NAMESPACE_BEGIN(scene)
+    class Scene;
+    TOV_NAMESPACE_END // scene
+
+    TOV_NAMESPACE_BEGIN(texture)
+    class Texture2D;
+    TOV_NAMESPACE_END // texture
 
     TOV_NAMESPACE_END // rendering
         
@@ -63,11 +71,13 @@ namespace tov
         void initialize();
 
         void swapBuffers();
-        void renderFrame(Scene& scene);
+        void renderFrame(scene::Scene& scene);
 
         auto getGBufferBucket() -> auto& { return mGBufferProducer->getCommandBucket(); }
-
         auto getProgramInstanceGBuffer() const { return mGBufferProducer->getProgramInstance(); }
+
+        auto getSkyboxBucket() -> auto& { return mSkyboxProducer->getCommandBucket(); }
+        auto getProgramInstanceSkybox() const { return mSkyboxProducer->getProgramInstance(); }
 
     protected:
         RenderTargetManager mRenderTargetManager;
@@ -76,13 +86,15 @@ namespace tov
         WindowPlatformSupport& mWindowPlatformSupport;
         WindowRendererSupport& mWindowRendererSupport;
 
-        std::unique_ptr<buffers::BufferManagerBase> mBufferManager = nullptr;
-        std::unique_ptr<mesh::MeshManager> mMeshManager = nullptr;
+        std::unique_ptr<buffers::BufferManagerBase> mBufferManager;
+        std::unique_ptr<mesh::MeshManager> mMeshManager;
 
         std::vector<producers::Producer*> mProducers;
         producers::Producer* mFinalProducer;
-        producers::GBufferProducer* mGBufferProducer;
         producers::ResourceBucket* mResourceBucket;
+
+        producers::GBufferProducer* mGBufferProducer = nullptr;
+        producers::SkyboxProducer* mSkyboxProducer = nullptr;
     };
 
     TOV_NAMESPACE_END

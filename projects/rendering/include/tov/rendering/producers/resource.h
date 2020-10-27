@@ -14,6 +14,8 @@ namespace tov
     {
     public:
         auto getResource() const { return mResource; }
+        
+        auto setProducer(Producer* producer) { mProducer = producer; }
         auto getProducer() -> auto& { return *mProducer; }
 
         void* mResource = nullptr;

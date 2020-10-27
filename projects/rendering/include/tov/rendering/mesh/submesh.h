@@ -42,7 +42,7 @@ namespace tov
 
         auto setMaterial(Material& material) -> void { mMaterial = &material; }
 
-        auto instantiate() -> SubmeshInstance;
+        auto instantiate() -> SubmeshInstance&;
 
     private:
         void build(geometry::Geometry const&, VertexDataFormat const& vertexDataFormat);
@@ -56,6 +56,8 @@ namespace tov
 
         std::unique_ptr<IndexData> mIndexData;
         std::unique_ptr<VertexData> mVertexData;
+
+        std::vector<std::unique_ptr<SubmeshInstance>> mSubmeshInstances;
     };
 
     TOV_NAMESPACE_END // mesh

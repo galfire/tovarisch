@@ -12,8 +12,6 @@
 
 #include "rendering/commands/commands.h"
 
-#include "rendering/geometry/rectangle.h"
-
 #include "rendering/mesh/vertex_data_format.h"
 #include "rendering/mesh/mesh.h"
 #include "rendering/mesh/mesh_instance.h"
@@ -31,7 +29,7 @@ namespace tov
     namespace
     {
         using CType = pipeline::ConstantType;
-        auto TEX_2D = tov::rendering::pipeline::ConstantDefinition<CType::TEXTURE_2D, int>::DEFINITION;
+        auto TEX_2D = pipeline::ConstantDefinition<CType::TEXTURE_2D, int>::DEFINITION;
     }
 
     GBufferLightingProducer::GBufferLightingProducer(RenderSystem& renderSystem, ResourceBucket& resourceBucket) noexcept
@@ -60,9 +58,10 @@ namespace tov
             auto shaderFragment = backend::createShader(pipeline::ShaderType::FRAGMENT, "./shaders/gbuffer_lighting.frag.glsl");
             shaderFragment->compile();
             mProgram->attachShader(*shaderFragment);
+
+            mProgram->link();
         }
 
-        mProgram->link();
         mProgram->addConstantDefinition("gPosition", TEX_2D);
         mProgram->addConstantDefinition("gNormal", TEX_2D);
         mProgram->addConstantDefinition("gAlbedo", TEX_2D);
@@ -86,8 +85,7 @@ namespace tov
 
     void GBufferLightingProducer::setOutputs()
     {
-        Resource texture = { mTexture, this };
-        setOutput("gBufferLighting", texture);
+        setOutput("gBufferLighting", { mTexture });
     }
 
     void GBufferLightingProducer::render()

@@ -25,6 +25,8 @@ namespace tov
 
         auto getDependencies() const -> auto const& { return mDependencyList; }
 
+        void resetDependencies();
+
         auto getResolvedDependencies() const -> DependencyList;
 
     private:

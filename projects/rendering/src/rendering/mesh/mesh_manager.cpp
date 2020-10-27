@@ -2,7 +2,10 @@
 
 #include <rendering/mesh/mesh.h>
 #include <rendering/mesh/vertex_data_format.h>
+
+#include <rendering/geometry/cube.h>
 #include <rendering/geometry/rectangle.h>
+#include <rendering/geometry/sphere.h>
 
 namespace tov
 {
@@ -30,21 +33,36 @@ namespace tov
             vertexDataFormat.mapHandleToFormat(0, vbf);
         }
 
+        mCube = create();
+        {
+            auto geometry = geometry::Cube(1.0f);
+            mCube->createSubmesh(geometry, vertexDataFormat);
+        }
+
         mFullscreenQuad = create();
         {
             auto geometry = geometry::Rectangle(2.0f, 2.0f); // [ -1, +1 ], [ -1, +1 ]
             mFullscreenQuad->createSubmesh(geometry, vertexDataFormat);
         }
+
+        mSphere = create();
+        {
+            auto geometry = geometry::Sphere(1.0f);
+            mSphere->createSubmesh(geometry, vertexDataFormat);
+        }
     }
 
     auto MeshManager::create() -> Mesh*
     {
-        auto mesh = std::unique_ptr<Mesh>(
-            new Mesh(*this)
-        );
-        mMeshList.push_back(std::move(mesh));
-        auto ret = mMeshList.back().get();
-        return static_cast<Mesh*>(ret);
+        {
+            auto mesh = std::unique_ptr<Mesh>(
+                new Mesh(*this)
+            );
+            mMeshList.push_back(std::move(mesh));
+        }
+
+        auto mesh = mMeshList.back().get();
+        return mesh;
     }
 
     TOV_NAMESPACE_END // mesh

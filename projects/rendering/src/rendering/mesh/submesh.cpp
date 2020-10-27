@@ -131,13 +131,20 @@ namespace tov
     Submesh::~Submesh() noexcept
     {}
 
-    auto Submesh::instantiate() -> SubmeshInstance
+    auto Submesh::instantiate() -> SubmeshInstance&
     {
-        auto const& ibo = getIndexData()->getBufferObject();
-        auto const& vbos = getVertexData()->getBufferObjects();
-        auto materialInstance = mMaterial ? &mMaterial->instantiate() : nullptr;
-        auto submeshInstance = SubmeshInstance(ibo, vbos, materialInstance);
-        return submeshInstance;
+        {
+            auto const& ibo = getIndexData()->getBufferObject();
+            auto const& vbos = getVertexData()->getBufferObjects();
+            auto materialInstance = mMaterial ? &mMaterial->instantiate() : nullptr;
+            auto submeshInstance = std::unique_ptr<SubmeshInstance>(
+                new SubmeshInstance(ibo, vbos, materialInstance)
+            );
+            mSubmeshInstances.push_back(std::move(submeshInstance));
+        }
+
+        auto submeshInstance = mSubmeshInstances.back().get();
+        return *submeshInstance;
     }
 
     void Submesh::build(geometry::Geometry const& geometry, VertexDataFormat const& vertexDataFormat)

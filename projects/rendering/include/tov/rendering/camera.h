@@ -13,8 +13,11 @@ namespace tov
 {
     TOV_NAMESPACE_BEGIN(rendering)
 
-    class DrawContext;
+    TOV_NAMESPACE_BEGIN(scene)
     class Scene;
+    TOV_NAMESPACE_END // scene
+
+    class DrawContext;
     class SceneNode;
     class Viewport;
 
@@ -22,7 +25,7 @@ namespace tov
         : public SceneObject
     {
     public:
-        Camera(Scene& scene) noexcept;
+        Camera(scene::Scene& scene) noexcept;
 
         void setNearDistance(float nearDistance);
         void setFarDistance(float farDistance);
@@ -43,11 +46,12 @@ namespace tov
     private:
         auto getDrawDataList() const -> DrawDataList const& { return mDrawDataList; }
 
+    public:
         void buildProjectionMatrix(void);
         void buildViewMatrix(void);
 
     private:
-        Scene& mScene;
+        scene::Scene& mScene;
         Transform mCachedTransform;
         ViewFrustum<ProjectionType::PERSPECTIVE> mViewFrustum;
 

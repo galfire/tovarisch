@@ -1,5 +1,5 @@
-#ifndef TOV_RENDERING_PRODUCERS_GBUFFER_PRODUCER_H
-#define TOV_RENDERING_PRODUCERS_GBUFFER_PRODUCER_H
+#ifndef TOV_RENDERING_PRODUCERS_SKYBOX_PRODUCER_H
+#define TOV_RENDERING_PRODUCERS_SKYBOX_PRODUCER_H
 
 #include <tov/rendering/rendering_core.h>
 
@@ -13,6 +13,10 @@ namespace tov
 
     class RenderSystem;
 
+    TOV_NAMESPACE_BEGIN(mesh)
+    class MeshInstance;
+    TOV_NAMESPACE_END // mesh
+
     TOV_NAMESPACE_BEGIN(texture)
     class Texture;
     TOV_NAMESPACE_END // texture
@@ -24,12 +28,12 @@ namespace tov
 
     class Resource;
 
-    class GBufferProducer
+    class SkyboxProducer
         : public Producer
     {
     public:
-        GBufferProducer(RenderSystem& renderSystem, ResourceBucket& resourceBucket) noexcept;
-        virtual ~GBufferProducer() noexcept = default;
+        SkyboxProducer(RenderSystem& renderSystem, ResourceBucket& resourceBucket) noexcept;
+        virtual ~SkyboxProducer() noexcept = default;
 
         auto getCommandBucket() -> auto& { return mCommandBucket; }
         auto getProgramInstance() -> auto& { return mProgramInstance; }
@@ -41,11 +45,9 @@ namespace tov
     private:
         RenderSystem& mRenderSystem;
 
-        commands::CommandBucket<128> mCommandBucket;
+        commands::CommandBucket<8> mCommandBucket;
 
-        texture::Texture* mTexturePosition = nullptr;
-        texture::Texture* mTextureNormal = nullptr;
-        texture::Texture* mTextureAlbedo = nullptr;
+        texture::Texture* mTexture = nullptr;
     };
 
     TOV_NAMESPACE_END // producers
