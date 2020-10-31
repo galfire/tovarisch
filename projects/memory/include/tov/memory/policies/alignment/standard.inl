@@ -24,7 +24,7 @@ namespace tov
 
 	inline void Standard::writeHeader(void*& ptr, size_t alignmentSpace, ptrdiff_t alignmentOffset) const noexcept
 	{
-		BlockHeader header = { alignmentSpace, alignmentOffset };
+		auto header = BlockHeader { alignmentSpace, alignmentOffset };
 		accessor.write(ptr, &header);
 
 		union
@@ -39,7 +39,7 @@ namespace tov
 
 	inline void Standard::readHeader(void*& ptr, size_t& alignmentSpace, ptrdiff_t& alignmentOffset) const noexcept
 	{
-		BlockHeader header;
+		auto header = BlockHeader {};
 		accessor.read(ptr, header);
 		alignmentSpace = header.alignmentSpace;
 		alignmentOffset = header.alignmentOffset;

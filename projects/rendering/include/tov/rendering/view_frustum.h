@@ -15,7 +15,7 @@ namespace tov
     class ViewFrustumView
     {
     public:
-        void buildViewMatrix(const Transform& transform) noexcept;
+        void buildViewMatrix(Transform& transform) noexcept;
 
         auto getViewMatrix() const -> auto const& { return mViewMatrix; }
 

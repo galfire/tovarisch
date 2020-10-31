@@ -19,8 +19,8 @@ namespace tov
 
         auto& submeshInstance = mCubeInstance->getSubmeshInstance(0);
 
-        std::vector<pipeline::TextureDescriptor> textureDescriptors;
-        textureDescriptors.emplace_back(texture, 0);
+        std::vector<pipeline::TextureUsage> textureUsages;
+        textureUsages.emplace_back(texture, 0);
 
         pipeline::RasterizerStateDescriptor rasterizerStateDescriptor;
         rasterizerStateDescriptor.setCullMode(pipeline::CullMode::FRONT);
@@ -29,7 +29,7 @@ namespace tov
             new mesh::DrawData(
                 submeshInstance.getIndexBufferObject(),
                 submeshInstance.getVertexBufferObjects(),
-                textureDescriptors,
+                textureUsages,
                 rasterizerStateDescriptor
             )
         );

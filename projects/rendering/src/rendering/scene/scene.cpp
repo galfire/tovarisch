@@ -39,15 +39,15 @@ namespace tov
 
     auto Scene::createCamera() -> Camera&
     {
-        auto& camera = *create<Camera>(*this);
+        auto camera = create<Camera>(*this);
         mCameras.push_back(camera);
-        return camera;
+        return *camera;
     }
 
     auto Scene::createEntity() -> Entity&
     {
-        auto& entity = *create<Entity>();
-        return entity;
+        auto entity = create<Entity>();
+        return *entity;
     }
 
     auto Scene::getRootNode() -> SceneNode&
@@ -62,16 +62,16 @@ namespace tov
 
         for (auto&& camera : mCameras)
         {
-            auto const& viewMatrix = camera.get().getViewMatrix();
+            auto const& viewMatrix = camera->getViewMatrix();
 
-            auto& viewports = camera.get().getViewports();
+            auto& viewports = camera->getViewports();
             for (auto&& viewport : viewports)
             {
                 auto width = static_cast<float>(viewport->getWidth());
                 auto height = static_cast<float>(viewport->getHeight());
                 auto aspectRatio = width / height;
-                camera.get().setAspectRatio(aspectRatio);
-                auto const& projectionMatrix = camera.get().getProjectionMatrix();
+                camera->setAspectRatio(aspectRatio);
+                auto const& projectionMatrix = camera->getProjectionMatrix();
 
                 auto* drawDataContext = backend::createDrawDataContext();
 
@@ -114,19 +114,19 @@ namespace tov
         for (auto&& camera : mCameras)
         {
             auto drawContext = DrawContext{};
-            camera.get().populateDrawContext(drawContext);
+            camera->populateDrawContext(drawContext);
 
             auto& nodes = drawContext.getSceneNodes();
-            auto const& viewMatrix = camera.get().getViewMatrix();
+            auto const& viewMatrix = camera->getViewMatrix();
 
-            auto& viewports = camera.get().getViewports();
+            auto& viewports = camera->getViewports();
             for (auto&& viewport : viewports)
             {
                 auto width = static_cast<float>(viewport->getWidth());
                 auto height = static_cast<float>(viewport->getHeight());
                 auto aspectRatio = width / height;
-                camera.get().setAspectRatio(aspectRatio);
-                auto const& projectionMatrix = camera.get().getProjectionMatrix();
+                camera->setAspectRatio(aspectRatio);
+                auto const& projectionMatrix = camera->getProjectionMatrix();
 
                 {
                     auto& command = bucket.addCommand<commands::ApplyViewport>(viewport->getZIndex());
@@ -146,7 +146,7 @@ namespace tov
 
                 for (auto&& node : nodes)
                 {
-                    auto const& modelMatrix = node->getTransform().getHomogeneousMatrix();
+                    auto const& modelMatrix = node->getDerivedTransform().getHomogeneousMatrix();
 
                     {
                         auto& command = bucket.addCommand<commands::SetMVP>(0);
@@ -184,7 +184,7 @@ namespace tov
     {
         for (auto&& camera : mCameras)
         {
-            camera.get().buildViewMatrix();
+            camera->buildViewMatrix();
         }
 
         //queueSkybox();

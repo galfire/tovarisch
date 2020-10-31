@@ -2,7 +2,7 @@
 
 #include <rendering/mesh/submesh_instance.h>
 #include <rendering/material_instance.h>
-#include <rendering/pipeline/texture_descriptor.h>
+#include <rendering/pipeline/texture_usage.h>
 
 namespace tov
 {
@@ -30,19 +30,19 @@ namespace tov
         {
             auto materialInstance = submeshInstance->getMaterialInstance();
 
-            std::vector<pipeline::TextureDescriptor> textureDescriptors;
+            std::vector<pipeline::TextureUsage> textureUsages;
             if (materialInstance)
             {
                 if (materialInstance->getAlbedoMap())
-                    textureDescriptors.emplace_back(materialInstance->getAlbedoMap(), 0);
+                    textureUsages.emplace_back(materialInstance->getAlbedoMap(), 0);
                 if (materialInstance->getNormalMap())
-                    textureDescriptors.emplace_back(materialInstance->getNormalMap(), 1);
+                    textureUsages.emplace_back(materialInstance->getNormalMap(), 1);
             }
 
             auto drawData = DrawData(
                 submeshInstance->getIndexBufferObject(),
                 submeshInstance->getVertexBufferObjects(),
-                textureDescriptors,
+                textureUsages,
                 materialInstance->getRasterizerStateDescriptor()
             );
             mDrawDataList.push_back(drawData);

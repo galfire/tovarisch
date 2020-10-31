@@ -3,6 +3,8 @@
 
 #include <tov/core/platform/platform.h>
 
+#define VERBOSE_GL_OUTPUT 0
+
 #if TOV_PLATFORM == TOV_PLATFORM_WIN
 #	include <Windows.h>
 #endif
@@ -66,7 +68,7 @@
 template<class... U>
 auto log_gl_op(const char* step, U&&... args)
 {
-#if TOV_DEBUG && 0
+#if TOV_DEBUG && VERBOSE_GL_OUTPUT
     return GLPrinter(step, std::forward<U>(args)...);
 #else
     return true;

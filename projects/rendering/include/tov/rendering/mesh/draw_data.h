@@ -6,7 +6,7 @@
 #include <tov/rendering/buffers/index_buffer_object.h>
 #include <tov/rendering/buffers/vertex_buffer_object.h>
 #include <tov/rendering/pipeline/rasterizer_state_descriptor.h>
-#include <tov/rendering/pipeline/texture_descriptor.h>
+#include <tov/rendering/pipeline/texture_usage.h>
 
 namespace tov
 {
@@ -19,12 +19,12 @@ namespace tov
         DrawData(
             buffers::IndexBufferObject const& indexBufferObject, 
             std::vector<buffers::VertexBufferObject*> const& vertexBufferObjects,
-            std::vector<pipeline::TextureDescriptor> const textureDescriptors,
+            std::vector<pipeline::TextureUsage> const textureUsages,
             pipeline::RasterizerStateDescriptor rasterizerStateDescriptor
         ) noexcept
             : mIndexBufferObject(indexBufferObject)
             , mVertexBufferObjects(vertexBufferObjects)
-            , mTextureDescriptors(textureDescriptors)
+            , mTextureUsages(textureUsages)
             , mRasterizerStateDescriptor(rasterizerStateDescriptor)
         {}
 
@@ -32,13 +32,13 @@ namespace tov
 
         auto getIndexBufferObject() const -> auto const& { return mIndexBufferObject; }
         auto getVertexBufferObjects() const -> auto const& { return mVertexBufferObjects; }
-        auto getTextureDescriptors() const -> auto const& { return mTextureDescriptors; }
+        auto getTextureUsages() const -> auto const& { return mTextureUsages; }
         auto getRasterizerStateDescriptor() const { return mRasterizerStateDescriptor; }
 
     private:
         buffers::IndexBufferObject const& mIndexBufferObject;
         std::vector<buffers::VertexBufferObject*> const& mVertexBufferObjects;
-        std::vector<pipeline::TextureDescriptor> const mTextureDescriptors;
+        std::vector<pipeline::TextureUsage> const mTextureUsages;
         pipeline::RasterizerStateDescriptor mRasterizerStateDescriptor;
     };
 

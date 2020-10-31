@@ -5,7 +5,6 @@
 #define TOV_COMPILER_MSVC		1
 #define TOV_COMPILER_CLANG		2
 #define TOV_COMPILER_GCC		3
-#define TOV_COMPILER_EMCC		4
 
 #if 0
 #

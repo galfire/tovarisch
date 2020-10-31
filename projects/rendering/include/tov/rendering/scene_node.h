@@ -26,7 +26,6 @@ namespace tov
         auto getChildren() const -> auto& { return mChildren; }
 
         void attachSceneObject(SceneObject* sceneObject);
-        auto getSceneObjects() -> auto& { return mSceneObjects; }
         auto getSceneObjects() const { return mSceneObjects; }
 
     private:

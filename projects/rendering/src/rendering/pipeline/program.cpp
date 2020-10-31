@@ -11,12 +11,15 @@ namespace tov
 
     auto Program::instantiate() -> ProgramInstance&
     {
-        auto instance = std::unique_ptr<ProgramInstance>(
-            new ProgramInstance(*this, mCPUBufferDescriptor)
-        );
-        mInstances.push_back(std::move(instance));
-        auto ret = mInstances.back().get();
-        return *ret;
+        {
+            auto instance = std::unique_ptr<ProgramInstance>(
+                new ProgramInstance(*this, mCPUBufferDescriptor)
+            );
+            mInstances.push_back(std::move(instance));
+        }
+
+        auto instance = mInstances.back().get();
+        return *instance;
     }
 
     void Program::attachShader(Shader& shader)

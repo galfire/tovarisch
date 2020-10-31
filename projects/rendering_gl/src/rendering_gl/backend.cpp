@@ -130,18 +130,6 @@ namespace tov
         default: return "UNKNOWN";
         }
     }
-
-    void SetIndexBuffer(buffers::IndexBufferObject const& indexBufferObject)
-    {
-        //using Buffer = rendering::gl::buffers::Buffer<buffers::UsageSettings::STATIC, buffers::AccessSettings::WRITE>;
-
-        //auto& indexBuffer = static_cast<Buffer&>(indexBufferObject.getBuffer());
-        //auto bindIndex = indexBuffer.binder();
-
-        auto& indexBuffer = indexBufferObject.getBuffer();
-        auto& bindable = dynamic_cast<rendering::gl::Bindable&>(indexBuffer);
-        bindable.bind();
-    }
     
     void DrawIndexed(uint numIndices, tov::rendering::buffers::IndexType indexType)
     {
@@ -175,13 +163,13 @@ namespace tov
         auto rasterizerStateDescriptor = drawData->getRasterizerStateDescriptor();
         gl::SetRasterizerState(rasterizerStateDescriptor);
 
-        auto textureDescriptors = drawData->getTextureDescriptors();
+        auto textureUsages = drawData->getTextureUsages();
 
-        for (auto&& textureDescriptor : textureDescriptors)
+        for (auto&& textureUsage : textureUsages)
         {
-            auto texture = static_cast<rendering::gl::texture::Texture2D const*>(textureDescriptor.texture);
-            auto slot = textureDescriptor.slot;
-            texture->activate(textureDescriptor.slot);
+            auto texture = static_cast<rendering::gl::texture::Texture2D const*>(textureUsage.texture);
+            auto slot = textureUsage.slot;
+            texture->activate(textureUsage.slot);
         }
 
         // Bind the index buffer and vertex buffers before drawing
@@ -256,10 +244,10 @@ namespace tov
             DrawIndexed(ibo.getNumIndices(), ibo.getIndexType());
         }
 
-        for (auto&& textureDescriptor : textureDescriptors)
+        for (auto&& textureUsage : textureUsages)
         {
-            auto texture = static_cast<rendering::gl::texture::Texture2D const*>(textureDescriptor.texture);
-            auto slot = textureDescriptor.slot;
+            auto texture = static_cast<rendering::gl::texture::Texture2D const*>(textureUsage.texture);
+            auto slot = textureUsage.slot;
             texture->deactivate(slot);
         }
 

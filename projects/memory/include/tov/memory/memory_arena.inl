@@ -25,7 +25,7 @@ namespace tov
             The required size of the user requested memory is equal to the
             requested size plus the size of overhead.
         */
-        const size_t requiredSize = size + OVERHEAD_REQUIREMENT;
+        const auto requiredSize = size + OVERHEAD_REQUIREMENT;
 
         /*	The space to store the user allocation in
 
@@ -33,8 +33,8 @@ namespace tov
             shift the user requested memory to an aligned location.
         */
         // The amount of space needed to accommodate alignment
-        size_t alignmentSpace = mAlignmentPolicy.determineAlignmentSpace(alignment);
-        size_t space = requiredSize + alignmentSpace;
+        const auto alignmentSpace = mAlignmentPolicy.determineAlignmentSpace(alignment);
+        auto space = requiredSize + alignmentSpace;
 
         //
         // 1. Allocation Policy: Allocate the memory
@@ -114,7 +114,7 @@ namespace tov
             by the allocation policy). Therefore, we subtract the overhead and alignment space
             to get the requested size (with any extra policy-specific size requirements).
         */
-        size_t allocationSize = mAllocationPolicy.getAllocationSize(allocation);
+        auto allocationSize = mAllocationPolicy.getAllocationSize(allocation);
         asByte += allocationSize - (OVERHEAD_REQUIREMENT + alignmentSpace);
         mBoundsSigner.signEnd(asRaw);
 

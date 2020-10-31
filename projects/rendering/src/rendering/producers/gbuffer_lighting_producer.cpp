@@ -98,17 +98,17 @@ namespace tov
         auto textureNormal = reinterpret_cast<texture::Texture*>(getResource("normalTexture"));
         auto textureAlbedo = reinterpret_cast<texture::Texture*>(getResource("albedoTexture"));
 
-        std::vector<pipeline::TextureDescriptor> textureDescriptors;
-        textureDescriptors.emplace_back(texturePosition, 0);
-        textureDescriptors.emplace_back(textureNormal, 1);
-        textureDescriptors.emplace_back(textureAlbedo, 2);
+        std::vector<pipeline::TextureUsage> textureUsages;
+        textureUsages.emplace_back(texturePosition, 0);
+        textureUsages.emplace_back(textureNormal, 1);
+        textureUsages.emplace_back(textureAlbedo, 2);
 
         pipeline::RasterizerStateDescriptor rasterizerStateDescriptor;
 
         auto drawData = mesh::DrawData(
             submeshInstance.getIndexBufferObject(),
             submeshInstance.getVertexBufferObjects(),
-            textureDescriptors,
+            textureUsages,
             rasterizerStateDescriptor
         );
 

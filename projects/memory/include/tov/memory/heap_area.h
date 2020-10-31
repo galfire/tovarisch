@@ -7,29 +7,29 @@
 
 namespace tov
 {
-	TOV_NAMESPACE_BEGIN(memory)
+    TOV_NAMESPACE_BEGIN(memory)
 
-	class HeapArea
-	{
-	public:
-		inline explicit HeapArea(const size_t size) noexcept;
-		inline ~HeapArea() noexcept = default;
+    class HeapArea
+    {
+    public:
+        inline explicit HeapArea(const size_t size) noexcept;
+        inline ~HeapArea() noexcept = default;
 
-		inline size_t getSize() const noexcept;
-		inline void* getStart() const noexcept;
-		inline void* getEnd() const noexcept;
+        inline size_t getSize() const noexcept;
+        inline void* getStart() const noexcept;
+        inline void* getEnd() const noexcept;
 
-	private:
-		void* mStart = nullptr;
-		void* mEnd = nullptr;
+    private:
+        void* mStart = nullptr;
+        void* mEnd = nullptr;
 
-		using ByteArrayUPtr = std::unique_ptr<byte[]>;
-		ByteArrayUPtr mByteArray = nullptr;
-	};
+        using ByteArrayUPtr = std::unique_ptr<byte[]>;
+        ByteArrayUPtr mByteArray = nullptr;
+    };
 
-	using HeapAreaUPtr = std::unique_ptr<HeapArea>;
+    using HeapAreaUPtr = std::unique_ptr<HeapArea>;
 
-	TOV_NAMESPACE_END
+    TOV_NAMESPACE_END
 }
 
 #include "heap_area.inl"

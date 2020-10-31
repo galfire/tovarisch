@@ -82,15 +82,15 @@ namespace tov
         auto texture = reinterpret_cast<texture::Texture*>(getResource("gBufferLighting"));
         //auto texture = reinterpret_cast<texture::Texture*>(getResource("skyboxTexture"));
 
-        std::vector<pipeline::TextureDescriptor> textureDescriptors;
-        textureDescriptors.emplace_back(texture, 0);
+        std::vector<pipeline::TextureUsage> textureUsages;
+        textureUsages.emplace_back(texture, 0);
 
         pipeline::RasterizerStateDescriptor rasterizerStateDescriptor;
 
         auto drawData = mesh::DrawData(
             submeshInstance.getIndexBufferObject(),
             submeshInstance.getVertexBufferObjects(),
-            textureDescriptors,
+            textureUsages,
             rasterizerStateDescriptor
         );
 

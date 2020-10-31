@@ -206,7 +206,7 @@ int main(int argc, char** argv)
     {
         auto now = clock::now();
         auto deltaTime = now - currentTime;
-        std::cout << deltaTime.count() << "\n";
+        //std::cout << deltaTime.count() << "\n";
         currentTime = now;
 
         accumulator += deltaTime;

@@ -60,12 +60,10 @@ namespace tov
         std::unique_ptr<SceneNode> mRootNode;
 
         using SceneObjectList = std::vector<std::unique_ptr<SceneObject>>;
-        using CameraList = std::vector<std::reference_wrapper<Camera>>;
-        using EntityList = std::vector<std::reference_wrapper<Entity>>;
+        using CameraList = std::vector<Camera*>;
 
         SceneObjectList mSceneObjects;
         CameraList mCameras;
-        EntityList mEntities;
 
         Skybox* mSkybox;
     };

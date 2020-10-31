@@ -1,5 +1,5 @@
-#ifndef TOV_RENDERING_PIPELINE_TEXTURE_DESCRIPTOR_H
-#define TOV_RENDERING_PIPELINE_TEXTURE_DESCRIPTOR_H
+#ifndef TOV_RENDERING_PIPELINE_TEXTURE_USAGE_H
+#define TOV_RENDERING_PIPELINE_TEXTURE_USAGE_H
 
 #include <tov/rendering/rendering_core.h>
 
@@ -14,9 +14,9 @@ namespace tov
     TOV_NAMESPACE_BEGIN(rendering)
     TOV_NAMESPACE_BEGIN(pipeline)
 
-    struct TextureDescriptor
+    struct TextureUsage
     {
-        TextureDescriptor(texture::Texture const* texture, uint slot)
+        TextureUsage(texture::Texture const* texture, uint slot)
             : texture(texture)
             , slot(slot)
         {}
@@ -29,4 +29,4 @@ namespace tov
     TOV_NAMESPACE_END // rendering
 }
 
-#endif // !TOV_RENDERING_PIPELINE_SHADER_TYPE_H
+#endif

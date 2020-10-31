@@ -36,12 +36,15 @@ namespace tov
         template<class T, class... U>
         auto createComponent(U&&... args)
         {
-            auto component = std::unique_ptr<T>(
-                new T(std::forward<U>(args)...)
-            );
-            mComponents.push_back(std::move(component));
-            auto ret = mComponents.back().get();
-            return static_cast<T*>(ret);
+            {
+                auto component = std::unique_ptr<T>(
+                    new T(std::forward<U>(args)...)
+                );
+                mComponents.push_back(std::move(component));
+            }
+
+            auto component = mComponents.back().get();
+            return static_cast<T*>(component);
         }
 
     private:

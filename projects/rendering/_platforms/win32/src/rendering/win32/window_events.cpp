@@ -3,6 +3,9 @@
 #include <tov/rendering/window.h>
 #include <tov/rendering/window_platform_component.h>
 
+#include <windowsx.h>
+#include <iostream>
+
 namespace tov
 {
     TOV_NAMESPACE_BEGIN(rendering)
@@ -20,19 +23,19 @@ namespace tov
 
     LRESULT CALLBACK WindowEvents::wndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
     {
-        Window* window = nullptr;
+        auto window = (Window*)nullptr;
 
         if(msg == WM_CREATE)
         {
-            LPCREATESTRUCT lpcs = (LPCREATESTRUCT)lParam;
-            WindowPlatformComponent* component = static_cast<WindowPlatformComponent*>(lpcs->lpCreateParams);
+            auto lpcs = (LPCREATESTRUCT)lParam;
+            auto component = static_cast<WindowPlatformComponent*>(lpcs->lpCreateParams);
             SetWindowLongPtr(hWnd, GWLP_USERDATA, (LONG_PTR)component);
             window = &component->getParentWindow();
             return 0;
         }
         else
         {
-            WindowPlatformComponent* component = (WindowPlatformComponent*)GetWindowLongPtr(hWnd, GWLP_USERDATA);
+            auto component = (WindowPlatformComponent*)GetWindowLongPtr(hWnd, GWLP_USERDATA);
             if(component)
             {
                 window = &component->getParentWindow();
@@ -48,7 +51,7 @@ namespace tov
         {
             case WM_ACTIVATE:
             {
-                bool active = (LOWORD(wParam) != WA_INACTIVE);
+                auto active = (LOWORD(wParam) != WA_INACTIVE);
                 if (active)
                 {
                     //window->setActive(true);
@@ -114,6 +117,18 @@ namespace tov
                 PostQuitMessage(0);
                 return 0;
             }
+
+            case WM_LBUTTONDOWN:
+                printf("LEFT BUTTON DOWN\n");
+                return 0;
+            case WM_LBUTTONUP:
+                printf("LEFT BUTTON UP\n");
+                return 0;
+
+            case WM_MOUSEMOVE:
+                auto xPosition = GET_X_LPARAM(lParam);
+                auto yPosition = GET_Y_LPARAM(lParam);
+                std::cout << "X: " << xPosition << ", Y: " << yPosition << "\n";
         }
 
         // Pass All Unhandled Messages To DefWindowProc

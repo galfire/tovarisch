@@ -23,37 +23,37 @@
 
 namespace tov
 {
-	TOV_NAMESPACE_BEGIN(memory)
+    TOV_NAMESPACE_BEGIN(memory)
 
-	using AllocationPolicyLinear = policies::allocation::Linear;
-	using AllocationPolicyNewDelete = policies::allocation::NewDelete;
+    using AllocationPolicyLinear = policies::allocation::Linear;
+    using AllocationPolicyNewDelete = policies::allocation::NewDelete;
 
-	using AlignmentPolicyNone = policies::alignment::None;
-	using AlignmentPolicyStandard = policies::alignment::Standard;
+    using AlignmentPolicyNone = policies::alignment::None;
+    using AlignmentPolicyStandard = policies::alignment::Standard;
 
-	using ThreadPolicySingle = policies::thread::Single;
+    using ThreadPolicySingle = policies::thread::Single;
 
 #if TOV_DEBUG
-	using BoundsPolicy = policies::bounds::Simple;
+    using BoundsPolicy = policies::bounds::Simple;
 #else
-	using BoundsPolicy = policies::bounds::None;
+    using BoundsPolicy = policies::bounds::None;
 #endif
 
-	using ArenaLinear = MemoryArena<
-		AllocationPolicyLinear, 
-		AlignmentPolicyStandard, 
-		ThreadPolicySingle, 
-		BoundsPolicy
-	>;
+    using ArenaLinear = MemoryArena<
+        AllocationPolicyLinear, 
+        AlignmentPolicyStandard, 
+        ThreadPolicySingle, 
+        BoundsPolicy
+    >;
 
-	using ArenaNewDelete = MemoryArena<
-		AllocationPolicyNewDelete,
-		AlignmentPolicyStandard,
-		ThreadPolicySingle,
-		BoundsPolicy
-	>;
+    using ArenaNewDelete = MemoryArena<
+        AllocationPolicyNewDelete,
+        AlignmentPolicyStandard,
+        ThreadPolicySingle,
+        BoundsPolicy
+    >;
 
-	TOV_NAMESPACE_END // memory
+    TOV_NAMESPACE_END // memory
 }
 
 #endif

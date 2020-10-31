@@ -5,31 +5,31 @@
 
 namespace tov
 {
-	TOV_NAMESPACE_BEGIN(memory)
-	TOV_NAMESPACE_BEGIN(policies)
-	TOV_NAMESPACE_BEGIN(bounds)
+    TOV_NAMESPACE_BEGIN(memory)
+    TOV_NAMESPACE_BEGIN(policies)
+    TOV_NAMESPACE_BEGIN(bounds)
 
-	class None
-	{
-	public:
-		// Number of bytes in the start bound guard
-		constexpr static size_t FRONT_BOUND_SIZE = 0;
-		// Number of bytes in the end bound guard
-		constexpr static size_t END_BOUND_SIZE = 0;
+    class None
+    {
+    public:
+        // Number of bytes in the start bound guard
+        constexpr static size_t FRONT_BOUND_SIZE = 0;
+        // Number of bytes in the end bound guard
+        constexpr static size_t END_BOUND_SIZE = 0;
 
-		constexpr static size_t TOTAL_BOUND_SIZE = FRONT_BOUND_SIZE + END_BOUND_SIZE;
+        constexpr static size_t TOTAL_BOUND_SIZE = FRONT_BOUND_SIZE + END_BOUND_SIZE;
 
-	public:
-		inline void signFront(void* memory) {}
-		inline void signEnd(void* memory) {}
+    public:
+        inline void signFront(void* memory) {}
+        inline void signEnd(void* memory) {}
 
-		inline bool checkFrontSignature(void* memory) const { return true; }
-		inline bool checkEndSignature(void* memory) const { return true; }
-	};
+        inline bool checkFrontSignature(void* memory) const { return true; }
+        inline bool checkEndSignature(void* memory) const { return true; }
+    };
 
-	TOV_NAMESPACE_END // bounds
-	TOV_NAMESPACE_END // policies
-	TOV_NAMESPACE_END // memory
+    TOV_NAMESPACE_END // bounds
+    TOV_NAMESPACE_END // policies
+    TOV_NAMESPACE_END // memory
 }
 
 #endif
