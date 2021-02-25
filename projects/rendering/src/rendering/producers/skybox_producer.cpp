@@ -32,8 +32,8 @@ namespace tov
         mFramebuffer = backend::createFramebuffer();
 
         auto pixelFormat = PixelFormat(8, 8, 8, 8, 0, 0);
-        auto width = 1280;
-        auto height = 720;
+        auto width = 800;
+        auto height = 600;
         {
             mTexture = &mRenderSystem.createTexture2D(width, height, pixelFormat);
             mFramebuffer->attachTexture(

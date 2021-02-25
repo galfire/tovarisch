@@ -4,7 +4,7 @@ project(simde NONE)
 
 include(ExternalProject)
 ExternalProject_Add(simde
-  GIT_REPOSITORY    https://github.com/nemequ/simde.git
+  GIT_REPOSITORY    https://github.com/simd-everywhere/simde
   GIT_TAG           master
   SOURCE_DIR        "${CMAKE_CURRENT_BINARY_DIR}/simde/src"
   BINARY_DIR        "${CMAKE_CURRENT_BINARY_DIR}/simde/build"

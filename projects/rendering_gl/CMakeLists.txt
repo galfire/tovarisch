@@ -50,13 +50,14 @@ if(${GL_IMPL} EQUAL ${GL_IMPL_GL})
         
         target_compile_definitions(rendering_gl PUBLIC GLEW_STATIC)
         
+        # GLEW
         add_library(glew STATIC IMPORTED)
-        set_target_properties(glew PROPERTIES IMPORTED_LOCATION ${CMAKE_SOURCE_DIR}/projects/rendering_gl/lib/Win32/glew32s.lib)
+        set_target_properties(glew PROPERTIES IMPORTED_LOCATION ${CMAKE_SOURCE_DIR}/vendor/Win32/glew32s.lib)
         target_link_libraries(rendering_gl glew)
 
-        add_library(glfw STATIC IMPORTED)
-        set_target_properties(glfw PROPERTIES IMPORTED_LOCATION ${CMAKE_SOURCE_DIR}/projects/rendering_gl/lib/Win32/glfw3.lib)
-        target_link_libraries(rendering_gl glfw)
+        #add_library(glfw STATIC IMPORTED)
+        #set_target_properties(glfw PROPERTIES IMPORTED_LOCATION ${CMAKE_SOURCE_DIR}/projects/rendering_gl/lib/Win32/glfw3.lib)
+        #target_link_libraries(rendering_gl glfw)
     else()
         message("Platform is not compatible with OpenGL!")
     endif()

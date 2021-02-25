@@ -187,7 +187,7 @@ namespace tov
             camera->buildViewMatrix();
         }
 
-        //queueSkybox();
+        queueSkybox();
         queueGBuffer();
     }
 

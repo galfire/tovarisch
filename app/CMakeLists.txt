@@ -35,8 +35,10 @@ add_custom_command(TARGET app POST_BUILD
 if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
     include_directories(${CMAKE_SOURCE_DIR}/projects/rendering/_platforms/win32/include)
     include_directories(${CMAKE_SOURCE_DIR}/projects/rendering_gl/_platforms/win32/include)
+
+    # GLEW
     add_library(glew STATIC IMPORTED)
-    set_target_properties(glew PROPERTIES IMPORTED_LOCATION ${CMAKE_SOURCE_DIR}/projects/rendering_gl/lib/Win32/glew32s.lib)
+    set_target_properties(glew PROPERTIES IMPORTED_LOCATION ${CMAKE_SOURCE_DIR}/vendor/Win32/glew32s.lib)
     target_link_libraries(app glew)
 endif()
 
