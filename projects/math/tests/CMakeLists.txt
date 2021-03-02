@@ -6,7 +6,10 @@ set(TARGET_NAME math_tests)
 include(${CMAKE_SOURCE_DIR}/projects/cmake/debug.cmake)
 
 include_directories(${DOCTEST_DIR}/doctest)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR})
+
 include_directories(${CMAKE_SOURCE_DIR}/projects/math/include)
+
 target_link_libraries(math_tests math)
 
 enable_testing()
