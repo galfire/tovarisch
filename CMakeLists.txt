@@ -10,7 +10,7 @@ project ("tovarisch")
 ###
 # SIMDe
 
-configure_file(simde.cmake simde/download/CMakeLists.txt)
+configure_file(vendor/external/simde.cmake simde/download/CMakeLists.txt)
 execute_process(COMMAND "${CMAKE_COMMAND}" -G "${CMAKE_GENERATOR}" .
   RESULT_VARIABLE result
   WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/simde/download)
@@ -29,7 +29,7 @@ set(SIMDE_DIR ${CMAKE_CURRENT_BINARY_DIR}/simde/src/)
 ###
 # stb
 
-configure_file(stb.cmake stb/download/CMakeLists.txt)
+configure_file(vendor/external/stb.cmake stb/download/CMakeLists.txt)
 execute_process(COMMAND "${CMAKE_COMMAND}" -G "${CMAKE_GENERATOR}" .
   RESULT_VARIABLE result
   WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/stb/download)
@@ -46,23 +46,23 @@ endif()
 set(STB_DIR ${CMAKE_CURRENT_BINARY_DIR}/stb/src/)
 
 ### 
-# Catch
+# doctest
 
-configure_file(catch.cmake catch/download/CMakeLists.txt)
+configure_file(vendor/external/doctest.cmake doctest/download/CMakeLists.txt)
 execute_process(COMMAND "${CMAKE_COMMAND}" -G "${CMAKE_GENERATOR}" .
   RESULT_VARIABLE result
-  WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/catch/download)
+  WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/doctest/download)
 if(result)
-  message(FATAL_ERROR "CMake step for Catch failed: ${result}")
+  message(FATAL_ERROR "CMake step for doctest failed: ${result}")
 endif()
 execute_process(COMMAND "${CMAKE_COMMAND}" --build .
   RESULT_VARIABLE result
-  WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/catch/download)
+  WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/doctest/download)
 if(result)
-  message(FATAL_ERROR "CMake step for Catch failed: ${result}")
+  message(FATAL_ERROR "CMake step for doctest failed: ${result}")
 endif()
 
-set(CATCH_DIR ${CMAKE_CURRENT_BINARY_DIR}/catch/src/)
+set(DOCTEST_DIR ${CMAKE_CURRENT_BINARY_DIR}/doctest/src/)
 
 # Include sub-projects.
 

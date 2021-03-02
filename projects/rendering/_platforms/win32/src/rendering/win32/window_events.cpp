@@ -128,7 +128,7 @@ namespace tov
             case WM_MOUSEMOVE:
                 auto xPosition = GET_X_LPARAM(lParam);
                 auto yPosition = GET_Y_LPARAM(lParam);
-                std::cout << "X: " << xPosition << ", Y: " << yPosition << "\n";
+                //std::cout << "X: " << xPos    ition << ", Y: " << yPosition << "\n";
         }
 
         // Pass All Unhandled Messages To DefWindowProc
