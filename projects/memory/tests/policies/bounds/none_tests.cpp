@@ -1,4 +1,4 @@
-#include <catch2/catch.hpp>
+#include "../../test_helper.h"
 
 #include <cstring>
 
@@ -22,7 +22,7 @@ TEST_CASE("None", "[None]")
 			policy.signFront(buffer);
 
 			int compare = memcmp(original, buffer, sz);
-			REQUIRE(compare == 0);
+			CHECK(compare == 0);
 		}
 	}
 
@@ -36,7 +36,7 @@ TEST_CASE("None", "[None]")
 			policy.signEnd(buffer);
 
 			int compare = memcmp(original, buffer, sz);
-			REQUIRE(compare == 0);
+			CHECK(compare == 0);
 		}
 	}
 	
@@ -45,12 +45,12 @@ TEST_CASE("None", "[None]")
 		SECTION("returns true for signed memory")
 		{
 			policy.signFront(buffer);
-			REQUIRE(policy.checkFrontSignature(buffer));
+			CHECK(policy.checkFrontSignature(buffer));
 		}
 
 		SECTION("returns true for unsigned memory")
 		{
-			REQUIRE(policy.checkFrontSignature(buffer));
+			CHECK(policy.checkFrontSignature(buffer));
 		}
 	}
 
@@ -59,12 +59,12 @@ TEST_CASE("None", "[None]")
 		SECTION("returns true for signed memory")
 		{
 			policy.signEnd(buffer);
-			REQUIRE(policy.checkEndSignature(buffer));
+			CHECK(policy.checkEndSignature(buffer));
 		}
 
 		SECTION("returns true for unsigned memory")
 		{
-			REQUIRE(policy.checkEndSignature(buffer));
+			CHECK(policy.checkEndSignature(buffer));
 		}
 	}
 }

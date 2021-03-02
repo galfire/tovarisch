@@ -1,4 +1,4 @@
-#include <catch2/catch.hpp>
+#include "../../test_helper.h"
 
 #include <cstring>
 
@@ -23,7 +23,7 @@ TEST_CASE("Standard", "[Standard]")
 			size_t space = 256;
 			void* ptr = operator new(sz);
 			void* alignedPtr = policy.align(alignment, sz, ptr, space);
-			REQUIRE((uintptr_t)alignedPtr % alignment == 0);
+			CHECK((uintptr_t)alignedPtr % alignment == 0);
 		}
 	}
 
@@ -42,7 +42,7 @@ TEST_CASE("Standard", "[Standard]")
 			memcpy(expectedBuffer, &header, sizeof(BlockHeader));
 
 			int compare = memcmp(expectedBuffer, buffer, sizeof(BlockHeader));
-			REQUIRE(compare == 0);
+			CHECK(compare == 0);
 		}
 
 
@@ -50,7 +50,7 @@ TEST_CASE("Standard", "[Standard]")
 		{
 			void* ptr = &buffer;
 			policy.writeHeader(ptr, 32, 32);
-			REQUIRE((uintptr_t)ptr == (uintptr_t)&buffer + sizeof(BlockHeader));
+			CHECK((uintptr_t)ptr == (uintptr_t)&buffer + sizeof(BlockHeader));
 		}
 	}
 
@@ -67,8 +67,8 @@ TEST_CASE("Standard", "[Standard]")
 			size_t alignmentSpace;
 			ptrdiff_t alignmentOffset;
 			policy.readHeader(readPtr, alignmentSpace, alignmentOffset);
-			REQUIRE(alignmentSpace == 32);
-			REQUIRE(alignmentOffset == 16);
+			CHECK(alignmentSpace == 32);
+			CHECK(alignmentOffset == 16);
 		}
 
 		SECTION("moves the given pointer forward by the size of the header")
@@ -77,7 +77,7 @@ TEST_CASE("Standard", "[Standard]")
 			size_t alignmentSpace;
 			ptrdiff_t alignmentOffset;
 			policy.readHeader(readPtr, alignmentSpace, alignmentOffset);
-			REQUIRE((uintptr_t)readPtr == (uintptr_t)&buffer + sizeof(BlockHeader));
+			CHECK((uintptr_t)readPtr == (uintptr_t)&buffer + sizeof(BlockHeader));
 		}
 	}
 }

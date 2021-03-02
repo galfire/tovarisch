@@ -1,4 +1,4 @@
-#include <catch2/catch.hpp>
+#include "test_helper.h"
 
 #include <tov/memory/memory_arena.h>
 
@@ -28,7 +28,7 @@ TEST_CASE("MemoryArena", "[MemoryArena]")
 		SECTION("returns a valid pointer")
 		{
 			void* ptr = arena.allocate(64, 32);
-			REQUIRE(ptr != nullptr);
+			CHECK(ptr != nullptr);
 		}
 
 		SECTION("allocates a block of memory suitable for the specified size")
@@ -36,13 +36,13 @@ TEST_CASE("MemoryArena", "[MemoryArena]")
 			void* ptr = arena.allocate(sizeof(int), alignof(int));
 			int* value = static_cast<int*>(ptr);
 			*value = 42;
-			REQUIRE(*value == 42);
+			CHECK(*value == 42);
 		}
 
 		SECTION("allocates a block of memory aligned to the specified alignment")
 		{
 			void* ptr = arena.allocate(sizeof(int), alignof(int));
-			REQUIRE((uintptr_t)ptr % alignof(int) == 0);
+			CHECK((uintptr_t)ptr % alignof(int) == 0);
 		}
 	}
 

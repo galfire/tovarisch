@@ -1,4 +1,4 @@
-#include <catch2/catch.hpp>
+#include "test_helper.h"
 
 #include <tov/memory/heap_area.h>
 
@@ -11,7 +11,7 @@ TEST_CASE("HeapArea", "[HeapArea]")
 	{
 		SECTION("returns a valid pointer")
 		{
-			REQUIRE(area.getStart() != nullptr);
+			CHECK(area.getStart() != nullptr);
 		}
 	}
 
@@ -19,14 +19,14 @@ TEST_CASE("HeapArea", "[HeapArea]")
 	{
 		SECTION("returns a valid pointer")
 		{
-			REQUIRE(area.getEnd() != nullptr);
+			CHECK(area.getEnd() != nullptr);
 		}
 
 		SECTION("returns a pointer SIZE bytes after the start pointer")
 		{
 			void* start = area.getStart();
 			void* end = area.getEnd();
-			REQUIRE((uintptr_t)end - (uintptr_t)start == sz);
+			CHECK((uintptr_t)end - (uintptr_t)start == sz);
 		}
 	}
 
@@ -34,7 +34,7 @@ TEST_CASE("HeapArea", "[HeapArea]")
 	{
 		SECTION("returns the size of the HeapArea")
 		{
-			REQUIRE(area.getSize() == sz);
+			CHECK(area.getSize() == sz);
 		}
 	}
 }

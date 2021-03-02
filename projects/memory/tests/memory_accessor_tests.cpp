@@ -16,7 +16,7 @@ TEST_CASE("MemoryAcessor", "[MemoryAccessor]")
 			int i = 42;
 			accessor.write(&buffer, &i);
 			int compare = memcmp(&i, buffer, sizeof(int));
-			REQUIRE(compare == 0);
+			CHECK(compare == 0);
 		}
 	}
 
@@ -29,7 +29,7 @@ TEST_CASE("MemoryAcessor", "[MemoryAccessor]")
 		{
 			int out;
 			accessor.read(&buffer, out);
-			REQUIRE(out == 42);
+			CHECK(out == 42);
 		}
 	}
 }

@@ -1,4 +1,4 @@
-#include <catch2/catch.hpp>
+#include "../../test_helper.h"
 
 #include <tov/memory/policies/allocation/new_delete.h>
 
@@ -11,22 +11,22 @@ TEST_CASE("NewDelete", "[NewDelete]")
 		SECTION("returns a valid pointer")
 		{
 			void* ptr = policy.allocate(64);
-			REQUIRE(ptr != nullptr);
+			CHECK(ptr != nullptr);
 		}
 
 		SECTION("writes the allocation size to the buffer before the returned pointer")
 		{
 			void* ptr = policy.allocate(64);
 			size_t allocation_size = *((size_t*)ptr - 1);
-			REQUIRE(allocation_size == 64);
+			CHECK(allocation_size == 64);
 		}
 
 		SECTION("allocates space for type construction")
 		{
 			void* ptr = policy.allocate(sizeof(int));
 			int* value = new (ptr) int(42);
-			REQUIRE(value == ptr);
-			REQUIRE(*value == 42);
+			CHECK(value == ptr);
+			CHECK(*value == 42);
 		}
 	}
 
@@ -38,7 +38,7 @@ TEST_CASE("NewDelete", "[NewDelete]")
 		{
 			policy.deallocate(ptr);
 
-			// TODO: REQUIRE something
+			// TODO: CHECK something
 		}
 	}
 
@@ -49,7 +49,7 @@ TEST_CASE("NewDelete", "[NewDelete]")
 		SECTION("returns the size of the allocation at the given pointer in bytes")
 		{
 			size_t allocation_size = policy.getAllocationSize(ptr);
-			REQUIRE(allocation_size == 64);
+			CHECK(allocation_size == 64);
 		}
 	}
 }

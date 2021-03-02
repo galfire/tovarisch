@@ -1,4 +1,4 @@
-#include <catch2/catch.hpp>
+#include "test_helper.h"
 
 #include <cstring>
 
@@ -26,15 +26,15 @@ TEST_CASE("BoundsSigner", "[BoundsSigner]")
 			boundsSigner.signFront(ptr);
 			int compare = memcmp(expectedSignature, &buffer, signatureSize);
 			bool success = compare == 0;
-			REQUIRE(success);
-			//REQUIRE(compare == 0);
+			CHECK(success);
+			//CHECK(compare == 0);
 		}
 
 		SECTION("moves the given pointer forward by the size of the bounds policy front signature")
 		{
 			void* ptr = &buffer;
 			boundsSigner.signFront(ptr);
-			REQUIRE((uintptr_t)ptr == (uintptr_t)&buffer + signatureSize);
+			CHECK((uintptr_t)ptr == (uintptr_t)&buffer + signatureSize);
 		}
 	}
 
@@ -48,14 +48,14 @@ TEST_CASE("BoundsSigner", "[BoundsSigner]")
 			void* ptr = &buffer;
 			boundsSigner.signEnd(ptr);
 			int compare = memcmp(expectedSignature, &buffer, signatureSize);
-			REQUIRE(compare == 0);
+			CHECK(compare == 0);
 		}
 
 		SECTION("moves the given pointer forward by the size of the bounds policy end signature")
 		{
 			void* ptr = &buffer;
 			boundsSigner.signEnd(ptr);
-			REQUIRE((uintptr_t)ptr == (uintptr_t)&buffer + signatureSize);
+			CHECK((uintptr_t)ptr == (uintptr_t)&buffer + signatureSize);
 		}
 	}
 }

@@ -1,4 +1,4 @@
-#include <catch2/catch.hpp>
+#include "../../test_helper.h"
 
 #include <tov/memory/policies/allocation/linear.h>
 
@@ -16,34 +16,34 @@ TEST_CASE("Linear", "[Linear]")
         SECTION("returns a valid pointer")
         {
             void* ptr = policy.allocate(64);
-            REQUIRE(ptr != nullptr);
+            CHECK(ptr != nullptr);
         }
 
         SECTION("returns a pointer in the buffer")
         {
             void* ptr = policy.allocate(64);
-            REQUIRE(ptr >= start);
-            REQUIRE(ptr < end);
+            CHECK(ptr >= start);
+            CHECK(ptr < end);
         }
 
         SECTION("writes the allocation size to the buffer before the returned pointer")
         {
             void* ptr = policy.allocate(64);
             size_t allocation_size = *((size_t*)ptr - 1);
-            REQUIRE(allocation_size == 64);
+            CHECK(allocation_size == 64);
         }
 
         SECTION("throws an error when the allocation size is greater than the remaining space in the buffer")
         {
-            REQUIRE_THROWS_AS(policy.allocate(sz * 10), std::bad_alloc);
+            CHECK_THROWS_AS(policy.allocate(sz * 10), std::bad_alloc);
         }
 
         SECTION("allocates space for type construction")
         {
             void* ptr = policy.allocate(sizeof(int));
             int* value = new (ptr) int(42);
-            REQUIRE(value == ptr);
-            REQUIRE(*value == 42);
+            CHECK(value == ptr);
+            CHECK(*value == 42);
         }
     }
 
@@ -59,7 +59,7 @@ TEST_CASE("Linear", "[Linear]")
             policy.deallocate(ptr);
             
             int compare = memcmp(buffer, original, sz);
-            REQUIRE(compare == 0);
+            CHECK(compare == 0);
         }
     }
 
@@ -70,7 +70,7 @@ TEST_CASE("Linear", "[Linear]")
             void* ptr = policy.allocate(64);
             policy.reset();
             void* ptr2 = policy.allocate(64);
-            REQUIRE(ptr == ptr2);
+            CHECK(ptr == ptr2);
         }
     }
 
@@ -81,7 +81,7 @@ TEST_CASE("Linear", "[Linear]")
         SECTION("returns the size of the allocation at the given pointer in bytes")
         {
             size_t allocation_size = policy.getAllocationSize(ptr);
-            REQUIRE(allocation_size == 64);
+            CHECK(allocation_size == 64);
         }
     }
 }
