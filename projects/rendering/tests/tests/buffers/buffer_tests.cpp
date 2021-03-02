@@ -1,5 +1,4 @@
-#include "../test_helper.h"
-#include "buffer_test_helper.h"
+#include "test_helper.h"
 
 #include <tov/rendering/buffers/buffer.h>
 #include <tov/rendering/buffers/access_settings.h>
@@ -67,14 +66,14 @@ TEST_CASE("Buffer", "[Buffer]")
             SECTION("returns a lock pointer")
             {
                 auto lock = buffer.lock(LockSettings::READ);
-                REQUIRE(lock != nullptr);
+                CHECK(lock != nullptr);
             }
 
             SECTION("returns a lock pointer populated with the buffer data")
             {
                 auto lock = buffer.lock(LockSettings::READ);
                 auto i = *static_cast<int*>(lock);
-                REQUIRE(i == 42);
+                CHECK(i == 42);
                 buffer.unlock();
             }
         }
@@ -84,14 +83,14 @@ TEST_CASE("Buffer", "[Buffer]")
             SECTION("returns a lock pointer")
             {
                 void* lock = buffer.lock(LockSettings::NO_READ);
-                REQUIRE(lock != nullptr);
+                CHECK(lock != nullptr);
             }
 
             SECTION("returns a lock pointer without reading the buffer data")
             {
                 void* lock = buffer.lock(LockSettings::NO_READ);
                 int i = *static_cast<int*>(lock);
-                REQUIRE(i != 42);
+                CHECK(i != 42);
             }
         }
     }
@@ -112,7 +111,7 @@ TEST_CASE("Buffer", "[Buffer]")
                 int* lockInt = static_cast<int*>(lock);
                 *lockInt = 144;
                 buffer.unlock();
-                REQUIRE(*bufferStore == 144);
+                CHECK(*bufferStore == 144);
             }
         }
 
@@ -124,7 +123,7 @@ TEST_CASE("Buffer", "[Buffer]")
                 int* lockInt = static_cast<int*>(lock);
                 *lockInt = 144;
                 buffer.unlock();
-                REQUIRE(*bufferStore == 42);
+                CHECK(*bufferStore == 42);
             }
         }
     }
@@ -152,7 +151,7 @@ TEST_CASE("Buffer", "[Buffer]")
             }
 
             char expectedBufferStore[8]= { '1', '1', '1', '1', '2', '2', '2', '2' };
-            REQUIRE(memcmp(bufferStore, expectedBufferStore, sizeof(bufferStore)) == 0);
+            CHECK(memcmp(bufferStore, expectedBufferStore, sizeof(bufferStore)) == 0);
         }
     }
 }
@@ -183,6 +182,6 @@ TEST_CASE("Multiple buffers", "[Buffer]")
         }
 
         char expectedBufferStore[8] = { '1', '1', '1', '1', '2', '2', '2', '2' };
-        REQUIRE(memcmp(bufferStore, expectedBufferStore, sizeof(bufferStore)) == 0);
+        CHECK(memcmp(bufferStore, expectedBufferStore, sizeof(bufferStore)) == 0);
     }
 }

@@ -13,10 +13,10 @@ TEST_CASE("Quaternion", "[Quaternion]")
         SECTION("accepts arguments for w, x, y, and z")
         {
             tov::math::Quaternion q(1.0f, 2.0f, 3.0f, 4.0f);
-            REQUIRE(q.w == 1.0f);
-            REQUIRE(q.x == 2.0f);
-            REQUIRE(q.y == 3.0f);
-            REQUIRE(q.z == 4.0f);
+            CHECK(q.w == 1.0f);
+            CHECK(q.x == 2.0f);
+            CHECK(q.y == 3.0f);
+            CHECK(q.z == 4.0f);
         }
     }
 
@@ -27,10 +27,10 @@ TEST_CASE("Quaternion", "[Quaternion]")
             tov::math::Radian r(PI);
             tov::math::Vector3 axis(1.0f, 1.0f, 1.0f);
             tov::math::Quaternion q(r, axis);
-            REQUIRE(q.getAngle() == tov::math::Radian(PI));
+            CHECK(q.getAngle() == tov::math::Radian(PI));
             auto axis_expected = tov::math::Vector3(1.0f, 1.0f, 1.0f).normalize();
             auto axis_actual = q.getAxis();
-            REQUIRE(axis_actual == axis_expected);
+            CHECK(axis_actual == axis_expected);
         }
     }
 
@@ -44,9 +44,9 @@ TEST_CASE("Quaternion", "[Quaternion]")
 
             tov::math::Vector3 v(0.0f, 1.0f, 0.0f);
             tov::math::Vector3 v2 = q.rotate(v);
-            REQUIRE(v2.x == 0.0f);
-            REQUIRE(v2.y == -1.0f);
-            REQUIRE(v2.z == 0.0f);
+            CHECK(v2.x == 0.0f);
+            CHECK(v2.y == -1.0f);
+            CHECK(v2.z == 0.0f);
         }
 
         SECTION("can be invoked with the operator *")
@@ -57,9 +57,9 @@ TEST_CASE("Quaternion", "[Quaternion]")
 
             tov::math::Vector3 v(0.0f, 1.0f, 0.0f);
             tov::math::Vector3 v2 = q * v;
-            REQUIRE(v2.x == 0.0f);
-            REQUIRE(v2.y == -1.0f);
-            REQUIRE(v2.z == 0.0f);
+            CHECK(v2.x == 0.0f);
+            CHECK(v2.y == -1.0f);
+            CHECK(v2.z == 0.0f);
         }
     }
 
@@ -76,19 +76,19 @@ TEST_CASE("Quaternion", "[Quaternion]")
         SECTION("returns a quaternion that is the composition of this quaternion and the given quatenrion")
         {
             tov::math::Quaternion q3 = q1.accumulate(q2);
-            REQUIRE(q3.getAngle() == tov::math::Radian(PI));
+            CHECK(q3.getAngle() == tov::math::Radian(PI));
             auto axis_expected = tov::math::Vector3::UNIT_Z;
             auto axis_actual = q3.getAxis();
-            REQUIRE(axis_actual == axis_expected);
+            CHECK(axis_actual == axis_expected);
         }
 
         SECTION("can be invoked with the operator *")
         {
             tov::math::Quaternion q3 = q1 * q2;
-            REQUIRE(q3.getAngle() == tov::math::Radian(PI));
+            CHECK(q3.getAngle() == tov::math::Radian(PI));
             auto axis_expected = tov::math::Vector3::UNIT_Z;
             auto axis_actual = q3.getAxis();
-            REQUIRE(axis_actual == axis_expected);
+            CHECK(axis_actual == axis_expected);
         }
     }
 
@@ -105,19 +105,19 @@ TEST_CASE("Quaternion", "[Quaternion]")
         SECTION("sets this quaternion to the composition of this quaternion and the given quatenrion")
         {
             q1.accumulateAssign(q2);
-            REQUIRE(q1.getAngle() == tov::math::Radian(PI));
+            CHECK(q1.getAngle() == tov::math::Radian(PI));
             auto axis_expected = tov::math::Vector3::UNIT_Z;
             auto axis_actual = q1.getAxis();
-            REQUIRE(axis_actual == axis_expected);
+            CHECK(axis_actual == axis_expected);
         }
 
         SECTION("can be invoked with the operator *=")
         {
             q1 *= q2;
-            REQUIRE(q1.getAngle() == tov::math::Radian(PI));
+            CHECK(q1.getAngle() == tov::math::Radian(PI));
             auto axis_expected = tov::math::Vector3::UNIT_Z;
             auto axis_actual = q1.getAxis();
-            REQUIRE(axis_actual == axis_expected);
+            CHECK(axis_actual == axis_expected);
         }
     }
 
@@ -128,7 +128,7 @@ TEST_CASE("Quaternion", "[Quaternion]")
             tov::math::Radian r(PI);
             tov::math::Vector3 axis = tov::math::Vector3::UNIT_Z;
             tov::math::Quaternion q(r, axis);
-            REQUIRE(q.getAngle() == tov::math::Radian(PI));
+            CHECK(q.getAngle() == tov::math::Radian(PI));
         }
     }
 
@@ -139,7 +139,7 @@ TEST_CASE("Quaternion", "[Quaternion]")
             tov::math::Radian r(PI);
             tov::math::Vector3 axis = tov::math::Vector3::UNIT_Z;
             tov::math::Quaternion q(r, axis);
-            REQUIRE(q.getAxis() == tov::math::Vector3::UNIT_Z);
+            CHECK(q.getAxis() == tov::math::Vector3::UNIT_Z);
         }
     }
 
@@ -152,15 +152,15 @@ TEST_CASE("Quaternion", "[Quaternion]")
             tov::math::Quaternion q(r, axis);
             tov::math::Matrix3 m = q.toRotationMatrix();
 
-            REQUIRE(cmpf(m[0][0], tov::math::cos(r)));
-            REQUIRE(cmpf(m[0][1], -tov::math::sin(r)));
-            REQUIRE(cmpf(m[0][2], 0.0f));
-            REQUIRE(cmpf(m[1][0], tov::math::sin(r)));
-            REQUIRE(cmpf(m[1][1], tov::math::cos(r)));
-            REQUIRE(cmpf(m[1][2], 0.0f));
-            REQUIRE(cmpf(m[2][0], 0.0f));
-            REQUIRE(cmpf(m[2][1], 0.0f));
-            REQUIRE(cmpf(m[2][2], 1.0f));
+            CHECK(cmpf(m[0][0], tov::math::cos(r)));
+            CHECK(cmpf(m[0][1], -tov::math::sin(r)));
+            CHECK(cmpf(m[0][2], 0.0f));
+            CHECK(cmpf(m[1][0], tov::math::sin(r)));
+            CHECK(cmpf(m[1][1], tov::math::cos(r)));
+            CHECK(cmpf(m[1][2], 0.0f));
+            CHECK(cmpf(m[2][0], 0.0f));
+            CHECK(cmpf(m[2][1], 0.0f));
+            CHECK(cmpf(m[2][2], 1.0f));
         }
     }
 }

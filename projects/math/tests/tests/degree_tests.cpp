@@ -10,7 +10,7 @@ TEST_CASE("Degree", "[Degree]")
         SECTION("returns the value in degrees")
         {
             tov::math::Degree d(90.0f);
-            REQUIRE(d.valueDegrees() == 90.0f);
+            CHECK(d.valueDegrees() == 90.0f);
         }
     }
 
@@ -21,7 +21,7 @@ TEST_CASE("Degree", "[Degree]")
             tov::math::Degree degArg(90.0f);
             tov::math::Degree d(0.0f);
             d = degArg;
-            REQUIRE(d.valueDegrees() == 90.0f);
+            CHECK(d.valueDegrees() == 90.0f);
         }
     }
 
@@ -31,7 +31,7 @@ TEST_CASE("Degree", "[Degree]")
         {
             tov::math::Degree degArg(90.0f);
             tov::math::Degree d = +degArg;
-            REQUIRE(d.valueDegrees() == 90.0f);
+            CHECK(d.valueDegrees() == 90.0f);
         }
     }
 
@@ -41,7 +41,7 @@ TEST_CASE("Degree", "[Degree]")
         {
             tov::math::Degree degArg(90.0f);
             tov::math::Degree d = -degArg;
-            REQUIRE(d.valueDegrees() == -90.0f);
+            CHECK(d.valueDegrees() == -90.0f);
         }
     }
 
@@ -52,7 +52,7 @@ TEST_CASE("Degree", "[Degree]")
             tov::math::Degree d1(90.0f);
             tov::math::Degree d2(90.0f);
             tov::math::Degree dSum = d1 + d2;
-            REQUIRE(dSum.valueDegrees() == 180.0f);
+            CHECK(dSum.valueDegrees() == 180.0f);
         }
     }
 
@@ -63,7 +63,7 @@ TEST_CASE("Degree", "[Degree]")
             tov::math::Degree d1(90.0f);
             tov::math::Degree d2(90.0f);
             d1 += d2;
-            REQUIRE(d1.valueDegrees() == 180.0f);
+            CHECK(d1.valueDegrees() == 180.0f);
         }
     }
 
@@ -74,7 +74,7 @@ TEST_CASE("Degree", "[Degree]")
             tov::math::Degree d1(90.0f);
             tov::math::Degree d2(90.0f);
             tov::math::Degree dDiff = d1 - d2;
-            REQUIRE(dDiff.valueDegrees() == 0.0f);
+            CHECK(dDiff.valueDegrees() == 0.0f);
         }
     }
 
@@ -85,7 +85,7 @@ TEST_CASE("Degree", "[Degree]")
             tov::math::Degree d1(90.0f);
             tov::math::Degree d2(90.0f);
             d1 -= d2;
-            REQUIRE(d1.valueDegrees() == 0.0f);
+            CHECK(d1.valueDegrees() == 0.0f);
         }
     }
 
@@ -95,7 +95,7 @@ TEST_CASE("Degree", "[Degree]")
         {
             tov::math::Degree d1(90.0f);
             tov::math::Degree dProduct = d1 * 4;
-            REQUIRE(dProduct.valueDegrees() == 360.0f);
+            CHECK(dProduct.valueDegrees() == 360.0f);
         }
     }
 
@@ -105,7 +105,7 @@ TEST_CASE("Degree", "[Degree]")
         {
             tov::math::Degree d1(90.0f);
             d1 *= 4;
-            REQUIRE(d1.valueDegrees() == 360.0f);
+            CHECK(d1.valueDegrees() == 360.0f);
         }
     }
 
@@ -115,7 +115,7 @@ TEST_CASE("Degree", "[Degree]")
         {
             tov::math::Degree d1(360.0f);
             tov::math::Degree dQuotient = d1 / 4;
-            REQUIRE(dQuotient.valueDegrees() == 90.0f);
+            CHECK(dQuotient.valueDegrees() == 90.0f);
         }
     }
 
@@ -125,7 +125,7 @@ TEST_CASE("Degree", "[Degree]")
         {
             tov::math::Degree d1(360.0f);
             d1 /= 4;
-            REQUIRE(d1.valueDegrees() == 90.0f);
+            CHECK(d1.valueDegrees() == 90.0f);
         }
     }
 
@@ -135,14 +135,14 @@ TEST_CASE("Degree", "[Degree]")
         {
             tov::math::Degree d1(90.0f);
             tov::math::Degree d2(90.0f);
-            REQUIRE(d1 == d2);
+            CHECK(d1 == d2);
         }
 
         SECTION("returns false when the LHS and RHS degrees are not equal")
         {
             tov::math::Degree d1(90.0f);
             tov::math::Degree d2(270.0f);
-            REQUIRE_FALSE(d1 == d2);
+            CHECK_FALSE(d1 == d2);
         }
     }
 
@@ -152,14 +152,14 @@ TEST_CASE("Degree", "[Degree]")
         {
             tov::math::Degree d1(90.0f);
             tov::math::Degree d2(90.0f);
-            REQUIRE_FALSE(d1 != d2);
+            CHECK_FALSE(d1 != d2);
         }
 
         SECTION("returns true when the LHS and RHS degrees are not equal")
         {
             tov::math::Degree d1(90.0f);
             tov::math::Degree d2(270.0f);
-            REQUIRE(d1 != d2);
+            CHECK(d1 != d2);
         }
     }
 
@@ -169,21 +169,21 @@ TEST_CASE("Degree", "[Degree]")
         {
             tov::math::Degree d1(45.0f);
             tov::math::Degree d2(90.0f);
-            REQUIRE(d1 < d2);
+            CHECK(d1 < d2);
         }
 
         SECTION("returns false when the LHS degree is greater than the RHS degree")
         {
             tov::math::Degree d1(90.0f);
             tov::math::Degree d2(45.0f);
-            REQUIRE_FALSE(d1 < d2);
+            CHECK_FALSE(d1 < d2);
         }
 
         SECTION("returns false when the LHS degree is equal to the RHS degree")
         {
             tov::math::Degree d1(90.0f);
             tov::math::Degree d2(90.0f);
-            REQUIRE_FALSE(d1 < d2);
+            CHECK_FALSE(d1 < d2);
         }
     }
 
@@ -193,21 +193,21 @@ TEST_CASE("Degree", "[Degree]")
         {
             tov::math::Degree d1(45.0f);
             tov::math::Degree d2(90.0f);
-            REQUIRE(d1 <= d2);
+            CHECK(d1 <= d2);
         }
 
         SECTION("returns false when the LHS degree is greater than the RHS degree")
         {
             tov::math::Degree d1(90.0f);
             tov::math::Degree d2(45.0f);
-            REQUIRE_FALSE(d1 <= d2);
+            CHECK_FALSE(d1 <= d2);
         }
 
         SECTION("returns true when the LHS degree is equal to the RHS degree")
         {
             tov::math::Degree d1(90.0f);
             tov::math::Degree d2(90.0f);
-            REQUIRE(d1 <= d2);
+            CHECK(d1 <= d2);
         }
     }
 
@@ -217,21 +217,21 @@ TEST_CASE("Degree", "[Degree]")
         {
             tov::math::Degree d1(45.0f);
             tov::math::Degree d2(90.0f);
-            REQUIRE_FALSE(d1 > d2);
+            CHECK_FALSE(d1 > d2);
         }
 
         SECTION("returns true when the LHS degree is greater than the RHS degree")
         {
             tov::math::Degree d1(90.0f);
             tov::math::Degree d2(45.0f);
-            REQUIRE(d1 > d2);
+            CHECK(d1 > d2);
         }
 
         SECTION("returns false when the LHS degree is equal to the RHS degree")
         {
             tov::math::Degree d1(90.0f);
             tov::math::Degree d2(90.0f);
-            REQUIRE_FALSE(d1 > d2);
+            CHECK_FALSE(d1 > d2);
         }
     }
 
@@ -241,21 +241,21 @@ TEST_CASE("Degree", "[Degree]")
         {
             tov::math::Degree d1(45.0f);
             tov::math::Degree d2(90.0f);
-            REQUIRE_FALSE(d1 >= d2);
+            CHECK_FALSE(d1 >= d2);
         }
 
         SECTION("returns true when the LHS degree is greater than the RHS degree")
         {
             tov::math::Degree d1(90.0f);
             tov::math::Degree d2(45.0f);
-            REQUIRE(d1 >= d2);
+            CHECK(d1 >= d2);
         }
 
         SECTION("returns true when the LHS degree is equal to the RHS degree")
         {
             tov::math::Degree d1(90.0f);
             tov::math::Degree d2(90.0f);
-            REQUIRE(d1 >= d2);
+            CHECK(d1 >= d2);
         }
     }
 
@@ -265,7 +265,7 @@ TEST_CASE("Degree", "[Degree]")
         {
             tov::math::Radian r(2.0f * tov::math::PI);
             tov::math::Degree d(r);
-            REQUIRE(d.valueDegrees() == 360.0f);
+            CHECK(d.valueDegrees() == 360.0f);
         }
     }
 
@@ -275,7 +275,7 @@ TEST_CASE("Degree", "[Degree]")
         {
             tov::math::Degree d(360.0f);
             tov::math::Radian r = d.toRadian();
-            REQUIRE(r.valueRadians() == 2.0f * tov::math::PI);
+            CHECK(r.valueRadians() == 2.0f * tov::math::PI);
         }
     }
 
@@ -285,7 +285,7 @@ TEST_CASE("Degree", "[Degree]")
         {
             tov::math::Degree d(180.0f);
             float vr = d.valueRadians();
-            REQUIRE(vr == tov::math::PI);
+            CHECK(vr == tov::math::PI);
         }
     }
 
@@ -295,7 +295,7 @@ TEST_CASE("Degree", "[Degree]")
         {
             using namespace tov::math;
             tov::math::Degree d = 180.0_deg;
-            REQUIRE(d.valueDegrees() == 180.0f);
+            CHECK(d.valueDegrees() == 180.0f);
         }
     }
 }

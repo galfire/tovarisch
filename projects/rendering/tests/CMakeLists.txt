@@ -6,6 +6,8 @@ set(TARGET_NAME rendering_tests)
 include(${CMAKE_SOURCE_DIR}/projects/cmake/debug.cmake)
 
 include_directories(${DOCTEST_DIR}/doctest)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR})
+
 include_directories(${CMAKE_SOURCE_DIR}/projects/rendering/include)
 
 target_link_libraries(rendering_tests rendering)

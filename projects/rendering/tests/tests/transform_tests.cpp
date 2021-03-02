@@ -15,19 +15,19 @@ TEST_CASE("Transform", "[Transform]")
         SECTION("sets the translation vector to the zero vector")
         {
             auto translation = transform.getTranslation();
-            REQUIRE(translation == tov::math::Vector3::ZERO);
+            CHECK(translation == tov::math::Vector3::ZERO);
         }
 
         SECTION("sets the rotation quaternion to the identity quaternion")
         {
             auto rotation = transform.getRotationQuaternion();
-            REQUIRE(rotation == tov::math::Quaternion::IDENTITY);
+            CHECK(rotation == tov::math::Quaternion::IDENTITY);
         }
 
         SECTION("sets the scale vector to the unit scale vector")
         {
             auto scale = transform.getScale();
-            REQUIRE(scale == tov::math::Vector3::UNIT_SCALE);
+            CHECK(scale == tov::math::Vector3::UNIT_SCALE);
         }
     }
 
@@ -41,19 +41,19 @@ TEST_CASE("Transform", "[Transform]")
         SECTION("sets the translation vector to the given vector")
         {
             auto translation = transform.getTranslation();
-            REQUIRE(translation == expectedTranslation);
+            CHECK(translation == expectedTranslation);
         }
 
         SECTION("sets the rotation quaternion to the given quaternion")
         {
             auto rotation = transform.getRotationQuaternion();
-            REQUIRE(rotation == expectedRotation);
+            CHECK(rotation == expectedRotation);
         }
 
         SECTION("sets the scale vector to the given vector")
         {
             auto scale = transform.getScale();
-            REQUIRE(scale == expectedScale);
+            CHECK(scale == expectedScale);
         }
     }
 
@@ -73,9 +73,9 @@ TEST_CASE("Transform", "[Transform]")
             auto rotation = transform.getRotationQuaternion();
             auto scale = transform.getScale();
 
-            REQUIRE(translation == expectedTranslation);
-            REQUIRE(rotation == expectedRotation);
-            REQUIRE(scale == expectedScale);
+            CHECK(translation == expectedTranslation);
+            CHECK(rotation == expectedRotation);
+            CHECK(scale == expectedScale);
         }
     }
 
@@ -86,7 +86,7 @@ TEST_CASE("Transform", "[Transform]")
 
         SECTION("returns true when the LHS and RHS transforms are equal")
         {
-            REQUIRE(transform1 == transform2);
+            CHECK(transform1 == transform2);
         }
 
         SECTION("returns false when the LHS and RHS transforms are not equal")
@@ -111,7 +111,7 @@ TEST_CASE("Transform", "[Transform]")
         {
             transform2.translate(tov::math::Vector3(1.0f, 1.0f, 1.0f));
 
-            REQUIRE(transform1 != transform2);
+            CHECK(transform1 != transform2);
         }
     }
 
@@ -126,7 +126,7 @@ TEST_CASE("Transform", "[Transform]")
             transform.translate(newTranslation);
 
             auto translation = transform.getTranslation();
-            REQUIRE(translation == initialTranslation + newTranslation);
+            CHECK(translation == initialTranslation + newTranslation);
         }
     }
 
@@ -140,7 +140,7 @@ TEST_CASE("Transform", "[Transform]")
             transform.setTranslation(newTranslation);
 
             auto translation = transform.getTranslation();
-            REQUIRE(translation == newTranslation);
+            CHECK(translation == newTranslation);
         }
     }
 
@@ -153,7 +153,7 @@ TEST_CASE("Transform", "[Transform]")
         SECTION("returns the transform's translation")
         {
             auto translation = transform.getTranslation();
-            REQUIRE(translation == newTranslation);
+            CHECK(translation == newTranslation);
         }
     }
 
@@ -168,7 +168,7 @@ TEST_CASE("Transform", "[Transform]")
             transform.rotate(newRotation);
 
             auto rotation = transform.getRotationQuaternion();
-            REQUIRE(rotation == initialRotation * newRotation);
+            CHECK(rotation == initialRotation * newRotation);
         }
     }
 
@@ -182,7 +182,7 @@ TEST_CASE("Transform", "[Transform]")
             transform.setRotation(newRotation);
 
             auto rotation = transform.getRotationQuaternion();
-            REQUIRE(rotation == newRotation);
+            CHECK(rotation == newRotation);
         }
     }
 
@@ -195,7 +195,7 @@ TEST_CASE("Transform", "[Transform]")
         SECTION("returns the transform's rotation as a quaternion")
         {
             auto rotation = transform.getRotationQuaternion();
-            REQUIRE(rotation == newRotation);
+            CHECK(rotation == newRotation);
         }
     }
 
@@ -210,7 +210,7 @@ TEST_CASE("Transform", "[Transform]")
             transform.scale(newScale);
 
             auto scale = transform.getScale();
-            REQUIRE(scale == initialScale * newScale);
+            CHECK(scale == initialScale * newScale);
         }
     }
 
@@ -224,7 +224,7 @@ TEST_CASE("Transform", "[Transform]")
             transform.setScale(newScale);
 
             auto scale = transform.getScale();
-            REQUIRE(scale == newScale);
+            CHECK(scale == newScale);
         }
     }
 
@@ -237,7 +237,7 @@ TEST_CASE("Transform", "[Transform]")
         SECTION("returns the transform's scale")
         {
             auto scale = transform.getScale();
-            REQUIRE(scale == expectedScale);
+            CHECK(scale == expectedScale);
         }
     }
 
@@ -255,15 +255,15 @@ TEST_CASE("Transform", "[Transform]")
         SECTION("returns the transform's rotation as a matrix")
         {
             auto m = transform.getRotationMatrix();
-            REQUIRE(cmpf(m[0][0],  tov::math::cos(r)));
-            REQUIRE(cmpf(m[0][1], -tov::math::sin(r)));
-            REQUIRE(cmpf(m[0][2],  0.0f));
-            REQUIRE(cmpf(m[1][0],  tov::math::sin(r)));
-            REQUIRE(cmpf(m[1][1],  tov::math::cos(r)));
-            REQUIRE(cmpf(m[1][2],  0.0f));
-            REQUIRE(cmpf(m[2][0],  0.0f));
-            REQUIRE(cmpf(m[2][1],  0.0f));
-            REQUIRE(cmpf(m[2][2],  1.0f));
+            CHECK(cmpf(m[0][0],  tov::math::cos(r)));
+            CHECK(cmpf(m[0][1], -tov::math::sin(r)));
+            CHECK(cmpf(m[0][2],  0.0f));
+            CHECK(cmpf(m[1][0],  tov::math::sin(r)));
+            CHECK(cmpf(m[1][1],  tov::math::cos(r)));
+            CHECK(cmpf(m[1][2],  0.0f));
+            CHECK(cmpf(m[2][0],  0.0f));
+            CHECK(cmpf(m[2][1],  0.0f));
+            CHECK(cmpf(m[2][2],  1.0f));
         }
     }
 
@@ -281,15 +281,15 @@ TEST_CASE("Transform", "[Transform]")
         SECTION("returns the transform's scale as a matrix")
         {
             auto m = transform.getScaleMatrix();
-            REQUIRE(cmpf(m[0][0], 1.0f));
-            REQUIRE(cmpf(m[0][1], 0.0f));
-            REQUIRE(cmpf(m[0][2], 0.0f));
-            REQUIRE(cmpf(m[1][0], 0.0f));
-            REQUIRE(cmpf(m[1][1], 2.0f));
-            REQUIRE(cmpf(m[1][2], 0.0f));
-            REQUIRE(cmpf(m[2][0], 0.0f));
-            REQUIRE(cmpf(m[2][1], 0.0f));
-            REQUIRE(cmpf(m[2][2], 3.0f));
+            CHECK(cmpf(m[0][0], 1.0f));
+            CHECK(cmpf(m[0][1], 0.0f));
+            CHECK(cmpf(m[0][2], 0.0f));
+            CHECK(cmpf(m[1][0], 0.0f));
+            CHECK(cmpf(m[1][1], 2.0f));
+            CHECK(cmpf(m[1][2], 0.0f));
+            CHECK(cmpf(m[2][0], 0.0f));
+            CHECK(cmpf(m[2][1], 0.0f));
+            CHECK(cmpf(m[2][2], 3.0f));
         }
     }
 
@@ -307,22 +307,22 @@ TEST_CASE("Transform", "[Transform]")
         SECTION("returns the transform as a matrix")
         {
             auto m = transform.getHomogeneousMatrix();
-            REQUIRE(cmpf(m[0][0],  scale.x * tov::math::cos(r)));
-            REQUIRE(cmpf(m[0][1], -scale.x * tov::math::sin(r)));
-            REQUIRE(cmpf(m[0][2],  0.0f));
-            REQUIRE(cmpf(m[0][3],  translation.x));
-            REQUIRE(cmpf(m[1][0],  scale.y * tov::math::sin(r)));
-            REQUIRE(cmpf(m[1][1],  scale.y * tov::math::cos(r)));
-            REQUIRE(cmpf(m[1][2],  0.0f));
-            REQUIRE(cmpf(m[1][3],  translation.y));
-            REQUIRE(cmpf(m[2][0],  0.0f));
-            REQUIRE(cmpf(m[2][1],  0.0f));
-            REQUIRE(cmpf(m[2][2],  scale.z));
-            REQUIRE(cmpf(m[2][3],  translation.z));
-            REQUIRE(cmpf(m[3][0],  0.0f));
-            REQUIRE(cmpf(m[3][1],  0.0f));
-            REQUIRE(cmpf(m[3][2],  0.0f));
-            REQUIRE(cmpf(m[3][3],  1.0f));
+            CHECK(cmpf(m[0][0],  scale.x * tov::math::cos(r)));
+            CHECK(cmpf(m[0][1], -scale.x * tov::math::sin(r)));
+            CHECK(cmpf(m[0][2],  0.0f));
+            CHECK(cmpf(m[0][3],  translation.x));
+            CHECK(cmpf(m[1][0],  scale.y * tov::math::sin(r)));
+            CHECK(cmpf(m[1][1],  scale.y * tov::math::cos(r)));
+            CHECK(cmpf(m[1][2],  0.0f));
+            CHECK(cmpf(m[1][3],  translation.y));
+            CHECK(cmpf(m[2][0],  0.0f));
+            CHECK(cmpf(m[2][1],  0.0f));
+            CHECK(cmpf(m[2][2],  scale.z));
+            CHECK(cmpf(m[2][3],  translation.z));
+            CHECK(cmpf(m[3][0],  0.0f));
+            CHECK(cmpf(m[3][1],  0.0f));
+            CHECK(cmpf(m[3][2],  0.0f));
+            CHECK(cmpf(m[3][3],  1.0f));
         }
     }
 }

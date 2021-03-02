@@ -10,7 +10,7 @@ TEST_CASE("Radian", "[Radian]")
     SECTION("assignment constructor")
     {
         tov::math::Radian r = PI;
-        REQUIRE(r.valueRadians() == PI);
+        CHECK(r.valueRadians() == PI);
     }
 
     SECTION("valueRadian")
@@ -18,7 +18,7 @@ TEST_CASE("Radian", "[Radian]")
         SECTION("returns the value in radians")
         {
             tov::math::Radian r(PI);
-            REQUIRE(r.valueRadians() == PI);
+            CHECK(r.valueRadians() == PI);
         }
     }
 
@@ -29,7 +29,7 @@ TEST_CASE("Radian", "[Radian]")
             tov::math::Radian rArg(PI);
             tov::math::Radian r(0.0f);
             r = rArg;;
-            REQUIRE(r.valueRadians() == PI);
+            CHECK(r.valueRadians() == PI);
         }
     }
 
@@ -39,7 +39,7 @@ TEST_CASE("Radian", "[Radian]")
         {
             tov::math::Radian rArg(PI);
             tov::math::Radian r = +rArg;
-            REQUIRE(r.valueRadians() == PI);
+            CHECK(r.valueRadians() == PI);
         }
     }
 
@@ -49,7 +49,7 @@ TEST_CASE("Radian", "[Radian]")
         {
             tov::math::Radian rArg(PI);
             tov::math::Radian r = -rArg;
-            REQUIRE(r.valueRadians() == -PI);
+            CHECK(r.valueRadians() == -PI);
         }
     }
 
@@ -60,7 +60,7 @@ TEST_CASE("Radian", "[Radian]")
             tov::math::Radian r1(PI);
             tov::math::Radian r2(PI);
             tov::math::Radian rSum = r1 + r2;
-            REQUIRE(rSum.valueRadians() == 2 * PI);
+            CHECK(rSum.valueRadians() == 2 * PI);
         }
     }
 
@@ -71,7 +71,7 @@ TEST_CASE("Radian", "[Radian]")
             tov::math::Radian r1(PI);
             tov::math::Radian r2(PI);
             r1 += r2;
-            REQUIRE(r1.valueRadians() == 2 * PI);
+            CHECK(r1.valueRadians() == 2 * PI);
         }
     }
 
@@ -82,7 +82,7 @@ TEST_CASE("Radian", "[Radian]")
             tov::math::Radian r1(PI);
             tov::math::Radian r2(PI);
             tov::math::Radian rDiff = r1 - r2;
-            REQUIRE(rDiff.valueRadians() == 0.0f);
+            CHECK(rDiff.valueRadians() == 0.0f);
         }
     }
 
@@ -93,7 +93,7 @@ TEST_CASE("Radian", "[Radian]")
             tov::math::Radian r1(PI);
             tov::math::Radian r2(PI);
             r1 -= r2;
-            REQUIRE(r1.valueRadians() == 0.0f);
+            CHECK(r1.valueRadians() == 0.0f);
         }
     }
 
@@ -103,7 +103,7 @@ TEST_CASE("Radian", "[Radian]")
         {
             tov::math::Radian r1(PI);
             tov::math::Radian rProduct = r1 * 2;
-            REQUIRE(rProduct.valueRadians() == 2 * PI);
+            CHECK(rProduct.valueRadians() == 2 * PI);
         }
     }
 
@@ -113,7 +113,7 @@ TEST_CASE("Radian", "[Radian]")
         {
             tov::math::Radian r1(PI);
             r1 *= 2;
-            REQUIRE(r1.valueRadians() == 2 * PI);
+            CHECK(r1.valueRadians() == 2 * PI);
         }
     }
 
@@ -123,7 +123,7 @@ TEST_CASE("Radian", "[Radian]")
         {
             tov::math::Radian r1(2 * PI);
             tov::math::Radian rQuotient = r1 / 2;
-            REQUIRE(rQuotient.valueRadians() == PI);
+            CHECK(rQuotient.valueRadians() == PI);
         }
     }
 
@@ -133,7 +133,7 @@ TEST_CASE("Radian", "[Radian]")
         {
             tov::math::Radian r1(2 * PI);
             r1 /= 2;
-            REQUIRE(r1.valueRadians() == PI);
+            CHECK(r1.valueRadians() == PI);
         }
     }
 
@@ -143,7 +143,7 @@ TEST_CASE("Radian", "[Radian]")
         {
             tov::math::Radian r1(PI);
             tov::math::Radian r2(PI);
-            REQUIRE(r1 == r2);
+            CHECK(r1 == r2);
         }
 
         SECTION("returns false when the LHS and RHS radians are not equal")
@@ -167,7 +167,7 @@ TEST_CASE("Radian", "[Radian]")
         {
             tov::math::Radian r1(PI);
             tov::math::Radian r2(2 * PI);
-            REQUIRE(r1 != r2);
+            CHECK(r1 != r2);
         }
     }
 
@@ -177,7 +177,7 @@ TEST_CASE("Radian", "[Radian]")
         {
             tov::math::Radian r1(PI);
             tov::math::Radian r2(2 * PI);
-            REQUIRE(r1 < r2);
+            CHECK(r1 < r2);
         }
 
         SECTION("returns false when the LHS radian is greater than the RHS radian")
@@ -201,7 +201,7 @@ TEST_CASE("Radian", "[Radian]")
         {
             tov::math::Radian r1(PI);
             tov::math::Radian r2(2 * PI);
-            REQUIRE(r1 <= r2);
+            CHECK(r1 <= r2);
         }
 
         SECTION("returns false when the LHS radian is greater than the RHS radian")
@@ -215,7 +215,7 @@ TEST_CASE("Radian", "[Radian]")
         {
             tov::math::Radian r1(PI);
             tov::math::Radian r2(PI);
-            REQUIRE(r1 <= r2);
+            CHECK(r1 <= r2);
         }
     }
 
@@ -232,7 +232,7 @@ TEST_CASE("Radian", "[Radian]")
         {
             tov::math::Radian r1(2 * PI);
             tov::math::Radian r2(PI);
-            REQUIRE(r1 > r2);
+            CHECK(r1 > r2);
         }
 
         SECTION("returns false when the LHS radian is equal to the RHS radian")
@@ -256,14 +256,14 @@ TEST_CASE("Radian", "[Radian]")
         {
             tov::math::Radian r1(2 * PI);
             tov::math::Radian r2(PI);
-            REQUIRE(r1 >= r2);
+            CHECK(r1 >= r2);
         }
 
         SECTION("returns true when the LHS radian is equal to the RHS radian")
         {
             tov::math::Radian r1(PI);
             tov::math::Radian r2(PI);
-            REQUIRE(r1 >= r2);
+            CHECK(r1 >= r2);
         }
     }
 
@@ -273,7 +273,7 @@ TEST_CASE("Radian", "[Radian]")
         {
             tov::math::Degree d(180.0f);
             tov::math::Radian r(d);
-            REQUIRE(r.valueRadians() == PI);
+            CHECK(r.valueRadians() == PI);
         }
     }
 
@@ -283,7 +283,7 @@ TEST_CASE("Radian", "[Radian]")
         {
             tov::math::Radian r(2.0f * tov::math::PI);
             tov::math::Degree d = r.toDegree();
-            REQUIRE(d.valueDegrees() == 360.0f);
+            CHECK(d.valueDegrees() == 360.0f);
         }
     }
 
@@ -293,7 +293,7 @@ TEST_CASE("Radian", "[Radian]")
         {
             tov::math::Radian r(PI);
             float dr = r.valueDegrees();
-            REQUIRE(dr == 180.0f);
+            CHECK(dr == 180.0f);
         }
     }
 
@@ -303,7 +303,7 @@ TEST_CASE("Radian", "[Radian]")
         {
             using namespace tov::math;
             tov::math::Radian r = 3.1415926535_rad;
-            REQUIRE(r.valueRadians() == PI);
+            CHECK(r.valueRadians() == PI);
         }
     }
 }

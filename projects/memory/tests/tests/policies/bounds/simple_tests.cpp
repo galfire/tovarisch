@@ -1,6 +1,4 @@
-#include "../../test_helper.h"
-
-#include <cstring>
+#include "test_helper.h"
 
 #include <tov/memory/policies/bounds/simple.h>
 

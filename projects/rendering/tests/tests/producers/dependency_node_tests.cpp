@@ -1,4 +1,4 @@
-#include "../test_helper.h"
+#include "test_helper.h"
 
 #include <tov/rendering/producers/dependency_node.h>
 
@@ -34,12 +34,12 @@ TEST_CASE("DependencyNode", "[DependencyNode]")
 
         auto resolved = d4.getResolvedDependencies();
 
-        REQUIRE(resolved.size() == 5);
+        CHECK(resolved.size() == 5);
 
-        REQUIRE(resolved[0] == &d0);
-        REQUIRE(resolved[1] == &d1);
-        REQUIRE(resolved[2] == &d2);
-        REQUIRE(resolved[3] == &d3);
-        REQUIRE(resolved[4] == &d4);
+        CHECK(resolved[0] == &d0);
+        CHECK(resolved[1] == &d1);
+        CHECK(resolved[2] == &d2);
+        CHECK(resolved[3] == &d3);
+        CHECK(resolved[4] == &d4);
     }
 }

@@ -1,5 +1,4 @@
-#include "../test_helper.h"
-#include "buffer_test_helper.h"
+#include "test_helper.h"
 
 #include <tov/rendering/buffers/buffer_accessor.h>
 
@@ -24,11 +23,11 @@ TEST_CASE("BufferAccessor", "[BufferAccessor]")
 		tov::rendering::buffers::BufferAccessor<BufferCopier, BufferCopier, U> u(data, scratch);
 		// Read data into scratch, no read
 		u.read(0, sz);
-		REQUIRE(*(int*)scratch == 0);
+		CHECK(*(int*)scratch == 0);
 		// Write scratch into data
 		*(int*)scratch = 144;
 		u.write(0, sz);
-		REQUIRE(*(int*)data == 144);
+		CHECK(*(int*)data == 144);
 	}
 
 	SECTION("with read access settings")
@@ -37,11 +36,11 @@ TEST_CASE("BufferAccessor", "[BufferAccessor]")
 		tov::rendering::buffers::BufferAccessor<BufferCopier, BufferCopier, U> u(data, scratch);
 		// Read data into scratch
 		u.read(0, sz);
-		REQUIRE(*(int*)scratch == 42);
+		CHECK(*(int*)scratch == 42);
 		// Write scratch into data, no write
 		*(int*)scratch = 144;
 		u.write(0, sz);
-		REQUIRE(*(int*)data == 42);
+		CHECK(*(int*)data == 42);
 	}
 
 	SECTION("with read and write access settings")
@@ -50,10 +49,10 @@ TEST_CASE("BufferAccessor", "[BufferAccessor]")
 		tov::rendering::buffers::BufferAccessor<BufferCopier, BufferCopier, U> u(data, scratch);
 		// Read data into scratch
 		u.read(0, sz);
-		REQUIRE(*(int*)scratch == 42);
+		CHECK(*(int*)scratch == 42);
 		// Write scratch into data
 		*(int*)scratch = 144;
 		u.write(0, sz);
-		REQUIRE(*(int*)data == 144);
+		CHECK(*(int*)data == 144);
 	}
 }
