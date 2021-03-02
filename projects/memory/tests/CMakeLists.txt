@@ -1,5 +1,3 @@
-# TESTS
-
 file(GLOB_RECURSE TEST_SOURCES *.cpp)
 add_executable(memory_tests ${TEST_SOURCES})
 set_target_properties(memory_tests PROPERTIES SUFFIX ".exe")
