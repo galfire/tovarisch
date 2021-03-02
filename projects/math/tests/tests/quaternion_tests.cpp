@@ -164,4 +164,3 @@ TEST_CASE("Quaternion", "[Quaternion]")
         }
     }
 }
-
