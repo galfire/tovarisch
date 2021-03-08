@@ -11,12 +11,6 @@ namespace tov
 
     class NewDelete
     {
-    private:
-        struct BlockHeader
-        {
-            size_t mAllocationSize;
-        };
-
     public:
         inline explicit NewDelete() noexcept = default;
         inline ~NewDelete() noexcept = default;
@@ -24,8 +18,6 @@ namespace tov
         inline void* allocate(size_t size);
         inline void deallocate(void* ptr) noexcept;
         inline void reset() noexcept;
-
-        inline size_t getAllocationSize(void* ptr) const noexcept;
     };
 
     TOV_NAMESPACE_END // allocation

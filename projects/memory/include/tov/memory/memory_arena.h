@@ -9,6 +9,12 @@ namespace tov
 {
     TOV_NAMESPACE_BEGIN(memory)
 
+    struct AllocationHeader
+    {
+        void* originalPtr;
+        size_t allocationSize;
+    };
+
     template<
         typename AllocationPolicy,
         typename AlignmentPolicy,
@@ -31,20 +37,20 @@ namespace tov
         inline void checkBounds(void* ptr) const;
 
     private:
+        inline auto getAllocationHeader(void* ptr) const -> AllocationHeader
+        {
+            auto cursor = static_cast<byte*>(ptr);
+            cursor -= BoundsCheckingPolicy::FRONT_BOUND_SIZE;
+            cursor -= sizeof(AllocationHeader);
+            return *reinterpret_cast<AllocationHeader*>(cursor);
+        }
+
+    private:
         AllocationPolicy mAllocationPolicy;
         AlignmentPolicy mAlignmentPolicy;
         ThreadPolicy mThreadPolicy;
         BoundsCheckingPolicy mBoundsCheckingPolicy;
         BoundsSigner<BoundsCheckingPolicy> mBoundsSigner;
-
-    public:
-        // Size of the offset created by all policy headers
-        constexpr static size_t POLICY_OFFSET =
-            AlignmentPolicy::POLICY_OFFSET;
-
-        constexpr static size_t OVERHEAD_REQUIREMENT = 
-            POLICY_OFFSET +
-            BoundsCheckingPolicy::TOTAL_BOUND_SIZE;
     };
 
     template <typename AllocationPolicy, typename AlignmentPolicy, typename ThreadPolicy, typename BoundsCheckingPolicy>

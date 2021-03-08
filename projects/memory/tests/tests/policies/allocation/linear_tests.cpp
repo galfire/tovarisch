@@ -26,13 +26,6 @@ TEST_CASE("Linear", "[Linear]")
             CHECK(ptr < end);
         }
 
-        SECTION("writes the allocation size to the buffer before the returned pointer")
-        {
-            void* ptr = policy.allocate(64);
-            size_t allocation_size = *((size_t*)ptr - 1);
-            CHECK(allocation_size == 64);
-        }
-
         SECTION("throws an error when the allocation size is greater than the remaining space in the buffer")
         {
             CHECK_THROWS_AS(policy.allocate(sz * 10), std::bad_alloc);
@@ -71,17 +64,6 @@ TEST_CASE("Linear", "[Linear]")
             policy.reset();
             void* ptr2 = policy.allocate(64);
             CHECK(ptr == ptr2);
-        }
-    }
-
-    SECTION("getAllocationSize")
-    {
-        void* ptr = policy.allocate(64);
-
-        SECTION("returns the size of the allocation at the given pointer in bytes")
-        {
-            size_t allocation_size = policy.getAllocationSize(ptr);
-            CHECK(allocation_size == 64);
         }
     }
 }

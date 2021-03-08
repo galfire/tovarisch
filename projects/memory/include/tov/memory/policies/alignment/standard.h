@@ -3,8 +3,6 @@
 
 #include <tov/core.h>
 
-#include "../../memory_accessor.h"
-
 namespace tov
 {
     TOV_NAMESPACE_BEGIN(memory)
@@ -13,28 +11,12 @@ namespace tov
 
     class Standard
     {
-    private:
-        struct BlockHeader
-        {
-            size_t alignmentSpace;
-            ptrdiff_t alignmentOffset;
-        };
-
     public:
         inline explicit Standard() noexcept = default;
         inline ~Standard() noexcept = default;
 
         inline size_t determineAlignmentSpace(size_t alignment) noexcept;
         inline void* align(size_t alignment, size_t size, void*& ptr, size_t& space) noexcept;
-
-        inline void writeHeader(void*& ptr, size_t alignmentSpace, ptrdiff_t alignmentOffset) const noexcept;
-        inline void readHeader(void*& ptr, size_t& alignmentSpace, ptrdiff_t& alignmentOffset) const noexcept;
-
-    private:
-        MemoryAccessor<BlockHeader> accessor;
-
-    public:
-        constexpr static size_t POLICY_OFFSET = sizeof(BlockHeader);
     };
 
     TOV_NAMESPACE_END // allocation

@@ -15,37 +15,45 @@ namespace tov
     template<typename AllocationPolicy, typename AlignmentPolicy, typename ThreadPolicy, typename BoundsCheckingPolicy>
     inline void* MemoryArena<AllocationPolicy, AlignmentPolicy, ThreadPolicy, BoundsCheckingPolicy>::allocate(size_t size, size_t alignment)
     {
-        const auto requiredSize = size + OVERHEAD_REQUIREMENT;
+        auto const requiredSize =
+            size
+            + sizeof(AllocationHeader)
+            + BoundsCheckingPolicy::TOTAL_BOUND_SIZE;
 
-        const auto alignmentSpace = mAlignmentPolicy.determineAlignmentSpace(alignment);
+        auto const alignmentSpace = mAlignmentPolicy.determineAlignmentSpace(alignment);
         auto space = requiredSize + alignmentSpace;
+        auto const allocation = mAllocationPolicy.allocate(space);
 
-        void* allocation = mAllocationPolicy.allocate(space);
-
-        union
+        auto p = static_cast<void*>(
+            static_cast<byte*>(allocation)
+            + sizeof(AllocationHeader)
+            + BoundsCheckingPolicy::FRONT_BOUND_SIZE
+            );
+        auto const userPtr = mAlignmentPolicy.align(alignment, requiredSize, p, space);
+        
         {
-            void* asRaw;
-            byte* asByte;
-        };
-        asRaw = allocation;
+            auto cursor = static_cast<byte*>(userPtr);
+            cursor -= BoundsCheckingPolicy::FRONT_BOUND_SIZE;
+            mBoundsCheckingPolicy.signFront(cursor);
+        }
 
-        void* p = asByte + POLICY_OFFSET + BoundsCheckingPolicy::FRONT_BOUND_SIZE;
-        asRaw = mAlignmentPolicy.align(alignment, requiredSize, p, space);
+        {
+            auto cursor = static_cast<byte*>(userPtr);
+            cursor += size;
+            mBoundsCheckingPolicy.signEnd(cursor);
+        }
 
-        void* userPtr = asRaw;
-
-
-        asByte -= POLICY_OFFSET + BoundsCheckingPolicy::FRONT_BOUND_SIZE;
-
-        ptrdiff_t alignmentOffset = asByte - (byte*)allocation;
-        mAlignmentPolicy.writeHeader(asRaw, alignmentSpace, alignmentOffset);
-
-        mBoundsSigner.signFront(asRaw);
-        auto allocationSize = mAllocationPolicy.getAllocationSize(allocation);
-        asByte += allocationSize - (OVERHEAD_REQUIREMENT + alignmentSpace);
-        mBoundsSigner.signEnd(asRaw);
-
-        mThreadPolicy.leave();
+        {
+            auto cursor = static_cast<byte*>(userPtr);
+            cursor -= BoundsCheckingPolicy::FRONT_BOUND_SIZE;
+            cursor -= sizeof(AllocationHeader);
+            auto header = AllocationHeader
+            {
+                allocation,
+                size
+            };
+            memcpy_s(cursor, sizeof(AllocationHeader), &header, sizeof(AllocationHeader));
+        }
 
         return userPtr;
     }
@@ -58,31 +66,10 @@ namespace tov
             return;
         }
 
-        mThreadPolicy.enter();
-
-        byte* ptrAsByte = (byte*)ptr;
-
-        byte* headersLocation = (byte*)ptr - (POLICY_OFFSET + BoundsCheckingPolicy::FRONT_BOUND_SIZE);
+        checkBounds(ptr);
         
-        void* currentLocation = (void*)headersLocation;
-
-        size_t alignmentSpace;
-        ptrdiff_t alignmentOffset;
-        mAlignmentPolicy.readHeader(currentLocation, alignmentSpace, alignmentOffset);
-
-        void* allocationPtr = headersLocation - alignmentOffset;
-
-        // Check guards
-        void* frontGuard = currentLocation;
-        assert(mBoundsCheckingPolicy.checkFrontSignature(frontGuard));
-
-        size_t allocationSize = mAllocationPolicy.getAllocationSize(allocationPtr);
-        byte* endGuard = ptrAsByte + allocationSize - (OVERHEAD_REQUIREMENT + alignmentSpace);
-        assert(mBoundsCheckingPolicy.checkEndSignature(endGuard));
-
-        mAllocationPolicy.deallocate(allocationPtr);
-
-        mThreadPolicy.leave();
+        auto header = getAllocationHeader(ptr);
+        mAllocationPolicy.deallocate(header.originalPtr);
     }
 
     template<typename AllocationPolicy, typename AlignmentPolicy,typename ThreadPolicy, typename BoundsCheckingPolicy>
@@ -92,30 +79,14 @@ namespace tov
     }
 
     template<typename AllocationPolicy, typename AlignmentPolicy, typename ThreadPolicy, typename BoundsCheckingPolicy>
-    inline void MemoryArena<AllocationPolicy, AlignmentPolicy, ThreadPolicy, BoundsCheckingPolicy>::checkBounds(void* ptr) const
+    void MemoryArena<AllocationPolicy, AlignmentPolicy, ThreadPolicy, BoundsCheckingPolicy>::checkBounds(void* ptr) const
     {
-        byte* ptrAsByte = (byte*)ptr;
-
-        //
-        //		ORDER OF HEADERS
-        //			1. AlignmentPolicy
-
-        byte* headersLocation = (byte*)ptr - (POLICY_OFFSET + BoundsCheckingPolicy::FRONT_BOUND_SIZE);
-
-        void* currentLocation = (void*)headersLocation;
-
-        size_t alignmentSpace;
-        ptrdiff_t alignmentOffset;
-        mAlignmentPolicy.readHeader(currentLocation, alignmentSpace, alignmentOffset);
-
-        void* allocationPtr = headersLocation - alignmentOffset;
+        auto header = getAllocationHeader(ptr);
 
         // Check guards
-        void* frontGuard = currentLocation;
+        auto frontGuard = static_cast<byte*>(ptr) - BoundsCheckingPolicy::FRONT_BOUND_SIZE;
         assert(mBoundsCheckingPolicy.checkFrontSignature(frontGuard));
-
-        size_t allocationSize = mAllocationPolicy.getAllocationSize(allocationPtr);
-        byte* endGuard = ptrAsByte + allocationSize - (OVERHEAD_REQUIREMENT + alignmentSpace);
+        auto endGuard = static_cast<byte*>(ptr) + header.allocationSize;
         assert(mBoundsCheckingPolicy.checkEndSignature(endGuard));
     }
 

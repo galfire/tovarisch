@@ -11,12 +11,6 @@ namespace tov
 
     class Linear
     {
-    private:
-        struct BlockHeader
-        {
-            size_t mAllocationSize;
-        };
-
     public:
         inline explicit Linear(const void* start, const void* end) noexcept;
         inline ~Linear() noexcept = default;
@@ -24,8 +18,6 @@ namespace tov
         inline void* allocate(size_t size);
         inline void deallocate(void* ptr) noexcept;
         inline void reset() noexcept;
-
-        inline size_t getAllocationSize(void* ptr) const noexcept;
 
     private:
         const void* mStart = nullptr;
