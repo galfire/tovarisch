@@ -75,11 +75,6 @@ namespace tov
     >
     inline auto MemoryArena<AllocationPolicy, AlignmentPolicy, ThreadPolicy, BoundsCheckingPolicy>::deallocate(void* ptr) -> void
     {
-        if (!ptr)
-        {
-            return;
-        }
-
         checkBounds(ptr);
         
         auto header = getAllocationHeader(ptr);
