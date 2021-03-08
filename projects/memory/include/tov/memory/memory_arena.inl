@@ -4,16 +4,25 @@ namespace tov
 {
     TOV_NAMESPACE_BEGIN(memory)
 
-    template<typename AllocationPolicy, typename AlignmentPolicy, typename ThreadPolicy, typename BoundsCheckingPolicy>
+    template<
+        typename AllocationPolicy,
+        typename AlignmentPolicy,
+        typename ThreadPolicy,
+        typename BoundsCheckingPolicy
+    >
     MemoryArena<AllocationPolicy, AlignmentPolicy, ThreadPolicy, BoundsCheckingPolicy>::MemoryArena(const void* start, const void* end) noexcept
         : mAllocationPolicy(start, end)
         , mAlignmentPolicy()
-        , mBoundsSigner()
     {
     }
 
-    template<typename AllocationPolicy, typename AlignmentPolicy, typename ThreadPolicy, typename BoundsCheckingPolicy>
-    inline void* MemoryArena<AllocationPolicy, AlignmentPolicy, ThreadPolicy, BoundsCheckingPolicy>::allocate(size_t size, size_t alignment)
+    template<
+        typename AllocationPolicy,
+        typename AlignmentPolicy,
+        typename ThreadPolicy,
+        typename BoundsCheckingPolicy
+    >
+    inline auto MemoryArena<AllocationPolicy, AlignmentPolicy, ThreadPolicy, BoundsCheckingPolicy>::allocate(size_t size, size_t alignment) -> void*
     {
         auto const requiredSize =
             size
@@ -58,8 +67,13 @@ namespace tov
         return userPtr;
     }
 
-    template<typename AllocationPolicy, typename AlignmentPolicy, typename ThreadPolicy, typename BoundsCheckingPolicy>
-    inline void MemoryArena<AllocationPolicy, AlignmentPolicy, ThreadPolicy, BoundsCheckingPolicy>::deallocate(void* ptr)
+    template<
+        typename AllocationPolicy,
+        typename AlignmentPolicy,
+        typename ThreadPolicy,
+        typename BoundsCheckingPolicy
+    >
+    inline auto MemoryArena<AllocationPolicy, AlignmentPolicy, ThreadPolicy, BoundsCheckingPolicy>::deallocate(void* ptr) -> void
     {
         if (!ptr)
         {
@@ -72,18 +86,26 @@ namespace tov
         mAllocationPolicy.deallocate(header.originalPtr);
     }
 
-    template<typename AllocationPolicy, typename AlignmentPolicy,typename ThreadPolicy, typename BoundsCheckingPolicy>
-    inline void MemoryArena<AllocationPolicy, AlignmentPolicy, ThreadPolicy, BoundsCheckingPolicy>::reset()
+    template<
+        typename AllocationPolicy,
+        typename AlignmentPolicy,
+        typename ThreadPolicy,
+        typename BoundsCheckingPolicy
+    >
+    inline auto MemoryArena<AllocationPolicy, AlignmentPolicy, ThreadPolicy, BoundsCheckingPolicy>::reset() -> void
     {
         mAllocationPolicy.reset();
     }
 
-    template<typename AllocationPolicy, typename AlignmentPolicy, typename ThreadPolicy, typename BoundsCheckingPolicy>
-    void MemoryArena<AllocationPolicy, AlignmentPolicy, ThreadPolicy, BoundsCheckingPolicy>::checkBounds(void* ptr) const
+    template<
+        typename AllocationPolicy,
+        typename AlignmentPolicy,
+        typename ThreadPolicy,
+        typename BoundsCheckingPolicy
+    >
+    inline auto MemoryArena<AllocationPolicy, AlignmentPolicy, ThreadPolicy, BoundsCheckingPolicy>::checkBounds(void* ptr) const -> void
     {
         auto header = getAllocationHeader(ptr);
-
-        // Check guards
         auto frontGuard = static_cast<byte*>(ptr) - BoundsCheckingPolicy::FRONT_BOUND_SIZE;
         assert(mBoundsCheckingPolicy.checkFrontSignature(frontGuard));
         auto endGuard = static_cast<byte*>(ptr) + header.allocationSize;

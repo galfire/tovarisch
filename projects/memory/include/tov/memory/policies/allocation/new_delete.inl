@@ -1,4 +1,3 @@
-#include <cstring> // std::memcpy
 #include <new>
 
 namespace tov

@@ -3,8 +3,6 @@
 
 #include <tov/core.h>
 
-#include "bounds_signer.h"
-
 namespace tov
 {
     TOV_NAMESPACE_BEGIN(memory)
@@ -30,11 +28,10 @@ namespace tov
         inline explicit MemoryArena(const void* start, const void* end) noexcept;
         inline ~MemoryArena() noexcept = default;
 
-        inline void* allocate(size_t size, size_t alignment);
-        inline void deallocate(void* ptr);
-        inline void reset();
-
-        inline void checkBounds(void* ptr) const;
+        inline auto allocate(size_t size, size_t alignment) -> void*;
+        inline auto deallocate(void* ptr) -> void;
+        inline auto reset() -> void;
+        inline auto checkBounds(void* ptr) const -> void;
 
     private:
         inline auto getAllocationHeader(void* ptr) const -> AllocationHeader
@@ -50,11 +47,7 @@ namespace tov
         AlignmentPolicy mAlignmentPolicy;
         ThreadPolicy mThreadPolicy;
         BoundsCheckingPolicy mBoundsCheckingPolicy;
-        BoundsSigner<BoundsCheckingPolicy> mBoundsSigner;
     };
-
-    template <typename AllocationPolicy, typename AlignmentPolicy, typename ThreadPolicy, typename BoundsCheckingPolicy>
-    using MemoryArenaUPtr = std::unique_ptr<MemoryArena<AllocationPolicy, AlignmentPolicy, ThreadPolicy, BoundsCheckingPolicy>>;
 
     TOV_NAMESPACE_END // memory
 }
