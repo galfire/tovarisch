@@ -73,6 +73,7 @@ if(${COMPILER} EQUAL ${COMPILER_MSVC})
     add_compile_options("/EHsc")
 endif()
 
+add_subdirectory("projects/gear")
 add_subdirectory("projects/memory")
 add_subdirectory("projects/math")
 add_subdirectory("projects/rendering")

@@ -10,7 +10,7 @@ namespace tov
         typename ThreadPolicy,
         typename BoundsCheckingPolicy
     >
-    MemoryArena<AllocationPolicy, AlignmentPolicy, ThreadPolicy, BoundsCheckingPolicy>::MemoryArena(const void* start, const void* end) noexcept
+    MemoryArena<AllocationPolicy, AlignmentPolicy, ThreadPolicy, BoundsCheckingPolicy>::MemoryArena(void* start, void* end) noexcept
         : mAllocationPolicy(start, end)
         , mAlignmentPolicy()
     {
@@ -32,6 +32,10 @@ namespace tov
         auto const alignmentSpace = mAlignmentPolicy.determineAlignmentSpace(alignment);
         auto space = requiredSize + alignmentSpace;
         auto const allocation = mAllocationPolicy.allocate(space);
+        if (!allocation)
+        {
+            throw std::bad_alloc();
+        }
 
         auto p = static_cast<void*>(
             static_cast<byte*>(allocation)

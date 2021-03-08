@@ -19,7 +19,7 @@ namespace tov
     {
         if((uintptr_t)mCurrent + size >= (uintptr_t)mEnd)
         {
-            throw std::bad_alloc();
+            return nullptr;
         }
 
         void* userPtr = mCurrent;

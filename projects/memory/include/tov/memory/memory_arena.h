@@ -25,7 +25,7 @@ namespace tov
 
     public:
         inline explicit MemoryArena() = default;
-        inline explicit MemoryArena(const void* start, const void* end) noexcept;
+        inline explicit MemoryArena(void* start, void* end) noexcept;
         inline ~MemoryArena() noexcept = default;
 
         inline auto allocate(size_t size, size_t alignment) -> void*;

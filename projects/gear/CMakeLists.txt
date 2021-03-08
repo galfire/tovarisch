@@ -3,15 +3,12 @@
 set(CMAKE_CXX_STANDARD 20)
 
 include_directories(${CMAKE_SOURCE_DIR}/projects/core/include)
-include_directories(${CMAKE_SOURCE_DIR}/projects/gear/include)
 include_directories(include/tov)
 
 file(GLOB_RECURSE SOURCES src/*.cpp)
-add_library(memory STATIC ${SOURCES})
+add_library(gear STATIC ${SOURCES})
 
-target_link_libraries(memory gear)
-
-set(TARGET_NAME memory)
+set(TARGET_NAME gear)
 include(${CMAKE_SOURCE_DIR}/projects/cmake/debug.cmake)
 
-add_subdirectory("tests")
+#add_subdirectory("tests")
