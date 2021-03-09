@@ -41,7 +41,7 @@ namespace tov
             static_cast<byte*>(allocation)
             + sizeof(AllocationHeader)
             + BoundsCheckingPolicy::FRONT_BOUND_SIZE
-            );
+        );
         auto const userPtr = mAlignmentPolicy.align(alignment, requiredSize, p, space);
         
         {

@@ -1,5 +1,5 @@
-#ifndef TOV_MEMORY_TESTS_DUMMY_ALLOCATION_POLICY_H
-#define TOV_MEMORY_TESTS_DUMMY_ALLOCATION_POLICY_H
+#ifndef TOV_MEMORY_TESTS_DUMMY_NULL_ALLOCATION_POLICY_H
+#define TOV_MEMORY_TESTS_DUMMY_NULL_ALLOCATION_POLICY_H
 
 namespace tov
 {
@@ -7,17 +7,16 @@ namespace tov
     {
         namespace memory
         {
-            class DummyAllocationPolicy
+            class DummyNullAllocationPolicy
             {
             public:
                 void* allocate(size_t sz)
                 {
-                    return operator new(sz);
+                    return nullptr;
                 }
 
                 void deallocate(void* ptr)
                 {
-                    operator delete(ptr);
                 }
 
                 void reset() {}

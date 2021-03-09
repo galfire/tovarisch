@@ -1,4 +1,5 @@
 #include <doctest.h>
+#include <doctest/trompeloeil.hpp>
 #include <cstring>
 
 #define SECTION(name) DOCTEST_SUBCASE(name)

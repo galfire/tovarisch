@@ -49,15 +49,11 @@ TEST_CASE("Freelist", "[Freelist]")
     {
         void* ptr = policy.allocate();
 
-        SECTION("does nothing")
+        SECTION("allows allocations to reuse the block")
         {
-            unsigned char original[sz];
-            memcpy(original, buffer, sz);
-
             policy.deallocate(ptr);
-
-            int compare = memcmp(buffer, original, sz);
-            CHECK(compare == 0);
+            void* ptr2 = policy.allocate();
+            CHECK(ptr == ptr2);
         }
     }
 
