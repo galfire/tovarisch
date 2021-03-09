@@ -16,7 +16,7 @@ namespace tov
         inline explicit Freelist(void* start, void* end, size_t elementSize) noexcept;
         inline ~Freelist() noexcept = default;
 
-        inline auto allocate() -> void*;
+        inline auto allocate() noexcept -> void*;
         inline auto deallocate(void* ptr) noexcept -> void;
         inline auto reset() noexcept -> void;
 

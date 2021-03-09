@@ -12,7 +12,7 @@ namespace tov
     {
     }
 
-    inline auto Freelist::allocate() -> void*
+    inline auto Freelist::allocate() noexcept -> void*
     {
         return mFreelist.getBlock();
     }

@@ -15,7 +15,7 @@ namespace tov
         inline explicit Linear(const void* start, const void* end) noexcept;
         inline ~Linear() noexcept = default;
 
-        inline void* allocate(size_t size);
+        inline void* allocate(size_t size) noexcept;
         inline void deallocate(void* ptr) noexcept;
         inline void reset() noexcept;
 

@@ -15,7 +15,7 @@ namespace tov
         mCurrent = (void*)mStart;
     }
 
-    inline void* Linear::allocate(size_t size)
+    inline void* Linear::allocate(size_t size) noexcept
     {
         if((uintptr_t)mCurrent + size >= (uintptr_t)mEnd)
         {

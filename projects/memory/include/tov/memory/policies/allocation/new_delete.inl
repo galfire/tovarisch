@@ -6,9 +6,9 @@ namespace tov
     TOV_NAMESPACE_BEGIN(policies)
     TOV_NAMESPACE_BEGIN(allocation)
 
-    inline void* NewDelete::allocate(size_t size)
+    inline void* NewDelete::allocate(size_t size) noexcept
     {
-        return ::operator new(size);
+        return ::operator new(size, std::nothrow);
     }
 
     inline void NewDelete::deallocate(void* ptr) noexcept
