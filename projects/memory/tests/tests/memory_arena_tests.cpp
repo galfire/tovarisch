@@ -3,9 +3,13 @@
 #include <tov/memory/memory_arena.h>
 #include <tov/memory/policies/alignment/standard.h>
 #include <tov/memory/policies/bounds/simple.h>
+
 #include "util/dummy_allocation_policy.h"
 #include "util/dummy_null_allocation_policy.h"
 #include "util/dummy_thread_policy.h"
+
+#include <tov/memory/heap_area.h>
+
 
 TEST_CASE("MemoryArena", "[MemoryArena]")
 {
@@ -14,6 +18,9 @@ TEST_CASE("MemoryArena", "[MemoryArena]")
     using AlignmentPolicy = tov::memory::policies::alignment::Standard;
     using BoundsPolicy = tov::memory::policies::bounds::Simple;
     using ThreadPolicy = tov::test::memory::DummyThreadPolicy;
+
+    const size_t sz = 1024;
+    tov::memory::HeapArea area(sz);
 
     SECTION("allocate")
     {
