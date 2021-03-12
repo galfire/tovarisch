@@ -10,6 +10,15 @@ namespace tov
             class DummyNullAllocationPolicy
             {
             public:
+                DummyNullAllocationPolicy() {}
+                DummyNullAllocationPolicy(void* start, void* end) {}
+                DummyNullAllocationPolicy(void* start, void* end, size_t size) {};
+
+                void* allocate()
+                {
+                    return nullptr;
+                }
+
                 void* allocate(size_t sz)
                 {
                     return nullptr;

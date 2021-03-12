@@ -70,11 +70,9 @@ namespace tov
     private:
         inline auto alignmentSpace()
         {
-            auto const size = sizeof(T);
-            auto const alignment = alignof(T);
             auto const alignmentSpace =
-                size
-                + mAlignmentPolicy.determineAlignmentSpace(alignment);
+                SIZE
+                + mAlignmentPolicy.determineAlignmentSpace(ALIGNMENT);
             return alignmentSpace;
         }
 
@@ -94,6 +92,10 @@ namespace tov
             cursor -= sizeof(AllocationHeader);
             return *reinterpret_cast<AllocationHeader*>(cursor);
         }
+
+    private:
+        static constexpr auto SIZE = sizeof(T);
+        static constexpr auto ALIGNMENT = alignof(T);
 
     private:
         AllocationPolicy mAllocationPolicy;

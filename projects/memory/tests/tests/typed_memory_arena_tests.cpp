@@ -3,8 +3,8 @@
 #include <tov/memory/memory_arena.h>
 #include <tov/memory/policies/alignment/standard.h>
 #include <tov/memory/policies/bounds/simple.h>
-#include <tov/memory/policies/allocation/freelist.h>
 
+#include "util/dummy_fixed_allocation_policy.h"
 #include "util/dummy_null_allocation_policy.h"
 #include "util/dummy_thread_policy.h"
 
@@ -12,8 +12,8 @@
 
 TEST_CASE("TypedMemoryArena", "[MemoryArena]")
 {
-    using AllocationPolicy = tov::memory::policies::allocation::Freelist;
-    //using NullAllocationPolicy = tov::test::memory::DummyNullAllocationPolicy;
+    using AllocationPolicy = tov::test::memory::DummyFixedAllocationPolicy;
+    using NullAllocationPolicy = tov::test::memory::DummyNullAllocationPolicy;
     using AlignmentPolicy = tov::memory::policies::alignment::Standard;
     using BoundsPolicy = tov::memory::policies::bounds::Simple;
     using ThreadPolicy = tov::test::memory::DummyThreadPolicy;
@@ -55,9 +55,9 @@ TEST_CASE("TypedMemoryArena", "[MemoryArena]")
 
         SECTION("throws a bad_alloc when the allocation policy returns null")
         {
-            //tov::memory::TypedMemoryArena<int, NullAllocationPolicy, AlignmentPolicy, ThreadPolicy, BoundsPolicy> arena(start, end);
+            tov::memory::TypedMemoryArena<int, NullAllocationPolicy, AlignmentPolicy, ThreadPolicy, BoundsPolicy> arena(start, end);
 
-            //CHECK_THROWS_AS(arena.allocate(), std::bad_alloc);
+            CHECK_THROWS_AS(arena.allocate(), std::bad_alloc);
         }
     }
 

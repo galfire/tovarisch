@@ -148,10 +148,8 @@ namespace tov
             + BoundsCheckingPolicy::FRONT_BOUND_SIZE
         );
         
-        auto const size = sizeof(T);
-        auto const alignment = alignof(T);
         auto _alignmentSpace = alignmentSpace();
-        auto const userPtr = mAlignmentPolicy.align(alignment, size, p, _alignmentSpace);
+        auto const userPtr = mAlignmentPolicy.align(ALIGNMENT, SIZE, p, _alignmentSpace);
 
         {
             auto cursor = static_cast<byte*>(userPtr);
@@ -161,7 +159,7 @@ namespace tov
 
         {
             auto cursor = static_cast<byte*>(userPtr);
-            cursor += size;
+            cursor += SIZE;
             mBoundsCheckingPolicy.signEnd(cursor);
         }
 
@@ -172,7 +170,7 @@ namespace tov
             auto header = AllocationHeader
             {
                 allocation,
-                size
+                SIZE
             };
             memcpy_s(cursor, sizeof(AllocationHeader), &header, sizeof(AllocationHeader));
         }
