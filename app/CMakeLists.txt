@@ -14,6 +14,7 @@ set_target_properties(app PROPERTIES SUFFIX ".exe")
 include_directories(${SIMDE_DIR})
 
 include_directories(${CMAKE_SOURCE_DIR}/projects/core/include)
+include_directories(${CMAKE_SOURCE_DIR}/projects/gear/include)
 include_directories(${CMAKE_SOURCE_DIR}/projects/memory/include)
 include_directories(${CMAKE_SOURCE_DIR}/projects/math/include)
 include_directories(${CMAKE_SOURCE_DIR}/projects/rendering/include)

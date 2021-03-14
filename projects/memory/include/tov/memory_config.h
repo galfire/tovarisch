@@ -8,8 +8,10 @@
 #include "memory/allocated_object.h"
 
 #include "memory/arena/memory_arena.h"
+#include "memory/arena/typed_memory_arena.h"
 #include "memory/heap_area.h"
 
+#include "memory/policies/allocation/freelist.h"
 #include "memory/policies/allocation/linear.h"
 #include "memory/policies/allocation/new_delete.h"
 
@@ -26,6 +28,7 @@ namespace tov
 {
     TOV_NAMESPACE_BEGIN(memory)
 
+    using AllocationPolicyFreelist = policies::allocation::Freelist;
     using AllocationPolicyLinear = policies::allocation::Linear;
     using AllocationPolicyNewDelete = policies::allocation::NewDelete;
 
@@ -58,6 +61,15 @@ namespace tov
 
     using ArenaNewDelete = arena::MemoryArena<
         AllocationPolicyNewDelete,
+        AlignmentPolicyStandard,
+        ThreadPolicySingle,
+        BoundsPolicy
+    >;
+
+    template <class T>
+    using ArenaFreelist = arena::TypedMemoryArena<
+        T,
+        AllocationPolicyFreelist,
         AlignmentPolicyStandard,
         ThreadPolicySingle,
         BoundsPolicy

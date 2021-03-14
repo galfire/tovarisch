@@ -25,6 +25,7 @@ include_directories(${OPENGL_INCLUDE_DIRS})
 
 include_directories(include/tov)
 include_directories(${CMAKE_SOURCE_DIR}/projects/core/include)
+include_directories(${CMAKE_SOURCE_DIR}/projects/gear/include)
 include_directories(${CMAKE_SOURCE_DIR}/projects/math/include)
 include_directories(${CMAKE_SOURCE_DIR}/projects/memory/include)
 include_directories(${CMAKE_SOURCE_DIR}/projects/rendering/include)
