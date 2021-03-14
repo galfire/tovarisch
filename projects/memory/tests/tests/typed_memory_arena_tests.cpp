@@ -5,10 +5,10 @@
 #include <tov/memory/heap_area.h>
 #include <tov/memory/bounds_check_exception.h>
 
+#include "util/policies/alignment/dummy_standard.h"
+
 #include "util/policies/allocation/dummy_fixed.h"
 #include "util/policies/allocation/dummy_null.h"
-
-#include "util/policies/alignment/dummy_standard.h"
 
 #include "util/policies/bounds/dummy_standard.h"
 #include "util/policies/bounds/dummy_token.h"
@@ -16,7 +16,6 @@
 #include "util/policies/bounds/dummy_token_false.h"
 
 #include "util/policies/thread/dummy_unsafe.h"
-
 
 namespace
 {
