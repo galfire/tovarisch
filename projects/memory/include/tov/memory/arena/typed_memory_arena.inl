@@ -2,6 +2,8 @@
 
 #include "memory/bounds_check_exception.h"
 
+#include <iostream>
+
 namespace tov
 {
     TOV_NAMESPACE_BEGIN(memory)
@@ -38,8 +40,7 @@ namespace tov
             static_cast<byte*>(allocation)
             + sizeof(AllocationHeader)
             + BoundsCheckingPolicy::FRONT_BOUND_SIZE
-            );
-
+        );
         auto _alignmentSpace = alignmentSpace();
         auto const userPtr = mAlignmentPolicy.align(ALIGNMENT, SIZE, p, _alignmentSpace);
 

@@ -3,18 +3,19 @@
 
 #include <tov/core.h>
 #include "memory.h"
+#include "heap_area.h"
 
 namespace tov
 {
     TOV_NAMESPACE_BEGIN(memory)
 
-    template<typename Arena, typename Area, size_t Sz>
+    template<
+        class Arena,
+        size_t Sz
+    >
     class AllocatedObject
     {
     public:
-        explicit AllocatedObject() = default;
-        virtual ~AllocatedObject() = default;
-
         static void* operator new(size_t sz)
         {
             return sArena->allocate();
@@ -25,24 +26,14 @@ namespace tov
             sArena->deallocate(ptr);
         }
 
-        static void* operator new[](size_t sz)
-        {
-            return sArena->allocate(sz);
-        }
-
-        static void operator delete[](void* ptr)
-        {
-            sArena->deallocate(ptr);
-        }
-
-        inline static void reset()
+        static void reset()
         {
             sArena->reset();
         }
 
     private:
-        static Area* sArea = new Area();
-        static Arena* sArena = new Arena(
+        static inline HeapArea* sArea = new HeapArea(Sz);
+        static inline Arena* sArena = new Arena(
             sArea->getStart(),
             sArea->getEnd()
         );
