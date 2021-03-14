@@ -38,7 +38,6 @@ add_library(rendering_gl STATIC ${SOURCES} "src/rendering_gl/render_system.cpp")
 set(TARGET_NAME rendering_gl)
 include(${CMAKE_SOURCE_DIR}/projects/cmake/debug.cmake)
 
-target_link_libraries(rendering_gl memory)
 target_link_libraries(rendering_gl rendering)
 
 if(${GL_IMPL} EQUAL ${GL_IMPL_GL})

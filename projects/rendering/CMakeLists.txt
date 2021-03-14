@@ -20,7 +20,6 @@ set(TARGET_NAME rendering)
 include(${CMAKE_SOURCE_DIR}/projects/cmake/debug.cmake)
 
 target_link_libraries(rendering math)
-target_link_libraries(rendering memory)
 
 if(${COMPILER} EQUAL ${COMPILER_EMCC})
     message("Rendering: Adding platform web")

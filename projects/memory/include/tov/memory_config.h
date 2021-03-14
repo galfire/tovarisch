@@ -17,7 +17,6 @@
 #include "memory/policies/alignment/none.h"
 
 #include "memory/policies/bounds/none.h"
-#include "memory/policies/bounds/simple.h"
 #include "memory/policies/bounds/standard.h"
 #include "memory/policies/bounds/token.h"
 
@@ -42,7 +41,10 @@ namespace tov
     template <byte TOKEN>
     using Token = policies::bounds::Token<TOKEN>;
     
-    using BoundsPolicy = Standard<Token<0xAB>, Token<0xBB>>;
+    using BoundsPolicy = Standard<
+        Token<0xAB>,
+        Token<0xBB>
+    >;
 
 #else
     using BoundsPolicy = policies::bounds::None;

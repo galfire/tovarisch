@@ -42,7 +42,6 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
     target_link_libraries(app glew)
 endif()
 
-target_link_libraries(app memory)
 target_link_libraries(app math)
 target_link_libraries(app rendering)
 target_link_libraries(app rendering_gl)
