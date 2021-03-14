@@ -7,7 +7,7 @@
 
 namespace
 {
-	class Foo
+	class alignas(8) Foo
 	{
 	public:
 		Foo(int i)
@@ -16,7 +16,7 @@ namespace
 			std::cout << "ALLOCATING FOO (" << i << "): " << this << "\n";
 		}
 
-		virtual ~Foo()
+		~Foo()
 		{
 			std::cout << "DEALLOCATING FOO: " << this << "\n";
 		}
@@ -38,10 +38,10 @@ namespace
 
 TEST_CASE("AllocatedObject", "[None]")
 {
+	AllocatedFoo::reset();
+
 	SECTION("allocate")
 	{
-		AllocatedFoo::reset();
-
 		SECTION("oding sothingd")
 		{
 			std::cout << "STARTING ALLOCATED OBJECT TEST\n";
