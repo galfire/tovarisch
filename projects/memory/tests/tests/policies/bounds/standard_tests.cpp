@@ -1,14 +1,24 @@
 #include "test_helper.h"
 
-#include <tov/memory/policies/bounds/simple.h>
+#include <tov/memory/policies/bounds/standard.h>
+#include <tov/memory/policies/bounds/token.h>
 
-TEST_CASE("Simple", "[None]")
+namespace
+{
+	template <tov::byte TOKEN>
+	using Token = tov::memory::policies::bounds::Token<TOKEN>;
+
+	template <class Front, class Back>
+	using Policy = tov::memory::policies::bounds::Standard<Front, Back>;
+}
+
+TEST_CASE("Standard", "[None]")
 {
 	const size_t sz = 1024;
 	char buffer[sz];
 	memset(buffer, 0xFF, sz);
 
-	tov::memory::policies::bounds::Simple policy;
+	Policy<Token<'a'>, Token<'z'>> policy;
 
 	SECTION("signFront")
 	{
@@ -16,7 +26,7 @@ TEST_CASE("Simple", "[None]")
 		{
 			policy.signFront(buffer);
 
-			const unsigned char expectedSignature[4] = { 0xAF, 0xAF, 0xAF, 0xAF };
+			const unsigned char expectedSignature[] = "aaaa";
 			const size_t signatureSize = 4;
 
 			int compare = memcmp(expectedSignature, buffer, signatureSize);
@@ -30,7 +40,7 @@ TEST_CASE("Simple", "[None]")
 		{
 			policy.signEnd(buffer);
 
-			const unsigned char expectedSignature[4] = { 0xFC, 0xFC, 0xFC, 0xFC };
+			const unsigned char expectedSignature[] = "zzzz";
 			const size_t signatureSize = 4;
 
 			int compare = memcmp(expectedSignature, buffer, signatureSize);

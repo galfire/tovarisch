@@ -18,6 +18,8 @@
 
 #include "memory/policies/bounds/none.h"
 #include "memory/policies/bounds/simple.h"
+#include "memory/policies/bounds/standard.h"
+#include "memory/policies/bounds/token.h"
 
 #include "memory/policies/thread/single.h"
 
@@ -34,7 +36,14 @@ namespace tov
     using ThreadPolicySingle = policies::thread::Single;
 
 #if TOV_DEBUG
-    using BoundsPolicy = policies::bounds::Simple;
+    template <class Front, class Back>
+    using Standard = policies::bounds::Standard<Front, Back>;
+
+    template <byte TOKEN>
+    using Token = policies::bounds::Token<TOKEN>;
+    
+    using BoundsPolicy = Standard<Token<0xAB>, Token<0xBB>>;
+
 #else
     using BoundsPolicy = policies::bounds::None;
 #endif

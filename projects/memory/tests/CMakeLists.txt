@@ -11,8 +11,5 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
 include_directories(${CMAKE_SOURCE_DIR}/projects/memory/include)
 
-target_link_libraries(memory_tests memory)
-target_link_libraries(memory_tests gear)
-
 enable_testing()
 add_test(NAME memory_tests COMMAND memory_tests)

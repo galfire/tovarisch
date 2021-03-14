@@ -12,11 +12,8 @@ namespace tov
     class None
     {
     public:
-        // Number of bytes in the start bound guard
         constexpr static size_t FRONT_BOUND_SIZE = 0;
-        // Number of bytes in the end bound guard
         constexpr static size_t END_BOUND_SIZE = 0;
-
         constexpr static size_t TOTAL_BOUND_SIZE = FRONT_BOUND_SIZE + END_BOUND_SIZE;
 
     public:

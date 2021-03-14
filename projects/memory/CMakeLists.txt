@@ -7,11 +7,8 @@ include_directories(${CMAKE_SOURCE_DIR}/projects/gear/include)
 include_directories(include/tov)
 
 file(GLOB_RECURSE SOURCES src/*.cpp)
-add_library(memory STATIC ${SOURCES})
 
-target_link_libraries(memory gear)
-
-set(TARGET_NAME memory)
-include(${CMAKE_SOURCE_DIR}/projects/cmake/debug.cmake)
+#set(TARGET_NAME memory)
+#include(${CMAKE_SOURCE_DIR}/projects/cmake/debug.cmake)
 
 add_subdirectory("tests")

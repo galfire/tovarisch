@@ -2,24 +2,43 @@
 
 #include <tov/memory/memory_arena.h>
 #include <tov/memory/policies/alignment/standard.h>
-#include <tov/memory/policies/bounds/simple.h>
 
 #include "util/policies/allocation/dummy_fixed.h"
 #include "util/policies/allocation/dummy_null.h"
+
 #include "util/policies/alignment/dummy_standard.h"
+
+#include "util/policies/bounds/dummy_standard.h"
+#include "util/policies/bounds/dummy_token.h"
+#include "util/policies/bounds/dummy_token_true.h"
+#include "util/policies/bounds/dummy_token_false.h"
+
 #include "util/policies/thread/dummy_unsafe.h"
 
 #include <tov/memory/heap_area.h>
 
-TEST_CASE("TypedMemoryArena", "[MemoryArena]")
+namespace
 {
+    template <class F, class B>
+    using StandardBoundsPolicy = tov::test::memory::policies::bounds::DummyStandard<F, B>;
+
+    template <unsigned char TOKEN>
+    using Token = tov::test::memory::policies::bounds::DummyToken<TOKEN>;
+
+    using TokenTrue = tov::test::memory::policies::bounds::DummyTokenTrue;
+    using TokenFalse = tov::test::memory::policies::bounds::DummyTokenFalse;
+    using BoundsPolicy = StandardBoundsPolicy<TokenTrue, TokenTrue>;
+
+    using AlignmentPolicy = tov::test::memory::policies::alignment::DummyStandard;
+
     using AllocationPolicy = tov::test::memory::policies::allocation::DummyFixed;
     using NullAllocationPolicy = tov::test::memory::policies::allocation::DummyNull;
-    using AlignmentPolicy = tov::test::memory::policies::alignment::DummyStandard;
+
     using ThreadPolicy = tov::test::memory::policies::thread::DummyUnsafe;
+}
 
-    using BoundsPolicy = tov::memory::policies::bounds::Simple;
-
+TEST_CASE("TypedMemoryArena", "[MemoryArena]")
+{
     const auto sz = 1024;
     tov::memory::HeapArea area(sz);
     const auto start = area.getStart();
@@ -61,16 +80,48 @@ TEST_CASE("TypedMemoryArena", "[MemoryArena]")
 
             CHECK_THROWS_AS(arena.allocate(), std::bad_alloc);
         }
+
+        SECTION("signs the allocation with the front bound signature")
+        {
+            using BoundsPolicy = StandardBoundsPolicy<Token<'a'>, Token<'z'>>;
+            tov::memory::TypedMemoryArena<int, AllocationPolicy, AlignmentPolicy, ThreadPolicy, BoundsPolicy> arena(start, end);
+            auto ptr = arena.allocate();
+            auto front = (tov::byte*)ptr - BoundsPolicy::FRONT_BOUND_SIZE;
+
+            constexpr auto expectedSignature = "aaaa";
+            CHECK(memcmp(front, expectedSignature, 4) == 0);
+        }
+
+        SECTION("signs the allocation with the end bound signature")
+        {
+            using BoundsPolicy = StandardBoundsPolicy<Token<'a'>, Token<'z'>>;
+            tov::memory::TypedMemoryArena<int, AllocationPolicy, AlignmentPolicy, ThreadPolicy, BoundsPolicy> arena(start, end);
+            auto ptr = arena.allocate();
+            auto end = (tov::byte*)ptr + sizeof(int);
+
+            constexpr auto expectedSignature = "zzzz";
+            CHECK(memcmp(end, expectedSignature, 4) == 0);
+        }
     }
 
     SECTION("deallocate")
     {
-        tov::memory::TypedMemoryArena<int, AllocationPolicy, AlignmentPolicy, ThreadPolicy, BoundsPolicy> arena(start, end);
-        void* ptr = arena.allocate();
-
-        SECTION("does something")
+        SECTION("throws an error when the front signature check fails")
         {
-            arena.deallocate(ptr);
+            using BoundsPolicy = StandardBoundsPolicy<TokenFalse, TokenFalse>;
+            tov::memory::TypedMemoryArena<int, AllocationPolicy, AlignmentPolicy, ThreadPolicy, BoundsPolicy> arena(start, end);
+            void* ptr = arena.allocate();
+
+            CHECK_THROWS_AS(arena.deallocate(ptr), tov::memory::BoundsCheckException);
+        }
+
+        SECTION("throws an error when the end signature check fails")
+        {
+            using BoundsPolicy = StandardBoundsPolicy<TokenTrue, TokenFalse>;
+            tov::memory::TypedMemoryArena<int, AllocationPolicy, AlignmentPolicy, ThreadPolicy, BoundsPolicy> arena(start, end);
+            void* ptr = arena.allocate();
+
+            CHECK_THROWS_AS(arena.deallocate(ptr), tov::memory::BoundsCheckException);
         }
     }
 }

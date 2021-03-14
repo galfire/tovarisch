@@ -108,11 +108,11 @@ namespace tov
         
         auto frontGuard = static_cast<byte*>(ptr) - BoundsCheckingPolicy::FRONT_BOUND_SIZE;
         if (!mBoundsCheckingPolicy.checkFrontSignature(frontGuard))
-            throw BoundsCheckException("front bound bad lol");
+            throw BoundsCheckException("Front bound signature check failed.");
 
         auto endGuard = static_cast<byte*>(ptr) + header.allocationSize;
         if (!mBoundsCheckingPolicy.checkEndSignature(endGuard))
-            throw BoundsCheckException("end bound bad lol");
+            throw BoundsCheckException("End bound signature check failed.");
     }
 
     //
@@ -222,11 +222,11 @@ namespace tov
         
         auto frontGuard = static_cast<byte*>(ptr) - BoundsCheckingPolicy::FRONT_BOUND_SIZE;
         if (!mBoundsCheckingPolicy.checkFrontSignature(frontGuard))
-            throw BoundsCheckException("front bound bad lol");
+            throw BoundsCheckException("Front bound signature check failed.");
 
         auto endGuard = static_cast<byte*>(ptr) + header.allocationSize;
         if (!mBoundsCheckingPolicy.checkEndSignature(endGuard))
-            throw BoundsCheckException("end bound bad lol");
+            throw BoundsCheckException("End bound signature check failed.");
     }
 
     TOV_NAMESPACE_END // memory

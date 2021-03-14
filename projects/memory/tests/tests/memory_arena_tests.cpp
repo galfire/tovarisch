@@ -8,20 +8,35 @@
 #include "util/policies/allocation/dummy_new_delete.h"
 #include "util/policies/allocation/dummy_null.h"
 
-#include "util/policies/bounds/dummy_simple.h"
-#include "util/policies/bounds/dummy_false.h"
+#include "util/policies/bounds/dummy_standard.h"
+#include "util/policies/bounds/dummy_token.h"
+#include "util/policies/bounds/dummy_token_true.h"
+#include "util/policies/bounds/dummy_token_false.h"
 
 #include "util/policies/thread/dummy_unsafe.h"
 
+namespace
+{
+    template <class F, class B>
+    using StandardBoundsPolicy = tov::test::memory::policies::bounds::DummyStandard<F, B>;
+
+    template <unsigned char TOKEN>
+    using Token = tov::test::memory::policies::bounds::DummyToken<TOKEN>;
+
+    using TokenTrue = tov::test::memory::policies::bounds::DummyTokenTrue;
+    using TokenFalse = tov::test::memory::policies::bounds::DummyTokenFalse;
+    using BoundsPolicy = StandardBoundsPolicy<TokenTrue, TokenTrue>;
+
+    using AlignmentPolicy = tov::test::memory::policies::alignment::DummyStandard;
+    
+    using AllocationPolicy = tov::test::memory::policies::allocation::DummyNewDelete;
+    using NullAllocationPolicy = tov::test::memory::policies::allocation::DummyNull;
+
+    using ThreadPolicy = tov::test::memory::policies::thread::DummyUnsafe;
+}
 
 TEST_CASE("MemoryArena", "[MemoryArena]")
 {
-    using AlignmentPolicy = tov::test::memory::policies::alignment::DummyStandard;
-    using AllocationPolicy = tov::test::memory::policies::allocation::DummyNewDelete;
-    using NullAllocationPolicy = tov::test::memory::policies::allocation::DummyNull;
-    using BoundsPolicy = tov::test::memory::policies::bounds::DummySimple;
-    using ThreadPolicy = tov::test::memory::policies::thread::DummyUnsafe;
-
     const size_t sz = 1024;
     tov::memory::HeapArea area(sz);
 
@@ -62,18 +77,24 @@ TEST_CASE("MemoryArena", "[MemoryArena]")
 
         SECTION("signs the allocation with the front bound signature")
         {
+            using BoundsPolicy = StandardBoundsPolicy<Token<'a'>, Token<'z'>>;
             tov::memory::MemoryArena<AllocationPolicy, AlignmentPolicy, ThreadPolicy, BoundsPolicy> arena;
             auto ptr = arena.allocate(sizeof(int), alignof(int));
             auto front = (tov::byte*)ptr - BoundsPolicy::FRONT_BOUND_SIZE;
-            CHECK(memcmp(front, BoundsPolicy::FRONT_BOUND_SIGNATURE, BoundsPolicy::FRONT_BOUND_SIZE) == 0);
+            
+            constexpr auto expectedSignature = "aaaa";
+            CHECK(memcmp(front, expectedSignature, 4) == 0);
         }
 
         SECTION("signs the allocation with the end bound signature")
         {
+            using BoundsPolicy = StandardBoundsPolicy<Token<'a'>, Token<'z'>>;
             tov::memory::MemoryArena<AllocationPolicy, AlignmentPolicy, ThreadPolicy, BoundsPolicy> arena;
             auto ptr = arena.allocate(sizeof(int), alignof(int));
             auto end = (tov::byte*)ptr + sizeof(int);
-            CHECK(memcmp(end, BoundsPolicy::END_BOUND_SIGNATURE, BoundsPolicy::END_BOUND_SIZE) == 0);
+
+            constexpr auto expectedSignature = "zzzz";
+            CHECK(memcmp(end, expectedSignature, 4) == 0);
         }
     }
 
@@ -81,7 +102,7 @@ TEST_CASE("MemoryArena", "[MemoryArena]")
     {
         SECTION("throws an error when the front signature check fails")
         {
-            using BoundsPolicy = tov::test::memory::policies::bounds::DummyFalse;
+            using BoundsPolicy = StandardBoundsPolicy<TokenFalse, TokenFalse>;
             tov::memory::MemoryArena<AllocationPolicy, AlignmentPolicy, ThreadPolicy, BoundsPolicy> arena;
             void* ptr = arena.allocate(64, 32);
 
@@ -90,7 +111,7 @@ TEST_CASE("MemoryArena", "[MemoryArena]")
 
         SECTION("throws an error when the end signature check fails")
         {
-            using BoundsPolicy = tov::test::memory::policies::bounds::DummyFalse;
+            using BoundsPolicy = StandardBoundsPolicy<TokenTrue, TokenFalse>;
             tov::memory::MemoryArena<AllocationPolicy, AlignmentPolicy, ThreadPolicy, BoundsPolicy> arena;
             void* ptr = arena.allocate(64, 32);
 
