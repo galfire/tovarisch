@@ -1,10 +1,12 @@
 #include "test_helper.h"
 
-#include <tov/memory/memory_arena.h>
+#include <tov/memory/arena/memory_arena.h>
+
 #include <tov/memory/heap_area.h>
 #include <tov/memory/bounds_check_exception.h>
 
 #include "util/policies/alignment/dummy_standard.h"
+
 #include "util/policies/allocation/dummy_new_delete.h"
 #include "util/policies/allocation/dummy_null.h"
 
@@ -44,7 +46,7 @@ TEST_CASE("MemoryArena", "[MemoryArena]")
     {
         SECTION("returns a valid pointer")
         {
-            tov::memory::MemoryArena<AllocationPolicy, AlignmentPolicy, ThreadPolicy, BoundsPolicy> arena;
+            tov::memory::arena::MemoryArena<AllocationPolicy, AlignmentPolicy, ThreadPolicy, BoundsPolicy> arena;
 
             void* ptr = arena.allocate(64, 32);
             CHECK(ptr != nullptr);
@@ -52,7 +54,7 @@ TEST_CASE("MemoryArena", "[MemoryArena]")
 
         SECTION("allocates a block of memory suitable for the specified size")
         {
-            tov::memory::MemoryArena<AllocationPolicy, AlignmentPolicy, ThreadPolicy, BoundsPolicy> arena;
+            tov::memory::arena::MemoryArena<AllocationPolicy, AlignmentPolicy, ThreadPolicy, BoundsPolicy> arena;
 
             void* ptr = arena.allocate(sizeof(int), alignof(int));
             int* value = static_cast<int*>(ptr);
@@ -62,7 +64,7 @@ TEST_CASE("MemoryArena", "[MemoryArena]")
 
         SECTION("allocates a block of memory aligned to the specified alignment")
         {
-            tov::memory::MemoryArena<AllocationPolicy, AlignmentPolicy, ThreadPolicy, BoundsPolicy> arena;
+            tov::memory::arena::MemoryArena<AllocationPolicy, AlignmentPolicy, ThreadPolicy, BoundsPolicy> arena;
 
             void* ptr = arena.allocate(sizeof(int), alignof(int));
             CHECK((uintptr_t)ptr % alignof(int) == 0);
@@ -70,7 +72,7 @@ TEST_CASE("MemoryArena", "[MemoryArena]")
 
         SECTION("throws a bad_alloc when the allocation policy returns null")
         {
-            tov::memory::MemoryArena<NullAllocationPolicy, AlignmentPolicy, ThreadPolicy, BoundsPolicy> arena;
+            tov::memory::arena::MemoryArena<NullAllocationPolicy, AlignmentPolicy, ThreadPolicy, BoundsPolicy> arena;
 
             CHECK_THROWS_AS(arena.allocate(8, 8), std::bad_alloc);
         }
@@ -78,7 +80,7 @@ TEST_CASE("MemoryArena", "[MemoryArena]")
         SECTION("signs the allocation with the front bound signature")
         {
             using BoundsPolicy = StandardBoundsPolicy<Token<'a'>, Token<'z'>>;
-            tov::memory::MemoryArena<AllocationPolicy, AlignmentPolicy, ThreadPolicy, BoundsPolicy> arena;
+            tov::memory::arena::MemoryArena<AllocationPolicy, AlignmentPolicy, ThreadPolicy, BoundsPolicy> arena;
             auto ptr = arena.allocate(sizeof(int), alignof(int));
             auto front = (tov::byte*)ptr - BoundsPolicy::FRONT_BOUND_SIZE;
             
@@ -89,7 +91,7 @@ TEST_CASE("MemoryArena", "[MemoryArena]")
         SECTION("signs the allocation with the end bound signature")
         {
             using BoundsPolicy = StandardBoundsPolicy<Token<'a'>, Token<'z'>>;
-            tov::memory::MemoryArena<AllocationPolicy, AlignmentPolicy, ThreadPolicy, BoundsPolicy> arena;
+            tov::memory::arena::MemoryArena<AllocationPolicy, AlignmentPolicy, ThreadPolicy, BoundsPolicy> arena;
             auto ptr = arena.allocate(sizeof(int), alignof(int));
             auto end = (tov::byte*)ptr + sizeof(int);
 
@@ -103,7 +105,7 @@ TEST_CASE("MemoryArena", "[MemoryArena]")
         SECTION("throws an error when the front signature check fails")
         {
             using BoundsPolicy = StandardBoundsPolicy<TokenFalse, TokenFalse>;
-            tov::memory::MemoryArena<AllocationPolicy, AlignmentPolicy, ThreadPolicy, BoundsPolicy> arena;
+            tov::memory::arena::MemoryArena<AllocationPolicy, AlignmentPolicy, ThreadPolicy, BoundsPolicy> arena;
             void* ptr = arena.allocate(64, 32);
 
             CHECK_THROWS_AS(arena.deallocate(ptr), tov::memory::BoundsCheckException);
@@ -112,7 +114,7 @@ TEST_CASE("MemoryArena", "[MemoryArena]")
         SECTION("throws an error when the end signature check fails")
         {
             using BoundsPolicy = StandardBoundsPolicy<TokenTrue, TokenFalse>;
-            tov::memory::MemoryArena<AllocationPolicy, AlignmentPolicy, ThreadPolicy, BoundsPolicy> arena;
+            tov::memory::arena::MemoryArena<AllocationPolicy, AlignmentPolicy, ThreadPolicy, BoundsPolicy> arena;
             void* ptr = arena.allocate(64, 32);
 
             CHECK_THROWS_AS(arena.deallocate(ptr), tov::memory::BoundsCheckException);

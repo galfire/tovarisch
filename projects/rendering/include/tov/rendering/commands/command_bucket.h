@@ -7,7 +7,6 @@
 
 #include <tov/memory_config.h>
 #include <tov/memory/heap_area.h>
-#include <tov/memory/memory_arena.h>
 
 #include <array>
 

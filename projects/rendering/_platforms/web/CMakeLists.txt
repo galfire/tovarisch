@@ -15,6 +15,5 @@ add_library(rendering_web STATIC ${SOURCES})
 set(TARGET_NAME rendering_web)
 include(${CMAKE_SOURCE_DIR}/projects/cmake/debug.cmake)
 
-target_link_libraries(rendering_web memory)
 target_link_libraries(rendering_web math)
 target_link_libraries(rendering_web rendering)

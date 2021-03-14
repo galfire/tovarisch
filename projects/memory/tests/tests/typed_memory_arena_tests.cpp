@@ -1,7 +1,9 @@
 #include "test_helper.h"
 
-#include <tov/memory/memory_arena.h>
-#include <tov/memory/policies/alignment/standard.h>
+#include <tov/memory/arena/typed_memory_arena.h>
+
+#include <tov/memory/heap_area.h>
+#include <tov/memory/bounds_check_exception.h>
 
 #include "util/policies/allocation/dummy_fixed.h"
 #include "util/policies/allocation/dummy_null.h"
@@ -15,7 +17,6 @@
 
 #include "util/policies/thread/dummy_unsafe.h"
 
-#include <tov/memory/heap_area.h>
 
 namespace
 {
@@ -48,7 +49,7 @@ TEST_CASE("TypedMemoryArena", "[MemoryArena]")
     {
         SECTION("returns a valid pointer")
         {
-            tov::memory::TypedMemoryArena<int, AllocationPolicy, AlignmentPolicy, ThreadPolicy, BoundsPolicy> arena(start, end);
+            tov::memory::arena::TypedMemoryArena<int, AllocationPolicy, AlignmentPolicy, ThreadPolicy, BoundsPolicy> arena(start, end);
 
             void* ptr = arena.allocate();
             CHECK(ptr != nullptr);
@@ -58,7 +59,7 @@ TEST_CASE("TypedMemoryArena", "[MemoryArena]")
 
         SECTION("allocates a block of memory suitable for the specified size")
         {
-            tov::memory::TypedMemoryArena<int, AllocationPolicy, AlignmentPolicy, ThreadPolicy, BoundsPolicy> arena(start, end);
+            tov::memory::arena::TypedMemoryArena<int, AllocationPolicy, AlignmentPolicy, ThreadPolicy, BoundsPolicy> arena(start, end);
 
             void* ptr = arena.allocate();
             int* value = static_cast<int*>(ptr);
@@ -68,7 +69,7 @@ TEST_CASE("TypedMemoryArena", "[MemoryArena]")
 
         SECTION("allocates a block of memory aligned to the specified alignment")
         {
-            tov::memory::TypedMemoryArena<int, AllocationPolicy, AlignmentPolicy, ThreadPolicy, BoundsPolicy> arena(start, end);
+            tov::memory::arena::TypedMemoryArena<int, AllocationPolicy, AlignmentPolicy, ThreadPolicy, BoundsPolicy> arena(start, end);
 
             void* ptr = arena.allocate();
             CHECK((uintptr_t)ptr % alignof(int) == 0);
@@ -76,7 +77,7 @@ TEST_CASE("TypedMemoryArena", "[MemoryArena]")
 
         SECTION("throws a bad_alloc when the allocation policy returns null")
         {
-            tov::memory::TypedMemoryArena<int, NullAllocationPolicy, AlignmentPolicy, ThreadPolicy, BoundsPolicy> arena(start, end);
+            tov::memory::arena::TypedMemoryArena<int, NullAllocationPolicy, AlignmentPolicy, ThreadPolicy, BoundsPolicy> arena(start, end);
 
             CHECK_THROWS_AS(arena.allocate(), std::bad_alloc);
         }
@@ -84,7 +85,7 @@ TEST_CASE("TypedMemoryArena", "[MemoryArena]")
         SECTION("signs the allocation with the front bound signature")
         {
             using BoundsPolicy = StandardBoundsPolicy<Token<'a'>, Token<'z'>>;
-            tov::memory::TypedMemoryArena<int, AllocationPolicy, AlignmentPolicy, ThreadPolicy, BoundsPolicy> arena(start, end);
+            tov::memory::arena::TypedMemoryArena<int, AllocationPolicy, AlignmentPolicy, ThreadPolicy, BoundsPolicy> arena(start, end);
             auto ptr = arena.allocate();
             auto front = (tov::byte*)ptr - BoundsPolicy::FRONT_BOUND_SIZE;
 
@@ -95,7 +96,7 @@ TEST_CASE("TypedMemoryArena", "[MemoryArena]")
         SECTION("signs the allocation with the end bound signature")
         {
             using BoundsPolicy = StandardBoundsPolicy<Token<'a'>, Token<'z'>>;
-            tov::memory::TypedMemoryArena<int, AllocationPolicy, AlignmentPolicy, ThreadPolicy, BoundsPolicy> arena(start, end);
+            tov::memory::arena::TypedMemoryArena<int, AllocationPolicy, AlignmentPolicy, ThreadPolicy, BoundsPolicy> arena(start, end);
             auto ptr = arena.allocate();
             auto end = (tov::byte*)ptr + sizeof(int);
 
@@ -109,7 +110,7 @@ TEST_CASE("TypedMemoryArena", "[MemoryArena]")
         SECTION("throws an error when the front signature check fails")
         {
             using BoundsPolicy = StandardBoundsPolicy<TokenFalse, TokenFalse>;
-            tov::memory::TypedMemoryArena<int, AllocationPolicy, AlignmentPolicy, ThreadPolicy, BoundsPolicy> arena(start, end);
+            tov::memory::arena::TypedMemoryArena<int, AllocationPolicy, AlignmentPolicy, ThreadPolicy, BoundsPolicy> arena(start, end);
             void* ptr = arena.allocate();
 
             CHECK_THROWS_AS(arena.deallocate(ptr), tov::memory::BoundsCheckException);
@@ -118,7 +119,7 @@ TEST_CASE("TypedMemoryArena", "[MemoryArena]")
         SECTION("throws an error when the end signature check fails")
         {
             using BoundsPolicy = StandardBoundsPolicy<TokenTrue, TokenFalse>;
-            tov::memory::TypedMemoryArena<int, AllocationPolicy, AlignmentPolicy, ThreadPolicy, BoundsPolicy> arena(start, end);
+            tov::memory::arena::TypedMemoryArena<int, AllocationPolicy, AlignmentPolicy, ThreadPolicy, BoundsPolicy> arena(start, end);
             void* ptr = arena.allocate();
 
             CHECK_THROWS_AS(arena.deallocate(ptr), tov::memory::BoundsCheckException);

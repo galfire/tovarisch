@@ -17,7 +17,6 @@ add_library(rendering_win32_gl STATIC ${SOURCES})
 set(TARGET_NAME rendering_win32_gl)
 include(${CMAKE_SOURCE_DIR}/projects/cmake/debug.cmake)
 
-target_link_libraries(rendering_win32_gl memory)
 target_link_libraries(rendering_win32_gl math)
 target_link_libraries(rendering_win32_gl rendering)
 target_link_libraries(rendering_win32_gl rendering_win32)

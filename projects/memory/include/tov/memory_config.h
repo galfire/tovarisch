@@ -7,7 +7,7 @@
 
 #include "memory/allocated_object.h"
 
-#include "memory/memory_arena.h"
+#include "memory/arena/memory_arena.h"
 #include "memory/heap_area.h"
 
 #include "memory/policies/allocation/linear.h"
@@ -45,19 +45,18 @@ namespace tov
         Token<0xAB>,
         Token<0xBB>
     >;
-
 #else
     using BoundsPolicy = policies::bounds::None;
 #endif
 
-    using ArenaLinear = MemoryArena<
+    using ArenaLinear = arena::MemoryArena<
         AllocationPolicyLinear, 
         AlignmentPolicyStandard, 
         ThreadPolicySingle, 
         BoundsPolicy
     >;
 
-    using ArenaNewDelete = MemoryArena<
+    using ArenaNewDelete = arena::MemoryArena<
         AllocationPolicyNewDelete,
         AlignmentPolicyStandard,
         ThreadPolicySingle,
