@@ -105,10 +105,14 @@ namespace tov
     inline auto MemoryArena<AllocationPolicy, AlignmentPolicy, ThreadPolicy, BoundsCheckingPolicy>::checkBounds(void* ptr) const -> void
     {
         auto header = getAllocationHeader(ptr);
+        
         auto frontGuard = static_cast<byte*>(ptr) - BoundsCheckingPolicy::FRONT_BOUND_SIZE;
-        assert(mBoundsCheckingPolicy.checkFrontSignature(frontGuard));
+        if (!mBoundsCheckingPolicy.checkFrontSignature(frontGuard))
+            throw BoundsCheckException("front bound bad lol");
+
         auto endGuard = static_cast<byte*>(ptr) + header.allocationSize;
-        assert(mBoundsCheckingPolicy.checkEndSignature(endGuard));
+        if (!mBoundsCheckingPolicy.checkEndSignature(endGuard))
+            throw BoundsCheckException("end bound bad lol");
     }
 
     //
@@ -215,10 +219,14 @@ namespace tov
         inline auto TypedMemoryArena<T, AllocationPolicy, AlignmentPolicy, ThreadPolicy, BoundsCheckingPolicy>::checkBounds(void* ptr) const -> void
     {
         auto header = getAllocationHeader(ptr);
+        
         auto frontGuard = static_cast<byte*>(ptr) - BoundsCheckingPolicy::FRONT_BOUND_SIZE;
-        assert(mBoundsCheckingPolicy.checkFrontSignature(frontGuard));
+        if (!mBoundsCheckingPolicy.checkFrontSignature(frontGuard))
+            throw BoundsCheckException("front bound bad lol");
+
         auto endGuard = static_cast<byte*>(ptr) + header.allocationSize;
-        assert(mBoundsCheckingPolicy.checkEndSignature(endGuard));
+        if (!mBoundsCheckingPolicy.checkEndSignature(endGuard))
+            throw BoundsCheckException("end bound bad lol");
     }
 
     TOV_NAMESPACE_END // memory

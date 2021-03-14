@@ -3,6 +3,8 @@
 
 #include <tov/core.h>
 
+#include "bounds_check_exception.h"
+
 namespace tov
 {
     TOV_NAMESPACE_BEGIN(memory)

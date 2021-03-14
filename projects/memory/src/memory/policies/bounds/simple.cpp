@@ -23,16 +23,12 @@ namespace tov
 
     bool Simple::checkFrontSignature(void* memory) const
     {
-        if (memcmp(memory, FRONT_BOUND_SIGNATURE, FRONT_BOUND_SIZE) != 0)
-            return false;
-        return true;
+        return memcmp(memory, FRONT_BOUND_SIGNATURE, FRONT_BOUND_SIZE) == 0;
     }
 
     bool Simple::checkEndSignature(void* memory) const
     {
-        if (memcmp(memory, END_BOUND_SIGNATURE, END_BOUND_SIZE) != 0)
-            return false;
-        return true;
+        return memcmp(memory, END_BOUND_SIGNATURE, END_BOUND_SIZE) == 0;
     }
 
     TOV_NAMESPACE_END // bounds

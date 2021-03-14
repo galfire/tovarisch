@@ -4,19 +4,21 @@
 #include <tov/memory/policies/alignment/standard.h>
 #include <tov/memory/policies/bounds/simple.h>
 
-#include "util/dummy_fixed_allocation_policy.h"
-#include "util/dummy_null_allocation_policy.h"
-#include "util/dummy_thread_policy.h"
+#include "util/policies/allocation/dummy_fixed.h"
+#include "util/policies/allocation/dummy_null.h"
+#include "util/policies/alignment/dummy_standard.h"
+#include "util/policies/thread/dummy_unsafe.h"
 
 #include <tov/memory/heap_area.h>
 
 TEST_CASE("TypedMemoryArena", "[MemoryArena]")
 {
-    using AllocationPolicy = tov::test::memory::DummyFixedAllocationPolicy;
-    using NullAllocationPolicy = tov::test::memory::DummyNullAllocationPolicy;
-    using AlignmentPolicy = tov::memory::policies::alignment::Standard;
+    using AllocationPolicy = tov::test::memory::policies::allocation::DummyFixed;
+    using NullAllocationPolicy = tov::test::memory::policies::allocation::DummyNull;
+    using AlignmentPolicy = tov::test::memory::policies::alignment::DummyStandard;
+    using ThreadPolicy = tov::test::memory::policies::thread::DummyUnsafe;
+
     using BoundsPolicy = tov::memory::policies::bounds::Simple;
-    using ThreadPolicy = tov::test::memory::DummyThreadPolicy;
 
     const auto sz = 1024;
     tov::memory::HeapArea area(sz);
