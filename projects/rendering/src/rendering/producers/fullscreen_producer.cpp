@@ -95,19 +95,19 @@ namespace tov
         );
 
         {
-            auto& command = mCommandBucket.addCommand<commands::StartDrawDataContext>(0);
+            auto& command = mCommandBucket.addCommand<commands::StartDrawDataContext>();
             command.drawDataContext = drawDataContext;
         }
         {
-            auto& command = mCommandBucket.addCommand<commands::UploadConstants>(0);
+            auto& command = mCommandBucket.addCommand<commands::UploadConstants>();
             command.programInstance = mProgramInstance;
         }
         {
-            auto& command = mCommandBucket.addCommand<commands::Draw>(0);
+            auto& command = mCommandBucket.addCommand<commands::Draw>();
             command.drawData = &drawData;
         }
         {
-            auto& command = mCommandBucket.addCommand<commands::EndDrawDataContext>(0);
+            auto& command = mCommandBucket.addCommand<commands::EndDrawDataContext>();
             command.drawDataContext = drawDataContext;
         }
 

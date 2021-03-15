@@ -76,30 +76,30 @@ namespace tov
                 auto* drawDataContext = backend::createDrawDataContext();
 
                 {
-                    auto& command = bucket.addCommand<commands::ApplyViewport>(viewport->getZIndex());
+                    auto& command = bucket.addCommand<commands::ApplyViewport>();
                     command.viewport = viewport;
                 }
                 {
-                    auto& command = bucket.addCommand<commands::StartDrawDataContext>(0);
+                    auto& command = bucket.addCommand<commands::StartDrawDataContext>();
                     command.drawDataContext = drawDataContext;
                 }
                 {
-                    auto& command = bucket.addCommand<commands::SetMVP>(0);
+                    auto& command = bucket.addCommand<commands::SetMVP>();
                     command.programInstance = programInstance;
                     command.modelMatrix = math::Matrix4::IDENTITY;
                     command.viewMatrix = viewMatrix;
                     command.projectionMatrix = projectionMatrix;
                 }
                 {
-                    auto& command = bucket.addCommand<commands::UploadConstants>(0);
+                    auto& command = bucket.addCommand<commands::UploadConstants>();
                     command.programInstance = programInstance;
                 }
                 {
-                    auto& command = bucket.addCommand<commands::Draw>(0);
+                    auto& command = bucket.addCommand<commands::Draw>();
                     command.drawData = &mSkybox->getDrawData();
                 }
                 {
-                    auto& command = bucket.addCommand<commands::EndDrawDataContext>(0);
+                    auto& command = bucket.addCommand<commands::EndDrawDataContext>();
                     command.drawDataContext = drawDataContext;
                 }
             }
@@ -129,7 +129,7 @@ namespace tov
                 auto const& projectionMatrix = camera->getProjectionMatrix();
 
                 {
-                    auto& command = bucket.addCommand<commands::ApplyViewport>(viewport->getZIndex());
+                    auto& command = bucket.addCommand<commands::ApplyViewport>();
                     command.viewport = viewport;
                 }
                 {
@@ -140,7 +140,7 @@ namespace tov
                 auto* drawDataContext = backend::createDrawDataContext();
 
                 {
-                    auto& command = bucket.addCommand<commands::StartDrawDataContext>(0);
+                    auto& command = bucket.addCommand<commands::StartDrawDataContext>();
                     command.drawDataContext = drawDataContext;
                 }
 
@@ -149,14 +149,14 @@ namespace tov
                     auto const& modelMatrix = node->getDerivedTransform().getHomogeneousMatrix();
 
                     {
-                        auto& command = bucket.addCommand<commands::SetMVP>(0);
+                        auto& command = bucket.addCommand<commands::SetMVP>();
                         command.programInstance = programInstance;
                         command.modelMatrix = modelMatrix;
                         command.viewMatrix = viewMatrix;
                         command.projectionMatrix = projectionMatrix;
                     }
                     {
-                        auto& command = bucket.addCommand<commands::UploadConstants>(0);
+                        auto& command = bucket.addCommand<commands::UploadConstants>();
                         command.programInstance = programInstance;
                     }
 
@@ -166,14 +166,14 @@ namespace tov
                         auto& drawDataList = sceneObject->getDrawDataList();
                         for (auto&& drawData : drawDataList)
                         {
-                            auto& command = bucket.addCommand<commands::Draw>(0);
+                            auto& command = bucket.addCommand<commands::Draw>();
                             command.drawData = &drawData;
                         }
                     }
                 }
 
                 {
-                    auto& command = bucket.addCommand<commands::EndDrawDataContext>(0);
+                    auto& command = bucket.addCommand<commands::EndDrawDataContext>();
                     command.drawDataContext = drawDataContext;
                 }
             }

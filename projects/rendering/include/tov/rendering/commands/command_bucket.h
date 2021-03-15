@@ -18,7 +18,12 @@ namespace tov
     template <uint Size>
     class CommandBucket
     {
-        using Key = uint;
+        template <class Command>
+        struct Layout
+        {
+            CommandPacket packet;
+            Command command;
+        };
 
     public:
         CommandBucket() noexcept
@@ -28,18 +33,11 @@ namespace tov
 
         ~CommandBucket() noexcept = default;
 
-        template <class Command, class... U>
-        auto addCommand(Key key) -> auto&
+        template <class Command>
+        auto addCommand() -> auto&
         {
-            struct Layout
-            {
-                CommandPacket packet;
-                Command command;
-            };
-
-            auto size = sizeof(Layout);
-            auto memory = this->mArena.allocate(size, alignof(Layout));
-            auto layout = new (memory) Layout;
+            auto memory = this->mArena.allocate(sizeof(Layout<Command>), alignof(Layout<Command>));
+            auto layout = new (memory) Layout<Command>;
             auto& packet = layout->packet;
             packet.setCommand(&layout->command);
             packet.setDispatchFunction(&Command::DispatchFunction);
@@ -47,7 +45,6 @@ namespace tov
             {
                 // TODO: synchronization
                 auto i = this->mCurrent++;
-                this->mKeys[i] = key;
                 this->mCommandPackets[i] = &packet;
             }
 
@@ -77,7 +74,6 @@ namespace tov
         memory::HeapArea mHeapArea;
         memory::ArenaLinear mArena;
 
-        std::array<Key, Size> mKeys = {};
         std::array<CommandPacket*, Size> mCommandPackets = {};
         uint mCurrent = 0;
     };
