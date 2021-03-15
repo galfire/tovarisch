@@ -19,10 +19,9 @@ namespace tov
 
     namespace
     {
-        using CType = pipeline::ConstantType;
-        using Matrix4 = math::Matrix4;
-        auto MAT_4 = pipeline::ConstantDefinition<CType::MATRIX_4, Matrix4>::DEFINITION;
-        auto TEX_2D = pipeline::ConstantDefinition<CType::TEXTURE_2D, int>::DEFINITION;
+        using pipeline::ConstantDefinition, pipeline::ConstantType;
+        auto MAT_4 = ConstantDefinition<ConstantType::MATRIX_4, math::Matrix4>::DEFINITION;
+        auto TEX_2D = ConstantDefinition<ConstantType::TEXTURE_2D, int>::DEFINITION;
     }
 
     SkyboxProducer::SkyboxProducer(RenderSystem& renderSystem, ResourceBucket& resourceBucket) noexcept
@@ -71,7 +70,7 @@ namespace tov
 
     void SkyboxProducer::setOutputs()
     {
-        setOutput("skyboxTexture", { mTexture });
+        setOutput("skyboxTexture", mTexture);
     }
 
     void SkyboxProducer::render()

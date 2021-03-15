@@ -39,7 +39,7 @@ namespace tov
         virtual void render() TOV_ABSTRACT;
 
     protected:
-        void setOutput(const std::string& name, Resource resource);
+        void setOutput(const std::string& name, void* resource);
         void setInput(const std::string& name);
 
         auto getResource(const std::string& name) const -> void*;

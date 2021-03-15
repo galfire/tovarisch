@@ -30,8 +30,8 @@ namespace tov
 
     namespace
     {
-        using CType = pipeline::ConstantType;
-        auto TEX_2D = pipeline::ConstantDefinition<CType::TEXTURE_2D, int>::DEFINITION;
+        using pipeline::ConstantDefinition, pipeline::ConstantType;
+        auto TEX_2D = ConstantDefinition<ConstantType::TEXTURE_2D, int>::DEFINITION;
     }
 
     FullscreenProducer::FullscreenProducer(RenderSystem& renderSystem, ResourceBucket& resourceBucket) noexcept
