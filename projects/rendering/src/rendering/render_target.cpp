@@ -30,8 +30,8 @@ namespace tov
         Colour backgroundColour
     ) -> Viewport&
     {
-        auto viewport = std::unique_ptr<Viewport>(
-            new Viewport(
+        {
+            auto viewport = std::make_unique<Viewport>(
                 *this,
                 zIndex,
                 normalizedLeft,
@@ -39,9 +39,12 @@ namespace tov
                 normalizedWidth,
                 normalizedHeight,
                 backgroundColour
-            ));
-        mViewports.push_back(std::move(viewport));
-        return *mViewports.back().get();
+            );
+            mViewports.push_back(std::move(viewport));
+        }
+        
+        auto viewport = mViewports.back().get();
+        return *viewport;
     }
 
     TOV_NAMESPACE_END

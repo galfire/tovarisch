@@ -18,6 +18,7 @@ namespace tov
     template <uint Size>
     class CommandBucket
     {
+    private:
         template <class Command>
         struct Layout
         {

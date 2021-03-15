@@ -137,9 +137,7 @@ namespace tov
             auto const& ibo = getIndexData()->getBufferObject();
             auto const& vbos = getVertexData()->getBufferObjects();
             auto materialInstance = mMaterial ? &mMaterial->instantiate() : nullptr;
-            auto submeshInstance = std::unique_ptr<SubmeshInstance>(
-                new SubmeshInstance(ibo, vbos, materialInstance)
-            );
+            auto submeshInstance = std::make_unique<SubmeshInstance>(ibo, vbos, materialInstance);
             mSubmeshInstances.push_back(std::move(submeshInstance));
         }
 
@@ -155,11 +153,9 @@ namespace tov
 
     void Submesh::buildIndexData(geometry::Geometry const& geometry)
     {
-        mIndexData = std::unique_ptr<IndexData>(
-            new IndexData(
-                mParentMesh.getManager().getBufferManager(),
-                geometry.getNumIndices()
-            )
+        mIndexData = std::make_unique<IndexData>(
+            mParentMesh.getManager().getBufferManager(),
+            geometry.getNumIndices()
         );
 
         auto indices = geometry.getIndices();
@@ -204,12 +200,10 @@ namespace tov
 
     void Submesh::buildVertexData(geometry::Geometry const& geometry, VertexDataFormat const& vertexDataFormat)
     {
-        mVertexData = std::unique_ptr<VertexData>(
-            new VertexData(
-                mParentMesh.getManager().getBufferManager(),
-                vertexDataFormat,
-                geometry.getNumVertices()
-            )
+        mVertexData = std::make_unique<VertexData>(
+            mParentMesh.getManager().getBufferManager(),
+            vertexDataFormat,
+            geometry.getNumVertices()
         );
 
         auto handles = vertexDataFormat.getHandles();

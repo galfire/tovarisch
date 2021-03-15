@@ -55,9 +55,7 @@ namespace tov
     auto MeshManager::create() -> Mesh*
     {
         {
-            auto mesh = std::unique_ptr<Mesh>(
-                new Mesh(*this)
-            );
+            auto mesh = std::make_unique<Mesh>(*this);
             mMeshList.push_back(std::move(mesh));
         }
 

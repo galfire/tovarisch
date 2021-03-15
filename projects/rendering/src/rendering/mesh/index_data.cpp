@@ -14,9 +14,7 @@ namespace tov
     ) noexcept
     {
         auto buffer = bufferManager.createIndexBuffer(numIndices);
-        auto bufferObject = std::unique_ptr<buffers::IndexBufferObject>(
-            new buffers::IndexBufferObject(*buffer, numIndices)
-        );
+        auto bufferObject = std::make_unique<buffers::IndexBufferObject>(*buffer, numIndices);
         mIndexBufferObject = std::move(bufferObject);
     }
 

@@ -25,13 +25,11 @@ namespace tov
         pipeline::RasterizerStateDescriptor rasterizerStateDescriptor;
         rasterizerStateDescriptor.setCullMode(pipeline::CullMode::FRONT);
 
-        mDrawData = std::unique_ptr<mesh::DrawData>(
-            new mesh::DrawData(
-                submeshInstance.getIndexBufferObject(),
-                submeshInstance.getVertexBufferObjects(),
-                textureUsages,
-                rasterizerStateDescriptor
-            )
+        mDrawData = std::make_unique<mesh::DrawData>(
+            submeshInstance.getIndexBufferObject(),
+            submeshInstance.getVertexBufferObjects(),
+            textureUsages,
+            rasterizerStateDescriptor
         );
     }
 

@@ -24,11 +24,11 @@ namespace tov
         if(!dummyCreated)
         {
             // Create dummy context to initialize GLEW
-            auto dummyContext = std::unique_ptr<DummyRenderContext>(new DummyRenderContext(deviceContext));
+            auto dummyContext = std::make_unique<DummyRenderContext>(deviceContext);
             dummyCreated = true;
         }
 
-        mRenderContext = std::unique_ptr<RenderContext>(new RenderContext(deviceContext));
+        mRenderContext = std::make_unique<RenderContext>(deviceContext);
     }
 
     TOV_NAMESPACE_END // gl

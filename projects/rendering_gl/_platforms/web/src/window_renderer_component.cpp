@@ -18,7 +18,7 @@ namespace tov
     void WindowRendererComponent::createRenderContext()
     {
         const DeviceContext& deviceContext = mParentWindow.getPlatformComponent().getDeviceContext();
-        mRenderContext = std::unique_ptr<RenderContext>(new RenderContext(deviceContext));
+        mRenderContext = std::make_unique<RenderContext>(deviceContext);
     }
 
     TOV_NAMESPACE_END // gl

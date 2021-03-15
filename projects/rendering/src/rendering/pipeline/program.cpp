@@ -12,9 +12,7 @@ namespace tov
     auto Program::instantiate() -> ProgramInstance&
     {
         {
-            auto instance = std::unique_ptr<ProgramInstance>(
-                new ProgramInstance(*this, mCPUBufferDescriptor)
-            );
+            auto instance = std::make_unique<ProgramInstance>(*this, mCPUBufferDescriptor);
             mInstances.push_back(std::move(instance));
         }
 

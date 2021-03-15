@@ -22,9 +22,7 @@ namespace tov
     auto Mesh::createSubmesh(geometry::Geometry const& geometry, VertexDataFormat const& vertexDataFormat) -> Submesh&
     {
         {
-            auto submesh = std::unique_ptr<Submesh>(
-                new Submesh(*this, geometry, vertexDataFormat)
-            );
+            auto submesh = std::make_unique<Submesh>(*this, geometry, vertexDataFormat);
             mSubmeshes.push_back(std::move(submesh));
         }
         
@@ -35,9 +33,7 @@ namespace tov
     auto Mesh::instantiate() -> MeshInstance&
     {
         {
-            auto meshInstance = std::unique_ptr<MeshInstance>(
-                new MeshInstance()
-            );
+            auto meshInstance = std::make_unique<MeshInstance>();
             mMeshInstances.push_back(std::move(meshInstance));
         }
 

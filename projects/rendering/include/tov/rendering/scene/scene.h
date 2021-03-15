@@ -31,9 +31,7 @@ namespace tov
         auto create(U&&... args)
         {
             {
-                auto sceneObject = std::unique_ptr<T>(
-                    new T(std::forward<U>(args)...)
-                );
+                auto sceneObject = std::make_unique<T>(std::forward<U>(args)...);
                 mSceneObjects.push_back(std::move(sceneObject));
             }
 

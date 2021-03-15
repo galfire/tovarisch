@@ -12,12 +12,13 @@ namespace tov
 
     auto Material::instantiate() -> MaterialInstance&
     {
-        auto instance = std::unique_ptr<MaterialInstance>(
-            new MaterialInstance(*this, mRasterizerStateDescriptor)
-        );
-        mInstances.push_back(std::move(instance));
-        auto ret = mInstances.back().get();
-        return *ret;
+        {
+            auto instance = std::make_unique<MaterialInstance>(*this, mRasterizerStateDescriptor);
+            mInstances.push_back(std::move(instance));
+        }
+
+        auto instance = mInstances.back().get();
+        return *instance;
     }
 
     TOV_NAMESPACE_END // rendering

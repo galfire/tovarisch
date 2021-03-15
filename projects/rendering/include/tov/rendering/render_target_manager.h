@@ -21,9 +21,7 @@ namespace tov
         auto create(U&&... args)
         {
             {
-                auto renderTarget = std::unique_ptr<T>(
-                    new T(std::forward<U>(args)...)
-                );
+                auto renderTarget = std::make_unique<T>(std::forward<U>(args)...);
                 mRenderTargets.push_back(std::move(renderTarget));
             }
 

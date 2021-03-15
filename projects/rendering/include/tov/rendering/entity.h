@@ -37,9 +37,7 @@ namespace tov
         auto createComponent(U&&... args)
         {
             {
-                auto component = std::unique_ptr<T>(
-                    new T(std::forward<U>(args)...)
-                );
+                auto component = std::make_unique<T>(std::forward<U>(args)...);
                 mComponents.push_back(std::move(component));
             }
 

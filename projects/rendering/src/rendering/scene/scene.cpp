@@ -29,9 +29,7 @@ namespace tov
     Scene::Scene(RenderSystem& renderSystem) noexcept
         : mRenderSystem(renderSystem)
     {
-        mRootNode = std::unique_ptr<SceneNode>(
-            new SceneNode()
-        );
+        mRootNode = std::make_unique<SceneNode>();
     }
 
     Scene::~Scene() noexcept

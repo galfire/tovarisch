@@ -8,12 +8,13 @@ namespace tov
 
     auto SceneNode::createChild() -> SceneNode&
     {
-        auto child = std::unique_ptr<SceneNode>(
-            new SceneNode()
-        );
-        mChildren.push_back(std::move(child));
-        auto ret = mChildren.back().get();
-        return *static_cast<SceneNode*>(ret);
+        {
+            auto child = std::make_unique<SceneNode>();
+            mChildren.push_back(std::move(child));
+        }
+
+        auto child = mChildren.back().get();
+        return *static_cast<SceneNode*>(child);
     }
 
     void SceneNode::attachSceneObject(SceneObject* sceneObject)

@@ -87,9 +87,7 @@ namespace tov
         auto create(size_t size, U&&... args)
         {
             {
-                auto buffer = std::unique_ptr<BufferBase>(
-                    new BufferT(*this, size, std::forward<U>(args)...)
-                );
+                auto buffer = std::make_unique<BufferT>(*this, size, std::forward<U>(args)...);
                 mBuffers.push_back(std::move(buffer));
             }
 
