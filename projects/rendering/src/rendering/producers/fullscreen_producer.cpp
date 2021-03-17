@@ -79,8 +79,7 @@ namespace tov
 
         auto& submeshInstance = mFullscreenQuadInstance->getSubmeshInstance(0);
 
-        //auto texture = reinterpret_cast<texture::Texture*>(getResource("gBufferLighting"));
-        auto texture = reinterpret_cast<texture::Texture*>(getResource("skyboxTexture"));
+        auto texture = getResource<texture::Texture>("skyboxTexture");
 
         std::vector<pipeline::TextureUsage> textureUsages;
         textureUsages.emplace_back(texture, 0);

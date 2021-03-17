@@ -5,6 +5,7 @@
 
 #include "dependency_node.h"
 #include "resource.h"
+#include "resource_bucket.h"
 
 #include <string>
 
@@ -23,8 +24,6 @@ namespace tov
     TOV_NAMESPACE_BEGIN(rendering)
     TOV_NAMESPACE_BEGIN(producers)
 
-    class ResourceBucket;
-
     class Producer
         : public DependencyNode
     {
@@ -42,7 +41,12 @@ namespace tov
         void setOutput(const std::string& name, void* resource);
         void setInput(const std::string& name);
 
-        auto getResource(const std::string& name) const -> void*;
+        template <class ResourceType>
+        auto getResource(const std::string& name) const -> ResourceType*
+        {
+            auto ptr = mResourceBucket.getResource(name).getResource();
+            return reinterpret_cast<ResourceType*>(ptr);
+        }
 
     protected:
         pipeline::Framebuffer* mFramebuffer = nullptr;

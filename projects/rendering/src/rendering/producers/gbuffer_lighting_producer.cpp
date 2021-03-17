@@ -94,9 +94,9 @@ namespace tov
 
         auto& submeshInstance = mFullscreenQuadInstance->getSubmeshInstance(0);
 
-        auto texturePosition = reinterpret_cast<texture::Texture*>(getResource("positionTexture"));
-        auto textureNormal = reinterpret_cast<texture::Texture*>(getResource("normalTexture"));
-        auto textureAlbedo = reinterpret_cast<texture::Texture*>(getResource("albedoTexture"));
+        auto texturePosition = getResource< texture::Texture>("positionTexture");
+        auto textureNormal = getResource<texture::Texture>("normalTexture");
+        auto textureAlbedo = getResource<texture::Texture>("albedoTexture");
 
         std::vector<pipeline::TextureUsage> textureUsages;
         textureUsages.emplace_back(texturePosition, 0);

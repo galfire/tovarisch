@@ -12,7 +12,7 @@ namespace tov
     {
     public:
         DrawDataContext() = default;
-        virtual ~DrawDataContext() = default;
+        virtual ~DrawDataContext() {};
 
         virtual void start() const TOV_ABSTRACT;
         virtual void end() const TOV_ABSTRACT;

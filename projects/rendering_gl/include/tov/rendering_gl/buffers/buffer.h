@@ -40,7 +40,6 @@ namespace tov
     class Buffer
         : public base::Buffer<NullReader, BufferWriter, usageSettings, accessSettings>
         , public Bindable
-        //, public GPUResource<BufferBinder>
     {
     private:
         static GLenum getGLAccessSettings();

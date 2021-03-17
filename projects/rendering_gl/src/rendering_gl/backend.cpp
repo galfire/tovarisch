@@ -164,7 +164,6 @@ namespace tov
         gl::SetRasterizerState(rasterizerStateDescriptor);
 
         auto textureUsages = drawData->getTextureUsages();
-
         for (auto&& textureUsage : textureUsages)
         {
             auto texture = static_cast<rendering::gl::texture::Texture2D const*>(textureUsage.texture);
@@ -283,6 +282,12 @@ namespace tov
     auto createDrawDataContext() -> mesh::DrawDataContext*
     {
         return new rendering::gl::mesh::DrawDataContext();
+    }
+
+    auto createDrawDataContext(mesh::DrawData* drawData) -> mesh::DrawDataContext*
+    {
+        auto ddc = new rendering::gl::mesh::DrawDataContext();
+        return nullptr;
     }
 
     auto getDefaultFramebuffer() -> pipeline::Framebuffer*

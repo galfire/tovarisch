@@ -4,7 +4,7 @@ namespace tov
     TOV_NAMESPACE_BEGIN(gl)
     TOV_NAMESPACE_BEGIN(buffers)
 
-    template<
+    template <
         UsageSettings usageSettings,
         AccessSettings accessSettings
     >
@@ -26,7 +26,7 @@ namespace tov
         return usage;
     }
 
-    template<
+    template <
         UsageSettings usageSettings,
         AccessSettings accessSettings
     >
@@ -60,7 +60,7 @@ namespace tov
         glDeleteBuffers(1, &(this->mBufferID));
     }
 
-    template<
+    template <
         UsageSettings usageSettings,
         AccessSettings accessSettings
     >
@@ -70,7 +70,7 @@ namespace tov
         glBindBuffer(mBufferTarget, mBufferID);
     }
 
-    template<
+    template <
         UsageSettings usageSettings,
         AccessSettings accessSettings
     >
@@ -80,7 +80,7 @@ namespace tov
         glBindBuffer(mBufferTarget, 0);
     }
 
-    template<
+    template <
         UsageSettings usageSettings,
         AccessSettings accessSettings
     >
@@ -90,7 +90,6 @@ namespace tov
         auto op = log_gl_op("buffer data", this->mBufferTarget, this->mBytes, sGLUsageSettings);
         glBufferData(this->mBufferTarget, this->mBytes, nullptr, sGLUsageSettings);
     }
-
 
     TOV_NAMESPACE_END // buffers
     TOV_NAMESPACE_END // gl

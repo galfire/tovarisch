@@ -49,6 +49,7 @@ namespace tov
 
     auto createBufferManager() -> buffers::BufferManagerBase*;
     auto createDrawDataContext() -> mesh::DrawDataContext*;
+    auto createDrawDataContext(mesh::DrawData* drawData) -> mesh::DrawDataContext*;
     auto getDefaultFramebuffer() -> pipeline::Framebuffer*;
     auto createFramebuffer() -> pipeline::Framebuffer*;
     auto createProgram() -> pipeline::Program*;

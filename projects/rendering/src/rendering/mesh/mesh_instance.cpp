@@ -49,7 +49,7 @@ namespace tov
         }
     }
 
-    auto MeshInstance::getDrawDataList() -> DrawDataList const&
+    auto MeshInstance::getDrawDataList() -> std::vector<mesh::DrawData> const&
     {
         buildDrawDataList();
         return mDrawDataList;

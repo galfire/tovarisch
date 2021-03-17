@@ -1,8 +1,5 @@
 #include "rendering/producers/producer.h"
 
-#include "rendering/producers/resource_bucket.h"
-#include "rendering/producers/resource.h"
-
 namespace tov
 {
     TOV_NAMESPACE_BEGIN(rendering)
@@ -25,11 +22,6 @@ namespace tov
         auto& resource = mResourceBucket.getResource(name);
         auto& resourceProducer = resource.getProducer();
         this->addDependency(&resourceProducer);
-    }
-
-    auto Producer::getResource(const std::string& name) const -> void*
-    {
-        return mResourceBucket.getResource(name).getResource();
     }
 
     TOV_NAMESPACE_END // producers
