@@ -221,18 +221,18 @@ int main(int argc, char** argv)
 
         auto alpha = (float)accumulator.count() / std::chrono::duration_cast<std::chrono::nanoseconds>(timestep).count();
 
-        /*{
+        {
             auto axis = tov::math::Vector3(0.0f, 1.0f, 0.0f);
             auto angle = tov::math::Radian(0.01f) * alpha;
             auto rotation = tov::math::Quaternion(angle, axis);
             node->getTransform().rotate(rotation);
-        }*/
+        }
 
         {
             auto axis = tov::math::Vector3(0.0f, 1.0f, 0.0f);
             auto angle = tov::math::Radian(0.001f) * alpha;
             auto rotation = tov::math::Quaternion(angle, axis);
-            cameraNode.getTransform().rotate(rotation);
+            //cameraNode.getTransform().rotate(rotation);
         }
 
 

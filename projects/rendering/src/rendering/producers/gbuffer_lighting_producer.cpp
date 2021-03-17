@@ -92,7 +92,7 @@ namespace tov
     {
         auto& submeshInstance = mFullscreenQuadInstance->getSubmeshInstance(0);
 
-        auto texturePosition = getResource< texture::Texture>("positionTexture");
+        auto texturePosition = getResource<texture::Texture>("positionTexture");
         auto textureNormal = getResource<texture::Texture>("normalTexture");
         auto textureAlbedo = getResource<texture::Texture>("albedoTexture");
 
@@ -102,7 +102,6 @@ namespace tov
         textureUsages.emplace_back(textureAlbedo, 2);
 
         pipeline::RasterizerStateDescriptor rasterizerStateDescriptor;
-
         auto drawData = mesh::DrawData(
             submeshInstance.getDrawDataContext(),
             submeshInstance.getIndexBufferObject(),

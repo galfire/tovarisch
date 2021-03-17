@@ -18,21 +18,16 @@ namespace tov
         TOV_MOVABLE_ONLY(MeshInstance)
 
     public:
-        MeshInstance() noexcept;
+        MeshInstance() noexcept = default;
         ~MeshInstance() noexcept = default;
 
         auto addSubmeshInstance(SubmeshInstance& submeshInstance) -> void;
         auto getSubmeshInstance(uint index) -> SubmeshInstance&;
 
-        auto getDrawDataList() ->std::vector<DrawData> const&;
+        auto getDrawDataList() -> std::vector<DrawData> const&;
 
     private:
-        auto buildDrawDataList() -> void;
-
-    private:
-        using SubmeshInstanceList = std::vector<SubmeshInstance*>;
-        SubmeshInstanceList mSubmeshInstanceList;
-
+        std::vector<SubmeshInstance*> mSubmeshInstanceList;
         std::vector<DrawData> mDrawDataList;
     };
 

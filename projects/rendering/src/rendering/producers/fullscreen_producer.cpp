@@ -4,6 +4,9 @@
 
 #include "rendering/render_system.h"
 
+#include "rendering/material.h"
+#include "rendering/material_instance.h"
+
 #include "rendering/pipeline/framebuffer.h"
 #include "rendering/pipeline/program.h"
 #include "rendering/pipeline/shader.h"
@@ -60,6 +63,7 @@ namespace tov
         mProgramInstance->setConstant<int>("Texture", 0);
 
         auto& fullscreenQuad = mRenderSystem.getMeshManager()->getFullscreenQuad();
+
         mFullscreenQuadInstance = &fullscreenQuad.instantiate();
     }
 
@@ -77,8 +81,8 @@ namespace tov
     {
         auto& submeshInstance = mFullscreenQuadInstance->getSubmeshInstance(0);
 
-        auto texture = getResource<texture::Texture>("skyboxTexture");
-        //auto texture = getResource<texture::Texture>("gBufferLighting");
+        //auto texture = getResource<texture::Texture>("skyboxTexture");
+        auto texture = getResource<texture::Texture>("gBufferLighting");
 
         std::vector<pipeline::TextureUsage> textureUsages;
         textureUsages.emplace_back(texture, 0);

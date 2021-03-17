@@ -136,7 +136,7 @@ namespace tov
             auto const& ibo = mIndexData->getBufferObject();
             auto const& vbos = mVertexData->getBufferObjects();
             auto materialInstance = mMaterial ? &mMaterial->instantiate() : nullptr;
-            auto submeshInstance = std::make_unique<SubmeshInstance>(*mDrawDataContext.get(), ibo, vbos, materialInstance);
+            auto submeshInstance = std::make_unique<SubmeshInstance>(*mDrawDataContext.get(), ibo, materialInstance);
             mSubmeshInstances.push_back(std::move(submeshInstance));
         }
 

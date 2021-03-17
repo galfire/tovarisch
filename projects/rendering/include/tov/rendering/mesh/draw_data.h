@@ -29,7 +29,6 @@ namespace tov
             , mTextureUsages(textureUsages)
             , mRasterizerStateDescriptor(rasterizerStateDescriptor)
         {}
-
         ~DrawData() noexcept = default;
 
         auto getDrawDataContext() const -> auto const& { return mDrawDataContext; }
