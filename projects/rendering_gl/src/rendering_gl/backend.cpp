@@ -176,8 +176,8 @@ namespace tov
             auto& context = drawData->getDrawDataContext();
             context.start();
 
-            auto const& ibo = static_cast<buffers::IndexBufferObject const&>(drawData->getIndexBufferObject());
             using Buffer = rendering::gl::buffers::Buffer<buffers::UsageSettings::STATIC, buffers::AccessSettings::WRITE>;
+            auto const& ibo = static_cast<buffers::IndexBufferObject const&>(drawData->getIndexBufferObject());
             auto& indexBuffer = static_cast<Buffer&>(ibo.getBuffer());
             auto bindIndex = indexBuffer.binder();
 
