@@ -71,15 +71,9 @@ namespace tov
                 camera->setAspectRatio(aspectRatio);
                 auto const& projectionMatrix = camera->getProjectionMatrix();
 
-                auto* drawDataContext = backend::createDrawDataContext();
-
                 {
                     auto& command = bucket.addCommand<commands::ApplyViewport>();
                     command.viewport = viewport;
-                }
-                {
-                    auto& command = bucket.addCommand<commands::StartDrawDataContext>();
-                    command.drawDataContext = drawDataContext;
                 }
                 {
                     auto& command = bucket.addCommand<commands::SetMVP>();
@@ -95,10 +89,6 @@ namespace tov
                 {
                     auto& command = bucket.addCommand<commands::Draw>();
                     command.drawData = &mSkybox->getDrawData();
-                }
-                {
-                    auto& command = bucket.addCommand<commands::EndDrawDataContext>();
-                    command.drawDataContext = drawDataContext;
                 }
             }
         }
@@ -135,13 +125,6 @@ namespace tov
                     //command.viewport = viewport;
                 }
 
-                auto* drawDataContext = backend::createDrawDataContext();
-
-                {
-                    auto& command = bucket.addCommand<commands::StartDrawDataContext>();
-                    command.drawDataContext = drawDataContext;
-                }
-
                 for (auto&& node : nodes)
                 {
                     auto const& modelMatrix = node->getDerivedTransform().getHomogeneousMatrix();
@@ -168,11 +151,6 @@ namespace tov
                             command.drawData = &drawData;
                         }
                     }
-                }
-
-                {
-                    auto& command = bucket.addCommand<commands::EndDrawDataContext>();
-                    command.drawDataContext = drawDataContext;
                 }
             }
         }

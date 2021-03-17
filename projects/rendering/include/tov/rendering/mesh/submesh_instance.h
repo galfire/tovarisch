@@ -3,6 +3,8 @@
 
 #include <tov/rendering/rendering_core.h>
 
+#include "draw_data.h"
+
 #include <vector>
 
 namespace tov
@@ -23,6 +25,8 @@ namespace tov
     class MaterialInstance;
 
     TOV_NAMESPACE_BEGIN(mesh)
+    
+    class DrawDataContext;
 
     class SubmeshInstance
     {
@@ -30,24 +34,28 @@ namespace tov
 
     public:
         SubmeshInstance(
+            DrawDataContext const& drawDataContext,
             buffers::IndexBufferObject const& ibo,
             std::vector<buffers::VertexBufferObject*> vbos,
             MaterialInstance* materialInstance
         )
-            : mIBO(ibo)
+            : mDrawDataContext(drawDataContext)
+            , mIBO(ibo)
             , mVBOs(vbos)
             , mMaterialInstance(materialInstance)
         {}
 
         ~SubmeshInstance() = default;
 
+        auto getDrawDataContext() const -> auto const& { return mDrawDataContext; }
         auto getIndexBufferObject() const -> auto const& { return mIBO; }
-        auto getVertexBufferObjects() const -> auto const& { return mVBOs; }
 
         void setMaterialInstance(MaterialInstance* materialInstance) { mMaterialInstance = materialInstance; }
         auto getMaterialInstance() const { return mMaterialInstance; }
 
     private:
+        DrawDataContext const& mDrawDataContext;
+
         buffers::IndexBufferObject const& mIBO;
         std::vector<buffers::VertexBufferObject*> mVBOs;
 

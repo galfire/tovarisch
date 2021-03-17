@@ -65,24 +65,6 @@ namespace tov
         programInstance.uploadConstants();
     }
 
-    void CommandDispatch::StartDrawDataContext(const void* data)
-    {
-        auto command = reinterpret_cast<commands::StartDrawDataContext const* const>(data);
-
-        auto drawDataContext = command->drawDataContext;
-        drawDataContext->start();
-    }
-
-    void CommandDispatch::EndDrawDataContext(const void* data)
-    {
-        auto command = reinterpret_cast<commands::EndDrawDataContext const* const>(data);
-
-        auto drawDataContext = command->drawDataContext;
-        drawDataContext->end();
-
-        delete drawDataContext;
-    }
-
     TOV_NAMESPACE_END // commands
     TOV_NAMESPACE_END // rendering
 }

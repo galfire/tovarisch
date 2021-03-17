@@ -90,8 +90,6 @@ namespace tov
 
     void GBufferLightingProducer::render()
     {
-        auto* drawDataContext = backend::createDrawDataContext();
-
         auto& submeshInstance = mFullscreenQuadInstance->getSubmeshInstance(0);
 
         auto texturePosition = getResource< texture::Texture>("positionTexture");
@@ -106,16 +104,12 @@ namespace tov
         pipeline::RasterizerStateDescriptor rasterizerStateDescriptor;
 
         auto drawData = mesh::DrawData(
+            submeshInstance.getDrawDataContext(),
             submeshInstance.getIndexBufferObject(),
-            submeshInstance.getVertexBufferObjects(),
             textureUsages,
             rasterizerStateDescriptor
         );
 
-        {
-            auto& command = mCommandBucket.addCommand<commands::StartDrawDataContext>();
-            command.drawDataContext = drawDataContext;
-        }
         {
             auto& command = mCommandBucket.addCommand<commands::UploadConstants>();
             command.programInstance = mProgramInstance;
@@ -123,10 +117,6 @@ namespace tov
         {
             auto& command = mCommandBucket.addCommand<commands::Draw>();
             command.drawData = &drawData;
-        }
-        {
-            auto& command = mCommandBucket.addCommand<commands::EndDrawDataContext>();
-            command.drawDataContext = drawDataContext;
         }
 
         mFramebuffer->bind();

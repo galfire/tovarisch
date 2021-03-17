@@ -8,6 +8,8 @@
 #include <tov/rendering/pipeline/rasterizer_state_descriptor.h>
 #include <tov/rendering/pipeline/texture_usage.h>
 
+#include <tov/rendering/mesh/draw_data_context.h>
+
 namespace tov
 {
     TOV_NAMESPACE_BEGIN(rendering)
@@ -17,27 +19,27 @@ namespace tov
     {
     public:
         DrawData(
+            mesh::DrawDataContext const& drawDataContext,
             buffers::IndexBufferObject const& indexBufferObject, 
-            std::vector<buffers::VertexBufferObject*> const& vertexBufferObjects,
             std::vector<pipeline::TextureUsage> const textureUsages,
             pipeline::RasterizerStateDescriptor rasterizerStateDescriptor
         ) noexcept
-            : mIndexBufferObject(indexBufferObject)
-            , mVertexBufferObjects(vertexBufferObjects)
+            : mDrawDataContext(drawDataContext)
+            , mIndexBufferObject(indexBufferObject)
             , mTextureUsages(textureUsages)
             , mRasterizerStateDescriptor(rasterizerStateDescriptor)
         {}
 
         ~DrawData() noexcept = default;
 
+        auto getDrawDataContext() const -> auto const& { return mDrawDataContext; }
         auto getIndexBufferObject() const -> auto const& { return mIndexBufferObject; }
-        auto getVertexBufferObjects() const -> auto const& { return mVertexBufferObjects; }
         auto getTextureUsages() const -> auto const& { return mTextureUsages; }
         auto getRasterizerStateDescriptor() const { return mRasterizerStateDescriptor; }
 
     private:
+        mesh::DrawDataContext const& mDrawDataContext;
         buffers::IndexBufferObject const& mIndexBufferObject;
-        std::vector<buffers::VertexBufferObject*> const& mVertexBufferObjects;
         std::vector<pipeline::TextureUsage> const mTextureUsages;
         pipeline::RasterizerStateDescriptor mRasterizerStateDescriptor;
     };

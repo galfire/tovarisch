@@ -40,8 +40,8 @@ namespace tov
             }
 
             auto drawData = DrawData(
+                submeshInstance->getDrawDataContext(),
                 submeshInstance->getIndexBufferObject(),
-                submeshInstance->getVertexBufferObjects(),
                 textureUsages,
                 materialInstance->getRasterizerStateDescriptor()
             );

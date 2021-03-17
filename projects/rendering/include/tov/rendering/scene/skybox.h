@@ -41,8 +41,6 @@ namespace tov
         mesh::MeshInstance* mCubeInstance = nullptr;
 
         //texture::Texture* mTexture = nullptr;
-
-
     };
 
     TOV_NAMESPACE_END // scene

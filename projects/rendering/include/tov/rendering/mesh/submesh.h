@@ -5,6 +5,8 @@
 
 #include "submesh_instance.h"
 
+#include "draw_data_context.h"
+
 namespace tov
 {
     TOV_NAMESPACE_BEGIN(rendering)
@@ -37,9 +39,6 @@ namespace tov
         Submesh(Mesh& parentMesh, geometry::Geometry const& geometry, VertexDataFormat const& vertexDataFormat) noexcept;
         ~Submesh() noexcept;
 
-        auto getIndexData() const -> auto const& { return mIndexData; }
-        auto getVertexData() const -> auto const& { return mVertexData; }
-
         auto setMaterial(Material& material) -> void { mMaterial = &material; }
 
         auto instantiate() -> SubmeshInstance&;
@@ -56,6 +55,8 @@ namespace tov
 
         std::unique_ptr<IndexData> mIndexData;
         std::unique_ptr<VertexData> mVertexData;
+
+        std::unique_ptr<DrawDataContext> mDrawDataContext;
 
         std::vector<std::unique_ptr<SubmeshInstance>> mSubmeshInstances;
     };

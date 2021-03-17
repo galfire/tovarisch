@@ -20,7 +20,7 @@ namespace tov
         {
             auto bufferFormat = mFormat.getVertexBufferFormatForHandle(handle);
             auto buffer = bufferManager.createVertexBuffer(bufferFormat, numVertices);
-            auto bufferObject = std::make_unique<buffers::VertexBufferObject>(*buffer, bufferFormat);
+            auto bufferObject = std::make_unique<buffers::VertexBufferObject>(*buffer);
             mVBOOwningList.push_back(std::move(bufferObject));
             mVBOList.push_back(mVBOOwningList.back().get());
             mHandleToVBOMap.emplace(handle, mVBOOwningList.back().get());
