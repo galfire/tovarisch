@@ -18,18 +18,9 @@ namespace tov
         : public BufferObject
     {
     public:
-        VertexBufferObject(
-            BufferBase& buffer,
-            VertexBufferFormat format
-        )
+        VertexBufferObject(BufferBase& buffer)
             : BufferObject(buffer)
-            , mFormat(format)
         {}
-
-        auto getBufferFormat() const -> auto const& { return mFormat; }
-
-    private:
-        VertexBufferFormat mFormat;
     };
 
     TOV_NAMESPACE_END // buffers 

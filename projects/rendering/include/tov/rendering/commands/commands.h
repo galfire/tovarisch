@@ -19,12 +19,12 @@ namespace tov
     class ProgramInstance;
 
     TOV_NAMESPACE_END // pipeline
-    TOV_NAMESPACE_BEGIN(mesh)
 
-    class DrawData;
-    class DrawDataContext;
+    namespace mesh
+    {
+        class DrawData;
+    }
 
-    TOV_NAMESPACE_END // mesh
     TOV_NAMESPACE_END //rendering
 
     TOV_NAMESPACE_BEGIN(rendering)
@@ -61,18 +61,6 @@ namespace tov
     {
         pipeline::ProgramInstance* programInstance;
         static inline DispatchFunction DispatchFunction = CommandDispatch::UploadConstants;
-    };
-
-    struct StartDrawDataContext
-    {
-        mesh::DrawDataContext const * drawDataContext;
-        static inline DispatchFunction DispatchFunction = CommandDispatch::StartDrawDataContext;
-    };
-
-    struct EndDrawDataContext
-    {
-        mesh::DrawDataContext const * drawDataContext;
-        static inline DispatchFunction DispatchFunction = CommandDispatch::EndDrawDataContext;
     };
 
     TOV_NAMESPACE_END // commands

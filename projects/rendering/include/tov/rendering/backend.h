@@ -4,6 +4,7 @@
 #include "rendering_core.h"
 
 #include <tov/rendering/pixel_format.h>
+#include <tov/rendering/mesh/vertex_data.h>
 #include <tov/rendering/pipeline/shader_type.h>
 
 namespace tov
@@ -48,8 +49,7 @@ namespace tov
     ) -> RenderSystem*;
 
     auto createBufferManager() -> buffers::BufferManagerBase*;
-    auto createDrawDataContext() -> mesh::DrawDataContext*;
-    auto createDrawDataContext(mesh::DrawData* drawData) -> mesh::DrawDataContext*;
+    auto createDrawDataContext(const mesh::VertexData& vertexData) -> mesh::DrawDataContext*;
     auto getDefaultFramebuffer() -> pipeline::Framebuffer*;
     auto createFramebuffer() -> pipeline::Framebuffer*;
     auto createProgram() -> pipeline::Program*;

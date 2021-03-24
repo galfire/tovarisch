@@ -6,6 +6,7 @@
 #include <tov/rendering/viewport.h>
 
 #include <tov/rendering/mesh/draw_data.h>
+#include <tov/rendering/mesh/vertex_data.h>
 
 #include <tov/rendering/buffers/access_settings.h>
 #include <tov/rendering/buffers/usage_settings.h>
@@ -171,18 +172,58 @@ namespace tov
             texture->activate(textureUsage.slot);
         }
 
-        // Bind the index buffer and vertex buffers before drawing
-        using Buffer = rendering::gl::buffers::Buffer<buffers::UsageSettings::STATIC, buffers::AccessSettings::WRITE>;
-        
-        auto const& vbos = drawData->getVertexBufferObjects();
-        for (auto&& vbo_ : vbos)
         {
-            auto const& vbo = static_cast<buffers::VertexBufferObject const&>(*vbo_);
+            auto& context = drawData->getDrawDataContext();
+            context.start();
 
+            using Buffer = rendering::gl::buffers::Buffer<buffers::UsageSettings::STATIC, buffers::AccessSettings::WRITE>;
+            auto const& ibo = static_cast<buffers::IndexBufferObject const&>(drawData->getIndexBufferObject());
+            auto& indexBuffer = static_cast<Buffer&>(ibo.getBuffer());
+            auto bindIndex = indexBuffer.binder();
+
+            DrawIndexed(ibo.getNumIndices(), ibo.getIndexType());
+
+            context.end();
+        }
+
+        for (auto&& textureUsage : textureUsages)
+        {
+            auto texture = static_cast<rendering::gl::texture::Texture2D const*>(textureUsage.texture);
+            auto slot = textureUsage.slot;
+            texture->deactivate(slot);
+        }
+    }
+
+    auto createRenderSystem(
+        WindowPlatformSupport& windowPlatformSupport,
+        WindowRendererSupport& windowRednererSupport
+    ) -> RenderSystem*
+    {
+        return new rendering::gl::RenderSystem(windowPlatformSupport, windowRednererSupport);
+    }
+
+    auto createBufferManager() -> buffers::BufferManagerBase*
+    {
+        return new rendering::gl::buffers::BufferManager();
+    }
+
+    auto createDrawDataContext(const mesh::VertexData& vertexData) -> mesh::DrawDataContext*
+    {
+        auto ddc = new rendering::gl::mesh::DrawDataContext();
+        
+        ddc->start();
+
+        auto format = vertexData.getFormat();
+        auto handles = format.getHandles();
+        for (auto&& handle : handles)
+        {
+            auto vbf = format.getVertexBufferFormatForHandle(handle);
+            auto vbo = vertexData.getBufferObjectForHandle(handle);
+
+            using Buffer = rendering::gl::buffers::Buffer<buffers::UsageSettings::STATIC, buffers::AccessSettings::WRITE>;
             auto& vertexBuffer = static_cast<Buffer&>(vbo.getBuffer());
             auto bindVertex = vertexBuffer.binder();
 
-            auto const& vbf = vbo.getBufferFormat();
             auto const& desc = vbf.getDescriptor();
             for (auto&& a : desc.attributeDescriptors)
             {
@@ -235,59 +276,9 @@ namespace tov
             }
         }
 
-        {
-            auto const& ibo = static_cast<buffers::IndexBufferObject const&>(drawData->getIndexBufferObject());
-            auto& indexBuffer = static_cast<Buffer&>(ibo.getBuffer());
-            auto bindIndex = indexBuffer.binder();
+        ddc->end();
 
-            DrawIndexed(ibo.getNumIndices(), ibo.getIndexType());
-        }
-
-        for (auto&& textureUsage : textureUsages)
-        {
-            auto texture = static_cast<rendering::gl::texture::Texture2D const*>(textureUsage.texture);
-            auto slot = textureUsage.slot;
-            texture->deactivate(slot);
-        }
-
-        // May not be necessary
-        // Vertex attributes are encapsulated by the VAO and will be unset when the VAO is unbound or deleted
-        /*for (auto&& vbo_ : vbos)
-        {
-            auto const& vbo = static_cast<buffers::VertexBufferObject const&>(*vbo_);
-            auto const& vbf = vbo.getBufferFormat();
-            auto const& desc = vbf.getDescriptor();
-            for (auto&& a : desc.attributeDescriptors)
-            {
-                auto location = a.location;
-                auto op = log_gl_op("disable vertex attrib", location);
-                glDisableVertexAttribArray(location);
-            }
-        }*/
-    }
-
-    auto createRenderSystem(
-        WindowPlatformSupport& windowPlatformSupport,
-        WindowRendererSupport& windowRednererSupport
-    ) -> RenderSystem*
-    {
-        return new rendering::gl::RenderSystem(windowPlatformSupport, windowRednererSupport);
-    }
-
-    auto createBufferManager() -> buffers::BufferManagerBase*
-    {
-        return new rendering::gl::buffers::BufferManager();
-    }
-
-    auto createDrawDataContext() -> mesh::DrawDataContext*
-    {
-        return new rendering::gl::mesh::DrawDataContext();
-    }
-
-    auto createDrawDataContext(mesh::DrawData* drawData) -> mesh::DrawDataContext*
-    {
-        auto ddc = new rendering::gl::mesh::DrawDataContext();
-        return nullptr;
+        return ddc;
     }
 
     auto getDefaultFramebuffer() -> pipeline::Framebuffer*

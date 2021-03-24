@@ -10,6 +10,8 @@ namespace tov
 
     class DrawDataContext
     {
+        TOV_MOVABLE_ONLY(DrawDataContext);
+
     public:
         DrawDataContext() = default;
         virtual ~DrawDataContext() {};

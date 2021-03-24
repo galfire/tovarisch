@@ -20,15 +20,16 @@
 
 #include <rendering/pipeline/program.h>
 
+#include <rendering/backend.h>
+
 namespace tov
 {
     TOV_NAMESPACE_BEGIN(rendering)
     TOV_NAMESPACE_BEGIN(mesh)
 
-    void writeVertexBufferInterleaved(buffers::VertexBufferObject& vbo, geometry::Geometry const& geometry)
+    void writeVertexBufferInterleaved(buffers::VertexBufferObject& vbo, buffers::VertexBufferFormat const& vbf, geometry::Geometry const& geometry)
     {
-        auto const& format = vbo.getBufferFormat();
-        auto attributes = format.getVertexFormat().getAttributes();
+        auto attributes = vbf.getVertexFormat().getAttributes();
         auto numVertices = geometry.getNumVertices();
 
         auto guard = buffers::Guard(vbo, buffers::LockSettings::WRITE);
@@ -68,10 +69,9 @@ namespace tov
         }
     }
 
-    void writeVertexBufferSequential(buffers::VertexBufferObject& vbo, geometry::Geometry const& geometry)
+    void writeVertexBufferSequential(buffers::VertexBufferObject& vbo, buffers::VertexBufferFormat const& vbf, geometry::Geometry const& geometry)
     {
-        auto const& format = vbo.getBufferFormat();
-        auto attributes = format.getVertexFormat().getAttributes();
+        auto attributes = vbf.getVertexFormat().getAttributes();
 
         auto guard = buffers::Guard(vbo, buffers::LockSettings::WRITE);
         auto lock = guard.getLock();
@@ -108,16 +108,15 @@ namespace tov
         }
     }
 
-    void writeVertexBuffer(buffers::VertexBufferObject& vbo, geometry::Geometry const& geometry)
+    void writeVertexBuffer(buffers::VertexBufferObject& vbo, buffers::VertexBufferFormat const& vbf, geometry::Geometry const& geometry)
     {
-        auto format = vbo.getBufferFormat();
-        switch (format.getSequenceType())
+        switch (vbf.getSequenceType())
         {
         case buffers::VertexBufferFormat::SequenceType::INTERLEAVED:
-            writeVertexBufferInterleaved(vbo, geometry);
+            writeVertexBufferInterleaved(vbo, vbf, geometry);
             break;
         case buffers::VertexBufferFormat::SequenceType::SEQUENTIAL:
-            writeVertexBufferSequential(vbo, geometry);
+            writeVertexBufferSequential(vbo, vbf, geometry);
             break;
         }
     }
@@ -134,10 +133,10 @@ namespace tov
     auto Submesh::instantiate() -> SubmeshInstance&
     {
         {
-            auto const& ibo = getIndexData()->getBufferObject();
-            auto const& vbos = getVertexData()->getBufferObjects();
+            auto const& ibo = mIndexData->getBufferObject();
+            auto const& vbos = mVertexData->getBufferObjects();
             auto materialInstance = mMaterial ? &mMaterial->instantiate() : nullptr;
-            auto submeshInstance = std::make_unique<SubmeshInstance>(ibo, vbos, materialInstance);
+            auto submeshInstance = std::make_unique<SubmeshInstance>(*mDrawDataContext.get(), ibo, materialInstance);
             mSubmeshInstances.push_back(std::move(submeshInstance));
         }
 
@@ -210,8 +209,13 @@ namespace tov
         for (auto&& handle : handles)
         {
             auto& vbo = mVertexData->getBufferObjectForHandle(handle);
-            writeVertexBuffer(vbo, geometry);
+            auto vbf = vertexDataFormat.getVertexBufferFormatForHandle(handle);
+            writeVertexBuffer(vbo, vbf, geometry);
         }
+
+        mDrawDataContext = std::unique_ptr<DrawDataContext>(
+            backend::createDrawDataContext(*mVertexData.get())
+        );
     }
 
     TOV_NAMESPACE_END // mesh
