@@ -13,9 +13,7 @@ namespace tov
 
     std::unique_ptr<rendering::WindowPlatformComponent> WindowPlatformSupport::buildComponent(Window& parentWindow) const
     {
-        return std::unique_ptr<rendering::WindowPlatformComponent>(
-            new WindowPlatformComponent(parentWindow)
-        );
+        return std::make_unique<WindowPlatformComponent>(parentWindow);
     }
 
     void WindowPlatformSupport::messageHandler()

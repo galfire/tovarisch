@@ -27,8 +27,9 @@ int main()
         "#canvas1",
         &platformSupport,
         &rendererSupport
-        );
-    emscripten_set_main_loop(oneIteration, 1, 1);
+    );
+    
+    emscripten_set_main_loop(oneIteration, 0, 1);
 
     return 0;
 }

@@ -66,13 +66,7 @@ public:
 
         auto& window = mRenderSystem->createRenderWindow(windowName, 800, 600, false);
         auto colour = tov::rendering::Colour::Blue;
-        std::cout << "color dfadfad: " << tov::rendering::Colour::Blue.r << "\n";
-        std::cout << "color dfadfad: " << tov::rendering::Colour::Blue.b << "\n";
-        std::cout << "color dfadfad: " << tov::rendering::Colour::Blue.g << "\n";
-
         auto& vp = window.createViewport(2, 0.0f, 0.0f, 1.0f, 1.0f, colour);
-        std::cout << "addr of vp : " << &vp << "\n";
-        std::cout << "color of vp: " << vp.getBackgroundColour() << "\n";
         mCamera->attachViewport(vp);
         mRenderSystem->initialize();
 
@@ -80,7 +74,7 @@ public:
         mCameraNode = &root.createChild();
         mCameraNode->attachSceneObject(mCamera);
 
-        //createSkybox();
+        createSkybox();
         createMaterials();
         createNodes();
     }
@@ -254,12 +248,12 @@ private:
         //    //mNode->getTransform().rotate(rotation);
         //}
 
-        //{
-        //    auto axis = tov::math::Vector3(0.0f, 1.0f, 0.0f);
-        //    auto angle = tov::math::Radian(0.001f) * alpha;
-        //    auto rotation = tov::math::Quaternion(angle, axis);
-        //    //mCameraNode->getTransform().rotate(rotation);
-        //}
+        {
+            auto axis = tov::math::Vector3(0.0f, 1.0f, 0.0f);
+            auto angle = tov::math::Radian(0.001f);
+            auto rotation = tov::math::Quaternion(angle, axis);
+            mCameraNode->getTransform().rotate(rotation);
+        }
 
         mRenderSystem->renderFrame(*mScene);
         mRenderSystem->swapBuffers();

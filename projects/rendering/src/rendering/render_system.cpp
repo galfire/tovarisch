@@ -107,8 +107,6 @@ namespace tov
             auto producer = static_cast<producers::Producer*>(dependentProducer);
             producer->render();
         }
-
-        //mResourceBucket->reset();
     }
 
     TOV_NAMESPACE_END // rendering

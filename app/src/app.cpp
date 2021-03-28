@@ -16,7 +16,7 @@ int main(int argc, char** argv)
     WindowRendererSupport rendererSupport;
 
     Application application(
-        "./assets",
+        "Window",
         &platformSupport,
         &rendererSupport
     );
