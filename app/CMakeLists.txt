@@ -21,6 +21,8 @@ include_directories(${CMAKE_SOURCE_DIR}/projects/rendering/include)
 include_directories(${CMAKE_SOURCE_DIR}/projects/rendering_gl/include)
 include_directories(${CMAKE_SOURCE_DIR}/projects/rendering_gl/gl)
 
+include_directories(${CMAKE_SOURCE_DIR}/application)
+
 set(TARGET_NAME app)
 include(${CMAKE_SOURCE_DIR}/projects/cmake/debug.cmake)
 
@@ -42,6 +44,9 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
     set_target_properties(glew PROPERTIES IMPORTED_LOCATION ${CMAKE_SOURCE_DIR}/vendor/Win32/glew32s.lib)
     target_link_libraries(app glew)
 endif()
+
+#add_compile_options("/EHsc")
+
 
 target_link_libraries(app math)
 target_link_libraries(app rendering)

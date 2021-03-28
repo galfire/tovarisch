@@ -8,28 +8,6 @@ namespace tov
         UsageSettings usageSettings,
         AccessSettings accessSettings
     >
-    GLenum Buffer<usageSettings, accessSettings>::getGLUsageSettings()
-    {
-        GLenum usage = 0;
-        if ((usageSettings & UsageSettings::STATIC) == UsageSettings::STATIC)
-        {
-            usage = GL_STATIC_DRAW;
-        }
-        else if ((usageSettings & UsageSettings::DYNAMIC) == UsageSettings::DYNAMIC)
-        {
-            usage = GL_DYNAMIC_DRAW;
-        }
-        else if ((usageSettings & UsageSettings::STREAM) == UsageSettings::STREAM)
-        {
-            usage = GL_STREAM_DRAW;
-        }
-        return usage;
-    }
-
-    template <
-        UsageSettings usageSettings,
-        AccessSettings accessSettings
-    >
     Buffer<usageSettings, accessSettings>::Buffer(
         base::BufferManagerBase& manager,
         size_t bytes,

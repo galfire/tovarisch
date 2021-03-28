@@ -33,28 +33,31 @@ namespace tov
         case EMSCRIPTEN_RESULT_SUCCESS:
             return true;
         case EMSCRIPTEN_RESULT_DEFERRED:
-            std::cout << "EMSCRIPTEN_RESULT_DEFERRED\n";
+            std::cerr << "EMSCRIPTEN_RESULT_DEFERRED\n";
             break;
         case EMSCRIPTEN_RESULT_NOT_SUPPORTED:
-            std::cout << "EMSCRIPTEN_RESULT_NOT_SUPPORTED\n";
+            std::cerr << "EMSCRIPTEN_RESULT_NOT_SUPPORTED\n";
             break;
         case EMSCRIPTEN_RESULT_FAILED_NOT_DEFERRED:
-            std::cout << "EMSCRIPTEN_RESULT_FAILED_NOT_DEFERRED\n";
+            std::cerr << "EMSCRIPTEN_RESULT_FAILED_NOT_DEFERRED\n";
             break;
         case EMSCRIPTEN_RESULT_INVALID_TARGET:
-            std::cout << "EMSCRIPTEN_RESULT_INVALID_TARGET\n";
+            std::cerr << "EMSCRIPTEN_RESULT_INVALID_TARGET\n";
             break;
         case EMSCRIPTEN_RESULT_UNKNOWN_TARGET:
-            std::cout << "EMSCRIPTEN_RESULT_UNKNOWN_TARGET\n";
+            std::cerr << "EMSCRIPTEN_RESULT_UNKNOWN_TARGET\n";
             break;
         case EMSCRIPTEN_RESULT_INVALID_PARAM:
-            std::cout << "EMSCRIPTEN_RESULT_INVALID_PARAM\n";
+            std::cerr << "EMSCRIPTEN_RESULT_INVALID_PARAM\n";
             break;
         case EMSCRIPTEN_RESULT_FAILED:
-            std::cout << "EMSCRIPTEN_RESULT_FAILED\n";
+            std::cerr << "EMSCRIPTEN_RESULT_FAILED\n";
             break;
         case EMSCRIPTEN_RESULT_NO_DATA:
-            std::cout << "EMSCRIPTEN_RESULT_NO_DATA\n";
+            std::cerr << "EMSCRIPTEN_RESULT_NO_DATA\n";
+            break;
+        default:
+            std::cerr << "UNKNOWN RESULT FROM WEBGL MAKE CURRENT\n";
             break;
         }
         return false;

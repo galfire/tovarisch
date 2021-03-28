@@ -1,6 +1,8 @@
 #include <assert.h>
 
-#include "memory/bounds_check_exception.h"
+#include <string.h> // memcpy_s
+
+#include "tov/memory/bounds_check_exception.h"
 
 namespace tov
 {
@@ -68,7 +70,7 @@ namespace tov
                 allocation,
                 size
             };
-            memcpy_s(cursor, sizeof(AllocationHeader), &header, sizeof(AllocationHeader));
+            memcpy(cursor, &header, sizeof(AllocationHeader));
         }
 
         return userPtr;
