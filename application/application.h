@@ -52,14 +52,12 @@ class Application
 public:
     Application(
         const char* windowName,
-        tov::rendering::WindowPlatformSupport* platformSupport,
-        tov::rendering::WindowRendererSupport* rendererSupport
+        tov::rendering::WindowPlatformSupport& platformSupport,
+        tov::rendering::WindowRendererSupport& rendererSupport
     )
-        : mPlatformSupport(platformSupport)
-        , mRendererSupport(rendererSupport)
-        , mAccumulator(0ns)
+        : mAccumulator(0ns)
     {
-        mRenderSystem = tov::rendering::backend::createRenderSystem(*platformSupport, *rendererSupport);
+        mRenderSystem = tov::rendering::backend::createRenderSystem(platformSupport, rendererSupport);
 
         mScene = new tov::rendering::scene::Scene(*mRenderSystem);
         mCamera = &mScene->createCamera();
@@ -260,9 +258,6 @@ private:
     }
 
 private:
-    tov::rendering::WindowPlatformSupport* mPlatformSupport;
-    tov::rendering::WindowRendererSupport* mRendererSupport;
-
     tov::rendering::RenderSystem* mRenderSystem;
 
     tov::rendering::scene::Skybox* mSkybox;

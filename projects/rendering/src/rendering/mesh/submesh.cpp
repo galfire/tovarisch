@@ -134,7 +134,6 @@ namespace tov
     {
         {
             auto const& ibo = mIndexData->getBufferObject();
-            auto const& vbos = mVertexData->getBufferObjects();
             auto materialInstance = mMaterial ? &mMaterial->instantiate() : nullptr;
             auto submeshInstance = std::make_unique<SubmeshInstance>(*mDrawDataContext.get(), ibo, materialInstance);
             mSubmeshInstances.push_back(std::move(submeshInstance));
@@ -163,7 +162,7 @@ namespace tov
 
         auto& ibo = mIndexData->getBufferObject();
         auto guard = buffers::Guard(ibo, buffers::LockSettings::WRITE);
-        auto lock = guard.getLock();;
+        auto lock = guard.getLock();
 
         switch (indexType)
         {
@@ -214,7 +213,7 @@ namespace tov
         }
 
         mDrawDataContext = std::unique_ptr<DrawDataContext>(
-            backend::createDrawDataContext(*mVertexData.get())
+            backend::createDrawDataContext(*mVertexData.get(), vertexDataFormat)
         );
     }
 

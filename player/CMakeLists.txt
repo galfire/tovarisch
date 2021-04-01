@@ -44,5 +44,5 @@ set_target_properties(player
 
 set_target_properties(player
     PROPERTIES
-    LINK_FLAGS "--preload-file ${CMAKE_SOURCE_DIR}/player/shaders@/shaders --preload-file ${CMAKE_SOURCE_DIR}/player/assets@/assets -s WASM=1 -s USE_WEBGL2=1 -s TOTAL_MEMORY=1024MB -s EXTRA_EXPORTED_RUNTIME_METHODS=\"['ccall', 'cwrap']\""
+    LINK_FLAGS "--preload-file ${CMAKE_SOURCE_DIR}/player/shaders@/shaders --preload-file ${CMAKE_SOURCE_DIR}/player/assets@/assets -s WASM=1 -s USE_WEBGL2=1 -s FULL_ES3=1 -s TOTAL_MEMORY=1024MB -s EXTRA_EXPORTED_RUNTIME_METHODS=\"['ccall', 'cwrap']\""
 )

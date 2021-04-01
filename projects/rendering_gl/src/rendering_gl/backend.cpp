@@ -207,17 +207,19 @@ namespace tov
         return new rendering::gl::buffers::BufferManager();
     }
 
-    auto createDrawDataContext(const mesh::VertexData& vertexData) -> mesh::DrawDataContext*
+    auto createDrawDataContext(
+        const mesh::VertexData& vertexData,
+        const mesh::VertexDataFormat& vertexDataFormat
+    ) -> mesh::DrawDataContext*
     {
         auto ddc = new rendering::gl::mesh::DrawDataContext();
         
         ddc->start();
 
-        auto format = vertexData.getFormat();
-        auto handles = format.getHandles();
+        auto handles = vertexDataFormat.getHandles();
         for (auto&& handle : handles)
         {
-            auto vbf = format.getVertexBufferFormatForHandle(handle);
+            auto vbf = vertexDataFormat.getVertexBufferFormatForHandle(handle);
             auto vbo = vertexData.getBufferObjectForHandle(handle);
 
             using Buffer = rendering::gl::buffers::Buffer<buffers::UsageSettings::STATIC, buffers::AccessSettings::WRITE>;

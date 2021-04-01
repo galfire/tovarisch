@@ -17,12 +17,11 @@ int main(int argc, char** argv)
 
     Application application(
         "Window",
-        &platformSupport,
-        &rendererSupport
+        platformSupport,
+        rendererSupport
     );
 
     application.start();
 
-    system("PAUSE");
     return 0;
 }

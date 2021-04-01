@@ -25,8 +25,8 @@ int main()
 
     application = new Application(
         "#canvas1",
-        &platformSupport,
-        &rendererSupport
+        platformSupport,
+        rendererSupport
     );
     
     emscripten_set_main_loop(oneIteration, 0, 1);
