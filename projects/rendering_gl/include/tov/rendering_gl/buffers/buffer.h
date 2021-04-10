@@ -42,8 +42,24 @@ namespace tov
         , public Bindable
     {
     private:
-        static GLenum getGLAccessSettings();
-        static GLenum getGLUsageSettings();
+        static constexpr GLenum getGLAccessSettings(); // TODO: AccessSettings is not used
+        static constexpr GLenum getGLUsageSettings()
+        {
+            GLenum usage = 0;
+            if ((usageSettings & UsageSettings::STATIC) == UsageSettings::STATIC)
+            {
+                usage = GL_STATIC_DRAW;
+            }
+            else if ((usageSettings & UsageSettings::DYNAMIC) == UsageSettings::DYNAMIC)
+            {
+                usage = GL_DYNAMIC_DRAW;
+            }
+            else if ((usageSettings & UsageSettings::STREAM) == UsageSettings::STREAM)
+            {
+                usage = GL_STREAM_DRAW;
+            }
+            return usage;
+        }
 
     public:
         Buffer(
@@ -67,7 +83,7 @@ namespace tov
     private:
         GLuint mBufferID;
         GLenum mBufferTarget;
-        static inline GLenum sGLUsageSettings = getGLUsageSettings();
+        static constexpr GLenum sGLUsageSettings = getGLUsageSettings();
     };
 
     TOV_NAMESPACE_END // buffers

@@ -13,6 +13,7 @@ include_directories(${STB_DIR})
 message("CMAKE SOURCE DIR:" ${CMAKE_SOURCE_DIR})
 
 include_directories(${CMAKE_SOURCE_DIR}/projects/core/include)
+include_directories(${CMAKE_SOURCE_DIR}/projects/gear/include)
 include_directories(${CMAKE_SOURCE_DIR}/projects/memory/include)
 include_directories(${CMAKE_SOURCE_DIR}/projects/math/include)
 include_directories(${CMAKE_SOURCE_DIR}/projects/rendering/include)
@@ -23,18 +24,13 @@ include_directories($ENV{EMSDK}/upstream/emscripten/system/include)
 
 include_directories(${CMAKE_SOURCE_DIR}/projects/rendering_gl/gl)
 
-set(CMAKE_AR "em++")
-#set(CMAKE_STATIC_LIBRARY_SUFFIX ".bc")
-set(CMAKE_C_CREATE_STATIC_LIBRARY "<CMAKE_AR> -o <TARGET> <LINK_FLAGS> <OBJECTS>")
-set(CMAKE_CXX_CREATE_STATIC_LIBRARY "<CMAKE_AR> -o <TARGET> <LINK_FLAGS> <OBJECTS>")
-
+include_directories(${CMAKE_SOURCE_DIR}/application)
 
 # Add source to this project's executable.
 add_executable (player "player.cpp" "player.h")
 set(CMAKE_EXECUTABLE_SUFFIX ".js")
 
 
-target_link_libraries(player memory)
 target_link_libraries(player math)
 target_link_libraries(player rendering)
 target_link_libraries(player rendering_gl)
@@ -48,6 +44,5 @@ set_target_properties(player
 
 set_target_properties(player
     PROPERTIES
-    LINK_FLAGS "--preload-file ${CMAKE_SOURCE_DIR}/player/shaders@/shaders --preload-file ${CMAKE_SOURCE_DIR}/player/assets@/assets -s WASM=1 -s USE_WEBGL2=1 -s OFFSCREENCANVAS_SUPPORT=1 -s TOTAL_MEMORY=64MB -s BINARYEN_METHOD='native-wasm' -s EXTRA_EXPORTED_RUNTIME_METHODS=\"['ccall', 'cwrap']\""
+    LINK_FLAGS "--preload-file ${CMAKE_SOURCE_DIR}/player/shaders@/shaders --preload-file ${CMAKE_SOURCE_DIR}/player/assets@/assets -s WASM=1 -s USE_WEBGL2=1 -s FULL_ES3=1 -s TOTAL_MEMORY=1024MB -s EXTRA_EXPORTED_RUNTIME_METHODS=\"['ccall', 'cwrap']\""
 )
-

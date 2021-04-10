@@ -20,6 +20,7 @@ namespace tov
     namespace
     {
         using pipeline::ConstantDefinition, pipeline::ConstantType;
+
         auto MAT_4 = ConstantDefinition<ConstantType::MATRIX_4, math::Matrix4>::DEFINITION;
         auto TEX_2D = ConstantDefinition<ConstantType::TEXTURE_2D, int>::DEFINITION;
     }
@@ -57,11 +58,11 @@ namespace tov
         mProgram->addConstantDefinition("modelMatrix", MAT_4);
         mProgram->addConstantDefinition("viewMatrix", MAT_4);
         mProgram->addConstantDefinition("projectionMatrix", MAT_4);
-        mProgram->addConstantDefinition("texture", TEX_2D);
+        mProgram->addConstantDefinition("skyboxTexture", TEX_2D);
         mProgram->buildLocationMap();
 
         mProgramInstance = &mProgram->instantiate();
-        mProgramInstance->setConstant<int>("texture", 0);
+        mProgramInstance->setConstant<int>("skyboxTexture", 0);
     }
 
     void SkyboxProducer::setInputs()

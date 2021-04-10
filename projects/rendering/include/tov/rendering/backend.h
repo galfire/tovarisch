@@ -49,7 +49,10 @@ namespace tov
     ) -> RenderSystem*;
 
     auto createBufferManager() -> buffers::BufferManagerBase*;
-    auto createDrawDataContext(const mesh::VertexData& vertexData) -> mesh::DrawDataContext*;
+    auto createDrawDataContext(
+        const mesh::VertexData& vertexData,
+        const mesh::VertexDataFormat& vertexDataFormat
+    ) -> mesh::DrawDataContext*;
     auto getDefaultFramebuffer() -> pipeline::Framebuffer*;
     auto createFramebuffer() -> pipeline::Framebuffer*;
     auto createProgram() -> pipeline::Program*;

@@ -26,6 +26,9 @@ namespace tov
         static const ConstantDefinition DEFINITION;
     };
 
+    template <ConstantType C, class T>
+    const ConstantDefinition<C, T> ConstantDefinition<C, T>::DEFINITION = ConstantDefinition<C, T>();
+
     TOV_NAMESPACE_END // pipeline
     TOV_NAMESPACE_END // rendering
 }

@@ -20,7 +20,7 @@ namespace tov
         Shader(ShaderType shaderType, const char* sourceFilePath);
         virtual ~Shader();
 
-        void compile();        
+        void compile();
 
     private:
         virtual void compileImpl() TOV_ABSTRACT;

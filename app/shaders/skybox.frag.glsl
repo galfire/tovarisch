@@ -4,7 +4,7 @@ layout(location = 0) out vec4 Colour;
 
 in vec3 TexCoord;
 
-uniform sampler2D texture;
+uniform sampler2D skyboxTexture;
 
 const float pi = 3.141592653589793238462643383279502884197169;
 
@@ -20,6 +20,6 @@ void main()
     
     uv.x += 0.5;
     
-    vec4 tex = texture2D(texture, uv);
+    vec4 tex = texture2D(skyboxTexture, uv);
     Colour = tex;
 }

@@ -3,6 +3,8 @@
 
 #include <tov/core.h>
 
+#include <exception>
+
 namespace tov
 {
     TOV_NAMESPACE_BEGIN(memory)
@@ -12,7 +14,7 @@ namespace tov
     {
     public:
         BoundsCheckException(const char* msg) throw()
-            : std::exception(msg)
+            : std::exception()
         {
         }
     };

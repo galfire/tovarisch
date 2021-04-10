@@ -42,7 +42,7 @@
             if (error != GL_NO_ERROR) success = false;
             if (success) std::cout << "\tSuccessfully completed " << mStep << ".\n";
             else
-                std::cout << "\nFailed to complete " << mStep << "!\n";
+                std::cerr << "\nFailed to complete " << mStep << "!\n";
         }
 
     private:

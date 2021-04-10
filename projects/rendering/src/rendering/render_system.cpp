@@ -28,12 +28,8 @@ namespace tov
         , mWindowPlatformSupport(windowPlatformSupport)
         , mWindowRendererSupport(windowRendererSupport)
     {
-        mBufferManager = std::unique_ptr<buffers::BufferManagerBase>(
-            backend::createBufferManager()
-        );
-        mMeshManager = std::unique_ptr<mesh::MeshManager>(
-            new mesh::MeshManager(*mBufferManager)
-        );
+        mBufferManager = std::unique_ptr<buffers::BufferManagerBase>(backend::createBufferManager());
+        mMeshManager = std::make_unique<mesh::MeshManager>(*mBufferManager);
     }
 
     RenderSystem::~RenderSystem() noexcept
@@ -107,8 +103,6 @@ namespace tov
             auto producer = static_cast<producers::Producer*>(dependentProducer);
             producer->render();
         }
-
-        //mResourceBucket->reset();
     }
 
     TOV_NAMESPACE_END // rendering

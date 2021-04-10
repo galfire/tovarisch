@@ -25,8 +25,6 @@ namespace tov
         TOV_MOVABLE_ONLY(VertexData)
 
         using VBOHandle =       byte;
-        using VBOOwningList =   std::vector<std::unique_ptr<buffers::VertexBufferObject>>;
-        using VBOList =         std::vector<buffers::VertexBufferObject*>;
         using HandleToVBOMap =  std::unordered_map<VBOHandle, buffers::VertexBufferObject*>;
 
     public:
@@ -38,13 +36,9 @@ namespace tov
         ~VertexData() noexcept;
 
         auto getBufferObjectForHandle(VBOHandle handle) const -> auto& { return *mHandleToVBOMap.at(handle); }
-        auto getBufferObjects() const -> auto& { return mVBOList; }
-        auto getFormat() const -> auto& { return mFormat; }
 
     private:
-        VertexDataFormat mFormat;
-        VBOOwningList mVBOOwningList;
-        VBOList mVBOList;
+        std::vector<std::unique_ptr<buffers::VertexBufferObject>> mVertexBufferObjects;
         HandleToVBOMap mHandleToVBOMap;
     };
 
