@@ -167,15 +167,26 @@ private:
 
         auto vertexDataFormat = tov::rendering::mesh::VertexDataFormat();
         {
-            tov::rendering::buffers::VertexFormat vf;
-            vf.addAttribute(tov::rendering::buffers::VertexAttribute::POSITION, 0);
-            vf.addAttribute(tov::rendering::buffers::VertexAttribute::NORMAL, 1);
-            vf.addAttribute(tov::rendering::buffers::VertexAttribute::TEXTURE_COORDINATE, 2);
-            tov::rendering::buffers::VertexBufferFormat vbf(
-                tov::rendering::buffers::VertexBufferFormat::SequenceType::INTERLEAVED,
-                vf
-            );
-            vertexDataFormat.mapHandleToFormat(0, vbf);
+            {
+                tov::rendering::buffers::VertexFormat vf;
+                vf.addAttribute(tov::rendering::buffers::VertexAttribute::POSITION, 0);
+                vf.addAttribute(tov::rendering::buffers::VertexAttribute::NORMAL, 1);
+                //vf.addAttribute(tov::rendering::buffers::VertexAttribute::TEXTURE_COORDINATE, 2);
+                tov::rendering::buffers::VertexBufferFormat vbf(
+                    tov::rendering::buffers::VertexBufferFormat::SequenceType::INTERLEAVED,
+                    vf
+                );
+                vertexDataFormat.mapHandleToFormat(0, vbf);
+            }
+            {
+                tov::rendering::buffers::VertexFormat vf;
+                vf.addAttribute(tov::rendering::buffers::VertexAttribute::TEXTURE_COORDINATE, 2);
+                tov::rendering::buffers::VertexBufferFormat vbf(
+                    tov::rendering::buffers::VertexBufferFormat::SequenceType::INTERLEAVED,
+                    vf
+                );
+                vertexDataFormat.mapHandleToFormat(1, vbf);
+            }
         }
 
         auto sphereMesh = meshManager.create();
@@ -250,7 +261,7 @@ private:
             auto axis = tov::math::Vector3(0.0f, 1.0f, 0.0f);
             auto angle = tov::math::Radian(0.001f);
             auto rotation = tov::math::Quaternion(angle, axis);
-            mCameraNode->getTransform().rotate(rotation);
+            //mCameraNode->getTransform().rotate(rotation);
         }
 
         mRenderSystem->renderFrame(*mScene);

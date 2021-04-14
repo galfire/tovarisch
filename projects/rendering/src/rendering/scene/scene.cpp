@@ -13,8 +13,6 @@
 #include "rendering/commands/commands.h"
 #include "rendering/commands/command_bucket.h"
 
-#include "rendering/mesh/draw_data_context.h"
-
 #include "rendering/scene/skybox.h"
 
 #include "rendering/backend.h"

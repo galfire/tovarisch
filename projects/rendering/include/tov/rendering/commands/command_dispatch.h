@@ -16,9 +16,6 @@ namespace tov
         static void Draw(const void* data);
         static void SetMVP(const void* data);
         static void UploadConstants(const void* data);
-
-        static void StartDrawDataContext(const void* data);
-        static void EndDrawDataContext(const void* data);
     };
 
     TOV_NAMESPACE_END // commands
