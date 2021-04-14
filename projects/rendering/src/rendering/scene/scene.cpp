@@ -60,7 +60,7 @@ namespace tov
         {
             auto const& viewMatrix = camera->getViewMatrix();
 
-            auto& viewports = camera->getViewports();
+            auto viewports = camera->getViewports();
             for (auto&& viewport : viewports)
             {
                 auto width = static_cast<float>(viewport->getWidth());
@@ -105,7 +105,7 @@ namespace tov
             auto& nodes = drawContext.getSceneNodes();
             auto const& viewMatrix = camera->getViewMatrix();
 
-            auto& viewports = camera->getViewports();
+            auto viewports = camera->getViewports();
             for (auto&& viewport : viewports)
             {
                 auto width = static_cast<float>(viewport->getWidth());
@@ -142,7 +142,7 @@ namespace tov
                     auto const& sceneObjects = node->getSceneObjects();
                     for (auto&& sceneObject : sceneObjects)
                     {
-                        auto& drawDataList = sceneObject->getDrawDataList();
+                        auto drawDataList = sceneObject->getDrawDataList();
                         for (auto&& drawData : drawDataList)
                         {
                             auto& command = bucket.addCommand<commands::Draw>();

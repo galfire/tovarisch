@@ -24,7 +24,7 @@ namespace tov
         auto addSubmeshInstance(SubmeshInstance& submeshInstance) -> void;
         auto getSubmeshInstance(uint index) -> SubmeshInstance&;
 
-        auto getDrawDataList() -> std::vector<DrawData> const&;
+        auto getDrawDataList() const { return std::span{ mDrawDataList }; }
 
     private:
         std::vector<SubmeshInstance*> mSubmeshInstanceList;

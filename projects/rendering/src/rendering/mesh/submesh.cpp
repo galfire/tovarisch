@@ -22,6 +22,8 @@
 
 #include <rendering/backend.h>
 
+#include <ranges>
+
 namespace tov
 {
     TOV_NAMESPACE_BEGIN(rendering)
@@ -133,7 +135,7 @@ namespace tov
     auto Submesh::instantiate() -> SubmeshInstance&
     {
         {
-            auto const& ibo = mIndexData->getBufferObject();
+            auto ibo = mIndexData->getBufferObject();
             auto materialInstance = mMaterial ? &mMaterial->instantiate() : nullptr;
             auto submeshInstance = std::make_unique<SubmeshInstance>(*mDrawDataContext.get(), ibo, materialInstance);
             mSubmeshInstances.push_back(std::move(submeshInstance));
@@ -160,7 +162,7 @@ namespace tov
         auto numIndices = geometry.getNumIndices();
         auto indexType = buffers::getIndexType(numIndices);
 
-        auto& ibo = mIndexData->getBufferObject();
+        auto ibo = mIndexData->getBufferObject();
         auto guard = buffers::Guard(ibo, buffers::LockSettings::WRITE);
         auto lock = guard.getLock();
 
@@ -204,12 +206,14 @@ namespace tov
             geometry.getNumVertices()
         );
 
-        auto handles = vertexDataFormat.getHandles();
-        for (auto&& handle : handles)
+        auto num = vertexDataFormat.getNumVertexBufferFormats();
+        auto vertexBufferFormats = vertexDataFormat.getVertexBufferFormats();
+        auto vertexBufferObjects = mVertexData->getVertexBufferObjects();
+        for (auto i = 0u; i < num; i++)
         {
-            auto& vbo = mVertexData->getBufferObjectForHandle(handle);
-            auto vbf = vertexDataFormat.getVertexBufferFormatForHandle(handle);
-            writeVertexBuffer(vbo, vbf, geometry);
+            auto vertexBufferFormat = vertexBufferFormats[i];
+            auto vertexBufferObject = vertexBufferObjects[i];
+            writeVertexBuffer(vertexBufferObject, vertexBufferFormat, geometry);
         }
 
         mDrawDataContext = std::unique_ptr<DrawDataContext>(

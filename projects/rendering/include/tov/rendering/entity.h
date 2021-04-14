@@ -30,7 +30,7 @@ namespace tov
         ~Entity() noexcept;
 
         auto createMeshComponent(mesh::Mesh& mesh) -> MeshComponent&;
-        auto getDrawDataList() const -> DrawDataList const& override;
+        auto getDrawDataList() const -> DrawDataList override;
 
     private:
         template<class T, class... U>

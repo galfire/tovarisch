@@ -41,10 +41,10 @@ namespace tov
         auto getViewMatrix() const { return mViewFrustum.getViewMatrix(); }
 
         void attachViewport(Viewport& viewport);
-        auto getViewports() const -> auto & { return mViewports; }
+        auto getViewports() const { return std::span{ mViewports }; }
 
     private:
-        auto getDrawDataList() const -> DrawDataList const& { return mDrawDataList; }
+        auto getDrawDataList() const -> DrawDataList { return std::span{ mDrawDataList }; }
 
     public:
         void buildProjectionMatrix(void);
@@ -56,8 +56,7 @@ namespace tov
         ViewFrustum<ProjectionType::PERSPECTIVE> mViewFrustum;
 
         std::vector<Viewport*> mViewports;
-
-        DrawDataList mDrawDataList;
+        std::vector<mesh::DrawData> mDrawDataList;
     };
 
     TOV_NAMESPACE_END

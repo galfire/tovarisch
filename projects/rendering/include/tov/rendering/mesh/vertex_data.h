@@ -4,6 +4,7 @@
 #include <tov/rendering/rendering_core.h>
 
 #include "vertex_data_format.h"
+#include <tov/rendering/buffers/vertex_buffer_object.h>
 
 namespace tov
 {
@@ -11,7 +12,6 @@ namespace tov
     TOV_NAMESPACE_BEGIN(buffers)
 
     class BufferManagerBase;
-    class VertexBufferObject;
 
     TOV_NAMESPACE_END // buffers
 
@@ -24,9 +24,6 @@ namespace tov
     {
         TOV_MOVABLE_ONLY(VertexData)
 
-        using VBOHandle =       byte;
-        using HandleToVBOMap =  std::unordered_map<VBOHandle, buffers::VertexBufferObject*>;
-
     public:
         VertexData(
             buffers::BufferManagerBase& bufferManager,
@@ -35,11 +32,10 @@ namespace tov
         ) noexcept;
         ~VertexData() noexcept;
 
-        auto getBufferObjectForHandle(VBOHandle handle) const -> auto& { return *mHandleToVBOMap.at(handle); }
+        auto getVertexBufferObjects() const { return std::span{ mVertexBufferObjects }; }
 
     private:
-        std::vector<std::unique_ptr<buffers::VertexBufferObject>> mVertexBufferObjects;
-        HandleToVBOMap mHandleToVBOMap;
+        std::vector<buffers::VertexBufferObject> mVertexBufferObjects;
     };
 
     TOV_NAMESPACE_END // mesh

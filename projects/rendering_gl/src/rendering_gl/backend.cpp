@@ -213,20 +213,21 @@ namespace tov
     ) -> mesh::DrawDataContext*
     {
         auto ddc = new rendering::gl::mesh::DrawDataContext();
-        
         ddc->start();
 
-        auto handles = vertexDataFormat.getHandles();
-        for (auto&& handle : handles)
+        auto num = vertexDataFormat.getNumVertexBufferFormats();
+        auto vertexBufferFormats = vertexDataFormat.getVertexBufferFormats();
+        auto vertexBufferObjects = vertexData.getVertexBufferObjects();
+        for (auto i = 0u; i < num; i++)
         {
-            auto vbf = vertexDataFormat.getVertexBufferFormatForHandle(handle);
-            auto vbo = vertexData.getBufferObjectForHandle(handle);
+            auto vertexBufferFormat = vertexBufferFormats[i];
+            auto vertexBufferObject = vertexBufferObjects[i];
 
             using Buffer = rendering::gl::buffers::Buffer<buffers::UsageSettings::STATIC, buffers::AccessSettings::WRITE>;
-            auto& vertexBuffer = static_cast<Buffer&>(vbo.getBuffer());
+            auto& vertexBuffer = static_cast<Buffer&>(vertexBufferObject.getBuffer());
             auto bindVertex = vertexBuffer.binder();
 
-            auto const& desc = vbf.getDescriptor();
+            auto const& desc = vertexBufferFormat.getDescriptor();
             for (auto&& a : desc.attributeDescriptors)
             {
                 auto location = a.location;

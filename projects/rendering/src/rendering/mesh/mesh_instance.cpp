@@ -37,12 +37,7 @@ namespace tov
 
     auto MeshInstance::getSubmeshInstance(uint index) -> SubmeshInstance&
     {
-        return *mSubmeshInstanceList[index];
-    }
-
-    auto MeshInstance::getDrawDataList() -> std::vector<mesh::DrawData> const&
-    {
-        return mDrawDataList;
+        return *mSubmeshInstanceList.at(index);
     }
 
     TOV_NAMESPACE_END // mesh

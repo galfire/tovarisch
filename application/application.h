@@ -171,12 +171,11 @@ private:
                 tov::rendering::buffers::VertexFormat vf;
                 vf.addAttribute(tov::rendering::buffers::VertexAttribute::POSITION, 0);
                 vf.addAttribute(tov::rendering::buffers::VertexAttribute::NORMAL, 1);
-                //vf.addAttribute(tov::rendering::buffers::VertexAttribute::TEXTURE_COORDINATE, 2);
                 tov::rendering::buffers::VertexBufferFormat vbf(
                     tov::rendering::buffers::VertexBufferFormat::SequenceType::INTERLEAVED,
                     vf
                 );
-                vertexDataFormat.mapHandleToFormat(0, vbf);
+                vertexDataFormat.addVertexBufferFormat(vbf);
             }
             {
                 tov::rendering::buffers::VertexFormat vf;
@@ -185,7 +184,7 @@ private:
                     tov::rendering::buffers::VertexBufferFormat::SequenceType::INTERLEAVED,
                     vf
                 );
-                vertexDataFormat.mapHandleToFormat(1, vbf);
+                vertexDataFormat.addVertexBufferFormat(vbf);
             }
         }
 

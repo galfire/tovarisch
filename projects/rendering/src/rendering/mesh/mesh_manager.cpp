@@ -30,7 +30,7 @@ namespace tov
                 buffers::VertexBufferFormat::SequenceType::INTERLEAVED,
                 vf
             );
-            vertexDataFormat.mapHandleToFormat(0, vbf);
+            vertexDataFormat.addVertexBufferFormat(vbf);
         }
 
         mCube = create();

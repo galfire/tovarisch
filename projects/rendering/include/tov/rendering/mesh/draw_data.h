@@ -20,9 +20,9 @@ namespace tov
     public:
         DrawData(
             mesh::DrawDataContext const& drawDataContext,
-            buffers::IndexBufferObject const& indexBufferObject, 
+            buffers::IndexBufferObject const indexBufferObject, 
             std::vector<pipeline::TextureUsage> const textureUsages,
-            pipeline::RasterizerStateDescriptor rasterizerStateDescriptor
+            pipeline::RasterizerStateDescriptor const rasterizerStateDescriptor
         ) noexcept
             : mDrawDataContext(drawDataContext)
             , mIndexBufferObject(indexBufferObject)
@@ -32,15 +32,15 @@ namespace tov
         ~DrawData() noexcept = default;
 
         auto getDrawDataContext() const -> auto const& { return mDrawDataContext; }
-        auto getIndexBufferObject() const -> auto const& { return mIndexBufferObject; }
-        auto getTextureUsages() const -> auto const& { return mTextureUsages; }
+        auto getIndexBufferObject() const { return mIndexBufferObject; }
+        auto getTextureUsages() const { return std::span{ mTextureUsages }; }
         auto getRasterizerStateDescriptor() const { return mRasterizerStateDescriptor; }
 
     private:
         mesh::DrawDataContext const& mDrawDataContext;
-        buffers::IndexBufferObject const& mIndexBufferObject;
+        buffers::IndexBufferObject const mIndexBufferObject;
         std::vector<pipeline::TextureUsage> const mTextureUsages;
-        pipeline::RasterizerStateDescriptor mRasterizerStateDescriptor;
+        pipeline::RasterizerStateDescriptor const mRasterizerStateDescriptor;
     };
 
     TOV_NAMESPACE_END // mesh

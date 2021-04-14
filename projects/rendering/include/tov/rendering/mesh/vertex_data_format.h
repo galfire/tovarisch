@@ -3,11 +3,7 @@
 
 #include <tov/rendering/rendering_core.h>
 
-#include <tov/rendering/buffers/vertex_attribute.h>
 #include <tov/rendering/buffers/vertex_buffer_format.h>
-
-#include <unordered_map>
-#include <vector>
 
 namespace tov
 {
@@ -16,30 +12,17 @@ namespace tov
 
     class VertexDataFormat
     {
-        using VBOHandle = byte;
-        using VertexBufferFormat = rendering::buffers::VertexBufferFormat;
-        using HandleToFormatMap = std::unordered_map<VBOHandle, VertexBufferFormat>;
-        using HandleList = std::vector<VBOHandle>;
-        using VertexBufferFormatList = std::vector<VertexBufferFormat>;
-
     public:
         VertexDataFormat() noexcept {}
         ~VertexDataFormat() noexcept {}
 
-        void mapHandleToFormat(VBOHandle handle, VertexBufferFormat vbf);
+        auto addVertexBufferFormat(buffers::VertexBufferFormat vbf) -> void;
 
-        auto getVertexBufferFormatForHandle(VBOHandle handle) const
-        {
-            auto format = mHandleToFormatMap.at(handle);
-            return format;
-        }
-
-        auto getHandles() const -> auto const& { return mHandles; }
-        auto getVertexBufferFormats() const -> auto const& { return mVertexBufferFormats; }
+        auto getNumVertexBufferFormats() const { return mVertexBufferFormats.size(); }
+        auto getVertexBufferFormats() const { return std::span { mVertexBufferFormats }; }
+    
     private:
-        HandleList mHandles;
-        VertexBufferFormatList mVertexBufferFormats;
-        HandleToFormatMap mHandleToFormatMap;
+        std::vector<buffers::VertexBufferFormat> mVertexBufferFormats;
     };
 
     TOV_NAMESPACE_END // mesh

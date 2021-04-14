@@ -21,8 +21,8 @@ namespace tov
 
         auto getParentSceneNode() const { return mParentSceneNode; }
 
-        using DrawDataList = std::vector<mesh::DrawData>;
-        virtual auto getDrawDataList() const -> DrawDataList const& TOV_ABSTRACT;
+        using DrawDataList = std::span<const mesh::DrawData>;
+        virtual auto getDrawDataList() const -> DrawDataList TOV_ABSTRACT;
 
     private:
         void attachToSceneNode(SceneNode* sceneNode);

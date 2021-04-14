@@ -22,6 +22,7 @@ namespace tov
         auto getCamera() const { return mCamera; }
 
         auto getSceneNodes() -> auto& { return mSceneNodes; }
+        auto getSceneNodes() const { return std::span{ mSceneNodes }; }
 
     private:
         Camera* mCamera = nullptr;

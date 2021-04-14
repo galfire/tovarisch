@@ -6,7 +6,6 @@
 #include "vertex_attribute.h"
 
 #include <unordered_map>
-#include <vector>
 
 namespace tov
 {
@@ -16,7 +15,6 @@ namespace tov
     class VertexFormat
     {
     private:
-        using VertexAttributeList = std::vector<VertexAttribute>;
         using VertexAttributeToLocationMap = std::unordered_map<VertexAttribute, ushort, VertexAttribute::Hash, VertexAttribute::EqualTo>;
 
     public:
@@ -25,12 +23,12 @@ namespace tov
         // The size of the vertex in bytes
         auto getSize() const { return mSize; }
 
-        auto getAttributes() const -> auto const & { return mAttributes; }
+        auto getAttributes() const { return std::span{ mAttributes }; }
 
         auto getAttributeLocation(VertexAttribute attribute) const { return mAttributeToLocationMap.at(attribute); }
 
     private:
-        VertexAttributeList mAttributes;
+        std::vector<VertexAttribute> mAttributes;
         VertexAttributeToLocationMap mAttributeToLocationMap;
         size_t mSize = 0;
     };

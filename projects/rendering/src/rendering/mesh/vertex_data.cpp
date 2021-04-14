@@ -14,16 +14,11 @@ namespace tov
         uint numVertices
     ) noexcept
     {
-        auto handles = format.getHandles();
-        for (auto&& handle : handles)
+        auto bufferFormats = format.getVertexBufferFormats();
+        for (auto&& bufferFormat : bufferFormats)
         {
-            {
-                auto bufferFormat = format.getVertexBufferFormatForHandle(handle);
-                auto buffer = bufferManager.createVertexBuffer(bufferFormat, numVertices);
-                auto bufferObject = std::make_unique<buffers::VertexBufferObject>(*buffer);
-                mVertexBufferObjects.push_back(std::move(bufferObject));
-            }
-            mHandleToVBOMap.emplace(handle, mVertexBufferObjects.back().get());
+            auto buffer = bufferManager.createVertexBuffer(bufferFormat, numVertices);
+            mVertexBufferObjects.emplace_back(*buffer);
         }
     }
 

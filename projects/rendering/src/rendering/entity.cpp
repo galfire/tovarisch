@@ -21,19 +21,12 @@ namespace tov
         return *mMeshComponent;
     }
     
-    auto Entity::getDrawDataList() const -> DrawDataList const&
+    auto Entity::getDrawDataList() const -> DrawDataList
     {
-        if (mMeshComponent)
-        {
-            auto & meshInstance = mMeshComponent->getMeshInstance();
-            auto const& drawDataList = meshInstance.getDrawDataList();
-            return drawDataList;
-        }
-        else
-        {
-            // TODO: FIX ME!
-            return {};
-        }
+        assert(mMeshComponent);
+
+        auto& meshInstance = mMeshComponent->getMeshInstance();
+        return meshInstance.getDrawDataList();
     }
 
     TOV_NAMESPACE_END // rendering

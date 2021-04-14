@@ -7,6 +7,8 @@
 
 #include <cassert> // assert
 #include <cstring> // memcpy
+#include <vector>
+#include <span>
 
 #if TOV_DEBUG
 #	include <iostream>
