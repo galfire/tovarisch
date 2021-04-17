@@ -13,12 +13,14 @@ namespace tov
     TOV_NAMESPACE_BEGIN(rendering)
     TOV_NAMESPACE_BEGIN(mesh)
 
+    class Mesh;
+
     class MeshInstance
     {
         TOV_MOVABLE_ONLY(MeshInstance)
 
     public:
-        MeshInstance() noexcept = default;
+        MeshInstance(Mesh& parentMesh) noexcept;
         ~MeshInstance() noexcept = default;
 
         auto addSubmeshInstance(SubmeshInstance& submeshInstance) -> void;
@@ -27,6 +29,7 @@ namespace tov
         auto getDrawDataList() const { return std::span{ mDrawDataList }; }
 
     private:
+        Mesh& mParentMesh;
         std::vector<SubmeshInstance*> mSubmeshInstanceList;
         std::vector<DrawData> mDrawDataList;
     };

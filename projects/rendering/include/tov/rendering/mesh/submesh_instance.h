@@ -2,6 +2,9 @@
 #define TOV_RENDERING_MESH_SUBMESH_INSTANCE_H
 
 #include <tov/rendering/rendering_core.h>
+
+#include "draw_data.h"
+
 #include <tov/rendering/buffers/index_buffer_object.h>
 
 namespace tov
@@ -23,19 +26,18 @@ namespace tov
             DrawDataContext const& drawDataContext,
             buffers::IndexBufferObject ibo,
             MaterialInstance* materialInstance
-        )
-            : mDrawDataContext(drawDataContext)
-            , mIBO(ibo)
-            , mMaterialInstance(materialInstance)
-        {}
+        );
         ~SubmeshInstance() = default;
 
         auto getDrawDataContext() const -> auto const& { return mDrawDataContext; }
         auto getIndexBufferObject() const { return mIBO; }
-        void setMaterialInstance(MaterialInstance* materialInstance) { mMaterialInstance = materialInstance; }
+        auto setMaterialInstance(MaterialInstance* materialInstance) { mMaterialInstance = materialInstance; }
         auto getMaterialInstance() const { return mMaterialInstance; }
 
+        auto getDrawData() const { return *mDrawData.get(); }
+
     private:
+        std::unique_ptr<DrawData> mDrawData;
         DrawDataContext const& mDrawDataContext;
         buffers::IndexBufferObject mIBO;
         MaterialInstance* mMaterialInstance;

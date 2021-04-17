@@ -35,11 +35,15 @@ namespace tov
         auto createSubmesh(geometry::Geometry const& geometry, VertexDataFormat const& vertexDataFormat) -> Submesh&;
         auto instantiate() -> MeshInstance&;
 
+        auto getSubmeshes() const { return std::span{ mSubmeshes_ }; }
+
     private:
         MeshManager& mManager;
 
         using SubmeshList = std::vector<std::unique_ptr<Submesh>>;
         SubmeshList mSubmeshes;
+        std::vector<Submesh*> mSubmeshes_;
+
 
         using MeshInstanceList = std::vector<std::unique_ptr<MeshInstance>>;
         MeshInstanceList mMeshInstances;

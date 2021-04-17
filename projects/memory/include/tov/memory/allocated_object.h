@@ -16,19 +16,32 @@ namespace tov
     class AllocatedObject
     {
     public:
-        static void* operator new(size_t sz)
+        static auto operator new(size_t sz) -> void*
         {
             return sArena->allocate();
         };
 
-        static void operator delete(void* ptr)
+        static auto operator delete(void* ptr) -> void
         {
             sArena->deallocate(ptr);
         }
 
-        static void reset()
+        static auto operator new[](size_t sz) -> void* = delete;
+        static auto operator delete[](void* ptr) -> void = delete;
+
+        static auto reset()
         {
             sArena->reset();
+        }
+
+        static auto getMemoryStart()
+        {
+            return sArea->getStart();
+        }
+
+        static auto getMemorySize()
+        {
+            return sArea->getSize();
         }
 
     private:

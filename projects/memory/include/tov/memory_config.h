@@ -14,6 +14,7 @@
 #include "memory/policies/allocation/freelist.h"
 #include "memory/policies/allocation/linear.h"
 #include "memory/policies/allocation/new_delete.h"
+#include "memory/policies/allocation/new_delete_fixed.h"
 
 #include "memory/policies/alignment/standard.h"
 #include "memory/policies/alignment/none.h"
@@ -31,6 +32,7 @@ namespace tov
     using AllocationPolicyFreelist = policies::allocation::Freelist;
     using AllocationPolicyLinear = policies::allocation::Linear;
     using AllocationPolicyNewDelete = policies::allocation::NewDelete;
+    using AllocationPolicyNewDeleteFixed = policies::allocation::NewDeleteFixed;
 
     using AlignmentPolicyNone = policies::alignment::None;
     using AlignmentPolicyStandard = policies::alignment::Standard;
@@ -61,6 +63,15 @@ namespace tov
 
     using ArenaNewDelete = arena::MemoryArena<
         AllocationPolicyNewDelete,
+        AlignmentPolicyStandard,
+        ThreadPolicySingle,
+        BoundsPolicy
+    >;
+
+    template <class T>
+    using ArenaNewDeleteFixed = arena::TypedMemoryArena<
+        T,
+        AllocationPolicyNewDeleteFixed,
         AlignmentPolicyStandard,
         ThreadPolicySingle,
         BoundsPolicy

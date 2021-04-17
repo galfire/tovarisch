@@ -29,24 +29,25 @@ namespace tov
         inline auto checkBounds(void* ptr) const -> void;
 
     private:
-        inline auto alignmentSpace()
+        static constexpr auto alignmentSpace()
         {
-            auto const alignmentSpace =
+            auto alignmentPolicy = AlignmentPolicy{};
+            constexpr auto alignmentSpace =
                 SIZE
-                + mAlignmentPolicy.determineAlignmentSpace(ALIGNMENT);
+                + alignmentPolicy.determineAlignmentSpace(ALIGNMENT);
             return alignmentSpace;
         }
 
-        inline auto allocationSpace()
+        static constexpr auto allocationSpace()
         {
-            auto const allocationSpace =
+            constexpr auto allocationSpace =
                 alignmentSpace()
                 + sizeof(AllocationHeader)
                 + BoundsCheckingPolicy::TOTAL_BOUND_SIZE;
             return allocationSpace;
         }
 
-        inline auto getAllocationHeader(void* ptr) const -> AllocationHeader
+        static constexpr auto getAllocationHeader(void* ptr) -> AllocationHeader
         {
             auto cursor = static_cast<byte*>(ptr);
             cursor -= BoundsCheckingPolicy::FRONT_BOUND_SIZE;
@@ -54,9 +55,11 @@ namespace tov
             return *reinterpret_cast<AllocationHeader*>(cursor);
         }
 
-    private:
+    public:
         static constexpr auto SIZE = sizeof(T);
         static constexpr auto ALIGNMENT = alignof(T);
+        static constexpr auto ALIGNMENT_SPACE = alignmentSpace();
+        static constexpr auto ALLOCATION_SPACE = allocationSpace();
 
     private:
         AllocationPolicy mAllocationPolicy;

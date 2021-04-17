@@ -76,6 +76,7 @@ namespace tov
         auto getSequenceType() const { return mSequenceType; }
         auto getVertexFormat() const -> auto const& { return mVertexFormat; }
         auto getDescriptor() const -> auto const& { return mDescriptor; }
+        auto getAttributeDescriptors() const { return std::span{ mDescriptor.attributeDescriptors }; }
 
     private:
         void buildDescriptor();

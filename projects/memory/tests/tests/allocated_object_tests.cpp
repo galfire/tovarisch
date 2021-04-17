@@ -5,6 +5,8 @@
 
 #include <tov/memory_config.h>
 
+#include <vector>
+
 namespace
 {
 	class alignas(8) Foo

@@ -15,9 +15,18 @@ namespace tov
         inline explicit NewDelete() noexcept = default;
         inline ~NewDelete() noexcept = default;
 
-        inline void* allocate(size_t size) noexcept;
-        inline void deallocate(void* ptr) noexcept;
-        inline void reset() noexcept;
+        inline void* allocate(size_t size) noexcept
+        {
+            return ::operator new(size, std::nothrow);
+        }
+
+        inline void deallocate(void* ptr) noexcept
+        {
+            ::operator delete(ptr);
+        }
+
+        inline void reset() noexcept
+        {}
     };
 
     TOV_NAMESPACE_END // allocation
@@ -25,6 +34,6 @@ namespace tov
     TOV_NAMESPACE_END // memory
 }
 
-#include "new_delete.inl"
+//#include "new_delete.inl"
 
 #endif // !TOV_MEMORY_POLICIES_ALLOCATION_NEW_DELETE_H

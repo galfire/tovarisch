@@ -227,8 +227,8 @@ namespace tov
             auto& vertexBuffer = static_cast<Buffer&>(vertexBufferObject.getBuffer());
             auto bindVertex = vertexBuffer.binder();
 
-            auto const& desc = vertexBufferFormat.getDescriptor();
-            for (auto&& a : desc.attributeDescriptors)
+            auto descriptors = vertexBufferFormat.getAttributeDescriptors();
+            for (auto&& a : descriptors)
             {
                 auto location = a.location;
                 auto count = a.count;

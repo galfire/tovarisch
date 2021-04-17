@@ -22,8 +22,6 @@
 
 #include <rendering/backend.h>
 
-#include <ranges>
-
 namespace tov
 {
     TOV_NAMESPACE_BEGIN(rendering)
@@ -137,7 +135,11 @@ namespace tov
         {
             auto ibo = mIndexData->getBufferObject();
             auto materialInstance = mMaterial ? &mMaterial->instantiate() : nullptr;
-            auto submeshInstance = std::make_unique<SubmeshInstance>(*mDrawDataContext.get(), ibo, materialInstance);
+            auto submeshInstance = std::make_unique<SubmeshInstance>(
+                *mDrawDataContext.get(),
+                ibo,
+                materialInstance
+            );
             mSubmeshInstances.push_back(std::move(submeshInstance));
         }
 
