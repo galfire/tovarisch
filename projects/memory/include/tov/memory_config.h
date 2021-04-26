@@ -9,6 +9,7 @@
 
 #include "memory/arena/memory_arena.h"
 #include "memory/arena/typed_memory_arena.h"
+#include "memory/arena/typed_memory_arena_simple.h"
 #include "memory/heap_area.h"
 
 #include "memory/policies/allocation/freelist.h"
@@ -77,13 +78,19 @@ namespace tov
         BoundsPolicy
     >;
 
+    //template <class T>
+    //using ArenaFreelist = arena::TypedMemoryArena<
+    //    T,
+    //    AllocationPolicyFreelist,
+    //    AlignmentPolicyStandard,
+    //    ThreadPolicySingle,
+    //    BoundsPolicy
+    //>;
+
     template <class T>
-    using ArenaFreelist = arena::TypedMemoryArena<
+    using ArenaFreelist = arena::TypedMemoryArenaSimple<
         T,
-        AllocationPolicyFreelist,
-        AlignmentPolicyStandard,
-        ThreadPolicySingle,
-        BoundsPolicy
+        AllocationPolicyFreelist
     >;
 
     TOV_NAMESPACE_END // memory

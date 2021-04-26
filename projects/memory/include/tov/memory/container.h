@@ -4,69 +4,108 @@
 
 #include <tov/memory_config.h>
 #include "allocated_object.h"
+#include "allocator.h"
+#include "heap_area.h"
+
+#include "policies/allocation/freelist.h"
 
 #include <vector>
 #include <span>
 #include <array>
+#include <functional>
+#include <stack>
 
 namespace tov
 {
     TOV_NAMESPACE_BEGIN(memory)
 
+    template <class T> 
+    struct Handle
+    {
+        T* ptr;
+    };
+
     template <class T, size_t N>
     class Container
     {
     private:
-        using Arena = ArenaFreelist<T>;
-        static constexpr size_t ALLOCATED_T_MEMORY = N * Arena::ALLOCATION_SPACE;
-        class AllocatedT
-            : public T
-            , public AllocatedObject<Arena, ALLOCATED_T_MEMORY>
-        {};
+        using Deleter = std::function<void(T*)>;
+        using UT = std::unique_ptr<T, Deleter>;
+
+
+        using HandleT = Handle<T>;
+        using UHandle = std::unique_ptr<HandleT, Deleter>;
 
     public:
-        Container() = default;
+        Container()
+            : mHeapArea(sizeof(T) * N)
+            , mAllocator(mHeapArea.getStart(), mHeapArea.getEnd(), sizeof(T))
+        {}
         ~Container() = default;
 
         template <class... U>
-        auto emplace_back(U&&... args) -> auto&
+        auto emplace_back(U&&... args) -> auto
         {
             assert(mCount < N);
 
             {
-                auto t = std::make_unique<AllocatedT>(std::forward<U>(args)...);
-                mT.push_back(std::move(t));
-            }
+                auto location = mAllocator.allocate();
+                auto deleter = [](T* t, auto& allocator)
+                {
+                    t->~T();
+                    allocator.deallocate(t);
+                };
+                auto ut = UT{
+                    new (location) T(std::forward<U>(args)...),
+                    std::bind(deleter, std::placeholders::_1, std::ref(mAllocator))
+                };
 
-            auto t = mT.back().get();
-            mT_.push_back(t);
+                mT.push_back(std::move(ut));
+            }
 
             mCount++;
 
-            return *t;
+            return nullptr;
         }
 
-        auto operator [] (unsigned int i)
+        auto operator [] (unsigned int i) -> auto&
         {
-            //return mT_[i];
+            return *mT[i].get();
         }
 
-        constexpr auto size()
+        auto delete_at(unsigned int i)
+        {
+            {
+                auto p = std::move(mT[i]);
+            }
+
+            mCount--;
+        }
+        
+        auto size() const
         {
             return mCount;
         }
 
-        constexpr auto data()
+        auto data() const
         {
             //return mT_;
         }
 
     private:
         unsigned int mCount = 0u;
-        std::vector<std::unique_ptr<AllocatedT>> mT;
-        std::vector<T*> mT_;
-    };
+        
+        HeapArea mHeapArea;
+        Allocator<policies::allocation::Freelist> mAllocator;
 
+
+
+        std::vector<UT> mT;
+        
+
+        std::vector<HandleT> mHandles;
+
+    };
 
     TOV_NAMESPACE_END
 }

@@ -46,7 +46,6 @@ TEST_CASE("AllocatedObject", "[None]")
 	{
 		SECTION("oding sothingd")
 		{
-			std::cout << "STARTING ALLOCATED OBJECT TEST\n";
 			{
 				auto f = new AllocatedFoo(10);
 				delete f;
@@ -61,33 +60,24 @@ TEST_CASE("AllocatedObject", "[None]")
 				new AllocatedFoo(10);
 				delete f;
 			}
-			std::cout << "ENDING ALLOCATED OBJECT TEST\n";
 		}
 
 		SECTION("MKAE UNQUE")
 		{
-			std::cout << "STARTING UNIQUE ALLOCATED OBJECT TEST\n";
-
 			std::make_unique<AllocatedFoo>(45);
 			std::make_unique<AllocatedFoo>(45);
 			std::make_unique<AllocatedFoo>(45);
-
-			std::cout << "ENDING UNIQUE ALLOCATED OBJECT TEST\n";
 		}
 
 		SECTION("adfadfadadsfadUNQUE")
 		{
-			std::cout << "STARTING crash ALLOCATED OBJECT TEST\n";
-
 			CHECK_THROWS_AS(
-				for (auto i = 0; true; i++)
+				for (auto i = 0; i < 1000; i++)
 				{
 					new AllocatedFoo(i);
 				},
 				std::bad_alloc
 			);
-
-			std::cout << "ENDING CRASHHH ALLOCATED OBJECT TEST\n";
 		}
 
 		SECTION("yyhjkhjkhjhj")

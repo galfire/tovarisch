@@ -14,7 +14,6 @@ namespace tov
     public:
         Freelist(void* start, void* end, size_t elementSize)
         {
-            std::cout << "ELMENT SIZE: " << elementSize << "\n";
             reset(start, end, elementSize);
         }
 

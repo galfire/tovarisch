@@ -12,7 +12,7 @@ namespace tov
     class None
     {
     public:
-        inline size_t determineAlignmentSpace(size_t alignment) noexcept
+        inline constexpr size_t determineAlignmentSpace(size_t alignment) noexcept
         {
             return 0;
         }

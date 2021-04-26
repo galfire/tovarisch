@@ -17,7 +17,7 @@ namespace tov
         typename BoundsCheckingPolicy
     >
     inline TypedMemoryArena<T, AllocationPolicy, AlignmentPolicy, ThreadPolicy, BoundsCheckingPolicy>::TypedMemoryArena(void* start, void* end)
-        : mAllocationPolicy(start, end, allocationSpace())
+        : mAllocationPolicy(start, end, ALLOCATION_SPACE)
     {
     }
 
@@ -41,7 +41,7 @@ namespace tov
             + sizeof(AllocationHeader)
             + BoundsCheckingPolicy::FRONT_BOUND_SIZE
         );
-        auto _alignmentSpace = alignmentSpace();
+        auto _alignmentSpace = ALLOCATION_SPACE;
         auto const userPtr = mAlignmentPolicy.align(ALIGNMENT, SIZE, p, _alignmentSpace);
 
         {
@@ -105,7 +105,7 @@ namespace tov
         typename ThreadPolicy,
         typename BoundsCheckingPolicy
     >
-        inline auto TypedMemoryArena<T, AllocationPolicy, AlignmentPolicy, ThreadPolicy, BoundsCheckingPolicy>::checkBounds(void* ptr) const -> void
+    inline auto TypedMemoryArena<T, AllocationPolicy, AlignmentPolicy, ThreadPolicy, BoundsCheckingPolicy>::checkBounds(void* ptr) const -> void
     {
         auto header = getAllocationHeader(ptr);
 

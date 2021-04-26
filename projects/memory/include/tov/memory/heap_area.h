@@ -11,6 +11,8 @@ namespace tov
 
     class HeapArea
     {
+        TOV_MOVABLE_ONLY(HeapArea);
+
     public:
         inline explicit HeapArea(const size_t size) noexcept;
         inline ~HeapArea() noexcept = default;
@@ -26,8 +28,6 @@ namespace tov
         using ByteArrayUPtr = std::unique_ptr<byte[]>;
         ByteArrayUPtr mByteArray = nullptr;
     };
-
-    using HeapAreaUPtr = std::unique_ptr<HeapArea>;
 
     TOV_NAMESPACE_END
 }
