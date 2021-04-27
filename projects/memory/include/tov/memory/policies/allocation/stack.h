@@ -8,7 +8,7 @@ namespace tov
         TOV_NAMESPACE_BEGIN(policies)
         TOV_NAMESPACE_BEGIN(allocation)
 
-        class Stack
+    class Stack
     {
     public:
         inline explicit Stack(void* start, void* end, size_t elementSize) noexcept
@@ -23,12 +23,24 @@ namespace tov
 
         inline auto allocate() noexcept -> void*
         {
+            if (mPosition + mElementSize > mEnd)
+            {
+                return nullptr;
+            }
+
+            auto userPtr = mPosition;
+            std::cout << "alloc location: " << (void*)userPtr << "\n";
+
             mPosition += mElementSize;
+
+            return userPtr;
         }
 
         inline auto deallocate(void* ptr) noexcept -> void
         {
             mPosition -= mElementSize;
+            std::cout << "dealloc location: " << (void*)mPosition << "\n";
+
         }
 
         inline auto reset() noexcept -> void

@@ -18,15 +18,29 @@ class Foo
     TOV_MOVABLE_ONLY(Foo);
 
 public:
+
     Foo(int i)
         : m_i(i)
     {
-        std::cout << "Creating " << this << "\n";
+        std::cout << "Creating " << this << " (" << m_i << ")\n";
+    }
+
+    Foo(Foo&& f)
+        : m_i(std::move(f.m_i))
+    {
+        std::cout << "Move creating " << this << " (" << m_i << ")\n";
+    }
+
+    Foo& operator = (Foo&& other) noexcept
+    {
+        std::cout << "Move assigning " << &other << " (" << other.m_i << ") to " << this << " (" << m_i << ")\n";
+        m_i = std::move(other.m_i);
+        return *this;
     }
 
     ~Foo()
     {
-        std::cout << "Destryoing " << this << "\n";
+        std::cout << "Destryoing " << this << " (" << m_i << ")\n";
     }
 
 public:
@@ -48,30 +62,63 @@ int main(int argc, char** argv)
 
     {
         auto c = tov::memory::Container<Foo, 4>{};
-        c.emplace_back(4);
-        c.emplace_back(2);
-        c.emplace_back(9);
-        c.emplace_back(1);
+        auto id_1 = c.emplace_back(1);
+        auto id_2 = c.emplace_back(2);
+        auto id_3 = c.emplace_back(3);
+        auto id_4 = c.emplace_back(4);
 
         {
-            auto& f = c[0];
+            auto& f = c[id_1];
             std::cout << f.m_i << "\n";
         }
 
         {
-            auto& f = c[1];
+            auto& f = c[id_2];
             std::cout << f.m_i << "\n";
         }
 
         {
-            auto& f = c[2];
+            auto& f = c[id_3];
             std::cout << f.m_i << "\n";
         }
 
-        c.delete_at(0);
-        c.emplace_back(2);
+        {
+            auto& f = c[id_4];
+            std::cout << f.m_i << "\n";
+        }
+
+        c.delete_at(id_1);
+        auto newid = c.emplace_back(5);
+
+        {
+            auto& f = c[id_1];
+            //std::cout << f.m_i << "\n";
+        }
+
+        {
+            auto& f = c[id_2];
+            std::cout << f.m_i << "\n";
+        }
+
+        {
+            auto& f = c[id_3];
+            std::cout << f.m_i << "\n";
+        }
+
+        {
+            auto& f = c[id_4];
+            std::cout << f.m_i << "\n";
+        }
+
+        {
+            auto& f = c[newid];
+            std::cout << f.m_i << "\n";
+        }
+
+        auto data = c.data();
 
         std::cout << "\n\n\n";
+        std::cout << data[0].m_i << ", " << data[1].m_i << ", " << data[2].m_i << ", " << data[3].m_i << "\n";
         std::cout << "Destroying container...\n";
     }
 
