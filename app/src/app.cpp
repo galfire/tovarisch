@@ -25,7 +25,7 @@ public:
         std::cout << "Creating " << this << " (" << m_i << ")\n";
     }
 
-    Foo(Foo&& f)
+    Foo(Foo&& f) noexcept
         : m_i(std::move(f.m_i))
     {
         std::cout << "Move creating " << this << " (" << m_i << ")\n";

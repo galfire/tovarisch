@@ -43,12 +43,8 @@ namespace tov
 
         class Creator
         {
-        private:
-            using AllocationPolicy = policies::allocation::Stack;
-            Allocator<AllocationPolicy> mAllocator;
-
         public:
-            Creator(HeapArea& heapArea)
+            Creator(HeapArea const& heapArea)
                 : mAllocator(heapArea.getStart(), heapArea.getEnd(), sizeof(T))
             {}
 
@@ -67,16 +63,17 @@ namespace tov
                 };
                 return ut;
             }
-        };
 
+        private:
+            using AllocationPolicy = policies::allocation::Stack;
+            Allocator<AllocationPolicy> mAllocator;
+        };
 
     public:
         Container()
             : mHeapArea(sizeof(T) * N)
-            , mAllocator(mHeapArea.getStart(), mHeapArea.getEnd(), sizeof(T))
-        {
-        }
-
+            , mCreator(mHeapArea)
+        {}
         ~Container() = default;
 
         template <class... U>
@@ -84,19 +81,7 @@ namespace tov
         {
             assert(mCount < N);
 
-            {
-                auto location = mAllocator.allocate();
-                auto deleter = [](T* t, auto& allocator)
-                {
-                    t->~T();
-                    allocator.deallocate(t);
-                };
-                auto ut = UT{
-                    new (location) T(std::forward<U>(args)...),
-                    std::bind(deleter, std::placeholders::_1, std::ref(mAllocator))
-                };
-                mT.push_back(std::move(ut));
-            }
+            mT.push_back(mCreator.create(std::forward<U>(args)...));
 
             auto h = HandleT{ mHandles.size() };
             mHandles.push_back(h);
@@ -131,18 +116,20 @@ namespace tov
                 auto _ = std::move(mT[index]);
             }
 
+            // Defragment the heap area
+            
             {
-                // Defragment the heap area
-                
                 // Move t_last data into location of deleted data
                 auto& t_delete = *static_cast<T*>(ptr);
                 T* data = static_cast<T*>(mHeapArea.getStart());
                 auto& t_last = data[mCount - 1];
                 t_delete = std::move(t_last);
+            }
 
+            {
                 // Repoint t_last ptr to the moved data's new location
                 mT[mCount - 1].release();
-                mT[mCount - 1].reset(&t_delete);
+                mT[mCount - 1].reset(ptr);
             }
 
             mCount--;
@@ -157,11 +144,10 @@ namespace tov
         unsigned int mCount = 0u;
         
         HeapArea mHeapArea;
-        using AllocationPolicy = policies::allocation::Stack;
-        Allocator<AllocationPolicy> mAllocator;
+
+        Creator mCreator;
 
         std::vector<UT> mT;
-
         std::vector<HandleT> mHandles;
     };
 
