@@ -2,6 +2,7 @@
 #include <tov/rendering_gl/window_renderer_support.h>
 
 #include <iostream>
+#include <ranges>
 
 #include "application.h"
 
@@ -49,16 +50,16 @@ public:
 
 int main(int argc, char** argv)
 {
-    WindowPlatformSupport platformSupport;
-    WindowRendererSupport rendererSupport;
+    //WindowPlatformSupport platformSupport;
+    //WindowRendererSupport rendererSupport;
 
-    /*Application application(
-        "Window",
-        platformSupport,
-        rendererSupport
-    );
+    //Application application(
+    //    "Window",
+    //    platformSupport,
+    //    rendererSupport
+    //);
 
-    application.start();*/
+    //application.start();
 
     {
         auto c = tov::memory::Container<Foo, 4>{};
@@ -119,12 +120,32 @@ int main(int argc, char** argv)
 
         std::cout << "\n\n\n";
         std::cout << data[0].m_i << ", " << data[1].m_i << ", " << data[2].m_i << ", " << data[3].m_i << "\n";
+
+        std::cout << "\n\n\n";
+
+
+        //std::iter_difference_t<tov::memory::Container<Foo, 4>>;
+        //auto b = std::ranges::begin(c);
+        //std::cout << "b: " << b << "\n";
+        
+
+
+        for (auto&& n : c) {
+            std::cout << "N: " << n.m_i << std::endl;
+        }
+
+        //std::cout << std::extent<tov::memory::Container<Foo, 4>>::value << "\n";
+        //std::cout << "SIZE: " << std::ranges::size(c) << "\n";
+        //std::cout << "DIST: " << std::ranges::distance(c.begin(), c.end()) << "\n";
+
+        auto s = std::span{ c };
+        for (auto&& n : s) {
+            std::cout << "S: " << n.m_i << std::endl;
+        }
+
         std::cout << "Destroying container...\n";
     }
 
-
-    //auto c = container<int>{ 1, 3, 5 };
-    //auto s = std::span{ c };
 
     return 0;
 }

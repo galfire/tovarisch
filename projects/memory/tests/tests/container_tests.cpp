@@ -27,7 +27,7 @@ TEST_CASE("Container", "[Container]")
         auto b = container.emplace_back(2);
         auto c = container.emplace_back(3);
         auto d = container.emplace_back(4);
-        std::cout << a.m_i << "\n";
+        //std::cout << a.m_i << "\n";
     }
 
     //SECTION("create")

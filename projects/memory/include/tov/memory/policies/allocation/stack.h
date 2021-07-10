@@ -5,8 +5,8 @@
 namespace tov
 {
     TOV_NAMESPACE_BEGIN(memory)
-        TOV_NAMESPACE_BEGIN(policies)
-        TOV_NAMESPACE_BEGIN(allocation)
+    TOV_NAMESPACE_BEGIN(policies)
+    TOV_NAMESPACE_BEGIN(allocation)
 
     class Stack
     {
@@ -16,8 +16,7 @@ namespace tov
             , mEnd(end)
             , mElementSize(elementSize)
             , mPosition(static_cast<byte*>(start))
-        {
-        }
+        {}
 
         inline ~Stack() noexcept = default;
 

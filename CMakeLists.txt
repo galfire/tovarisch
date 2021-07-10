@@ -64,26 +64,6 @@ endif()
 
 set(DOCTEST_DIR ${CMAKE_CURRENT_BINARY_DIR}/doctest/src/)
 
-### 
-# tromploeil
-
-configure_file(vendor/external/tromploeil.cmake tromploeil/download/CMakeLists.txt)
-execute_process(COMMAND "${CMAKE_COMMAND}" -G "${CMAKE_GENERATOR}" .
-  RESULT_VARIABLE result
-  WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/tromploeil/download)
-if(result)
-  message(FATAL_ERROR "CMake step for tromploeil failed: ${result}")
-endif()
-execute_process(COMMAND "${CMAKE_COMMAND}" --build .
-  RESULT_VARIABLE result
-  WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/tromploeil/download)
-if(result)
-  message(FATAL_ERROR "CMake step for tromploeil failed: ${result}")
-endif()
-
-set(TROMPLOEIL_DIR ${CMAKE_CURRENT_BINARY_DIR}/tromploeil/src/)
-
-
 # Include sub-projects.
 
 include(${CMAKE_SOURCE_DIR}/projects/cmake/compiler.cmake)
