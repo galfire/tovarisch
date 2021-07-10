@@ -69,7 +69,7 @@ namespace tov
             return t;
         }
 
-        auto delete_at(id i)
+        auto delete_at(id i) noexcept
         {
             auto handle = mHandles[i];
             delete_at(handle);
@@ -77,7 +77,7 @@ namespace tov
 
         auto begin() { return Iterator{ &this->data()[0] }; }
         auto end() { return Iterator{ &this->data()[mCount] }; }
-        auto size() { return mCount; }
+        auto size() const { return mCount; }
 
     private:
         auto data()
@@ -85,7 +85,7 @@ namespace tov
             return static_cast<T*>(mHeapArea.getStart());
         }
 
-        auto delete_at(HandleT h)
+        auto delete_at(HandleT h) noexcept
         {
             auto index = h.index;
             auto ptr = mT[index].get();
@@ -99,17 +99,16 @@ namespace tov
             
             {
                 // Move t_last data into location of deleted data
-                auto& t_delete = *static_cast<T*>(ptr);
-                T* data = static_cast<T*>(mHeapArea.getStart());
-                auto& t_last = data[mCount - 1];
-                t_delete = std::move(t_last);
+                auto& t_deleted = *static_cast<T*>(ptr);
+                auto& t_last = this->data()[mCount - 1];
+                t_deleted = std::move(t_last);
             }
 
             {
                 // Repoint t_last ptr to the moved data's new location
-                auto& up = mT[mCount - 1];
-                up.release();
-                up.reset(ptr);
+                auto& t_last_ptr = mT[mCount - 1];
+                t_last_ptr.release();
+                t_last_ptr.reset(ptr);
             }
 
             mCount--;
@@ -315,43 +314,46 @@ namespace tov
         pointer mPtr;
     };
 
-    using Iterator = Container<int, 4>::Iterator;
-
-    template <class I>
-    concept random_access_iterator_test = requires(I i, const I j, const std::iter_difference_t<I> n)
+    namespace
     {
-        { i += n } -> std::same_as<I&>;
-        { j +  n } -> std::same_as<I>;
-        { n +  j } -> std::same_as<I>;
-        { i -= n } -> std::same_as<I&>;
-        { i -  n } -> std::same_as<I>;
-        { j[n] }   -> std::same_as<std::iter_reference_t<I>>;
-    };
+        using Iterator = Container<int, 4>::Iterator;
 
-    template <class I>
-    concept contiguous_iterator_test = requires(const I& i)
-    {
-        { std::to_address(i) } -> std::same_as<std::add_pointer_t<std::iter_reference_t<I>>>;
-    };
+        template <class I>
+        concept random_access_iterator_test = requires(I i, const I j, const std::iter_difference_t<I> n)
+        {
+            { i += n } -> std::same_as<I&>;
+            { j + n } -> std::same_as<I>;
+            { n + j } -> std::same_as<I>;
+            { i -= n } -> std::same_as<I&>;
+            { i - n } -> std::same_as<I>;
+            { j[n] } -> std::same_as<std::iter_reference_t<I>>;
+        };
 
-    static_assert(std::is_object_v<Iterator>, "Iterator must be object.");
-    static_assert(std::is_nothrow_destructible_v<Iterator>, "Iterator must be nothrow destructible.");
-    static_assert(std::destructible<Iterator>, "Iterator must be destructible.");
-    static_assert(std::constructible_from<Iterator, Iterator>, "Iterator must be constructible from itself.");
-    static_assert(std::move_constructible<Iterator>, "Iterator must be move constructible.");
-    static_assert(std::assignable_from<Iterator&, Iterator>, "Iterator must be assignable from.");
-    static_assert(std::movable<Iterator>, "Iterator must be movable.");
-    static_assert(std::weakly_incrementable<Iterator>, "Iterator must be weakly icrementable.");
-    static_assert(std::input_or_output_iterator<Iterator>, "Iterator must be an input or output iterator.");
-    static_assert(std::input_iterator<Iterator>, "Iterator must be an input iterator.");
-    static_assert(std::forward_iterator<Iterator>, "Iterator must be a forward iterator.");
-    static_assert(std::bidirectional_iterator<Iterator>, "Iterator must be a bidirectional iterator.");
-    static_assert(std::totally_ordered<Iterator>, "Iterator must be totally ordered.");
-    static_assert(std::sized_sentinel_for<Iterator, Iterator>, "Iterator must be a sized sentinel.");
-    static_assert(random_access_iterator_test<Iterator>, "Iterator must pass the random access iterator tests.");
-    static_assert(std::random_access_iterator<Iterator>, "Iterator must be a random access iterator.");
-    static_assert(contiguous_iterator_test<Iterator>, "Iterator must pass the contiguous iterator tests.");
-    static_assert(std::contiguous_iterator<Iterator>, "Iterator must be a contiguous iterator.");
+        template <class I>
+        concept contiguous_iterator_test = requires(const I & i)
+        {
+            { std::to_address(i) } -> std::same_as<std::add_pointer_t<std::iter_reference_t<I>>>;
+        };
+
+        static_assert(std::is_object_v<Iterator>, "Iterator must be object.");
+        static_assert(std::is_nothrow_destructible_v<Iterator>, "Iterator must be nothrow destructible.");
+        static_assert(std::destructible<Iterator>, "Iterator must be destructible.");
+        static_assert(std::constructible_from<Iterator, Iterator>, "Iterator must be constructible from itself.");
+        static_assert(std::move_constructible<Iterator>, "Iterator must be move constructible.");
+        static_assert(std::assignable_from<Iterator&, Iterator>, "Iterator must be assignable from.");
+        static_assert(std::movable<Iterator>, "Iterator must be movable.");
+        static_assert(std::weakly_incrementable<Iterator>, "Iterator must be weakly icrementable.");
+        static_assert(std::input_or_output_iterator<Iterator>, "Iterator must be an input or output iterator.");
+        static_assert(std::input_iterator<Iterator>, "Iterator must be an input iterator.");
+        static_assert(std::forward_iterator<Iterator>, "Iterator must be a forward iterator.");
+        static_assert(std::bidirectional_iterator<Iterator>, "Iterator must be a bidirectional iterator.");
+        static_assert(std::totally_ordered<Iterator>, "Iterator must be totally ordered.");
+        static_assert(std::sized_sentinel_for<Iterator, Iterator>, "Iterator must be a sized sentinel.");
+        static_assert(random_access_iterator_test<Iterator>, "Iterator must pass the random access iterator tests.");
+        static_assert(std::random_access_iterator<Iterator>, "Iterator must be a random access iterator.");
+        static_assert(contiguous_iterator_test<Iterator>, "Iterator must pass the contiguous iterator tests.");
+        static_assert(std::contiguous_iterator<Iterator>, "Iterator must be a contiguous iterator.");
+    }
     
     TOV_NAMESPACE_END
 }
