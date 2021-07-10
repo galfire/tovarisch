@@ -62,7 +62,7 @@ int main(int argc, char** argv)
     //application.start();
 
     {
-        auto c = tov::memory::Container<Foo, 4>{};
+        auto c = tov::memory::Container<Foo, 5>{};
         auto id_1 = c.emplace_back(1);
         auto id_2 = c.emplace_back(2);
         auto id_3 = c.emplace_back(3);
@@ -116,10 +116,10 @@ int main(int argc, char** argv)
             std::cout << f.m_i << "\n";
         }
 
-        auto data = c.data();
+        //auto data = c.data();
 
-        std::cout << "\n\n\n";
-        std::cout << data[0].m_i << ", " << data[1].m_i << ", " << data[2].m_i << ", " << data[3].m_i << "\n";
+        //std::cout << "\n\n\n";
+        //std::cout << data[0].m_i << ", " << data[1].m_i << ", " << data[2].m_i << ", " << data[3].m_i << "\n";
 
         std::cout << "\n\n\n";
 

@@ -31,9 +31,6 @@ namespace tov
 
     private:
         AllocationPolicy mAllocationPolicy;
-
-        int mAllocations = 0;
-        int mDeallocations = 0;
     };
 
     TOV_NAMESPACE_END // memory
