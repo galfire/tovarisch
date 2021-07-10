@@ -75,12 +75,12 @@ namespace tov
             delete_at(handle);
         }
 
-        auto begin() { return Iterator{ &this->data()[0] }; }
-        auto end() { return Iterator{ &this->data()[mCount] }; }
+        auto begin() const { return Iterator{ &this->data()[0] }; }
+        auto end() const { return Iterator{ &this->data()[mCount] }; }
         auto size() const { return mCount; }
 
     private:
-        auto data()
+        auto data() const
         {
             return static_cast<T*>(mHeapArea.getStart());
         }
