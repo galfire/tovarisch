@@ -26,12 +26,6 @@ public:
         std::cout << "Creating " << this << " (" << m_i << ")\n";
     }
 
-    Foo(Foo&& f) noexcept
-        : m_i(std::move(f.m_i))
-    {
-        std::cout << "Move creating " << this << " (" << m_i << ")\n";
-    }
-
     Foo& operator = (Foo&& other) noexcept
     {
         std::cout << "Move assigning " << &other << " (" << other.m_i << ") to " << this << " (" << m_i << ")\n";
@@ -50,17 +44,22 @@ public:
 
 int main(int argc, char** argv)
 {
-    //WindowPlatformSupport platformSupport;
-    //WindowRendererSupport rendererSupport;
+    /*Iter t1, t2;
+    t1 > t2;
+    t1 != t2;*/
 
-    //Application application(
-    //    "Window",
-    //    platformSupport,
-    //    rendererSupport
-    //);
+    WindowPlatformSupport platformSupport;
+    WindowRendererSupport rendererSupport;
 
-    //application.start();
+    Application application(
+        "Window",
+        platformSupport,
+        rendererSupport
+    );
 
+    application.start();
+
+    /**/
     {
         auto c = tov::memory::Container<Foo, 5>{};
         auto id_1 = c.emplace_back(1);
@@ -88,7 +87,7 @@ int main(int argc, char** argv)
             std::cout << f.m_i << "\n";
         }
 
-        c.delete_at(id_1);
+        c.erase(id_1);
         auto newid = c.emplace_back(5);
 
         {
@@ -116,23 +115,8 @@ int main(int argc, char** argv)
             std::cout << f.m_i << "\n";
         }
 
-        //auto data = c.data();
-
-        //std::cout << "\n\n\n";
-        //std::cout << data[0].m_i << ", " << data[1].m_i << ", " << data[2].m_i << ", " << data[3].m_i << "\n";
-
         std::cout << "\n\n\n";
 
-
-        //std::iter_difference_t<tov::memory::Container<Foo, 4>>;
-        //auto b = std::ranges::begin(c);
-        //std::cout << "b: " << b << "\n";
-        
-
-
-        for (auto&& n : c) {
-            std::cout << "N: " << n.m_i << std::endl;
-        }
 
         //std::cout << std::extent<tov::memory::Container<Foo, 4>>::value << "\n";
         //std::cout << "SIZE: " << std::ranges::size(c) << "\n";
@@ -145,7 +129,8 @@ int main(int argc, char** argv)
 
         std::cout << "Destroying container...\n";
     }
-
+    /*
+    */
 
     return 0;
 }

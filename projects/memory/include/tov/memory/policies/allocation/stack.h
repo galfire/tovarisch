@@ -28,7 +28,6 @@ namespace tov
             }
 
             auto userPtr = mPosition;
-            std::cout << "alloc location: " << (void*)userPtr << "\n";
 
             mPosition += mElementSize;
 
@@ -38,8 +37,6 @@ namespace tov
         inline auto deallocate(void* ptr) noexcept -> void
         {
             mPosition -= mElementSize;
-            std::cout << "dealloc location: " << (void*)mPosition << "\n";
-
         }
 
         inline auto reset() noexcept -> void

@@ -17,7 +17,7 @@ namespace tov
         auto submeshes = mParentMesh.getSubmeshes();
         for (auto&& submesh : submeshes)
         {
-            auto& submeshInstance = submesh->instantiate();
+            auto& submeshInstance = submesh.instantiate();
             addSubmeshInstance(submeshInstance);
         }
     }

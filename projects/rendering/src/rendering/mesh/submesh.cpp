@@ -130,6 +130,17 @@ namespace tov
     Submesh::~Submesh() noexcept
     {}
 
+    auto Submesh::operator=(Submesh&& other) noexcept -> Submesh&
+    {
+        mMaterial = other.mMaterial;
+        mIndexData = std::move(other.mIndexData);
+        mVertexData = std::move(other.mVertexData);
+        mDrawDataContext = std::move(other.mDrawDataContext);
+        mSubmeshInstances = std::move(other.mSubmeshInstances);
+
+        return *this;
+    }
+
     auto Submesh::instantiate() -> SubmeshInstance&
     {
         {

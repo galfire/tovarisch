@@ -3,7 +3,10 @@
 
 #include <tov/rendering/rendering_core.h>
 
+#include <tov/memory/container.h>
+
 #include "mesh_instance.h"
+#include "submesh.h"
 
 #include <vector>
 
@@ -35,15 +38,18 @@ namespace tov
         auto createSubmesh(geometry::Geometry const& geometry, VertexDataFormat const& vertexDataFormat) -> Submesh&;
         auto instantiate() -> MeshInstance&;
 
-        auto getSubmeshes() const { return std::span{ mSubmeshes_ }; }
+        //auto getSubmeshes() const { return std::span{ mSubmeshes_ }; }
+        auto getSubmeshes() const { return std::span{ mSubmeshes }; }
 
     private:
         MeshManager& mManager;
 
-        using SubmeshList = std::vector<std::unique_ptr<Submesh>>;
+        /*using SubmeshList = std::vector<std::unique_ptr<Submesh>>;
         SubmeshList mSubmeshes;
-        std::vector<Submesh*> mSubmeshes_;
+        std::vector<Submesh*> mSubmeshes_;*/
 
+        using SubmeshList = memory::Container<Submesh, 8>;
+        SubmeshList mSubmeshes;
 
         using MeshInstanceList = std::vector<std::unique_ptr<MeshInstance>>;
         MeshInstanceList mMeshInstances;

@@ -8,6 +8,14 @@
 #include "policies/allocation/freelist.h"
 #include "policies/allocation/stack.h"
 
+#include "iterator/addressable.h"
+#include "iterator/comparable.h"
+#include "iterator/dereferenceable.h"
+#include "iterator/incrementable.h"
+#include "iterator/orderable.h"
+#include "iterator/random_accessible.h"
+#include "iterator/subscriptable.h"
+
 #include <type_traits>
 #include <vector>
 #include <array>
@@ -33,6 +41,7 @@ namespace tov
     {
     public:
         class Creator;
+        class Traits;
         class Iterator;
 
     private:
@@ -69,10 +78,10 @@ namespace tov
             return t;
         }
 
-        auto delete_at(id i) noexcept
+        auto erase(id i) noexcept
         {
             auto handle = mHandles[i];
-            delete_at(handle);
+            erase(handle);
         }
 
         auto begin() const { return Iterator{ &this->data()[0] }; }
@@ -85,7 +94,7 @@ namespace tov
             return static_cast<T*>(mHeapArea.getStart());
         }
 
-        auto delete_at(HandleT h) noexcept
+        auto erase(HandleT h) noexcept
         {
             auto index = h.index;
             auto ptr = mT[index].get();
@@ -158,159 +167,45 @@ namespace tov
     };
 
     template <Containerable T, size_t N>
-    class Container<T, N>::Iterator
+    class Container<T, N>::Traits
     {
     public:
         using value_type = T;
-        using element_type = T;
         using reference = value_type&;
         using pointer = value_type*;
-        using iterator_category = std::contiguous_iterator_tag;
         using difference_type = ptrdiff_t;
+        using iterator_category = std::contiguous_iterator_tag;
+    };
+
+    template <Containerable T, size_t N>
+    class Container<T, N>::Iterator
+        : public iterator::Addressable<Iterator, Traits>
+        , public iterator::Comparable<Iterator>
+        , public iterator::Dereferenceable<Iterator, Traits>
+        , public iterator::Incrementable<Iterator>
+        , public iterator::Orderable<Iterator>
+        , public iterator::RandomAccessible<Iterator, Traits>
+        , public iterator::Subscriptable<Iterator, Traits>
+    {
+    public:
+        using value_type = Traits::value_type;
+        using element_type = Traits::value_type;
+        using reference = Traits::reference;
+        using pointer = Traits::pointer;
+        using difference_type = Traits::difference_type;
+        using iterator_category = Traits::iterator_category;
 
     public:
-        Iterator() noexcept = default;
-        ~Iterator() noexcept = default;
-
-        Iterator(const Iterator& it) noexcept
-            : mPtr(it.mPtr)
-        {}
-
-        Iterator(Iterator&& it) noexcept
-            : mPtr(it.mPtr)
-        {}
-
+        Iterator() noexcept {}
+        ~Iterator() noexcept {};
         Iterator(pointer ptr) noexcept
             : mPtr(ptr)
         {}
 
-        auto operator=(const Iterator& rhs) -> auto&
-        {
-            mPtr = rhs.mPtr;
-            return *this;
-        }
+        auto ptr() -> pointer& { return mPtr; }
+        auto ptr() const -> pointer { return mPtr; }
 
-        auto operator-(const Iterator& rhs) const
-        {
-            return difference_type{ this->mPtr - rhs.mPtr };
-        }
-
-        auto operator+(difference_type n) const
-        {
-            auto tmp = *this;
-            tmp.mPtr += n;
-            return tmp;
-        }
-
-        auto operator+=(difference_type n) -> auto&
-        {
-            mPtr += n;
-            return *this;
-        }
-
-        auto operator-(difference_type n) const
-        {
-            auto tmp = *this;
-            tmp.mPtr -= n;
-            return tmp;
-        }
-
-        auto operator-=(difference_type n) -> auto&
-        {
-            mPtr -= n;
-            return *this;
-        }
-
-        auto operator++() -> Iterator&
-        {
-            mPtr++;
-            return *this;
-        }
-
-        friend
-        auto operator+(difference_type n, const Iterator j)
-        {
-            auto tmp = Iterator{ j.mPtr + n };
-            return tmp;
-        }
-
-        auto operator--() -> auto&
-        {
-            mPtr--;
-            return *this;
-        }
-
-        auto operator--(int)
-        {
-            Iterator tmp = *this;
-            --(*this);
-            return tmp;
-        }
-
-        auto operator++(int)
-        {
-            Iterator tmp = *this;
-            ++(*this);
-            return tmp;
-        }
-
-        auto operator[](difference_type n) const -> reference
-        {
-            auto tmp = Iterator{ mPtr + n };
-            return *tmp;
-        }
-
-        auto operator*() -> reference
-        { 
-            return *mPtr;
-        }
-        
-        auto operator*() const -> std::add_const_t<reference>
-        { 
-            return *mPtr;
-        }
-
-        auto operator->() -> pointer
-        {
-            return mPtr;
-        }
-        
-        auto operator->() const -> std::add_const_t<pointer>
-        {
-            return mPtr;
-        }
-
-        auto operator==(Iterator const& other) const
-        {
-            return mPtr == other.mPtr;
-        }
-
-        auto operator!=(Iterator const& other) const
-        {
-            return !(*this == other);
-        }
-
-        auto operator<(Iterator const& other) const
-        {
-            return mPtr < other.mPtr;
-        }
-
-        auto operator>(Iterator const& other) const
-        {
-            return mPtr > other.mPtr;
-        }
-
-        auto operator<=(Iterator const& other) const
-        {
-            return mPtr <= other.mPtr;
-        }
-
-        auto operator>=(Iterator const& other) const
-        {
-            return mPtr >= other.mPtr;
-        }
-
-    private:
+    public:
         pointer mPtr;
     };
 
@@ -337,6 +232,9 @@ namespace tov
 
         static_assert(std::is_object_v<Iterator>, "Iterator must be object.");
         static_assert(std::is_nothrow_destructible_v<Iterator>, "Iterator must be nothrow destructible.");
+        static_assert(std::copyable<Iterator>, "Iterator must be copyable.");
+        static_assert(std::default_initializable<Iterator>, "Iterator must be default initializable.");
+        static_assert(std::semiregular<Iterator>, "Iterator must be semiregular.");
         static_assert(std::destructible<Iterator>, "Iterator must be destructible.");
         static_assert(std::constructible_from<Iterator, Iterator>, "Iterator must be constructible from itself.");
         static_assert(std::move_constructible<Iterator>, "Iterator must be move constructible.");
@@ -345,6 +243,7 @@ namespace tov
         static_assert(std::weakly_incrementable<Iterator>, "Iterator must be weakly icrementable.");
         static_assert(std::input_or_output_iterator<Iterator>, "Iterator must be an input or output iterator.");
         static_assert(std::input_iterator<Iterator>, "Iterator must be an input iterator.");
+        static_assert(std::sentinel_for<Iterator, Iterator>, "Iterator must be a sentinel.");
         static_assert(std::forward_iterator<Iterator>, "Iterator must be a forward iterator.");
         static_assert(std::bidirectional_iterator<Iterator>, "Iterator must be a bidirectional iterator.");
         static_assert(std::totally_ordered<Iterator>, "Iterator must be totally ordered.");

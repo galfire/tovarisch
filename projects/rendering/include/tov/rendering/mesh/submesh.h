@@ -39,6 +39,10 @@ namespace tov
         Submesh(Mesh& parentMesh, geometry::Geometry const& geometry, VertexDataFormat const& vertexDataFormat) noexcept;
         ~Submesh() noexcept;
 
+        //Submesh(Submesh&& other) noexcept = default;
+
+        auto operator=(Submesh&& other) noexcept -> Submesh&;
+
         auto setMaterial(Material& material) -> void { mMaterial = &material; }
 
         auto instantiate() -> SubmeshInstance&;
