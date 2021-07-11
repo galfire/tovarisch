@@ -17,7 +17,7 @@ namespace tov
     public:
         auto operator[](difference_type n) const -> reference
         {
-            auto& self = static_cast<Iterator&>(*this);
+            auto& self = static_cast<Iterator const&>(*this);
             auto tmp = Iterator{ &self + n };
             return *tmp;
         }
