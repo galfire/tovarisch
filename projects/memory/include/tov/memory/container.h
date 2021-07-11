@@ -20,12 +20,11 @@
 #include <vector>
 #include <array>
 #include <functional>
+#include <cassert>
 
 namespace tov
 {
     TOV_NAMESPACE_BEGIN(memory)
-
-    using id = unsigned int;
 
     template <class T>
     struct Handle
@@ -64,34 +63,16 @@ namespace tov
             auto h = HandleT{ mHandles.size() };
             mHandles.push_back(h);
 
-            auto i = id{ mHandles.size() - 1 };
-
             mCount++;
 
-            return i;
+            return h;
         }
 
-        auto operator [] (id i) -> auto&
+        auto operator[](HandleT h) -> auto&
         {
-            auto index = mHandles[i].index;
+            auto index = h.index;
             auto& t = *mT[index].get();
             return t;
-        }
-
-        auto erase(id i) noexcept
-        {
-            auto handle = mHandles[i];
-            erase(handle);
-        }
-
-        auto begin() const { return Iterator{ &this->data()[0] }; }
-        auto end() const { return Iterator{ &this->data()[mCount] }; }
-        auto size() const { return mCount; }
-
-    private:
-        auto data() const
-        {
-            return static_cast<T*>(mHeapArea.getStart());
         }
 
         auto erase(HandleT h) noexcept
@@ -105,7 +86,7 @@ namespace tov
             }
 
             // Defragment the heap area
-            
+
             {
                 // Move t_last data into location of deleted data
                 auto& t_deleted = *static_cast<T*>(ptr);
@@ -121,6 +102,16 @@ namespace tov
             }
 
             mCount--;
+        }
+
+        auto begin() const { return Iterator{ &this->data()[0] }; }
+        auto end() const { return Iterator{ &this->data()[mCount] }; }
+        auto size() const { return mCount; }
+
+    private:
+        auto data() const
+        {
+            return static_cast<T*>(mHeapArea.getStart());
         }
 
     private:
@@ -196,14 +187,14 @@ namespace tov
         using iterator_category = Traits::iterator_category;
 
     public:
-        Iterator() noexcept {}
-        ~Iterator() noexcept {};
+        Iterator() noexcept = default;
+        ~Iterator() noexcept = default;
         Iterator(pointer ptr) noexcept
             : mPtr(ptr)
         {}
 
-        auto ptr() -> pointer& { return mPtr; }
-        auto ptr() const -> pointer { return mPtr; }
+        auto operator->() -> pointer& { return mPtr; }
+        auto operator->() const -> std::add_const_t<pointer> { return mPtr; }
 
     public:
         pointer mPtr;

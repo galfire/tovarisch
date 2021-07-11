@@ -17,41 +17,41 @@ namespace tov
         auto operator+(difference_type n) const -> Iterator
         {
             auto tmp = static_cast<Iterator>(*this);
-            tmp.ptr() += n;
+            &tmp += n;
             return tmp;
         }
 
         auto operator+=(difference_type n) -> auto&
         {
-            auto self = static_cast<Iterator*>(this);
-            (*self).ptr() += n;
-            return *self;
+            auto& self = static_cast<Iterator&>(*this);
+            &self += n;
+            return self;
         }
 
         auto operator-(difference_type n) const -> Iterator
         {
             auto tmp = static_cast<Iterator>(*this);
-            tmp.ptr() -= n;
+            &tmp -= n;
             return tmp;
         }
 
         auto operator-=(difference_type n) -> auto&
         {
-            auto self = static_cast<Iterator*>(this);
-            (*self).ptr() -= n;
-            return *self;
+            auto& self = static_cast<Iterator&>(*this);
+            &self -= n;
+            return self;
         }
 
         auto operator-(const Iterator& rhs) const
         {
-            auto self = static_cast<Iterator const*>(this);
-            return difference_type{ (*self).ptr() - rhs.ptr() };
+            auto& self = static_cast<Iterator const&>(*this);
+            return difference_type{ &self - &rhs };
         }
 
         friend
         auto operator+(difference_type n, const Iterator j)
         {
-            auto tmp = Iterator{ j.mPtr + n };
+            auto tmp = Iterator{ &j + n };
             return tmp;
         }
     };

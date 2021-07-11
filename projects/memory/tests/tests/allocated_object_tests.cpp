@@ -15,12 +15,12 @@ namespace
 		Foo(int i)
 			: mInt(i)
 		{
-			std::cout << "ALLOCATING FOO (" << i << "): " << this << "\n";
+			//std::cout << "ALLOCATING FOO (" << i << "): " << this << "\n";
 		}
 
 		~Foo()
 		{
-			std::cout << "DEALLOCATING FOO: " << this << "\n";
+			//std::cout << "DEALLOCATING FOO: " << this << "\n";
 		}
 
 	private:

@@ -11,18 +11,18 @@ namespace tov
     class Incrementable
     {
     public:
-        auto operator++() -> auto&
+        auto operator++() -> Iterator&
         {
-            auto self = static_cast<Iterator*>(this);
-            self->ptr()++;
-            return *self;
+            auto& self = static_cast<Iterator&>(*this);
+            &self++;
+            return self;
         }
 
-        auto operator--() -> auto&
+        auto operator--() -> Iterator&
         {
-            auto self = static_cast<Iterator*>(this);
-            self->ptr()--;
-            return *self;
+            auto& self = static_cast<Iterator&>(*this);
+            &self--;
+            return self;
         }
 
         auto operator--(int)

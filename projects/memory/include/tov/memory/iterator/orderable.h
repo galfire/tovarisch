@@ -14,25 +14,25 @@ namespace tov
         auto operator<(Iterator const& other) const
         {
             auto& self = static_cast<Iterator const&>(*this);
-            return self.ptr() < other.ptr();
+            return &self < &other;
         }
 
         auto operator>(Iterator const& other) const
         {
             auto& self = static_cast<Iterator const&>(*this);
-            return self.ptr() > other.ptr();
+            return &self > &other;
         }
 
         auto operator<=(Iterator const& other) const
         {
             auto& self = static_cast<Iterator const&>(*this);
-            return self.ptr() <= other.ptr();
+            return &self <= &other;
         }
 
         auto operator>=(Iterator const& other) const
         {
             auto& self = static_cast<Iterator const&>(*this);
-            return self.ptr() >= other.ptr();
+            return &self >= &other;
         }
     };
 

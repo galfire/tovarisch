@@ -2,38 +2,36 @@
 
 #include <tov/memory/container.h>
 
+#include <span>
+
 TEST_CASE("Container", "[Container]")
 {
     class Foo
     {
     public:
         Foo(int i)
-            : m_i(i)
+            : i(i)
         {}
-        ~Foo()
-        {
-            std::cout << "destryoing\n";
-        }
+
+        ~Foo() {}
 
     public:
-        int m_i;
+        int i;
     };
 
     auto container = tov::memory::Container<Foo, 4>();
 
-    SECTION("create")
+    SECTION("emplace_back")
     {
         auto a = container.emplace_back(1);
         auto b = container.emplace_back(2);
         auto c = container.emplace_back(3);
         auto d = container.emplace_back(4);
-        //std::cout << a.m_i << "\n";
+
+        auto s = std::span{ container };
+        for (auto&& i : s)
+        {
+            std::cout << i.i << "\n";
+        }
     }
-
-    //SECTION("create")
-    //{
-    //    //auto i = std::ranges::size(container);
-    //    //std::cout << i << "\n";
-    //}
-
 }

@@ -16,14 +16,14 @@ namespace tov
     public:
         auto operator*() -> reference
         {
-            auto self = static_cast<Iterator*>(this);
-            return *self->ptr();
+            auto& self = static_cast<Iterator&>(*this);
+            return *&self;
         }
 
         auto operator*() const -> std::add_const_t<reference>
         {
-            auto self = static_cast<Iterator const*>(this);
-            return *self->ptr();
+            auto& self = static_cast<Iterator const&>(*this);
+            return *&self;
         }
     };
 

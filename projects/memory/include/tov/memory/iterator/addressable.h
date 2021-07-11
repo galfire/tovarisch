@@ -14,16 +14,16 @@ namespace tov
         using pointer = Traits::pointer;
 
     public:
-        auto operator->() -> pointer
+        auto operator&() -> pointer&
         {
-            auto self = static_cast<Iterator*>(this);
-            return self->ptr();
+            auto& self = static_cast<Iterator&>(*this);
+            return self.operator->();
         }
 
-        auto operator->() const -> std::add_const_t<pointer>
+        auto operator&() const -> pointer
         {
-            auto self = static_cast<Iterator const*>(this);
-            return self->ptr();
+            auto& self = static_cast<Iterator const&>(*this);
+            return self.operator->();
         }
     };
 
