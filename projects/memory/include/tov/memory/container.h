@@ -68,11 +68,16 @@ namespace tov
             return h;
         }
 
-        auto operator[](HandleT h) -> auto&
+        auto get(HandleT h) -> auto&
         {
             auto index = h.index;
             auto& t = *mT[index].get();
             return t;
+        }
+
+        auto operator[](HandleT h) -> auto&
+        {
+            return get(h);
         }
 
         auto erase(HandleT h) noexcept
