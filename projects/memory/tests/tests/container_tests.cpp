@@ -80,13 +80,15 @@ TEST_CASE("Container", "[Container]")
     {
         SECTION("returns an iterator to the start of the container")
         {
-            auto i1 = container.emplace_back(1);
-            auto i2 = container.emplace_back(2);
-            auto i3 = container.emplace_back(3);
+            container.emplace_back(1);
+            container.emplace_back(2);
+            container.emplace_back(3);
 
             auto it = container.begin();
 
             CHECK_EQ((*it).i, 1);
+            CHECK_EQ((*(it + 1)).i, 2);
+            CHECK_EQ((*(it + 2)).i, 3);
         }
     }
 

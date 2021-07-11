@@ -16,7 +16,7 @@ namespace tov
     public:
         auto operator+(difference_type n) const -> Iterator
         {
-            auto tmp = static_cast<Iterator>(*this);
+            auto tmp = static_cast<Iterator const&>(*this);
             &tmp += n;
             return tmp;
         }
@@ -30,7 +30,7 @@ namespace tov
 
         auto operator-(difference_type n) const -> Iterator
         {
-            auto tmp = static_cast<Iterator>(*this);
+            auto tmp = static_cast<Iterator const&>(*this);
             &tmp -= n;
             return tmp;
         }
