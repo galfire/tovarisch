@@ -23,15 +23,18 @@ TEST_CASE("Container", "[Container]")
 
     SECTION("emplace_back")
     {
-        auto a = container.emplace_back(1);
-        auto b = container.emplace_back(2);
-        auto c = container.emplace_back(3);
-        auto d = container.emplace_back(4);
-
-        auto s = std::span{ container };
-        for (auto&& i : s)
+        SECTION("emplaces new instances in order")
         {
-            std::cout << i.i << "\n";
+            container.emplace_back(1);
+            container.emplace_back(2);
+            container.emplace_back(3);
+
+            std::vector<Foo> v;
+            std::ranges::copy(container, std::back_inserter(v));
+
+            CHECK_EQ(v[0].i, 1);
+            CHECK_EQ(v[1].i, 2);
+            CHECK_EQ(v[2].i, 3);
         }
     }
 }

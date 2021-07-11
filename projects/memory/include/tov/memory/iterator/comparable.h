@@ -13,13 +13,13 @@ namespace tov
     public:
         auto operator==(Iterator const& other) const -> bool
         {
-            auto& self = static_cast<Iterator const>(*this);
+            auto& self = static_cast<Iterator const&>(*this);
             return &self == &other;
         }
 
         auto operator!=(Iterator const& other) const -> bool
         {
-            auto& self = static_cast<Iterator const>(*this);
+            auto& self = static_cast<Iterator const&>(*this);
             return &self != &other;
         }
     };

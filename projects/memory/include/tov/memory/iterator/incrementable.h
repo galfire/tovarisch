@@ -14,14 +14,14 @@ namespace tov
         auto operator++() -> Iterator&
         {
             auto& self = static_cast<Iterator&>(*this);
-            &self++;
+            (&self)++;
             return self;
         }
 
         auto operator--() -> Iterator&
         {
             auto& self = static_cast<Iterator&>(*this);
-            &self--;
+            (&self)--;
             return self;
         }
 

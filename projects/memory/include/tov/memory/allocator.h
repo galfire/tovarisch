@@ -10,7 +10,7 @@ namespace tov
     class Allocator
     {
     public:
-        Allocator(void* start, void* end, size_t elementSize)
+        Allocator(void* start, void* end, size_t elementSize) noexcept
             : mAllocationPolicy(start, end, elementSize)
         {}
 
