@@ -21,15 +21,6 @@ namespace tov
 
     auto Mesh::createSubmesh(geometry::Geometry const& geometry, VertexDataFormat const& vertexDataFormat) -> Submesh&
     {
-        /*{
-            auto submesh = std::make_unique<Submesh>(*this, geometry, vertexDataFormat);
-            mSubmeshes.push_back(std::move(submesh));
-        }
-
-        auto submesh = mSubmeshes.back().get();
-        mSubmeshes_.push_back(submesh);
-        return *submesh;*/
-
         auto i = mSubmeshes.emplace_back(*this, geometry, vertexDataFormat);
         return mSubmeshes[i];
     }
@@ -42,12 +33,6 @@ namespace tov
         }
 
         auto meshInstance = mMeshInstances.back().get();
-
-        /*for (auto&& submesh : mSubmeshes)
-        {
-            auto& submeshInstance = submesh->instantiate();
-            meshInstance->addSubmeshInstance(submeshInstance);
-        }*/
         
         return *meshInstance;
     }
